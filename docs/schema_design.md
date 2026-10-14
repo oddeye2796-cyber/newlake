@@ -245,7 +245,7 @@ v0.4 를 Fable 이 빈 DB 에 다시 올려 실제 접속 계정(`svc_app IN ROL
 
 운영 메모 추가:
 - 적재 접속 계정: `CREATE ROLE svc_loader LOGIN BYPASSRLS IN ROLE lake_loader;`
-- 에이전트 접속 계정: `CREATE ROLE svc_agent LOGIN IN ROLE lake_agent;` (lake_app 멤버로 만들지 않는다). 실행은 `BEGIN READ ONLY; SET LOCAL app.*; SELECT gov.run_agent_query($1); COMMIT;`
+- 에이전트 접속 계정: `CREATE ROLE svc_agent LOGIN IN ROLE lake_agent;` (lake_app 멤버로 만들지 않는다). 실행은 `BEGIN READ ONLY; SET LOCAL app.*; SET LOCAL ROLE lake_agent; SELECT gov.run_agent_query($1); COMMIT;` (함수가 `current_user = lake_agent` 를 확인한다)
 - 커넥션 풀(pgbouncer·JDBC·Airflow)은 접속 옵션에 `-c timezone=Asia/Seoul` 를 넣는다.
 - 정책 정의 자체를 바꾼 마이그레이션은 점검 시간에 `SELECT gov.apply_scope_policies(true);` 로 전부 다시 만든다.
 - `lake_ml` 은 `lake_app` 멤버라 승인 함수 실행권도 물려받는다. ML 계정에 승인권이 필요 없으면 운영 배포 때 lake_ml 을 lake_app 에서 분리한다.

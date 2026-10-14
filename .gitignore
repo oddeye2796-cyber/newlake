@@ -7,3 +7,5 @@ node_modules/
 dist/
 .pytest_cache/
 .DS_Store
+web/node_modules
+web/dist
