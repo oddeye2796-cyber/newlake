@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Pencil } from 'lucide-react';
-import type { AdminClassDetail, AdminClassRow, AdminDatasetDetail, AdminDatasetRow, OntoProperty } from '../../api';
+import type { AdminClassDetail, AdminClassRow, AdminDatasetDetail, AdminDatasetRow, ExtAttrs, OntoProperty } from '../../api';
 import { useAuth } from '../../auth';
 import { Pill, State, Tier } from '../../components/ui';
 import { fmtTs } from '../../format';
@@ -23,6 +23,8 @@ function Detail({ id, index, onDeleted }: { id: string; index: Map<string, Admin
   const d = data?.dataset;
   const cls = d?.represents_class_iri ? lastName(d.represents_class_iri) : null;
   const rel = useApi<AdminClassDetail>(tab === 'rel' && cls ? `/api/admin/ontology/classes/${encodeURIComponent(cls)}` : null);
+  const stdTable = d?.location_uri?.startsWith('postgresql://lake/ksx.') ? d.location_uri.slice('postgresql://lake/ksx.'.length) : null;
+  const ext = useApi<ExtAttrs>(tab === 'schema' && stdTable ? `/api/admin/extension-attributes?table=${encodeURIComponent(stdTable)}&limit=20` : null);
   if (!data || !d) return <section className="panel"><State loading={loading} error={error} /></section>;
   const [qs, qsc] = qstatus(d.quality_status) || [d.quality_status, 'p-line'];
   const run = data.quality_runs[0];
@@ -58,6 +60,13 @@ function Detail({ id, index, onDeleted }: { id: string; index: Map<string, Admin
           </tbody></table></div>
           {canField && <p className="hint">{t('제안된 매핑(human 이 아닌 것)은 ✓ 승인 · ✕ 반려로 결정해요. 결정은 catalog.mapping_review 에 남아요.')}</p>}
         </>) : <p className="muted">{t('컬럼 목록이 등록되지 않은 데이터셋이에요.')} {d.zone_id === 'RAW' ? t('원천 포맷 그대로 보관하며 스키마는 매핑 버전에 기록돼요.') : d.zone_id === 'SEMANTIC' ? t('RDF 트리플 저장소라 클래스 구조는 온톨로지 화면에서 봐요.') : ''}</p>}
+        {ext.data && ext.data.summary.length > 0 && <>
+          <h3 className="sub">{t('확장 속성 (표준 표에 자리가 없어 따로 보관한 열)')}</h3>
+          <div className="tablewrap"><table><thead><tr><th>{t('원천 열')}</th><th>{t('온톨로지 속성')}</th><th className="r">{t('값')}</th><th>{t('최근 적재')}</th></tr></thead><tbody>
+            {ext.data.summary.map((x) => <tr key={x.attr_name}><td className="mono">{x.attr_name}</td><td>{x.property_name ? <>{x.property_label ?? x.property_name} <code className="mono muted">arcon:{x.property_name}</code></> : <Link to="/admin/ontology/_proposals">{t('아직 안 정함 → 확장 제안')}</Link>}</td><td className="r num">{num(x.rows)}</td><td className="num small">{fmtTs(x.last_loaded_at)}</td></tr>)}
+          </tbody></table></div>
+          <p className="hint">{t('값은 ksx.extension_attribute 에 (표, 행 키, 열 이름) 으로 보관돼요. 승인한 확장 속성은 온톨로지 화면의 회사 확장 탭에서 관리해요.')}</p>
+        </>}
         {data.mappings.length > 0 && <>
           <h3 className="sub">{t('매핑 버전')}</h3>
           <div className="tablewrap"><table><thead><tr><th>{t('매핑')}</th><th>{t('대상 클래스')}</th><th>{t('상태')}</th><th className="r">F1</th></tr></thead><tbody>

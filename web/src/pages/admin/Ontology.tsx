@@ -5,6 +5,9 @@ import { Pill, State } from '../../components/ui';
 import { useApi } from '../../useApi';
 import { t } from '../../i18n';
 import { Head, ZoneChip, lastName, num } from './common';
+import { ExtensionsTab, ProposalsTab } from './OntoExt';
+
+const TABS = (): [string, string][] => [['_std', t('표준 코어')], ['_ext', t('회사 확장')], ['_proposals', t('확장 제안')]];
 
 const IGNORE = ['Enterprise', 'Site', 'Plant', 'Personnel'];
 const clip = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
@@ -79,7 +82,7 @@ export default function Ontology() {
   const { name = 'Lot' } = useParams();
   const nav = useNavigate();
   const list = useApi<AdminClassRow[]>('/api/admin/ontology/classes');
-  const det = useApi<AdminClassDetail>(`/api/admin/ontology/classes/${encodeURIComponent(name)}`);
+  const det = useApi<AdminClassDetail>(name.startsWith('_') ? null : `/api/admin/ontology/classes/${encodeURIComponent(name)}`);
   const [q, setQ] = useState('');
   useEffect(() => { document.title = `${t('온톨로지')} · ${t('뉴레이크')}`; }, []);
   const labels = useMemo(() => new Map((list.data ?? []).map((c) => [c.local_name, c])), [list.data]);
@@ -90,12 +93,17 @@ export default function Ontology() {
   }, [list.data, q]);
   const pick = (n: string) => nav(`/admin/ontology/${encodeURIComponent(n)}`);
   const curGroup = labels.get(name)?.business_group ?? t('기타');
+  const tab = name.startsWith('_') ? name : '_std';
+  const pending = useApi<{ proposal_id: number }[]>('/api/admin/ontology/proposals?status=PROPOSED');
   return (
     <>
-      <Head title={t('온톨로지')} lede={t('KS X 9101-1을 OWL로 옮긴 표준 코어예요. 클래스를 고르면 1단계 이웃과 관계를 보여 줍니다.')}
+      <Head title={t('온톨로지')} lede={t('KS X 9101-1을 OWL로 옮긴 표준 코어예요. 클래스를 고르면 1단계 이웃과 관계를 보여 줍니다. 표준에 없는 개념은 회사 확장(arcon)으로 더해요.')}
         right={list.data && <div className="small muted num">{t('클래스 {a} · 표현 데이터셋 {b}', { a: num(list.data.length), b: num(list.data.reduce((a, c) => a + c.datasets, 0)) })}</div>} />
+      <div className="tabs" role="tablist">{TABS().map(([k, n]) => <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => nav(k === '_std' ? '/admin/ontology' : `/admin/ontology/${k}`)}>{n}{k === '_proposals' && pending.data && pending.data.length > 0 ? ` (${pending.data.length})` : ''}</button>)}</div>
       <State loading={list.loading} error={list.error} />
-      {list.data && (
+      {list.data && tab === '_ext' && <ExtensionsTab classes={list.data} />}
+      {list.data && tab === '_proposals' && <ProposalsTab classes={list.data} />}
+      {list.data && tab === '_std' && (
         <div className="onto">
           <section className="panel tree" aria-label={t('클래스 목록')}>
             <input className="input" type="search" placeholder={t('클래스 찾기')} value={q} onChange={(e) => setQ(e.target.value)} style={{ width: '100%', marginBottom: 8 }} aria-label={t('클래스 검색')} />

@@ -20,10 +20,11 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from psycopg import sql
 from pydantic import BaseModel, Field
 
-from .. import automap
+from .. import automap, extsuggest
 from ..config import settings
 from ..deps import Scoped
 from .admin import admin_scoped
+from .steward import run_rule_now
 
 router = APIRouter(prefix="/api/admin", tags=["admin-ingest"])
 
@@ -291,7 +292,7 @@ def _targets(s: Scoped) -> dict[str, dict]:
             continue
         cl = classes.get(r["tbl"])
         t = out.setdefault(r["tbl"], {"table": r["tbl"], "label_ko": cl["label_ko"] if cl else None,
-                                      "class_name": cl["local_name"] if cl else None, "columns": []})
+                                      "class_name": cl["local_name"] if cl else None, "class_iri": cl["class_iri"] if cl else None, "columns": []})
         t["columns"].append({"name": r["col"], "label_ko": r["label"], "type": r["type"],
                              "required": r["required"] and not r["has_default"], "pk": r["pk"]})
     return out
@@ -348,11 +349,88 @@ class StandardizeIn(BaseModel):
     site_id: str | None = Field(default=None, max_length=50)
     plant_id: str | None = Field(default=None, max_length=50)
     create_refs: bool = False
+    keep_extras: bool = True      # 대응 안 된 원천 열을 확장 속성(ksx.extension_attribute)으로 보관하고 온톨로지 확장을 제안
+    auto_quality: bool = True     # 변환 뒤 대상 데이터셋·클래스에 걸린 검사식(SQL) 규칙을 바로 돌린다
 
 
 @router.post("/batches/{batch_id}/standardize")
 def standardize(batch_id: UUID, body: StandardizeIn, s: Scoped = Depends(admin_scoped)):
-    return s.conn.execute(
+    """표준 존 변환. 변환 자체는 gov.standardize_batch 가 하고, 그 뒤에
+
+    1) keep_extras: 표준 표에 자리가 없던 열을 확장 속성으로 보관하고(gov.store_extension_attributes) 온톨로지 확장 제안을 쌓는다
+       (extsuggest + gov.propose_extensions). 이미 등록된 회사 확장 속성과 이름이 맞으면 그 속성에 바로 연결한다.
+    2) auto_quality: 대상 데이터셋 또는 대상 클래스에 걸린 켜진 SQL 규칙을 바로 돌려 결과를 함께 돌려준다.
+    """
+    cmap = {k: v for k, v in body.column_map.items() if v}
+    out = s.conn.execute(
         "SELECT gov.standardize_batch(%s, %s, %s::jsonb, %s, %s, %s) AS r",
-        (batch_id, body.table, json.dumps({k: v for k, v in body.column_map.items() if v}),
-         body.site_id or None, body.plant_id or None, body.create_refs)).fetchone()["r"]
+        (batch_id, body.table, json.dumps(cmap), body.site_id or None, body.plant_id or None, body.create_refs)).fetchone()["r"]
+    out["extensions"] = None
+    out["proposals"] = 0
+    out["quality"] = []
+    if not out.get("rows_out"):
+        return out
+    tg = _targets(s).get(body.table)
+    class_iri = tg["class_iri"] if tg else None
+
+    if body.keep_extras:
+        info = s.conn.execute("SELECT columns FROM gov.ingest_batches(500) WHERE batch_id = %s", (batch_id,)).fetchone()
+        sample = [p["payload"] for p in s.conn.execute("SELECT * FROM gov.ingest_batch_preview(%s, 200)", (batch_id,)).fetchall()]
+        cols: list[str] = list((info and info["columns"]) or [])
+        for p in sample:
+            for k in p:
+                if k not in cols:
+                    cols.append(k)
+        extras = [c for c in cols if c not in cmap]
+        if extras and tg:
+            pk = [c["name"] for c in tg["columns"] if c["pk"]]
+            inv = {v: k for k, v in cmap.items()}
+            key_map = {p: inv[p] for p in pk if p in inv}
+            if key_map:
+                ext_props = s.conn.execute(
+                    "SELECT property_iri, local_name, label_ko, kind, range_iri, unit, domain_class_iri FROM onto.property"
+                    " WHERE property_iri LIKE %s AND domain_class_iri IS NOT NULL", (extsuggest.ARCON + "%",)).fetchall()
+                # 같은 표준 표에서 같은 열 이름을 이미 승인했으면 그 속성에 바로 잇는다 (다시 묻지 않는다)
+                accepted = {r["column_name"]: r["result_iri"] for r in s.conn.execute(
+                    "SELECT DISTINCT ON (x.column_name) x.column_name, x.result_iri FROM onto.extension_proposal x"
+                    "  JOIN onto.property p ON p.property_iri = x.result_iri"
+                    " WHERE x.std_table = %s AND x.status = 'ACCEPTED' AND x.kind <> 'CLASS'"
+                    " ORDER BY x.column_name, x.decided_at DESC", (body.table,)).fetchall()}
+                # 표준·확장 속성과 겹치는 영문 이름은 제안하지 않는다 (겹치면 클래스 이름을 앞에 붙인다)
+                taken = {r["local_name"] for r in s.conn.execute("SELECT local_name FROM onto.property").fetchall()}
+                items, attrs = [], {}
+                for c in extras:
+                    vals = [r.get(c) for r in sample]
+                    prof = automap.profile(vals)
+                    if prof["kind"] == "empty":
+                        continue
+                    if c in accepted:
+                        attrs[c] = accepted[c]
+                        continue
+                    samples = [str(v) for v in vals if v is not None and str(v).strip() != ""][:5]
+                    sg = extsuggest.suggest(c, prof, samples, ext_props, class_iri, len(sample), taken)
+                    attrs[c] = sg["matched_property_iri"]
+                    if not sg["matched_property_iri"]:
+                        items.append(sg)
+                if attrs:
+                    out["extensions"] = s.conn.execute("SELECT gov.store_extension_attributes(%s, %s, %s::jsonb, %s::jsonb) AS r",
+                                                       (batch_id, body.table, json.dumps(key_map), json.dumps(attrs))).fetchone()["r"]
+                    out["extensions"]["matched"] = sum(1 for v in attrs.values() if v)
+                if items:
+                    out["proposals"] = s.conn.execute("SELECT gov.propose_extensions(%s, %s::jsonb) AS n",
+                                                      (batch_id, json.dumps(items, ensure_ascii=False, default=str))).fetchone()["n"]
+
+    if body.auto_quality:
+        rules = s.conn.execute(
+            "SELECT rule_id, label_ko, sql_check, target_dataset_id FROM catalog.quality_rule"
+            " WHERE enabled AND sql_check IS NOT NULL AND (target_dataset_id = %s OR (target_class_iri IS NOT NULL AND target_class_iri = %s))"
+            " ORDER BY rule_id", (out.get("std_dataset_id"), class_iri)).fetchall()
+        for rule in rules:
+            try:
+                r = run_rule_now(s, rule, out.get("std_dataset_id"), inline=True)
+                out["quality"].append({"rule_id": rule["rule_id"], "label_ko": rule["label_ko"], "status": "OK" if not r.get("violation_count") else "VIOLATED",
+                                       "conformance_rate": r.get("conformance_rate"), "violation_count": r.get("violation_count"),
+                                       "focus_count": r.get("focus_count"), "quality_run_id": r.get("quality_run_id")})
+            except HTTPException as e:
+                out["quality"].append({"rule_id": rule["rule_id"], "label_ko": rule["label_ko"], "status": "ERROR", "error": e.detail})
+    return out

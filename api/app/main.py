@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 
 from .config import settings
 from .db import app_pool, close_pools, open_pools
-from .routers import admin, agent, core, entities, govadmin, inbox, ingest, kpi, steward
+from .routers import admin, agent, core, entities, govadmin, inbox, ingest, kpi, ontoext, steward
 
 
 @asynccontextmanager
@@ -20,7 +20,7 @@ async def lifespan(_: FastAPI):
 app = FastAPI(title="newlake API", version="0.1.0", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins, allow_methods=["*"], allow_headers=["*"])
 
-for r in (core.router, entities.router, kpi.router, inbox.router, agent.router, admin.router, ingest.router, govadmin.router, steward.router):
+for r in (core.router, entities.router, kpi.router, inbox.router, agent.router, admin.router, ingest.router, govadmin.router, steward.router, ontoext.router):
     app.include_router(r)
 
 

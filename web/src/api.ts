@@ -106,7 +106,10 @@ export interface Target { table: string; label_ko: string | null; class_name: st
 export interface BatchDetail { batch: BatchRow; columns: string[]; rows: Record<string, unknown>[]; suggested_table: string | null; suggested_map: Record<string, string>;
   confidence: Record<string, number>; profiles: Record<string, string>; sample_rows: number; dup_keys: number;
   candidates: { table: string; label_ko: string | null; score: number; pk_ok: boolean; mapped: number }[] }
-export interface StdResult { run_id: string; mapping_id: string | null; target: string; std_dataset_id: string | null; rows_in: number; rows_out: number; rows_rejected: number; errors: { record_seq: number; error: string }[]; refs_created?: Record<string, number> }
+export interface StdQuality { rule_id: string; label_ko: string; status: 'OK' | 'VIOLATED' | 'ERROR'; conformance_rate?: number | null; violation_count?: number; focus_count?: number; quality_run_id?: string; error?: string }
+export interface StdResult { run_id: string; mapping_id: string | null; target: string; std_dataset_id: string | null; rows_in: number; rows_out: number; rows_rejected: number; errors: { record_seq: number; error: string }[]; refs_created?: Record<string, number>;
+  extensions?: { rows: number; columns: number; matched?: number } | null; proposals?: number; quality?: StdQuality[] }
+export interface RollbackResult { batch_id: string; table: string; std_dataset_id: string | null; rows: number; extension_rows: number }
 export interface Loaded { batch_id: string; rows: number; columns: string[]; entity?: string }
 
 export const runQuery = (sql: string, question?: string) => post<QueryResult>('/api/agent/query', { sql, question });
@@ -192,3 +195,13 @@ export interface CatalogDataset { dataset_id: string; title_ko: string; zone_id:
 export interface Person { user_id: string; display_name: string }
 export interface OntoProperty { property_iri: string; local_name: string; kind: string; label_ko: string | null; range_iri: string | null }
 export interface QualityRunResult { quality_run_id: string; focus_count: number; violation_count: number; conformance_rate: number | null; dataset_id: string | null }
+
+// 온톨로지 확장 (CRUD 3차)
+export interface ExtClass { class_iri: string; local_name: string; label_ko: string; label_en: string | null; business_group: string | null; parent_class_iri: string | null; parent_label: string | null; is_event: boolean; definition_ko: string | null; version_id: string | null; properties: number; datasets: number }
+export interface ExtProperty { property_iri: string; local_name: string; kind: string; label_ko: string | null; range_iri: string | null; range_label: string | null; domain_class_iri: string | null; domain_label: string | null; unit: string | null; code_scheme: string | null; definition_ko: string | null; version_id: string | null; values_stored: number }
+export interface ExtLink { link_id: number; subject_class_iri: string; subject_label: string; property_iri: string; property_name: string; property_label: string | null; object_class_iri: string; object_label: string; relation_kind: string | null }
+export interface OntoVersion { version_id: string; ontology_iri: string; version_info: string | null; source: string | null; status: string; released_at: string | null; classes: number; properties: number }
+export interface Extensions { classes: ExtClass[]; properties: ExtProperty[]; links: ExtLink[]; versions: OntoVersion[]; unpublished: number }
+export interface ExtProposal { proposal_id: number; dataset_id: string | null; dataset_title: string | null; batch_id: string | null; std_table: string | null; column_name: string; sample_values: unknown[]; profile: string | null; kind: string; target_class_iri: string | null; target_label: string | null;
+  suggested_local_name: string | null; suggested_label: string | null; suggested_range_iri: string | null; unit: string | null; confidence: number | null; matched_property_iri: string | null; matched_name: string | null; rationale: string | null; status: string; rows_seen: number; created_at: string; decided_by: string | null; decided_at: string | null; result_iri: string | null }
+export interface ExtAttrs { summary: { attr_name: string; property_iri: string | null; property_name: string | null; property_label: string | null; rows: number; last_loaded_at: string }[]; rows: { record_key: string; attr_name: string; attr_value: string; lake_batch_id: string; lake_loaded_at: string }[] }

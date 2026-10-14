@@ -540,3 +540,6 @@ td .mono,td code,td.mono,.kv dd{overflow-wrap:anywhere}
 /* 표 안 아이콘 버튼 (원천 수정·삭제) */
 .btn.icon { padding: 6px 8px; }
 .btn.icon + .btn.icon { margin-left: 4px; }
+
+/* 온톨로지 확장 탭: 패널 세로 쌓기 */
+.stack{display:grid;gap:14px}

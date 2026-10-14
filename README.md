@@ -87,6 +87,20 @@ https://newlake.vercel.app 은 화면과 API 를 Vercel 에 올리고 Neon(무�
 - 오늘의 레이크: 열린 위험 닫기·억제(`gov.set_risk_status`, 사업장·공장 범위 확인), 파이프라인 켜기/끄기·주기·담당자(`gov.update_pipeline`).
 - 쓰기 역할: 데이터셋·필드·매핑은 `data_steward`(필드는 `ontology_manager` 도), 품질 규칙은 `quality_engineer`·`data_steward`, 위험은 `production_manager`·`quality_engineer`·`data_steward`, 파이프라인은 `data_engineer`. `admin` 은 모두 된다(`gov.require_role`). 품질 엔지니어도 데이터 관리 화면을 볼 수 있다.
 
+## 온톨로지 확장 (CRUD 3차)
+
+- 온톨로지 화면에 **표준 코어 | 회사 확장 | 확장 제안** 탭. 표준(ksx)은 읽기 전용이고, 표준에 없는 개념은 회사 확장(`arcon:`)으로 더한다.
+- 회사 확장: 확장 클래스(`gov.save_ext_class`·`delete_ext_class`, 가장 가까운 표준 클래스를 상위로), 확장 속성(`gov.save_ext_property`·`delete_ext_property`, 값·참조·코드, 단위·정의;
+  참조 속성은 관계도 함께 생성), 확장 관계(`gov.save_ext_link`·`delete_ext_link`), 버전 발행(`gov.publish_ontology_version`: 버전이 없던 확장 클래스·속성에
+  `arcon-<버전>-<날짜>` 를 찍고 이전 발행본은 RETIRED), 빈 버전 삭제(`gov.delete_ontology_version`).
+- 규정되지 않은 열의 처리: 데이터 넣기에서 표준 표에 자리가 없는 열은 버리지 않고 `ksx.extension_attribute`(표·행 키·열 이름·값)에 보관하고(`gov.store_extension_attributes`),
+  열 이름·값 모양으로 확장 속성을 제안한다(`api/app/extsuggest.py` → `onto.extension_proposal`, `gov.propose_extensions`). 이미 등록된 확장 속성과 이름이 맞으면 바로 잇고,
+  스튜어드가 확장 제안 탭에서 이름·형·단위·클래스를 고쳐 승인하면 속성이 생기고 보관된 값에 이어진다(`gov.decide_extension_proposal`). 같은 열은 다음 적재부터 자동으로 이어진다.
+- 적재 시 자동 품질 검증: 표준 존 변환 직후 그 데이터셋·클래스에 걸린 켜진 SQL 검사식 규칙을 같은 트랜잭션 안에서(읽기 전용 세이브포인트) 바로 돌리고 결과를 함께 돌려준다.
+  기본 규칙 `po-quantity-positive`·`po-item-known`·`lot-quantity-consistent` 가 V0008 에 들어 있다. SHACL 셰이프 규칙은 여전히 배치 파이프라인 몫이다.
+- 표준 존 배치 되돌리기(`gov.rollback_batch`): 그 배치가 넣은 표준 행(`lake_batch_id`)과 확장 값을 빼고 배치를 원천 존 상태(LANDED)로 되돌린다. 뒤 배치가 덮어쓴 행은 남는다.
+- 데이터 카탈로그의 표준 데이터셋 상세에 확장 속성 요약이 보인다. 쓰기 역할: 클래스·관계·발행은 `ontology_manager`, 속성·제안 결정은 `ontology_manager`·`data_steward`, 되돌리기는 적재 역할(`gov.require_ingest_role`).
+
 ## 테스트
 
 ```bash

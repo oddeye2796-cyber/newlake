@@ -1,7 +1,7 @@
-import { CheckCircle2, Database, FileUp, Pencil, Plug, RefreshCw, Trash2 } from 'lucide-react';
+import { CheckCircle2, Database, FileUp, Pencil, Plug, RefreshCw, Trash2, Undo2 } from 'lucide-react';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { del, get, post, postForm, put, type BatchDetail, type BatchRow, type Loaded, type SourceRow, type StdResult, type Target } from '../../api';
+import { del, get, post, postForm, put, type BatchDetail, type BatchRow, type Loaded, type RollbackResult, type SourceRow, type StdResult, type Target } from '../../api';
 import { useAuth } from '../../auth';
 import { Pill, State } from '../../components/ui';
 import { fmtTs, n0 } from '../../format';
@@ -52,6 +52,8 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
   const [res, setRes] = useState<StdResult | null>(null);
   const [touched, setTouched] = useState<Set<string>>(new Set());
   const [refs, setRefs] = useState(true);
+  const [extras, setExtras] = useState(true);
+  const [autoQ, setAutoQ] = useState(true);
 
   useEffect(() => {
     setErr(null);
@@ -64,10 +66,11 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
   const used = new Set(Object.values(map).filter(Boolean));
   const missing = (tgt?.columns ?? []).filter((c) => (c.pk || c.required) && !used.has(c.name) && !['site_id', 'plant_id'].includes(c.name));
   const hasScope = (tgt?.columns ?? []).some((c) => c.name === 'site_id' || c.name === 'plant_id');
+  const unmapped = detail ? detail.columns.filter((c) => !map[c]) : [];
 
   const run = () => {
     setBusy(true); setErr(null);
-    post<StdResult>(`/api/admin/batches/${batchId}/standardize`, { table, column_map: map, site_id: site.trim() || null, plant_id: plant.trim() || null, create_refs: refs })
+    post<StdResult>(`/api/admin/batches/${batchId}/standardize`, { table, column_map: map, site_id: site.trim() || null, plant_id: plant.trim() || null, create_refs: refs, keep_extras: extras, auto_quality: autoQ })
       .then((r) => { setRes(r); toast(t('표준 존에 {n}행을 넣었어요.', { n: n0(r.rows_out) })); onDone(); })
       .catch((e: Error) => setErr(e.message)).finally(() => setBusy(false));
   };
@@ -111,6 +114,12 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
       {tgt && <label className="small" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 10 }}>
         <input type="checkbox" checked={refs} onChange={(e) => setRefs(e.target.checked)} />
         {t('품목·공급사처럼 참조하는 마스터에 없는 코드는 키만으로 먼저 등록하기')}</label>}
+      {tgt && <label className="small" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 6 }}>
+        <input type="checkbox" checked={extras} onChange={(e) => setExtras(e.target.checked)} />
+        {t('표준 표에 자리가 없는 열은 확장 속성으로 보관하고 온톨로지 확장을 제안받기')}{unmapped.length > 0 && <span className="muted"> · {t('지금 {n}개: {cols}', { n: unmapped.length, cols: unmapped.slice(0, 6).join(', ') + (unmapped.length > 6 ? '…' : '') })}</span>}</label>}
+      {tgt && <label className="small" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 6 }}>
+        <input type="checkbox" checked={autoQ} onChange={(e) => setAutoQ(e.target.checked)} />
+        {t('넣은 뒤 이 표에 걸린 품질 검사식을 바로 돌리기')}</label>}
       {missing.length > 0 && <p className="note">{t('아직 안 맞춘 필수 열: {cols}', { cols: missing.map((c) => c.name).join(', ') })}</p>}
       {err && <div className="banner" role="alert">{err}</div>}
       <div className="acts" style={{ marginTop: 12 }}>
@@ -125,6 +134,13 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
         </div>
         {res.refs_created && Object.keys(res.refs_created).length > 0 && <p className="small">{t('마스터에 새로 등록')}: {Object.entries(res.refs_created).map(([k, v]) => `${k} ${n0(v)}`).join(', ')}</p>}
         {res.errors.length > 0 && <ul className="errs">{res.errors.map((e) => <li key={e.record_seq}><span className="mono">#{e.record_seq}</span> {e.error}</li>)}</ul>}
+        {res.extensions && res.extensions.rows > 0 && <p className="small">{t('확장 속성으로 보관: {cols}개 열 · {rows}개 값', { cols: n0(res.extensions.columns), rows: n0(res.extensions.rows) })}{res.extensions.matched ? ` · ${t('기존 확장 속성에 이음 {n}', { n: n0(res.extensions.matched) })}` : ''}
+          {(res.proposals ?? 0) > 0 && <> · <Link to="/admin/ontology/_proposals">{t('온톨로지 확장 제안 {n}건 보기', { n: n0(res.proposals ?? 0) })}</Link></>}</p>}
+        {res.quality && res.quality.length > 0 && <div className="small" style={{ marginTop: 6 }}><b>{t('자동 품질 검증')}</b><ul className="evlist" style={{ marginTop: 4 }}>{res.quality.map((q) => (
+          <li key={q.rule_id}><Pill cls={q.status === 'OK' ? 'p-ok' : q.status === 'VIOLATED' ? 'p-crit' : 'p-warn'}>{q.status === 'OK' ? t('적합') : q.status === 'VIOLATED' ? t('위반 {n}', { n: n0(q.violation_count ?? 0) }) : t('실패')}</Pill> {q.label_ko}
+            {q.conformance_rate != null && <span className="muted num"> · {Math.round(Number(q.conformance_rate) * 10) / 10}%</span>}{q.error && <span className="muted"> · {q.error}</span>}</li>))}</ul>
+          <Link to="/admin/quality">{t('품질 화면에서 위반 처리')}</Link></div>}
+        {res.quality && res.quality.length === 0 && autoQ && <p className="small muted">{t('이 표에 걸린 검사식(SQL) 규칙이 없어 자동 검증은 건너뛰었어요. 품질 화면에서 규칙을 만들면 다음 적재부터 돌아요.')}</p>}
         <div className="acts">
           <Link className="btn" to={`/admin/catalog/${encodeURIComponent(b.dataset_id)}`}>{t('원천 데이터셋 보기')}</Link>
           {res.std_dataset_id && <Link className="btn" to={`/admin/catalog/${encodeURIComponent(res.std_dataset_id)}`}>{t('표준 데이터셋 보기')}</Link>}
@@ -307,6 +323,11 @@ function HistoryTab({ rows, open, reload }: { rows: BatchRow[]; open: (id: strin
     setErr(null);
     del<{ records: number }>(`/api/admin/batches/${b.batch_id}`).then((r) => { toast(t('{n}행을 지웠어요.', { n: n0(r.records) })); reload(); }).catch((x: Error) => setErr(x.message));
   };
+  const rollback = (b: BatchRow) => {
+    if (!window.confirm(t('{name} 배치가 표준 존({tbl})에 넣은 행과 확장 값을 빼고 원천 존 상태로 되돌릴까요? 뒤 배치가 덮어쓴 행은 남아요.', { name: b.file_name ?? b.source_entity ?? b.batch_id, tbl: b.std_table ?? '' }))) return;
+    setErr(null);
+    post<RollbackResult>(`/api/admin/batches/${b.batch_id}/rollback`, {}).then((r) => { toast(t('표준 존에서 {n}행을 뺐어요.', { n: n0(r.rows) })); reload(); }).catch((x: Error) => setErr(x.message));
+  };
   return (
     <section className="panel"><header><h2>{t('적재 기록')}</h2><span className="small muted">raw.ingest_batch</span></header>
       <div className="tablewrap"><table><thead><tr><th>{t('시각')}</th><th>{t('원천 · 데이터셋')}</th><th className="r">{t('행')}</th><th>{t('상태')}</th><th>{t('표준 존')}</th><th /></tr></thead><tbody>
@@ -319,6 +340,7 @@ function HistoryTab({ rows, open, reload }: { rows: BatchRow[]; open: (id: strin
             <td><Pill cls={stc}>{st}</Pill></td>
             <td className="small">{b.std_table ? <><span className="mono">{b.std_table}</span><div className="muted">{t('넣음 {a} · 거부 {b}', { a: n0(b.std_rows_out), b: n0(b.std_rows_rejected) })}</div></> : '—'}</td>
             <td className="r" style={{ whiteSpace: 'nowrap' }}><button className="btn" type="button" onClick={() => open(b.batch_id)}>{b.status === 'LANDED' ? t('표준 존에 넣기') : t('다시 넣기')}</button>{' '}
+              {b.std_table && <><button className="btn icon" type="button" title={t('표준 존에서 되돌리기')} aria-label={t('{id} 표준 존에서 되돌리기', { id: b.file_name ?? b.batch_id })} disabled={DEMO} onClick={() => rollback(b)}><Undo2 aria-hidden="true" /></button>{' '}</>}
               <button className="btn icon" type="button" title={t('삭제')} aria-label={t('{id} 삭제', { id: b.file_name ?? b.batch_id })} disabled={DEMO} onClick={() => remove(b)}><Trash2 aria-hidden="true" /></button></td></tr>;
         })}
         {rows.length === 0 && <tr><td colSpan={6} className="muted">{t('아직 올린 데이터가 없어요.')}</td></tr>}

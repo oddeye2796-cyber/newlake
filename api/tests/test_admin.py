@@ -33,7 +33,7 @@ def test_ontology(client):
 def test_lineage_and_quality(client):
     assert len(client.get("/api/admin/lineage", headers=ADMIN).json()["edges"]) >= 6
     q = client.get("/api/admin/quality", headers=ADMIN).json()
-    assert q["rules"][0]["rule_id"] == "ksx-lot-structure" and len(q["violations"]) == 2
+    assert q["rules"][0]["rule_id"] == "ksx-lot-structure" and len([v for v in q["violations"] if v["rule_id"] == "ksx-lot-structure"]) == 2
 
 
 def test_access_lists_assignments_for_admin_only(client):
