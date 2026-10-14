@@ -43,6 +43,15 @@ DB(TimescaleDB+pgvector) → 스키마·시드 적용 → API → 화면 순서�
 - 시드나 API 가 바뀌면 API 를 띄운 상태에서 `python3 tools/record_demo_fixtures.py` 로 다시 녹화한다.
 - 화면은 다크(기본)·라이트 테마를 오른쪽 위 버튼으로 바꾼다.
 
+## 실제 DB 시연 (Vercel + Neon)
+
+https://newlake.vercel.app 은 화면과 API 를 Vercel 에 올리고 Neon(무료 PostgreSQL)의 시연 DB 를 쓴다. 운영 대상은 그대로 사내 PostgreSQL 이고, 이건 외부 시연용이다.
+
+- `vercel.json`: `/api/*` 는 `api/index.py`(FastAPI 서버리스 함수), 나머지는 `web/` 빌드 결과로 보낸다.
+- Vercel 환경변수: `LAKE_DATABASE_URL`(svc_app), `LAKE_AGENT_DATABASE_URL`(svc_agent). Neon 의 direct 연결 문자열을 쓴다.
+- Neon 에 스키마를 다시 올릴 때는 Actions 의 `demo-db` 워크플로를 손으로 실행한다(Secret `NEON_DATABASE_URL`, `DEMO_SVC_PASSWORD`). Neon 의 TimescaleDB 는 연속 집계를 못 써서 `31_raw_timescale.sql` 은 건너뛴다.
+- 인증은 개발용(`X-User-Id`)이라 주소를 아는 사람은 누구나 시연 사용자로 승인·반려를 해볼 수 있다. 시연 데이터만 넣는다.
+
 ## API 구조
 
 - 요청 하나가 트랜잭션 하나다. `gov.user_context()` 로 사용자의 회사·사업장·공장을 받아 `app.*` 를 SET LOCAL 하고, RLS(`gov.scope_ok`)가 행을 거른다.
