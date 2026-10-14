@@ -14,6 +14,7 @@ set -euo pipefail
 DB=${1:-lake}
 ALLOW_TS_FALLBACK=${ALLOW_TS_FALLBACK:-0}
 SAMPLE=${SAMPLE:-1}
+SKIP_TIMESCALE=${SKIP_TIMESCALE:-0}   # 1: TimescaleDB 가 있어도 31 을 건너뛴다 (연속 집계를 못 쓰는 관리형 DB, 예: Neon)
 cd "$(dirname "$0")/schema"
 
 # 데이터베이스가 없을 때만 만든다 (권한 오류 등은 그대로 실패시킨다 — 리뷰 F27)
@@ -54,7 +55,7 @@ if ! has_ts; then
   fi
 fi
 for f in 10_ksx_tables.sql 11_ksx_fk.sql 20_onto.sql 21_catalog.sql 30_raw.sql; do run "$f"; done
-if has_ts; then run 31_raw_timescale.sql notx; fi
+if has_ts && [ "$SKIP_TIMESCALE" != "1" ]; then run 31_raw_timescale.sql notx; fi
 for f in 40_sem.sql 50_mart.sql 60_gov.sql 70_rls.sql 90_seed_ontology.sql 91_seed_actions.sql; do run "$f"; done
 # 증분 마이그레이션 (V0002__*.sql …) — 이름순
 for f in $(ls V[0-9]*__*.sql 2>/dev/null | sort); do run "$f"; done
@@ -71,6 +72,13 @@ if [ -n "$nobypass" ]; then echo "!! lake_loader 멤버 접속 계정에 BYPASSR
 
 # 역할별 스모크 테스트 (리뷰 F1: 소유자로만 검증하면 권한 누락이 안 잡힌다)
 echo "== 역할별 스모크 테스트"
+# PG16+ 에서 슈퍼유저가 아닌 소유자(Neon 등)는 자기가 만든 역할에 ADMIN 만 있고 SET 이 없다.
+# 그때는 SET 만 되는 멤버십(INHERIT FALSE)을 받아 검사한다. 평소 권한은 바뀌지 않는다.
+for r in lake_app lake_loader; do
+  if [ "$(q "select pg_has_role(current_user, '$r', 'SET')")" != "t" ]; then
+    q "grant $r to current_user with inherit false, set true" >/dev/null
+  fi
+done
 psql -d "$DB" -v ON_ERROR_STOP=1 -q <<'SQL'
 BEGIN;
 SET LOCAL ROLE lake_app;

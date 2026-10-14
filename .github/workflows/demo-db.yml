@@ -1,0 +1,46 @@
+# 외부 시연 DB(Neon)에 스키마·예시 데이터·시연 시드를 올린다.
+# 운영 DB 는 사내 PostgreSQL 이고, 이 워크플로는 시연용 DB 에만 쓴다.
+# 필요한 저장소 Secret: NEON_DATABASE_URL (Neon 의 direct 연결 문자열, -pooler 가 없는 것)
+# 접속 계정 비밀번호는 Secret DEMO_SVC_PASSWORD 가 있으면 그걸 쓰고, 없으면 연결 문자열에서 만든다.
+# Neon 의 TimescaleDB 는 연속 집계를 지원하지 않아 31 은 건너뛴다(SKIP_TIMESCALE=1). raw.ts_point 는 일반 테이블이 된다.
+name: demo-db
+on:
+  workflow_dispatch:   # 시연 DB 를 바꾸므로 손으로만 실행한다
+concurrency: demo-db
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 연결 정보 준비
+        env:
+          URL: ${{ secrets.NEON_DATABASE_URL }}
+          SVC_PW: ${{ secrets.DEMO_SVC_PASSWORD }}
+        run: |
+          if [ -z "$URL" ]; then echo "::error::저장소 Secret NEON_DATABASE_URL 이 없습니다"; exit 1; fi
+          python3 - <<'PY' >> "$GITHUB_ENV"
+          import os, urllib.parse as u, hashlib
+          p = u.urlparse(os.environ["URL"].replace("postgres://", "postgresql://", 1))
+          q = dict(u.parse_qsl(p.query))
+          pw = u.unquote(p.password or "")
+          svc = os.environ.get("SVC_PW") or hashlib.sha256((pw + ":newlake-svc").encode()).hexdigest()[:32]
+          print(f"::add-mask::{pw}")
+          print(f"::add-mask::{svc}")
+          for k, v in {"PGHOST": p.hostname, "PGPORT": p.port or 5432, "PGUSER": u.unquote(p.username or ""),
+                       "PGPASSWORD": pw, "PGSSLMODE": q.get("sslmode", "require"),
+                       "DEMO_DB": p.path.lstrip("/") or "neondb", "SVC_PW": svc}.items():
+              print(f"{k}={v}")
+          PY
+      - name: 접속 확인
+        run: psql -d "$DEMO_DB" -tAc "select version(); select extname, extversion from pg_extension order by 1"
+      - name: 스키마·예시 데이터 (31 TimescaleDB 제외)
+        run: ALLOW_TS_FALLBACK=1 SKIP_TIMESCALE=1 bash db/apply.sh "$DEMO_DB"
+      - name: 접속 계정 svc_app·svc_agent
+        run: psql -d "$DEMO_DB" -v ON_ERROR_STOP=1 -q -v app_pw="$SVC_PW" -v agent_pw="$SVC_PW" -f db/seed/demo_roles.sql
+      - name: 시연 시드
+        run: psql -d "$DEMO_DB" -v ON_ERROR_STOP=1 -q -1 -f db/seed/dev_seed.sql
+      - name: 확인
+        run: |
+          psql -d "$DEMO_DB" -v ON_ERROR_STOP=1 -c "select count(*) as rls_gaps from gov.rls_gaps()" \
+            -c "select user_id, display_name from gov.app_user order by 1" \
+            -c "select version from gov.schema_migration order by applied_at"
