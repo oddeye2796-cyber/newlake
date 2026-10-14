@@ -457,8 +457,10 @@ def _targets(s: Scoped) -> dict[str, dict]:
         cl = classes.get(r["tbl"])
         t = out.setdefault(r["tbl"], {"table": r["tbl"], "label_ko": cl["label_ko"] if cl else None,
                                       "class_name": cl["local_name"] if cl else None, "class_iri": cl["class_iri"] if cl else None, "columns": []})
-        t["columns"].append({"name": r["col"], "label_ko": r["label"], "type": r["type"],
-                             "required": r["required"] and not r["has_default"], "pk": r["pk"]})
+        col = {"name": r["col"], "label_ko": r["label"], "type": r["type"],
+               "required": r["required"] and not r["has_default"], "pk": r["pk"]}
+        col["default"] = automap.auto_default(col)   # 원천에 없어도 변환이 채우는 값 (순번 기본키 → 1)
+        t["columns"].append(col)
     return out
 
 
@@ -469,7 +471,7 @@ def targets(s: Scoped = Depends(admin_scoped)):
 
 def _dup_keys(rows: list[dict], m: dict[str, str], table: dict) -> int:
     """표본에서 기본키 값이 겹치는 행 수 (겹치면 뒤 행이 앞 행을 덮어쓴다)."""
-    pk = [c["name"] for c in table["columns"] if c["pk"] and c["name"] not in ("site_id", "plant_id")]
+    pk = automap.pk_columns(table)
     inv = {v: k for k, v in m.items()}
     if not pk or not all(p in inv for p in pk):
         return 0

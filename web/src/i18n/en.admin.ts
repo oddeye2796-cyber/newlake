@@ -255,6 +255,7 @@ const d: Dict = {
   "새로 고침": "Refresh",
   "시스템 종류": "System type",
   "시험 전": "Not tested",
+  "키·비우면 {v}": "key · {v} if blank",
   "아직 안 맞춘 필수 열: {cols}": "Required columns not yet mapped: {cols}",
   "아직 올린 데이터가 없어요.": "Nothing has been loaded yet.",
   "엔터티 이름 (선택)": "Entity name (optional)",

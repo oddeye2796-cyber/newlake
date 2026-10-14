@@ -101,7 +101,7 @@ export interface BatchRow {
   batch_id: string; source_system_id: string; dataset_id: string; received_at: string; record_count: number; byte_size: number | null;
   status: string; file_name: string | null; source_entity: string | null; std_rows_out: number | null; std_rows_rejected: number | null; std_table: string | null;
 }
-export interface TargetCol { name: string; label_ko: string | null; type: string; required: boolean; pk: boolean }
+export interface TargetCol { name: string; label_ko: string | null; type: string; required: boolean; pk: boolean; default?: number | string | null }
 export interface Target { table: string; label_ko: string | null; class_name: string | null; columns: TargetCol[] }
 export interface BatchDetail { batch: BatchRow; columns: string[]; rows: Record<string, unknown>[]; suggested_table: string | null; suggested_map: Record<string, string>;
   confidence: Record<string, number>; profiles: Record<string, string>; sample_rows: number; dup_keys: number;

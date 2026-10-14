@@ -261,3 +261,76 @@ def test_upload_repairs_broken_xlsx_styles(client):
         assert body["rows"] == 1 and body["columns"] == ["LOT", "수량", "일자"]
         pv = client.get(f"/api/admin/batches/{body['batch_id']}", headers=ADMIN).json()
         assert pv["rows"][0]["일자"].startswith("2026-10-01"), (name, pv["rows"][0])
+
+
+FIXTURES = __import__("pathlib").Path(__file__).parent / "fixtures"
+
+
+def _upload(client, sid: str, name: str) -> dict:
+    data = (FIXTURES / name).read_bytes()
+    r = client.post("/api/admin/upload", headers=ADMIN, data={"source_system_id": sid},
+                    files={"file": (name, data, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")})
+    assert r.status_code == 200, (name, r.text)
+    return r.json()
+
+
+def test_real_mes_export_maps_to_production_performance(client):
+    """실제 MES(TreeGrid) 실적 내보내기와 같은 구조의 파일(규격에 어긋난 styles.xml, 줄바꿈 든 머리글 43개).
+    열리고, 생산실적 표로 자동 대응되며, 원천에 없는 생산실적순번은 1 로 채워져 표준 존에 들어간다."""
+    import zipfile
+
+    from openpyxl import load_workbook
+
+    raw = (FIXTURES / "mes_treegrid_export.xlsx").read_bytes()
+    try:                                   # openpyxl 은 이 파일을 그대로는 못 연다 — 보정 경로를 타는지 확인
+        load_workbook(io.BytesIO(raw), read_only=True)
+        assert False, "fixture no longer exercises the styles repair path"
+    except ValueError:
+        pass
+    assert "xl/drawings/drawing1.xml" not in zipfile.ZipFile(io.BytesIO(raw)).namelist()
+
+    sid = _source(client)
+    up = _upload(client, sid, "mes_treegrid_export.xlsx")
+    assert up["rows"] == 3 and len(up["columns"]) == 43 and up["columns"][0] == "배정\n번호"
+
+    pv = client.get(f"/api/admin/batches/{up['batch_id']}", headers=ADMIN).json()
+    assert pv["suggested_table"] == "production_performance", pv["candidates"]
+    m = pv["suggested_map"]
+    assert m["배정\n번호"] == "production_performance_id" and m["작업일"] == "production_performance_date"
+    assert m["양품\n수량"] == "produced_quantity" and m["불량\n수량"] == "defect_quantity" and m["품번"] == "item_id"
+    assert m["시작시간"] == "execution_start_date_time" and m["종료시간"] == "execution_end_date_time"
+    assert m["작업자"] == "personnel_id" and "production_performance_sequence" not in m.values()
+    assert pv["rows"][0]["작업일"].startswith("2026-09-30")
+
+    tg = {t["table"]: t for t in client.get("/api/admin/targets", headers=ADMIN).json()}
+    seq = next(c for c in tg["production_performance"]["columns"] if c["name"] == "production_performance_sequence")
+    assert seq["pk"] and seq["default"] == 1
+
+    r = client.post(f"/api/admin/batches/{up['batch_id']}/standardize", headers=ADMIN,
+                    json={"table": "production_performance", "column_map": m, "site_id": "HQ", "plant_id": "P1",
+                          "create_refs": True, "keep_extras": True, "auto_quality": True})
+    assert r.status_code == 200, r.text
+    res = r.json()
+    assert (res["rows_in"], res["rows_out"], res["rows_rejected"]) == (3, 3, 0), res["errors"]
+    assert isinstance(res["extensions"], dict) and "matched" in res["extensions"]   # 대응 안 된 35열은 확장 속성으로 보관
+    ea = client.get("/api/admin/extension-attributes?table=production_performance&limit=100", headers=ADMIN).json()
+    kept = {x["attr_name"] for x in ea["summary"]}
+    assert {"설비명", "공정명", "Shift"} <= kept, kept
+
+
+def test_real_scm_export_maps_to_purchase_order(client):
+    """실제 SCM 발주 조회 내보내기와 같은 열(진행상태·구분·업체명·두께·폭·미입고수량 포함)."""
+    sid = _source(client)
+    up = _upload(client, sid, "scm_po_export.xlsx")
+    assert up["rows"] == 3 and up["columns"][:3] == ["진행상태", "납품요청일", "발주번호"]
+    pv = client.get(f"/api/admin/batches/{up['batch_id']}", headers=ADMIN).json()
+    assert pv["suggested_table"] == "purchase_order", pv["candidates"]
+    m = pv["suggested_map"]
+    assert m["발주번호"] == "purchase_order_id" and m["납품요청일"] == "expected_delivery_date"
+    assert m["발주수량"] == "purchase_order_quantity" and m["가입고수량"] == "purchase_goods_receipt_quantity"
+    assert set(pv["columns"]) - set(m) == {"구분", "업체명", "두께", "폭", "미입고수량"}
+    r = client.post(f"/api/admin/batches/{up['batch_id']}/standardize", headers=ADMIN,
+                    json={"table": "purchase_order", "column_map": m, "site_id": "HQ", "plant_id": "P1",
+                          "create_refs": True, "keep_extras": True})
+    assert r.status_code == 200, r.text
+    assert (r.json()["rows_out"], r.json()["rows_rejected"]) == (3, 0), r.json()["errors"]
