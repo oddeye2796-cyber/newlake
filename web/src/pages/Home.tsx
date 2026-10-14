@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Activity, Boxes, Gauge, Sparkles, Truck, type LucideIcon } from 'lucide-react';
 import type { Home as HomeT, PpmRow, SpecOut } from '../api';
 import { useAuth } from '../auth';
 import { State } from '../components/ui';
@@ -67,19 +68,26 @@ export default function Home() {
   useEffect(() => { document.title = '홈 · 뉴레이크'; }, []);
   const submit = (e: FormEvent) => { e.preventDefault(); if (q.trim()) nav(`/ask?q=${encodeURIComponent(q.trim())}`); };
   const k = home.data?.kpi;
-  const tiles: [string, string, string][] = [
-    ['양품률', pct(k?.yield_7d_pct, 2), '최근 7일'],
-    ['불량 PPM', worstPpm ? `${n0(worstPpm.ppm)} PPM` : '—', worstPpm ? `${worstPpm.operation_id} · ${worstPpm.perf_date}` : '데이터 없음'],
-    ['납기 준수', pct(k?.otd_pct), '출고 완료 주문 기준'],
-    ['진행 중 로트', k ? `${k.wip_lots}개` : '—', `보류 ${k?.hold_lots ?? 0}`],
+  const tiles: [string, string, string, LucideIcon, string][] = [
+    ['양품률', pct(k?.yield_7d_pct, 2), '최근 7일', Gauge, 'var(--ok)'],
+    ['불량 PPM', worstPpm ? `${n0(worstPpm.ppm)}` : '—', worstPpm ? `${worstPpm.operation_id} · ${worstPpm.perf_date}` : '데이터 없음', Activity, 'var(--crit)'],
+    ['납기 준수', pct(k?.otd_pct), '출고 완료 주문 기준', Truck, 'var(--accent)'],
+    ['진행 중 로트', k ? `${k.wip_lots}개` : '—', `보류 ${k?.hold_lots ?? 0}개`, Boxes, 'var(--info)'],
   ];
+  const nCrit = tasks.filter((t) => t.sev === 'crit').length;
 
   return (
     <>
-      <div className="head"><div>
-        <h1>{me ? `${me.display_name} 님, ` : ''}확인할 일이 {tasks.length}건 있어요</h1>
-        <p className="lede">{me ? `${me.enterprise_id} · ${me.site_ids === '*' ? '전사' : [me.site_ids, me.plant_ids].flat().join(' / ')}` : ''}</p>
-      </div></div>
+      <section className="hero" aria-label="오늘 요약">
+        <span className="eyebrow"><Sparkles aria-hidden="true" />{me ? `${me.enterprise_id} · ${me.site_ids === '*' ? '전사' : [me.site_ids, me.plant_ids].flat().join(' / ')}` : '오늘의 공장'}</span>
+        <h1>{me ? `${me.display_name} 님, ` : ''}오늘 확인할 일이 {tasks.length}건 있어요</h1>
+        <p>규칙이 잡아낸 위험, 승인을 기다리는 요청, 기준을 벗어난 설비 값을 한곳에 모았어요. 항목을 열면 근거가 된 기록까지 따라가 볼 수 있어요.</p>
+        <div className="hstats">
+          <span className="hstat" style={{ ['--c' as string]: '#FB7185' }}><i />위험 <b>{nCrit}</b></span>
+          <span className="hstat" style={{ ['--c' as string]: '#FBBF24' }}><i />승인 대기 <b>{home.data?.pending_approvals ?? 0}</b></span>
+          <span className="hstat" style={{ ['--c' as string]: '#34D399' }}><i />진행 로트 <b>{k?.wip_lots ?? '—'}</b></span>
+        </div>
+      </section>
       <State loading={home.loading} error={home.error} />
       <section aria-label="확인할 일" className="alerts">
         {tasks.map((t) => (
@@ -89,14 +97,15 @@ export default function Home() {
         ))}
         {home.data && tasks.length === 0 && <div className="panel muted">지금 확인할 일이 없어요.</div>}
       </section>
-      <div className="grid g4" style={{ marginTop: 18 }}>
-        {tiles.map((t) => (
-          <Link key={t[0]} className="panel kpi tile" to="/kpi" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <span className="kl">{t[0]}</span><span className="kv num">{t[1]}</span><span className="kd muted">{t[2]}</span>
+      <div className="grid g4" style={{ marginTop: 20 }}>
+        {tiles.map(([label, value, desc, Icon, color]) => (
+          <Link key={label} className="kcard" to="/kpi" style={{ ['--kc' as string]: color }}>
+            <span className="ki" aria-hidden="true"><Icon /></span>
+            <span className="kl">{label}</span><span className="kv num">{value}</span><span className="kd">{desc}</span>
           </Link>
         ))}
       </div>
-      <div className="grid g2" style={{ marginTop: 14 }}>
+      <div className="grid g2" style={{ marginTop: 16 }}>
         <section className="panel"><header><h2>무엇이든 물어보세요</h2></header>
           <form className="composer" style={{ marginTop: 0 }} onSubmit={submit}>
             <input className="input grow" value={q} onChange={(e) => setQ(e.target.value)} placeholder="예: EQ-07 때문에 위험한 주문 있어?" autoComplete="off" aria-label="질문" />

@@ -1,3 +1,4 @@
+import { Database, KeyRound, Network, ShieldAlert, Siren, type LucideIcon } from 'lucide-react';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import type { AdminOverview } from '../../api';
@@ -10,12 +11,12 @@ export default function Overview() {
   const { data, error, loading } = useApi<AdminOverview>('/api/admin/overview');
   useEffect(() => { document.title = '오늘의 레이크 · 뉴레이크'; }, []);
   const c = data?.counts;
-  const tiles: [string, number | undefined, string, string][] = [
-    ['데이터셋', c?.datasets, '/admin/catalog', '카탈로그 보기'],
-    ['온톨로지 클래스', c?.classes, '/admin/ontology', `속성 ${num(c?.properties)}개`],
-    ['미처리 품질 위반', c?.open_violations, '/admin/quality', '품질 검증 보기'],
-    ['승인 대기 접근 요청', c?.pending_access, '/admin/access', '권한·감사 보기'],
-    ['열린 위험', c?.open_risks, '/admin/overview', '규칙이 잡아낸 위험'],
+  const tiles: [string, number | undefined, string, string, LucideIcon, string][] = [
+    ['데이터셋', c?.datasets, '/admin/catalog', '카탈로그 보기', Database, 'var(--accent)'],
+    ['온톨로지 클래스', c?.classes, '/admin/ontology', `속성 ${num(c?.properties)}개`, Network, 'var(--info)'],
+    ['미처리 품질 위반', c?.open_violations, '/admin/quality', '품질 검증 보기', ShieldAlert, 'var(--warn)'],
+    ['승인 대기 접근 요청', c?.pending_access, '/admin/access', '권한·감사 보기', KeyRound, 'var(--ok)'],
+    ['열린 위험', c?.open_risks, '/admin', '규칙이 잡아낸 위험', Siren, 'var(--crit)'],
   ];
   return (
     <>
@@ -29,13 +30,14 @@ export default function Overview() {
               <div className="zs">레코드 {z.records == null ? '집계 없음' : n0(z.records)}</div><span className="arrow" aria-hidden="true">›</span>
             </div>))}
         </div>
-        <div className="grid g5" style={{ marginTop: 14 }}>
-          {tiles.map(([l, v, to, s]) => (
-            <Link key={l} className="panel kpi tile" to={to} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <span className="kl">{l}</span><span className="kv num">{num(v)}</span><span className="kd muted">{s}</span>
+        <div className="grid g5" style={{ marginTop: 16 }}>
+          {tiles.map(([l, v, to, s, Icon, color]) => (
+            <Link key={l} className="kcard" to={to} style={{ ['--kc' as string]: color }}>
+              <span className="ki" aria-hidden="true"><Icon /></span>
+              <span className="kl">{l}</span><span className="kv num">{num(v)}</span><span className="kd">{s}</span>
             </Link>))}
         </div>
-        <div className="grid g3" style={{ marginTop: 14 }}>
+        <div className="grid g3" style={{ marginTop: 16, alignItems: 'start' }}>
           <section className="panel span2">
             <header><h2>규칙이 잡아낸 위험</h2><span className="small muted">열린 위험 {data.risks.length}건</span></header>
             <div className="alerts">

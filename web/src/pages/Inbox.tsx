@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { TriangleAlert } from 'lucide-react';
 import { post, type InboxRow } from '../api';
 import { useAuth } from '../auth';
 import { Pill, State, Tier, TierLegend } from '../components/ui';
@@ -7,6 +8,22 @@ import { execPill, fmtTs, iriId, iriKind, riskPill } from '../format';
 import { useApi } from '../useApi';
 
 type Tab = 'approve' | 'mine' | 'all';
+
+const STEPS = ['탐지', '분석', '조치 제안', '승인 대기', '처리'];
+// 실행 요청 상태 → 몇 번째 단계까지 왔는지 (IMPIX 사고 카드의 단계 표시)
+function stepOf(status: string): number { return status === 'PROPOSED' ? 3 : 4; }
+function Stepper({ status }: { status: string }) {
+  const cur = stepOf(status);
+  const label = (i: number) => (i === 4 && status === 'REJECTED' ? '반려' : i === 4 && status !== 'PROPOSED' ? '승인' : STEPS[i]);
+  return (
+    <ol className="stepper" aria-label="진행 단계">
+      {STEPS.map((_, i) => (
+        <li key={i} className={`st ${i < cur || (i === cur && status !== 'PROPOSED') ? (i === 4 && status === 'REJECTED' ? 'rej' : 'done') : i === cur ? 'cur' : ''}`}
+          aria-current={i === cur ? 'step' : undefined}><i />{label(i)}</li>
+      ))}
+    </ol>
+  );
+}
 
 function Card({ r, onDone }: { r: InboxRow; onDone: (msg: string) => void }) {
   const [note, setNote] = useState('');
@@ -30,6 +47,8 @@ function Card({ r, onDone }: { r: InboxRow; onDone: (msg: string) => void }) {
       <div>
         <b>{r.action_label} · {kind ? <Link to={`/find/${kind}/${target}`}>{target}</Link> : target}</b>
         <p>요청 {r.requested_by ?? '—'} · {fmtTs(r.created_at)}{d?.cause ? ` · 이유: ${d.cause}` : ''}{d?.sales_order_id ? ` · 주문 ${d.sales_order_id}` : ''}</p>
+        <Stepper status={r.status} />
+        {r.status === 'PROPOSED' && r.can_decide && <div className="yourtask"><TriangleAlert aria-hidden="true" />내 할 일: 근거를 확인하고 승인하거나 반려해 주세요</div>}
         <div className="meta"><Pill cls={stc}>{st}</Pill>{r.risk_level && <Pill cls={rlc}>위험도 {rl}</Pill>}
           {r.approved_by && <Pill>결정 {r.approved_by}</Pill>}
           {r.approver_role_id && r.status === 'PROPOSED' && <Pill>승인 권한: {r.approver_role_id}</Pill>}</div>
