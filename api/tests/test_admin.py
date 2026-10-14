@@ -15,8 +15,9 @@ def test_overview(client):
 
 
 def test_catalog_and_dataset_detail(client):
-    ids = {d["dataset_id"] for d in client.get("/api/admin/datasets", params={"zone": "RAW"}, headers=ADMIN).json()}
-    assert ids == {"raw.eap07.trace", "raw.mes.lot_history"}
+    raw = client.get("/api/admin/datasets", params={"zone": "RAW"}, headers=ADMIN).json()
+    # 데이터 넣기 테스트가 원천 데이터셋을 더 만들 수 있다
+    assert {"raw.eap07.trace", "raw.mes.lot_history"} <= {d["dataset_id"] for d in raw} and {d["zone_id"] for d in raw} == {"RAW"}
     d = client.get("/api/admin/datasets/raw.mes.lot_history", headers=ADMIN).json()
     assert d["downstream"][0]["dataset_id"] == "std.lot"
     assert d["mappings"][0]["status"] == "APPROVED"

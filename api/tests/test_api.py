@@ -85,7 +85,7 @@ def test_inbox_can_decide_hint(client, fresh_hold):
 
 def test_agent_query_scoped(client):
     r = client.post("/api/agent/query", headers=as_user("u-jung"),
-                    json={"sql": "select lot_id from ksx.lot order by lot_id"})
+                    json={"sql": "select lot_id from ksx.lot where lot_id like 'LOT-2026-%' order by lot_id"})
     assert r.status_code == 200, r.text
     assert r.json()["row_count"] == 4
 
