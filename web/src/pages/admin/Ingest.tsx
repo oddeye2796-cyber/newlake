@@ -12,11 +12,13 @@ import { Head } from './common';
 const DEMO = import.meta.env.VITE_DEMO === '1';
 type Tab = 'file' | 'db' | 'sources' | 'history';
 const TABS: [Tab, string][] = [['file', tk('파일 올리기')], ['db', tk('DB에서 가져오기')], ['sources', tk('원천 관리')], ['history', tk('적재 기록')]];
-const SYSTEM_TYPES = ['MES', 'ERP', 'QMS', 'WMS', 'PLM', 'SCADA', 'SECS_GEM', 'EDMS', 'SENSOR', 'FILE'];
+const SYSTEM_TYPES = ['MES', 'ERP', 'SCM', 'QMS', 'WMS', 'PLM', 'SCADA', 'SECS_GEM', 'EDMS', 'SENSOR', 'FILE'];
 const DB_KINDS = ['POSTGRESQL', 'MYSQL', 'MSSQL', 'ORACLE', 'FILE'];
 
 const batchSt = (s: string): [string, string] => (({ LANDED: [t('원천 존에 있음'), 'p-warn'], STANDARDIZED: [t('표준 존 반영'), 'p-ok'], REJECTED: [t('전부 거부'), 'p-crit'], QUARANTINED: [t('격리'), 'p-crit'] } as Record<string, [string, string]>)[s] ?? [s, 'p-line']);
 const connSt = (s: string | null): [string, string] => (({ OK: [t('연결됨'), 'p-ok'], FAILED: [t('연결 실패'), 'p-crit'], UNTESTED: [t('시험 전'), 'p-line'] } as Record<string, [string, string]>)[s ?? ''] ?? [t('파일 전용'), 'p-line']);
+const confPill = (c: number | undefined, manual: boolean) => (manual ? <Pill cls="p-line">{t('직접')}</Pill>
+  : c == null ? null : <Pill cls={c >= 0.85 ? 'p-ok' : c >= 0.7 ? 'p-warn' : 'p-crit'}>{`${Math.round(c * 100)}%`}</Pill>);
 const cell = (v: unknown) => (v == null ? '' : typeof v === 'object' ? JSON.stringify(v) : String(v));
 
 function Steps({ at }: { at: number }) {
@@ -36,8 +38,8 @@ function SourcePick({ sources, value, onChange, filter }: { sources: SourceRow[]
   );
 }
 
-/** 원천 존에 올린 배치를 표준(KS X 9101) 표로 옮긴다. 열 대응은 서버가 이름·한글 설명으로 먼저 제안한다. */
-function MapPanel({ batchId, onDone }: { batchId: string; onDone: () => void }) {
+/** 원천 존에 올린 배치를 표준(KS X 9101) 표로 옮긴다. 표와 열 대응은 서버가 이름·한글 설명·값 모양을 보고 먼저 제안한다. */
+function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDone: () => void }) {
   const { toast } = useAuth();
   const targets = useApi<Target[]>('/api/admin/targets');
   const [table, setTable] = useState<string>('');
@@ -48,13 +50,15 @@ function MapPanel({ batchId, onDone }: { batchId: string; onDone: () => void }) 
   const [plant, setPlant] = useState('P1');
   const [busy, setBusy] = useState(false);
   const [res, setRes] = useState<StdResult | null>(null);
+  const [touched, setTouched] = useState<Set<string>>(new Set());
+  const [refs, setRefs] = useState(true);
 
   useEffect(() => {
     setErr(null);
     get<BatchDetail>(`/api/admin/batches/${batchId}${table ? `?table=${encodeURIComponent(table)}` : ''}`)
-      .then((d) => { setDetail(d); setMap(d.suggested_map); if (!table && d.suggested_table) setTable(d.suggested_table); })
+      .then((d) => { setDetail(d); setMap(d.suggested_map); setTouched(new Set()); if (!table && d.suggested_table) setTable(d.suggested_table); })
       .catch((e: Error) => setErr(e.message));
-  }, [batchId, table]);
+  }, [batchId, table, rev]);
 
   const tgt = useMemo(() => targets.data?.find((x) => x.table === table), [targets.data, table]);
   const used = new Set(Object.values(map).filter(Boolean));
@@ -63,7 +67,7 @@ function MapPanel({ batchId, onDone }: { batchId: string; onDone: () => void }) 
 
   const run = () => {
     setBusy(true); setErr(null);
-    post<StdResult>(`/api/admin/batches/${batchId}/standardize`, { table, column_map: map, site_id: site.trim() || null, plant_id: plant.trim() || null })
+    post<StdResult>(`/api/admin/batches/${batchId}/standardize`, { table, column_map: map, site_id: site.trim() || null, plant_id: plant.trim() || null, create_refs: refs })
       .then((r) => { setRes(r); toast(t('표준 존에 {n}행을 넣었어요.', { n: n0(r.rows_out) })); onDone(); })
       .catch((e: Error) => setErr(e.message)).finally(() => setBusy(false));
   };
@@ -91,16 +95,22 @@ function MapPanel({ batchId, onDone }: { batchId: string; onDone: () => void }) 
           <label className="fld"><span>{t('기본 공장')}</span><input className="input" value={plant} onChange={(e) => setPlant(e.target.value)} /></label>
         </>}
       </div>
-      {detail.suggested_table && <p className="note">{t('열 이름과 한글 설명을 보고 {table} 표와 {n}개 열을 먼저 짝지어 두었어요. 맞는지 확인해 주세요.', { table: `ksx.${detail.suggested_table}`, n: Object.keys(detail.suggested_map).length })}</p>}
+      {detail.suggested_table && <p className="note">{t('열 이름·한글 설명·값 모양을 보고 {table} 표에 {n}개 열을 자동으로 맞춰 두었어요. 신뢰도가 낮은 열만 확인하고 넣으면 돼요.', { table: `ksx.${detail.suggested_table}`, n: Object.keys(detail.suggested_map).length })}</p>}
+      {detail.candidates.length > 1 && <p className="small muted">{t('다른 후보')}: {detail.candidates.filter((x) => x.table !== table).map((x, i) => <span key={x.table}>{i > 0 && ', '}<button type="button" className="linkbtn" onClick={() => setTable(x.table)}>{x.label_ko ?? x.table}</button> <span className="muted">({t('{n}개 열', { n: x.mapped })})</span></span>)}</p>}
+      {detail.dup_keys > 0 && <p className="note">{t('앞 {n}행 가운데 {d}행이 같은 키를 가져서, 넣으면 뒤 행이 앞 행을 덮어써요. 키 열이 맞는지 확인해 주세요.', { n: n0(detail.sample_rows), d: n0(detail.dup_keys) })}</p>}
 
-      {tgt && <div className="tablewrap" style={{ marginTop: 10 }}><table className="maptbl"><thead><tr><th>{t('원천 열')}</th><th>{t('예시 값')}</th><th>{t('표준 열')}</th></tr></thead><tbody>
+      {tgt && <div className="tablewrap" style={{ marginTop: 10 }}><table className="maptbl"><thead><tr><th>{t('원천 열')}</th><th>{t('예시 값')}</th><th>{t('표준 열')}</th><th className="r">{t('신뢰도')}</th></tr></thead><tbody>
         {detail.columns.map((c) => (
           <tr key={c}><td className="mono">{c}</td><td className="small muted">{cell(detail.rows[0]?.[c])}</td>
-            <td><select className="input" value={map[c] ?? ''} aria-label={t('{col} 의 표준 열', { col: c })} onChange={(e) => setMap((m) => ({ ...m, [c]: e.target.value }))}>
+            <td><select className="input" value={map[c] ?? ''} aria-label={t('{col} 의 표준 열', { col: c })} onChange={(e) => { const v = e.target.value; setMap((m) => ({ ...m, [c]: v })); setTouched((x) => new Set(x).add(c)); }}>
               <option value="">{t('— 넣지 않음 —')}</option>
               {tgt.columns.map((tc) => <option key={tc.name} value={tc.name} disabled={used.has(tc.name) && map[c] !== tc.name}>{tc.name}{tc.label_ko ? ` · ${tc.label_ko}` : ''}{tc.pk ? ` (${t('키')})` : tc.required ? ' *' : ''}</option>)}
-            </select></td></tr>))}
+            </select></td>
+            <td className="r">{map[c] ? confPill(detail.confidence[c], touched.has(c) || detail.suggested_map[c] !== map[c]) : null}</td></tr>))}
       </tbody></table></div>}
+      {tgt && <label className="small" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 10 }}>
+        <input type="checkbox" checked={refs} onChange={(e) => setRefs(e.target.checked)} />
+        {t('품목·공급사처럼 참조하는 마스터에 없는 코드는 키만으로 먼저 등록하기')}</label>}
       {missing.length > 0 && <p className="note">{t('아직 안 맞춘 필수 열: {cols}', { cols: missing.map((c) => c.name).join(', ') })}</p>}
       {err && <div className="banner" role="alert">{err}</div>}
       <div className="acts" style={{ marginTop: 12 }}>
@@ -113,6 +123,7 @@ function MapPanel({ batchId, onDone }: { batchId: string; onDone: () => void }) 
           <div><span>{t('넣은 행')}</span><b className="num" style={{ color: 'var(--ok)' }}>{n0(res.rows_out)}</b></div>
           <div><span>{t('거부된 행')}</span><b className="num" style={{ color: res.rows_rejected ? 'var(--crit)' : undefined }}>{n0(res.rows_rejected)}</b></div>
         </div>
+        {res.refs_created && Object.keys(res.refs_created).length > 0 && <p className="small">{t('마스터에 새로 등록')}: {Object.entries(res.refs_created).map(([k, v]) => `${k} ${n0(v)}`).join(', ')}</p>}
         {res.errors.length > 0 && <ul className="errs">{res.errors.map((e) => <li key={e.record_seq}><span className="mono">#{e.record_seq}</span> {e.error}</li>)}</ul>}
         <div className="acts">
           <Link className="btn" to={`/admin/catalog/${encodeURIComponent(b.dataset_id)}`}>{t('원천 데이터셋 보기')}</Link>
@@ -284,15 +295,22 @@ export default function Ingest() {
   const [tab, setTab] = useState<Tab>('file');
   const [batch, setBatch] = useState<string | null>(null);
   const [fresh, setFresh] = useState(false);
+  const [rev, setRev] = useState(0);
+  const { toast } = useAuth();
   const sources = useApi<SourceRow[]>('/api/admin/sources');
   const batches = useApi<BatchRow[]>(DEMO ? null : '/api/admin/batches');
   useEffect(() => { document.title = `${t('데이터 넣기')} · ${t('뉴레이크')}`; }, []);
   const loaded = (l: Loaded) => { setBatch(l.batch_id); setFresh(true); batches.reload(); };
   const open = (id: string) => { setBatch(id); setFresh(false); };
+  const refreshing = sources.loading || batches.loading;
+  const refresh = () => {
+    setRev((r) => r + 1);
+    void Promise.all([sources.reload(), batches.reload()]).then(() => toast(t('최신 내용으로 다시 불러왔어요.')));
+  };
   return (
     <>
       <Head title={t('데이터 넣기')} lede={t('원천을 등록하고 파일이나 DB 표를 원천 존에 올린 뒤, 열을 맞춰 표준(KS X 9101) 표로 옮겨요.')}
-        right={<button className="btn" type="button" onClick={() => { sources.reload(); batches.reload(); }}><RefreshCw aria-hidden="true" /> {t('새로 고침')}</button>} />
+        right={<button className="btn" type="button" disabled={refreshing} onClick={refresh}><RefreshCw aria-hidden="true" className={refreshing ? 'spin' : undefined} /> {t('새로 고침')}</button>} />
       {DEMO && <div className="note" role="note">{t('미리보기에서는 데이터를 넣을 수 없어요. 실제 서버(newlake.vercel.app)에서 해 보세요.')}</div>}
       <div className="tabs" role="tablist">
         {TABS.map(([k, l]) => <button key={k} role="tab" type="button" aria-selected={tab === k} onClick={() => { setTab(k); if (k !== 'history') setBatch(null); }}>{t(l)}</button>)}
@@ -306,7 +324,7 @@ export default function Ingest() {
       </>}
       {batch && <>
         {fresh && <p className="small" style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 6 }}><CheckCircle2 aria-hidden="true" style={{ width: 16, color: 'var(--ok)' }} />{t('원천 존에 올렸어요. 이제 표준 표의 열과 맞춰 주세요.')}</p>}
-        <MapPanel key={batch} batchId={batch} onDone={() => { batches.reload(); sources.reload(); }} />
+        <MapPanel key={batch} batchId={batch} rev={rev} onDone={() => { batches.reload(); sources.reload(); }} />
       </>}
     </>
   );

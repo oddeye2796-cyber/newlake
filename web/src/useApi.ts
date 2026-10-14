@@ -7,11 +7,11 @@ export function useApi<T>(path: string | null) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(path !== null);
   const seq = useRef(0);
-  const load = useCallback(() => {
-    if (path === null) { setLoading(false); return; }
+  const load = useCallback((): Promise<void> => {
+    if (path === null) { setLoading(false); return Promise.resolve(); }
     const my = ++seq.current;
     setLoading(true);
-    get<T>(path).then((d) => { if (my === seq.current) { setData(d); setError(null); } })
+    return get<T>(path).then((d) => { if (my === seq.current) { setData(d); setError(null); } })
       .catch((e: Error) => { if (my === seq.current) { setError(e.message); setData(null); } })
       .finally(() => { if (my === seq.current) setLoading(false); });
   }, [path]);

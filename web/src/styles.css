@@ -531,3 +531,8 @@ td .mono,td code,td.mono,.kv dd{overflow-wrap:anywhere}
 .errs{margin:0 0 10px;padding-left:18px;font-size:12.5px;color:var(--crit)}
 .linkbtn{border:0;background:none;padding:0;color:var(--accent);cursor:pointer;font-weight:600}
 @media (max-width:640px){.formgrid{grid-template-columns:minmax(0,1fr)}.fld{flex:1 1 100%}.stepper.ing .st:not(.cur){font-size:0;gap:0}.stepper.ing .st.cur{white-space:nowrap}}
+
+/* 새로 고침 아이콘 돌기 */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin .8s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .spin { animation: none; } }

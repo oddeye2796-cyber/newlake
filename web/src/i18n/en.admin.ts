@@ -266,7 +266,6 @@ const d: Dict = {
   "연결됨": "Connected",
   "연결하지 못했어요: {msg}": "Couldn't connect: {msg}",
   "열 맞추기": "Map columns",
-  "열 이름과 한글 설명을 보고 {table} 표와 {n}개 열을 먼저 짝지어 두었어요. 맞는지 확인해 주세요.": "Based on column names and descriptions, {n} columns were pre-matched to {table}. Please check them.",
   "예: 2공장 MES": "e.g. Plant 2 MES",
   "예시 값": "Sample value",
   "올리는 중…": "Uploading…",
@@ -305,5 +304,15 @@ const d: Dict = {
   "표준 존에 넣기": "Load into standard zone",
   "행": "Rows",
   "호스트": "Host",
+  // 자동 매핑
+  "직접": "Manual",
+  "열 이름·한글 설명·값 모양을 보고 {table} 표에 {n}개 열을 자동으로 맞춰 두었어요. 신뢰도가 낮은 열만 확인하고 넣으면 돼요.": "Matched {n} columns to {table} automatically, using column names, Korean descriptions and value patterns. Just check the low-confidence ones and load.",
+  "다른 후보": "Other candidates",
+  "{n}개 열": "{n} columns",
+  "앞 {n}행 가운데 {d}행이 같은 키를 가져서, 넣으면 뒤 행이 앞 행을 덮어써요. 키 열이 맞는지 확인해 주세요.": "{d} of the first {n} rows share a key, so later rows will overwrite earlier ones. Check that the key column is right.",
+  "신뢰도": "Confidence",
+  "품목·공급사처럼 참조하는 마스터에 없는 코드는 키만으로 먼저 등록하기": "Register codes missing from referenced masters (items, vendors, …) first, with just their keys",
+  "마스터에 새로 등록": "Newly registered in masters",
+  "최신 내용으로 다시 불러왔어요.": "Reloaded the latest data.",
 };
 export default d;
