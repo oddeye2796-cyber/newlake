@@ -34,6 +34,8 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const get = <T,>(path: string) => call<T>(path);
 export const post = <T,>(path: string, data: unknown) => call<T>(path, { method: 'POST', body: JSON.stringify(data) });
+export const put = <T,>(path: string, data: unknown) => call<T>(path, { method: 'PUT', body: JSON.stringify(data) });
+export const del = <T,>(path: string) => call<T>(path, { method: 'DELETE' });
 
 /** 파일 올리기 (multipart). 시연 모드에서는 서버가 없어 거절된다. */
 export async function postForm<T>(path: string, form: FormData): Promise<T> {
@@ -166,3 +168,21 @@ export interface AuditRow { occurred_at: string; user_id: string; channel: strin
 
 export const ADMIN_ROLES = ['admin', 'data_steward', 'data_engineer', 'ontology_manager'];
 export const isAdminUser = (me: Me | null) => !!me && me.roles.some((r) => ADMIN_ROLES.includes(r));
+
+/* ---------- 권한·운영 CRUD ---------- */
+export interface AdminUser { user_id: string; display_name: string; email: string | null; personnel_id: string | null; status: string; created_at: string; roles: string[] }
+export interface Scopes { sites: { site_id: string; site_name: string | null }[]; plants: { plant_id: string; site_id: string; plant_name: string | null }[] }
+export interface AccessPolicy {
+  policy_id: string; role_id: string; role_label: string; target_class_iri: string | null; class_label: string | null; target_dataset_id: string | null; dataset_title: string | null;
+  max_sensitivity: string; actions: string[]; requires_approval: boolean;
+}
+export interface ActionPolicy {
+  policy_id: string; trigger_class_iri: string; trigger_label: string | null; condition: Record<string, unknown>; action_iri: string; action_label: string | null;
+  mode: string; approver_role_id: string | null; notify_role_ids: string[]; suppress_minutes: number; enabled: boolean; executions: number;
+}
+export interface OntoAction { action_iri: string; label_ko: string }
+export interface MyAccessRequest {
+  request_id: string; dataset_id: string; dataset_title: string | null; purpose: string; requested_actions: string[]; period_from: string; period_to: string;
+  status: string; approver_id: string | null; decided_at: string | null; decision_note: string | null; created_at: string;
+}
+export interface CatalogDataset { dataset_id: string; title_ko: string; zone_id: string; sensitivity: string }

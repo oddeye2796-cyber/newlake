@@ -71,6 +71,14 @@ https://newlake.vercel.app 은 화면과 API 를 Vercel 에 올리고 Neon(무�
 
 쓰기는 모두 `gov.register_source`·`gov.ingest_records`·`gov.standardize_batch`(SECURITY DEFINER)로만 하고, 함수가 역할과 회사·사업장·공장 범위를 다시 확인한다. 공개 시연(Vercel)에서는 사내망·로컬 주소로 DB 연결을 못 하게 막는다(`LAKE_INGEST_ALLOW_PRIVATE_HOSTS`).
 
+## 권한·운영 관리 (CRUD)
+
+권한·감사(`/admin/access`)는 탭으로 나뉜다. 접근 요청(승인·반려), 사용자, 역할과 범위, 접근 정책, 조치 정책, 감사 기록.
+사용자·역할 배정·정책의 쓰기는 `admin` 만 되고(`gov.require_admin()`), 다른 관리 역할은 읽기만 한다. 감사 기록은 불변이다.
+누구나 요청함 → **데이터 접근 요청** 에서 데이터셋 접근을 요청하고 취소할 수 있다(`gov.create_access_request`, `gov.cancel_access_request`).
+데이터 넣기 → 적재 기록에서 잘못 올린 배치를 원천 존에서 지울 수 있다(`gov.delete_batch`, 표준 존에 들어간 행은 남는다).
+전체 화면의 조회·CRUD 필요 여부는 `docs/crud-audit.md` 에 정리했다.
+
 ## 테스트
 
 ```bash

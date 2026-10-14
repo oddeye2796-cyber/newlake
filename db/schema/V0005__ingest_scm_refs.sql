@@ -1,5 +1,6 @@
 -- V0005: 데이터 넣기 보완
 --   · 원천 종류에 SCM 추가
+--   · 원천 지우기 (gov.delete_source)
 --   · 표준화할 때 품목·공급사처럼 참조 마스터에 없는 코드를 키만으로 먼저 등록하는 선택지 (p_create_refs)
 
 CREATE OR REPLACE FUNCTION gov.register_source(
@@ -245,3 +246,50 @@ END $$;
 
 REVOKE ALL ON FUNCTION gov.standardize_batch(uuid, text, jsonb, text, text, boolean) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION gov.standardize_batch(uuid, text, jsonb, text, text, boolean) TO lake_app;
+
+-- 원천 지우기. 원천 존 데이터(배치·적재 행·데이터셋·매핑·계보)가 있으면 p_purge 일 때만 함께 지운다.
+-- 표준 존(ksx)에 이미 들어간 행은 남긴다 (lake_source_system 으로 출처가 남는다).
+CREATE OR REPLACE FUNCTION gov.delete_source(p_source_system_id text, p_purge boolean DEFAULT false)
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog, gov AS $$
+DECLARE
+  v_ent  text := gov.require_ingest_role();
+  v_ds   text[];
+  v_b    uuid[];
+  v_runs uuid[];
+  v_maps text[];
+  n_rec  bigint := 0;
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM catalog.source_system WHERE source_system_id = p_source_system_id AND enterprise_id = v_ent) THEN
+    RAISE EXCEPTION '원천 % 가 없거나 다른 회사 것입니다', p_source_system_id;
+  END IF;
+  v_ds := ARRAY(SELECT dataset_id::text FROM catalog.dataset WHERE source_system_id = p_source_system_id);
+  v_b  := ARRAY(SELECT batch_id FROM raw.ingest_batch WHERE source_system_id = p_source_system_id OR dataset_id::text = ANY (v_ds));
+  IF (cardinality(v_ds) > 0 OR cardinality(v_b) > 0) AND NOT p_purge THEN
+    RAISE EXCEPTION '원천 % 에 데이터셋 %개·적재 %건이 있습니다. 원천 존 데이터까지 함께 지우려면 함께 지우기를 고르세요',
+      p_source_system_id, cardinality(v_ds), cardinality(v_b);
+  END IF;
+  BEGIN
+    v_maps := ARRAY(SELECT mapping_id::text FROM catalog.mapping WHERE source_dataset_id::text = ANY (v_ds));
+    v_runs := ARRAY(SELECT job_run_id FROM raw.ingest_batch WHERE batch_id = ANY (v_b) AND job_run_id IS NOT NULL
+                    UNION SELECT std_job_run_id FROM raw.ingest_batch WHERE batch_id = ANY (v_b) AND std_job_run_id IS NOT NULL
+                    UNION SELECT run_id FROM catalog.job_run WHERE mapping_id::text = ANY (v_maps));
+    DELETE FROM raw.landing_file WHERE batch_id = ANY (v_b);
+    DELETE FROM raw.landing_record WHERE batch_id = ANY (v_b);
+    GET DIAGNOSTICS n_rec = ROW_COUNT;
+    DELETE FROM raw.ingest_batch WHERE batch_id = ANY (v_b);
+    DELETE FROM catalog.lineage_edge WHERE from_dataset_id::text = ANY (v_ds) OR to_dataset_id::text = ANY (v_ds);
+    DELETE FROM catalog.job_run WHERE run_id = ANY (v_runs);
+    DELETE FROM catalog.mapping WHERE mapping_id::text = ANY (v_maps);
+    DELETE FROM catalog.dataset WHERE dataset_id::text = ANY (v_ds);
+    DELETE FROM catalog.source_system WHERE source_system_id = p_source_system_id;
+  EXCEPTION WHEN foreign_key_violation THEN
+    RAISE EXCEPTION '원천 % 의 데이터가 품질 규칙·권한 정책·작업 기록 등에서 쓰이고 있어 지울 수 없습니다', p_source_system_id;
+  END;
+  INSERT INTO gov.audit_log (channel, action, object_ref, row_count, result)
+  VALUES ('UI', 'delete_source', 'catalog.source_system:' || p_source_system_id, n_rec, 'OK');
+  RETURN jsonb_build_object('source_system_id', p_source_system_id, 'datasets', cardinality(v_ds),
+                            'batches', cardinality(v_b), 'records', n_rec);
+END $$;
+
+REVOKE ALL ON FUNCTION gov.delete_source(text, boolean) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION gov.delete_source(text, boolean) TO lake_app;
