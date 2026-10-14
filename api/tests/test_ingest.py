@@ -224,3 +224,40 @@ def test_upload_sniffs_real_format_not_extension(client):
     r = client.post("/api/admin/upload", headers=ADMIN, data={"source_system_id": sid},
                     files={"file": ("junk.xlsx", b"\x00\x01\x02 not a spreadsheet", "application/octet-stream")})
     assert r.status_code == 400 and "엑셀 파일이 아닌" in r.json()["detail"]
+
+
+def test_upload_repairs_broken_xlsx_styles(client):
+    """MES 가 만든 .xlsx 의 styles.xml 이 규격에 어긋나도(openpyxl: could not read stylesheet) 보정해서 읽는다. 날짜 서식은 지킨다."""
+    import re
+    import zipfile
+    from datetime import date
+
+    from openpyxl import Workbook
+
+    sid = _source(client)
+    wb = Workbook()
+    ws = wb.active
+    ws.append(["LOT", "수량", "일자"])
+    ws.append(["R001", 4, date(2026, 10, 1)])
+    buf = io.BytesIO()
+    wb.save(buf)
+    src = zipfile.ZipFile(io.BytesIO(buf.getvalue()))
+
+    def rebuild(mod):
+        out = io.BytesIO()
+        with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+            for n in src.namelist():
+                d = src.read(n)
+                z.writestr(n, mod(d) if n == "xl/styles.xml" else d)
+        return out.getvalue()
+
+    bad_color = rebuild(lambda d: re.sub(rb'<fonts count="1">', rb'<fonts count="2"><font><color rgb="ZZ"/></font>', d))
+    bad_xml = rebuild(lambda d: d.replace(b"</styleSheet>", b""))
+    for name, data in (("bad_color.xlsx", bad_color), ("bad_xml.xlsx", bad_xml)):
+        r = client.post("/api/admin/upload", headers=ADMIN, data={"source_system_id": sid},
+                        files={"file": (name, data, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")})
+        assert r.status_code == 200, (name, r.text)
+        body = r.json()
+        assert body["rows"] == 1 and body["columns"] == ["LOT", "수량", "일자"]
+        pv = client.get(f"/api/admin/batches/{body['batch_id']}", headers=ADMIN).json()
+        assert pv["rows"][0]["일자"].startswith("2026-10-01"), (name, pv["rows"][0])
