@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, HashRouter } from 'react-router-dom';
 import App from './App';
 import { AuthProvider } from './auth';
+import { LangProvider } from './i18n/react';
 import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
 import './styles.css';
 
@@ -12,9 +13,11 @@ const Router = import.meta.env.VITE_DEMO === '1' ? HashRouter : BrowserRouter;
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Router>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+      <LangProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </LangProvider>
     </Router>
   </StrictMode>,
 );

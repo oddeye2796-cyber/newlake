@@ -2,13 +2,14 @@ import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 
 import { runQuery, type QueryResult } from '../../api';
 import { PRESETS } from '../../askPresets';
 import { DataTable } from '../../components/ui';
+import { locale, t } from '../../i18n';
 import { Head } from './common';
 
 const SAMPLES = PRESETS.filter((p) => p.sql).map((p) => ({ id: p.id, title: p.question, sql: p.sql as string }));
-const EXTRA = [{ id: 'kpi-wip', title: '진행 중 로트 현황 (mart 뷰)', sql: 'SELECT * FROM mart.v_kpi_wip' }];
+const extra = () => [{ id: 'kpi-wip', title: t('진행 중 로트 현황 (mart 뷰)'), sql: 'SELECT * FROM mart.v_kpi_wip' }];
 
 export default function Workbench() {
-  const all = [...SAMPLES, ...EXTRA];
+  const all = [...SAMPLES, ...extra()];
   const [cur, setCur] = useState(all[0].id);
   const [sql, setSql] = useState(all[0].sql);
   const [res, setRes] = useState<QueryResult | null>(null);
@@ -16,7 +17,7 @@ export default function Workbench() {
   const [busy, setBusy] = useState(false);
   const [ms, setMs] = useState<number | null>(null);
   const seq = useRef(0);
-  useEffect(() => { document.title = '질의 작업대 · 뉴레이크'; }, []);
+  useEffect(() => { document.title = `${t('질의 작업대')} · ${t('뉴레이크')}`; }, []);
 
   const run = (e?: FormEvent) => {
     e?.preventDefault();
@@ -33,24 +34,24 @@ export default function Workbench() {
 
   return (
     <>
-      <Head title="질의 작업대" lede="표준 존(ksx.*)과 활용 존(mart.*) 뷰에 SQL을 직접 던져 봐요. SELECT 한 문장만 실행되고, 내 권한 밖 데이터는 보이지 않아요." />
+      <Head title={t('질의 작업대')} lede={t('표준 존(ksx.*)과 활용 존(mart.*) 뷰에 SQL을 직접 던져 봐요. SELECT 한 문장만 실행되고, 내 권한 밖 데이터는 보이지 않아요.')} />
       <div className="qwrap">
-        <section className="panel"><h3 style={{ marginBottom: 8 }}>예시 질의</h3>
+        <section className="panel"><h3 style={{ marginBottom: 8 }}>{t('예시 질의')}</h3>
           <div className="saved">{all.map((s) => <button key={s.id} type="button" aria-current={s.id === cur} onClick={() => load(s.id)}><b>{s.title}</b><small>SQL</small></button>)}</div>
         </section>
         <section className="panel">
           <form onSubmit={run}>
-            <label className="small muted" htmlFor="wb-sql">SQL (실행: Ctrl+Enter). 연결: ksx.* / mart.* 뷰 · 역할별 행 단위 권한 적용</label>
+            <label className="small muted" htmlFor="wb-sql">{t('SQL (실행: Ctrl+Enter). 연결: ksx.* / mart.* 뷰 · 역할별 행 단위 권한 적용')}</label>
             <textarea id="wb-sql" className="sql" style={{ minHeight: 280, marginTop: 6 }} value={sql} onChange={(e) => setSql(e.target.value)} onKeyDown={key} spellCheck={false} />
             <div className="toolbar" style={{ marginTop: 8 }}>
-              <button className="btn primary" type="submit" disabled={busy}>{busy ? '실행 중…' : '실행'}</button>
-              <button className="btn" type="button" onClick={() => load(cur)}>예시로 되돌리기</button>
-              {res && <span className="small">{res.row_count.toLocaleString('ko-KR')}행{res.truncated ? ' (일부만 표시)' : ''}{ms != null ? ` · ${ms}ms` : ''}</span>}
+              <button className="btn primary" type="submit" disabled={busy}>{busy ? t('실행 중…') : t('실행')}</button>
+              <button className="btn" type="button" onClick={() => load(cur)}>{t('예시로 되돌리기')}</button>
+              {res && <span className="small">{t('{n}행', { n: res.row_count.toLocaleString(locale()) })}{res.truncated ? ` ${t('(일부만 표시)')}` : ''}{ms != null ? ` · ${ms}ms` : ''}</span>}
             </div>
           </form>
           {err && <div className="banner" role="alert">{err}</div>}
           {res && <div className="wb-res"><DataTable cols={res.rows[0] ? Object.keys(res.rows[0]) : []} rows={res.rows} /></div>}
-          <p className="note">SPARQL과 자연어 질의는 아직 연결되지 않았어요. 자연어는 질문하기 화면의 추천 질문을 써 주세요.</p>
+          <p className="note">{t('SPARQL과 자연어 질의는 아직 연결되지 않았어요. 자연어는 질문하기 화면의 추천 질문을 써 주세요.')}</p>
         </section>
       </div>
     </>

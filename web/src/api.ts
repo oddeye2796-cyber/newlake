@@ -1,4 +1,5 @@
 // 모든 요청에 X-User-Id 헤더를 붙인다. 사용자 선택은 auth.tsx 가 관리한다.
+import { t } from './i18n';
 let currentUser = 'u-jung';
 export const setApiUser = (id: string) => { currentUser = id; };
 
@@ -10,7 +11,7 @@ export class ApiError extends Error {
 function detailText(d: unknown, status: number): string {
   if (typeof d === 'string') return d;
   if (Array.isArray(d)) return d.map((x) => (x && typeof x === 'object' && 'msg' in x ? String((x as { msg: unknown }).msg) : String(x))).join(', ');
-  return `요청에 실패했어요 (${status})`;
+  return t('요청에 실패했어요 ({status})', { status });
 }
 
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
@@ -19,7 +20,7 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     res = await fetch(path, { ...init, headers: { 'X-User-Id': currentUser, ...(init?.body ? { 'Content-Type': 'application/json' } : {}) } });
   } catch {
-    throw new ApiError(0, 'API 서버에 연결할 수 없어요');
+    throw new ApiError(0, t('API 서버에 연결할 수 없어요'));
   }
   const text = await res.text();
   let body: unknown = null;

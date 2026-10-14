@@ -93,6 +93,12 @@ a:hover{text-decoration:underline;text-underline-offset:3px}
 .iconbtn{position:relative;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface);color:var(--ink2);cursor:pointer}
 .iconbtn:hover{color:var(--ink);border-color:var(--line2);text-decoration:none}
 .iconbtn svg{width:17px;height:17px}
+.langsw{display:inline-flex;align-items:center;gap:2px;height:38px;padding:0 4px 0 9px;border:1px solid var(--line);border-radius:11px;background:var(--surface);color:var(--ink2)}
+.langsw>svg{width:15px;height:15px;margin-right:4px;color:var(--muted)}
+.langsw button{min-width:30px;height:28px;padding:0 6px;border:0;border-radius:8px;background:transparent;color:var(--ink2);font:600 12px/1 inherit;cursor:pointer}
+.langsw button:hover{color:var(--ink)}
+.langsw button.on{background:var(--accent);color:#fff}
+.langsw button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .iconbtn .dot{position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:50%;background:#F43F5E;box-shadow:0 0 8px #F43F5E}
 
 main{padding:28px 32px 64px;min-width:0;width:100%;max-width:1480px;margin-inline:auto}
