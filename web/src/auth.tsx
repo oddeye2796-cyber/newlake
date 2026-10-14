@@ -6,6 +6,7 @@ export const USERS = [
   { id: 'u-jung', name: '정품질', label: '정품질 · 분석가 (승인 권한 없음)' },
   { id: 'u-kim', name: '김품질', label: '김품질 · 품질 책임자 (승인자)' },
   { id: 'u-lee', name: '이생산', label: '이생산 · 생산 관리자' },
+  { id: 'u-choi', name: '최관리', label: '최관리 · 데이터 관리자 (전사)' },
 ];
 const KEY = 'newlake.user';
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { get, type Kind, type SearchHit } from '../api';
 import { KIND_KO, LOT_STATE } from '../format';
 import { getRecent } from '../recent';
@@ -13,7 +13,10 @@ export default function Find() {
   const splat = useParams()['*'] || '';
   const [kind, id] = splat.split('/').map(decodeURIComponent);
   const nav = useNavigate();
-  const [fq, setFq] = useState('');
+  const [sp] = useSearchParams();
+  const [fq, setFq] = useState(() => sp.get('q') ?? '');
+  // 상단 검색창에서 넘어오면 검색어를 이어받는다
+  useEffect(() => { const v = sp.get('q'); if (v != null) setFq(v); }, [sp]);
   const [ft, setFt] = useState<Kind | null>(null);
   const [hits, setHits] = useState<SearchHit[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
