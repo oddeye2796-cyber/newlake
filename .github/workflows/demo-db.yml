@@ -18,18 +18,21 @@ jobs:
           SVC_PW: ${{ secrets.DEMO_SVC_PASSWORD }}
         run: |
           if [ -z "$URL" ]; then echo "::error::저장소 Secret NEON_DATABASE_URL 이 없습니다"; exit 1; fi
-          python3 - <<'PY' >> "$GITHUB_ENV"
+          # 가리기(::add-mask::)는 표준 출력으로, 환경변수는 $GITHUB_ENV 파일로 따로 쓴다.
+          # 둘을 같은 파일로 보내면 러너가 형식 오류를 내면서 값을 가리지 않은 채 로그에 찍는다.
+          python3 - <<'PY'
           import os, urllib.parse as u, hashlib
           p = u.urlparse(os.environ["URL"].replace("postgres://", "postgresql://", 1))
           q = dict(u.parse_qsl(p.query))
           pw = u.unquote(p.password or "")
           svc = os.environ.get("SVC_PW") or hashlib.sha256((pw + ":newlake-svc").encode()).hexdigest()[:32]
-          print(f"::add-mask::{pw}")
-          print(f"::add-mask::{svc}")
-          for k, v in {"PGHOST": p.hostname, "PGPORT": p.port or 5432, "PGUSER": u.unquote(p.username or ""),
-                       "PGPASSWORD": pw, "PGSSLMODE": q.get("sslmode", "require"),
-                       "DEMO_DB": p.path.lstrip("/") or "neondb", "SVC_PW": svc}.items():
-              print(f"{k}={v}")
+          print(f"::add-mask::{pw}", flush=True)
+          print(f"::add-mask::{svc}", flush=True)
+          with open(os.environ["GITHUB_ENV"], "a") as env:
+              for k, v in {"PGHOST": p.hostname, "PGPORT": p.port or 5432, "PGUSER": u.unquote(p.username or ""),
+                           "PGPASSWORD": pw, "PGSSLMODE": q.get("sslmode", "require"),
+                           "DEMO_DB": p.path.lstrip("/") or "neondb", "SVC_PW": svc}.items():
+                  env.write(f"{k}={v}\n")
           PY
       - name: 접속 확인
         run: psql -d "$DEMO_DB" -tAc "select version(); select extname, extversion from pg_extension order by 1"
