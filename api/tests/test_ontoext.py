@@ -149,7 +149,7 @@ def test_standardize_keeps_extras_proposes_and_checks_quality(client):
     q2 = {x["rule_id"]: x for x in res2["quality"]}
     assert q2["po-quantity-positive"]["status"] == "VIOLATED" and q2["po-quantity-positive"]["violation_count"] == 1
     viol = client.get("/api/admin/quality", headers=ADMIN).json()["violations"]
-    assert any(v["rule_id"] == "po-quantity-positive" and v["focus_node"] == f"SX{tag}B02" for v in viol)
+    assert any(v["rule_id"] == "po-quantity-positive" and v["focus_node"] == f"SX{tag}B02-1" for v in viol)
 
     # 되돌리기: 이 배치의 표준 행·확장 값이 빠지고 배치는 LANDED 로 돌아간다
     r = client.post(f"/api/admin/batches/{bid2}/rollback", headers=ADMIN)

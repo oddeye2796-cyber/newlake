@@ -21,6 +21,29 @@ const confPill = (c: number | undefined, manual: boolean) => (manual ? <Pill cls
   : c == null ? null : <Pill cls={c >= 0.85 ? 'p-ok' : c >= 0.7 ? 'p-warn' : 'p-crit'}>{`${Math.round(c * 100)}%`}</Pill>);
 const cell = (v: unknown) => (v == null ? '' : typeof v === 'object' ? JSON.stringify(v) : String(v));
 
+const SCOPE = new Set(['enterprise_id', 'site_id', 'plant_id']);
+const INT = new Set(['integer', 'smallint', 'bigint']);
+/** gov.auto_key_columns / automap.auto_keys 와 같은 규칙: 원천에 없어도 변환이 채우는 키 열 */
+function autoKeys(tgt: Target | undefined, used: Set<string>): Set<string> {
+  const out = new Set<string>();
+  if (!tgt) return out;
+  const types = new Map(tgt.columns.map((c) => [c.name, c.type.toLowerCase()]));
+  const pk = tgt.columns.filter((c) => c.pk).map((c) => c.name);
+  const keys = [pk, ...(tgt.unique_keys ?? [])];
+  for (const k of keys) for (const c of k) {
+    if (used.has(c) || out.has(c) || !c.endsWith('_sequence') || !INT.has(types.get(c) ?? '')) continue;
+    if (k.filter((x) => x !== c && !SCOPE.has(x)).every((x) => used.has(x))) out.add(c);
+  }
+  for (const c of pk) {
+    if (used.has(c) || SCOPE.has(c) || out.has(c)) continue;
+    for (const k of keys.slice(1)) {
+      const sib = k.filter((x) => !SCOPE.has(x));
+      if (sib.length && !sib.includes(c) && sib.every((x) => used.has(x) || out.has(x))) { out.add(c); break; }
+    }
+  }
+  return out;
+}
+
 function Steps({ at }: { at: number }) {
   const names = [t('원천 고르기'), t('원천 존에 올리기'), t('열 맞추기'), t('표준 존에 넣기')];
   return <ol className="stepper ing" aria-label={t('진행 단계')}>{names.map((n, i) => <li key={n} className={`st ${i < at ? 'done' : i === at ? 'cur' : ''}`}><i />{n}</li>)}</ol>;
@@ -64,7 +87,8 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
 
   const tgt = useMemo(() => targets.data?.find((x) => x.table === table), [targets.data, table]);
   const used = new Set(Object.values(map).filter(Boolean));
-  const missing = (tgt?.columns ?? []).filter((c) => (c.pk || c.required) && !used.has(c.name) && c.default == null && !['site_id', 'plant_id'].includes(c.name));
+  const auto = useMemo(() => autoKeys(tgt, used), [tgt, map]);   // 변환이 자동으로 채우는 키 (순번 번호 매김, '문서번호-순번' 식별자)
+  const missing = (tgt?.columns ?? []).filter((c) => (c.pk || c.required) && !used.has(c.name) && !auto.has(c.name) && !['site_id', 'plant_id'].includes(c.name));
   const hasScope = (tgt?.columns ?? []).some((c) => c.name === 'site_id' || c.name === 'plant_id');
   const unmapped = detail ? detail.columns.filter((c) => !map[c]) : [];
 
@@ -100,6 +124,7 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
       </div>
       {detail.suggested_table && <p className="note">{t('열 이름·한글 설명·값 모양을 보고 {table} 표에 {n}개 열을 자동으로 맞춰 두었어요. 신뢰도가 낮은 열만 확인하고 넣으면 돼요.', { table: `ksx.${detail.suggested_table}`, n: Object.keys(detail.suggested_map).length })}</p>}
       {detail.candidates.length > 1 && <p className="small muted">{t('다른 후보')}: {detail.candidates.filter((x) => x.table !== table).map((x, i) => <span key={x.table}>{i > 0 && ', '}<button type="button" className="linkbtn" onClick={() => setTable(x.table)}>{x.label_ko ?? x.table}</button> <span className="muted">({t('{n}개 열', { n: x.mapped })})</span></span>)}</p>}
+      {auto.size > 0 && <p className="small muted">{t('자동으로 채우는 키: {cols} — 순번은 같은 문서 안에서 1, 2, 3… 으로 매기고, 식별자는 "문서번호-순번" 으로 만들어요.', { cols: [...auto].join(', ') })}</p>}
       {detail.dup_keys > 0 && <p className="note">{t('앞 {n}행 가운데 {d}행이 같은 키를 가져서, 넣으면 뒤 행이 앞 행을 덮어써요. 키 열이 맞는지 확인해 주세요.', { n: n0(detail.sample_rows), d: n0(detail.dup_keys) })}</p>}
 
       {tgt && <div className="tablewrap" style={{ marginTop: 10 }}><table className="maptbl"><thead><tr><th>{t('원천 열')}</th><th>{t('예시 값')}</th><th>{t('표준 열')}</th><th className="r">{t('신뢰도')}</th></tr></thead><tbody>
@@ -107,7 +132,7 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
           <tr key={c}><td className="mono">{c}</td><td className="small muted">{cell(detail.rows[0]?.[c])}</td>
             <td><select className="input" value={map[c] ?? ''} aria-label={t('{col} 의 표준 열', { col: c })} onChange={(e) => { const v = e.target.value; setMap((m) => ({ ...m, [c]: v })); setTouched((x) => new Set(x).add(c)); }}>
               <option value="">{t('— 넣지 않음 —')}</option>
-              {tgt.columns.map((tc) => <option key={tc.name} value={tc.name} disabled={used.has(tc.name) && map[c] !== tc.name}>{tc.name}{tc.label_ko ? ` · ${tc.label_ko}` : ''}{tc.pk ? (tc.default != null ? ` (${t('키·비우면 {v}', { v: String(tc.default) })})` : ` (${t('키')})`) : tc.required ? ' *' : ''}</option>)}
+              {tgt.columns.map((tc) => <option key={tc.name} value={tc.name} disabled={used.has(tc.name) && map[c] !== tc.name}>{tc.name}{tc.label_ko ? ` · ${tc.label_ko}` : ''}{tc.pk ? (auto.has(tc.name) ? ` (${t('키·자동')})` : ` (${t('키')})`) : tc.required ? ' *' : ''}</option>)}
             </select></td>
             <td className="r">{map[c] ? confPill(detail.confidence[c], touched.has(c) || detail.suggested_map[c] !== map[c]) : null}</td></tr>))}
       </tbody></table></div>}

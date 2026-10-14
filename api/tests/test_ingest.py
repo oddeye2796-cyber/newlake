@@ -140,7 +140,7 @@ def test_auto_map_purchase_order_file(client):
     d = client.get(f"/api/admin/batches/{bid}", headers=ADMIN).json()
     assert d["suggested_table"] == "purchase_order"
     m, conf = d["suggested_map"], d["confidence"]
-    assert m["발주번호"] == "purchase_order_id" and conf["발주번호"] >= 0.9
+    assert m["발주번호"] == "purchase_document_number" and conf["발주번호"] >= 0.9   # 발주번호는 문서 번호, 식별자는 "문서번호-순번" 자동
     assert m["품번"] == "item_id" and m["품명"] == "item_name" and m["발주수량"] == "purchase_order_quantity"
     assert m["납품요청일"] == "expected_delivery_date"
     assert "업체명" not in m  # 이름을 식별자 열에 넣지 않는다
@@ -302,9 +302,9 @@ def test_real_mes_export_maps_to_production_performance(client):
     assert m["작업자"] == "personnel_id" and "production_performance_sequence" not in m.values()
     assert pv["rows"][0]["작업일"].startswith("2026-09-30")
 
+    assert pv["auto_keys"] == {"seq": {"production_performance_sequence": ["production_performance_id"]}, "derived": {}}
     tg = {t["table"]: t for t in client.get("/api/admin/targets", headers=ADMIN).json()}
-    seq = next(c for c in tg["production_performance"]["columns"] if c["name"] == "production_performance_sequence")
-    assert seq["pk"] and seq["default"] == 1
+    assert tg["purchase_order"]["unique_keys"] == [["enterprise_id", "purchase_document_number", "purchase_document_sequence"]]
 
     r = client.post(f"/api/admin/batches/{up['batch_id']}/standardize", headers=ADMIN,
                     json={"table": "production_performance", "column_map": m, "site_id": "HQ", "plant_id": "P1",
@@ -326,7 +326,9 @@ def test_real_scm_export_maps_to_purchase_order(client):
     pv = client.get(f"/api/admin/batches/{up['batch_id']}", headers=ADMIN).json()
     assert pv["suggested_table"] == "purchase_order", pv["candidates"]
     m = pv["suggested_map"]
-    assert m["발주번호"] == "purchase_order_id" and m["납품요청일"] == "expected_delivery_date"
+    assert m["발주번호"] == "purchase_document_number" and m["납품요청일"] == "expected_delivery_date"
+    assert pv["auto_keys"] == {"seq": {"purchase_document_sequence": ["purchase_document_number"]},
+                               "derived": {"purchase_order_id": ["purchase_document_number", "purchase_document_sequence"]}}
     assert m["발주수량"] == "purchase_order_quantity" and m["가입고수량"] == "purchase_goods_receipt_quantity"
     assert set(pv["columns"]) - set(m) == {"구분", "업체명", "두께", "폭", "미입고수량"}
     r = client.post(f"/api/admin/batches/{up['batch_id']}/standardize", headers=ADMIN,
@@ -334,3 +336,31 @@ def test_real_scm_export_maps_to_purchase_order(client):
                           "create_refs": True, "keep_extras": True})
     assert r.status_code == 200, r.text
     assert (r.json()["rows_out"], r.json()["rows_rejected"]) == (3, 0), r.json()["errors"]
+
+
+def test_po_lines_keep_every_line(client):
+    """발주 한 건에 품목 줄이 여럿인 라인 단위 파일: 줄이 겹쳐 사라지지 않는다.
+    발주번호 → 구매문서번호, 순번은 문서별 1,2,3…, 구매발주식별자는 "문서번호-순번"."""
+    sid = _source(client)
+    po = "PO" + uuid.uuid4().hex[:6].upper()
+    body = (f"발주번호,품번,발주수량,납품요청일,업체명\n{po},A-1,10,2026-10-01,(주)두원\n{po},A-2,20,2026-10-01,(주)두원\n"
+            f"{po},A-3,30,2026-10-02,(주)두원\n{po}X,A-1,5,2026-10-03,(주)대한\n").encode("utf-8")
+    r = client.post("/api/admin/upload", headers=ADMIN, data={"source_system_id": sid, "entity": "purchase_order"},
+                    files={"file": ("po_lines.csv", body, "text/csv")})
+    assert r.status_code == 200, r.text
+    bid = r.json()["batch_id"]
+    pv = client.get(f"/api/admin/batches/{bid}", headers=ADMIN).json()
+    assert pv["suggested_table"] == "purchase_order" and pv["suggested_map"]["발주번호"] == "purchase_document_number"
+    assert pv["dup_keys"] == 0 and "purchase_order_id" in pv["auto_keys"]["derived"]
+    r = client.post(f"/api/admin/batches/{bid}/standardize", headers=ADMIN,
+                    json={"table": "purchase_order", "column_map": pv["suggested_map"], "site_id": "HQ", "plant_id": "P1",
+                          "create_refs": True, "keep_extras": True, "auto_quality": False})
+    assert r.status_code == 200, r.text
+    assert (r.json()["rows_out"], r.json()["rows_rejected"]) == (4, 0), r.json()["errors"]
+    ea = client.get("/api/admin/extension-attributes?table=purchase_order&limit=200", headers=ADMIN).json()
+    keys = {x["record_key"] for x in ea["rows"] if x["attr_name"] == "업체명" and x["record_key"].startswith(po)}
+    assert keys == {f"{po}-1", f"{po}-2", f"{po}-3", f"{po}X-1"}, keys
+    # 같은 파일을 다시 넣어도 같은 식별자로 덮어쓴다 (줄이 늘지 않는다)
+    r = client.post(f"/api/admin/batches/{bid}/standardize", headers=ADMIN,
+                    json={"table": "purchase_order", "column_map": pv["suggested_map"], "site_id": "HQ", "plant_id": "P1", "keep_extras": False})
+    assert r.status_code == 200 and r.json()["rows_out"] == 4

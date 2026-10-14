@@ -101,10 +101,11 @@ export interface BatchRow {
   batch_id: string; source_system_id: string; dataset_id: string; received_at: string; record_count: number; byte_size: number | null;
   status: string; file_name: string | null; source_entity: string | null; std_rows_out: number | null; std_rows_rejected: number | null; std_table: string | null;
 }
-export interface TargetCol { name: string; label_ko: string | null; type: string; required: boolean; pk: boolean; default?: number | string | null }
-export interface Target { table: string; label_ko: string | null; class_name: string | null; columns: TargetCol[] }
+export interface TargetCol { name: string; label_ko: string | null; type: string; required: boolean; pk: boolean }
+export interface Target { table: string; label_ko: string | null; class_name: string | null; unique_keys?: string[][]; columns: TargetCol[] }
+export interface AutoKeys { seq: Record<string, string[]>; derived: Record<string, string[]> }
 export interface BatchDetail { batch: BatchRow; columns: string[]; rows: Record<string, unknown>[]; suggested_table: string | null; suggested_map: Record<string, string>;
-  confidence: Record<string, number>; profiles: Record<string, string>; sample_rows: number; dup_keys: number;
+  confidence: Record<string, number>; profiles: Record<string, string>; sample_rows: number; dup_keys: number; auto_keys?: AutoKeys;
   candidates: { table: string; label_ko: string | null; score: number; pk_ok: boolean; mapped: number }[] }
 export interface StdQuality { rule_id: string; label_ko: string; status: 'OK' | 'VIOLATED' | 'ERROR'; conformance_rate?: number | null; violation_count?: number; focus_count?: number; quality_run_id?: string; error?: string }
 export interface StdResult { run_id: string; mapping_id: string | null; target: string; std_dataset_id: string | null; rows_in: number; rows_out: number; rows_rejected: number; errors: { record_seq: number; error: string }[]; refs_created?: Record<string, number>;

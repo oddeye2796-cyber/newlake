@@ -15,7 +15,10 @@ SYNONYMS: list[tuple] = [
     ("자재번호", "품목식별자"), ("부품번호", "품목식별자"), ("제품코드", "품목식별자"), ("partno", "품목식별자"),
     ("품명", "품목명"), ("자재명", "품목명"), ("부품명", "품목명"), ("제품명", "품목명"),
     ("규격", "품목사양"), ("사양", "품목사양"),
+    # 발주번호는 문서 번호(구매문서번호)로 받는다: 한 발주에 품목 줄이 여럿이면 순번은 변환이 매기고 구매발주식별자는 "문서번호-순번" 이 된다
+    ("발주번호", "구매문서번호", 0.95), ("po번호", "구매문서번호", 0.95), ("발주no", "구매문서번호", 0.95),
     ("발주번호", "구매발주식별자"), ("po번호", "구매발주식별자"), ("발주no", "구매발주식별자"),
+    ("발주순번", "구매문서순번"), ("라인번호", "구매문서순번", 0.8), ("발주라인", "구매문서순번", 0.8),
     ("발주일자", "구매발주일"), ("발주일", "구매발주일"), ("발주수량", "구매발주수량"), ("발주량", "구매발주수량"),
     ("발주단가", "발주단가"), ("발주금액", "발주금액"), ("발주상태", "발주라인상태코드"), ("진행상태", "발주라인상태코드", 0.7),
     ("가입고수량", "구매입고수량", 0.75), ("입고수량", "입고처리수량"), ("입고량", "입고처리수량"),
@@ -204,17 +207,42 @@ def score(src: str, prof: dict, col: dict) -> float:
 MAP_MIN = 0.55
 
 
-def auto_default(col: dict):
-    """원천에 없어도 변환이 채워 주는 기본키 열의 값. 순번 기본키(…_sequence, 정수)는 1 (gov.standardize_batch 와 같은 규칙)."""
-    if col["pk"] and col["name"].endswith("_sequence") and col["type"].lower() in ("integer", "smallint", "bigint"):
-        return 1
-    return None
+SCOPE = ("enterprise_id", "site_id", "plant_id")
+_INT = ("integer", "smallint", "bigint")
 
 
-def pk_columns(table: dict) -> list[str]:
-    """원천이 꼭 대응시켜야 하는 기본키 열 (회사·사업장·공장과 자동으로 채워지는 순번은 뺀다)."""
-    return [c["name"] for c in table["columns"]
-            if c["pk"] and c["name"] not in ("site_id", "plant_id") and auto_default(c) is None]
+def auto_keys(table: dict, mapped: set[str]) -> dict[str, dict[str, list[str]]]:
+    """원천에 없어도 변환(gov.auto_key_columns)이 채워 주는 키 열. 같은 규칙을 파이썬에서 되풀이한다.
+    seq: 기본키·고유키에 든 정수 …_sequence 열 → 같은 키의 다른 열이 모두 대응돼 있으면 문서별 1,2,3… 번호.
+    derived: 대응 안 된 문자 기본키 열 → 다른 고유키의 열이 모두 채워지면 그 값들을 '-' 로 이은 식별자."""
+    types = {c["name"]: c["type"].lower() for c in table["columns"]}
+    pk = [c["name"] for c in table["columns"] if c["pk"]]
+    keys = [pk] + [list(k) for k in table.get("unique_keys") or []]
+    seq: dict[str, list[str]] = {}
+    for k in keys:
+        for c in k:
+            if c in mapped or c in seq or not c.endswith("_sequence") or types.get(c) not in _INT:
+                continue
+            sib = [x for x in k if x != c and x not in SCOPE]
+            if all(x in mapped for x in sib):
+                seq[c] = sib
+    derived: dict[str, list[str]] = {}
+    for c in pk:
+        if c in mapped or c in SCOPE or c in seq:
+            continue
+        for k in keys[1:]:
+            sib = [x for x in k if x not in SCOPE]
+            if sib and c not in sib and all(x in mapped or x in seq for x in sib):
+                derived[c] = sib
+                break
+    return {"seq": seq, "derived": derived}
+
+
+def missing_keys(table: dict, mapped: set[str]) -> list[str]:
+    """원천이 꼭 대응시켜야 하는데 아직 안 된 기본키 열 (회사·사업장·공장과 자동으로 채워지는 열은 뺀다)."""
+    auto = auto_keys(table, mapped)
+    filled = mapped | set(auto["seq"]) | set(auto["derived"])
+    return [c["name"] for c in table["columns"] if c["pk"] and c["name"] not in SCOPE and c["name"] not in filled]
 
 
 def map_table(cols: list[str], profs: dict[str, dict], table: dict) -> tuple[dict[str, str], dict[str, float]]:
@@ -247,9 +275,9 @@ def pick(cols: list[str], profs: dict[str, dict], entity: str | None, targets: d
         m, conf = map_table(cols, profs, t)
         if not m:
             continue
-        pk = pk_columns(t)
-        pk_ok = all(p in m.values() for p in pk)
-        sc = sum(conf.values()) + (1.0 if pk_ok else -1.5 * sum(p not in m.values() for p in pk))
+        missing = missing_keys(t, set(m.values()))
+        pk_ok = not missing
+        sc = sum(conf.values()) + (1.0 if pk_ok else -1.5 * len(missing))
         if ent and (norm(name) in ent or (t["label_ko"] and norm(t["label_ko"]) in ent)):
             sc += 1.5
         out.append({"table": name, "label_ko": t["label_ko"], "score": round(sc, 2), "pk_ok": pk_ok,
