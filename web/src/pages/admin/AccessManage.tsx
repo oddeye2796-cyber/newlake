@@ -87,6 +87,7 @@ export function RolesTab({ roles, assignments, reload }: { roles: AdminRole[]; a
   const scopes = useApi<Scopes>('/api/admin/scopes');
   const users = useApi<AdminUser[]>('/api/admin/users');
   const [f, setF] = useState({ user_id: '', role_id: 'viewer', site_id: '', plant_id: '', valid_until: '' });
+  const [createScope, setCreateScope] = useState(true);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const set = (k: keyof typeof f) => (e: { target: { value: string } }) => setF((x) => ({ ...x, [k]: e.target.value, ...(k === 'site_id' ? { plant_id: '' } : {}) }));
@@ -94,8 +95,8 @@ export function RolesTab({ roles, assignments, reload }: { roles: AdminRole[]; a
   const rows = assignments.filter((a) => a.role_id);
   const submit = (e: FormEvent) => {
     e.preventDefault(); setBusy(true); setErr(null);
-    post('/api/admin/roles/grant', { user_id: f.user_id, role_id: f.role_id, site_id: f.site_id || null, plant_id: f.plant_id || null, valid_until: f.valid_until || null })
-      .then(() => { toast(t('{user} 에게 {role} 역할을 줬어요.', { user: f.user_id, role: f.role_id })); reload(); })
+    post<{ ok: boolean; site_created?: boolean; plant_created?: boolean }>('/api/admin/roles/grant', { user_id: f.user_id.trim(), role_id: f.role_id, site_id: f.site_id.trim() || null, plant_id: f.plant_id.trim() || null, valid_until: f.valid_until || null, create_scope: createScope })
+      .then((r) => { toast(t('{user} 에게 {role} 역할을 줬어요.', { user: f.user_id.trim(), role: f.role_id }) + (r.site_created || r.plant_created ? ' ' + t('(사업장·공장을 새로 등록했어요)') : '')); reload(); scopes.reload(); })
       .catch((x: Error) => setErr(x.message)).finally(() => setBusy(false));
   };
   const edit = (a: RoleAssignment) => { setErr(null); setF({ user_id: a.user_id, role_id: a.role_id, site_id: a.site_id ?? '', plant_id: a.plant_id ?? '', valid_until: a.valid_until ?? '' }); };
@@ -119,18 +120,21 @@ export function RolesTab({ roles, assignments, reload }: { roles: AdminRole[]; a
       </section>
       <form className="panel" onSubmit={submit}><header><h2>{t('역할 주기')}</h2></header>
         <div className="formgrid">
-          <label className="fld"><span>{t('사용자')}</span><select className="input" required value={f.user_id} onChange={set('user_id')}>
-            <option value="">{t('사용자를 고르세요')}</option>{(users.data ?? []).map((u) => <option key={u.user_id} value={u.user_id}>{u.display_name} · {u.user_id}</option>)}</select></label>
+          <label className="fld"><span>{t('사용자')}</span><input className="input mono" required list="grant-users" placeholder={t('사용자 ID 입력 (목록에서 골라도 돼요)')} value={f.user_id} onChange={set('user_id')} />
+            <datalist id="grant-users">{(users.data ?? []).map((u) => <option key={u.user_id} value={u.user_id}>{u.display_name}</option>)}</datalist></label>
           <label className="fld"><span>{t('역할')}</span><select className="input" value={f.role_id} onChange={set('role_id')}>{roles.map((r) => <option key={r.role_id} value={r.role_id}>{r.label_ko} · {r.role_id}</option>)}</select></label>
-          <label className="fld"><span>{t('사업장 (비우면 전사)')}</span><select className="input" value={f.site_id} onChange={set('site_id')}>
-            <option value="">{t('전사')}</option>{(scopes.data?.sites ?? []).map((s) => <option key={s.site_id} value={s.site_id}>{s.site_id}{s.site_name ? ` · ${s.site_name}` : ''}</option>)}</select></label>
-          <label className="fld"><span>{t('공장 (비우면 사업장 전체)')}</span><select className="input" value={f.plant_id} disabled={!f.site_id} onChange={set('plant_id')}>
-            <option value="">{t('사업장 전체')}</option>{plants.map((p) => <option key={p.plant_id} value={p.plant_id}>{p.plant_id}{p.plant_name ? ` · ${p.plant_name}` : ''}</option>)}</select></label>
+          <label className="fld"><span>{t('사업장 (비우면 전사)')}</span><input className="input mono" list="grant-sites" maxLength={50} placeholder={t('전사')} value={f.site_id} onChange={set('site_id')} />
+            <datalist id="grant-sites">{(scopes.data?.sites ?? []).map((s) => <option key={s.site_id} value={s.site_id}>{s.site_name ?? ''}</option>)}</datalist></label>
+          <label className="fld"><span>{t('공장 (비우면 사업장 전체)')}</span><input className="input mono" list="grant-plants" maxLength={50} disabled={!f.site_id.trim()} placeholder={t('사업장 전체')} value={f.plant_id} onChange={set('plant_id')} />
+            <datalist id="grant-plants">{plants.map((p) => <option key={p.plant_id} value={p.plant_id}>{p.plant_name ?? ''}</option>)}</datalist></label>
           <label className="fld"><span>{t('만료일 (선택)')}</span><input className="input" type="date" value={f.valid_until} onChange={set('valid_until')} /></label>
         </div>
-        <p className="note">{t('같은 사용자·역할·범위가 이미 있으면 만료일만 바뀌어요. 범위는 행 단위 권한(RLS)에 바로 반영돼요.')}</p>
+        <label className="small" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 8 }}>
+          <input type="checkbox" checked={createScope} onChange={(e) => setCreateScope(e.target.checked)} />
+          {t('입력한 사업장·공장이 마스터에 없으면 새로 등록하기')}</label>
+        <p className="note">{t('사용자·사업장·공장은 직접 입력해요 (목록은 참고용). 같은 사용자·역할·범위가 이미 있으면 만료일만 바뀌어요. 범위는 행 단위 권한(RLS)에 바로 반영돼요.')}</p>
         {err && <div className="banner" role="alert">{err}</div>}
-        <div className="acts" style={{ marginTop: 12 }}><button className="btn primary" type="submit" disabled={busy || DEMO || !f.user_id}>{t('역할 주기')}</button></div>
+        <div className="acts" style={{ marginTop: 12 }}><button className="btn primary" type="submit" disabled={busy || DEMO || !f.user_id.trim()}>{t('역할 주기')}</button></div>
       </form>
     </div>
   );

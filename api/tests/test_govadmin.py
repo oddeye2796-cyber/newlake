@@ -27,6 +27,18 @@ def test_user_and_role_crud(client):
                     json={"user_id": uid, "role_id": "production_manager", "site_id": "HQ", "plant_id": "P1", "valid_until": "2030-12-31"})
     assert r.status_code == 200, r.text
     assert client.post("/api/admin/roles/grant", headers=ADMIN, json={"user_id": uid, "role_id": "analyst", "site_id": "NOPE"}).status_code == 409
+    # 직접 입력한 사업장·공장: create_scope 면 마스터에 새로 등록하고 역할을 준다 (회사마다 사업장 목록이 다르다)
+    tag = uid[-4:].upper()
+    r = client.post("/api/admin/roles/grant", headers=ADMIN,
+                    json={"user_id": uid, "role_id": "analyst", "site_id": f" S{tag} ", "plant_id": f"PL{tag}", "create_scope": True})
+    assert r.status_code == 200, r.text
+    assert (r.json()["site_created"], r.json()["plant_created"]) == (True, True)
+    sc = client.get("/api/admin/scopes", headers=ADMIN).json()
+    assert any(x["site_id"] == f"S{tag}" for x in sc["sites"]) and any(x["plant_id"] == f"PL{tag}" and x["site_id"] == f"S{tag}" for x in sc["plants"])
+    r = client.post("/api/admin/roles/grant", headers=ADMIN, json={"user_id": uid, "role_id": "analyst", "site_id": f"S{tag}", "plant_id": f"PL{tag}", "create_scope": True})
+    assert r.status_code == 200 and (r.json()["site_created"], r.json()["plant_created"]) == (False, False)
+    assert client.post("/api/admin/roles/revoke", headers=ADMIN,
+                       json={"user_id": uid, "role_id": "analyst", "site_id": f"S{tag}", "plant_id": f"PL{tag}"}).status_code == 200
     assert client.post("/api/admin/roles/grant", headers=ADMIN, json={"user_id": uid, "role_id": "nope"}).status_code == 409
     me = client.get("/api/me", headers=as_user(uid)).json()
     assert set(me["roles"]) == {"analyst", "production_manager"}
