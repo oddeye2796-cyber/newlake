@@ -5,3 +5,4 @@ psycopg-pool==3.3.3
 pydantic-settings==2.6.1
 python-multipart==0.0.20
 openpyxl==3.1.5
+xlrd==2.0.1

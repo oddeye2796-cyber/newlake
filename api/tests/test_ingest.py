@@ -185,3 +185,42 @@ def test_source_crud(client):
 
     # 표준 존에 쓰인 시드 원천은 지울 수 없다
     assert client.delete("/api/admin/sources/MES-A?purge=true", headers=ADMIN).status_code == 409
+
+
+def test_upload_sniffs_real_format_not_extension(client):
+    """MES·ERP 가 .xlsx 라는 이름으로 내보내는 옛 .xls·HTML 표·XML 스프레드시트도 내용으로 가려 읽는다."""
+    import xlwt
+
+    sid = _source(client)
+    html = ("<html><body><table><tr><th>LOT</th><th>수량</th></tr>"
+            "<tr><td>H001</td><td>10</td></tr><tr><td>H002</td><td>20</td></tr></table></body></html>").encode("cp949")
+    r = client.post("/api/admin/upload", headers=ADMIN, data={"source_system_id": sid},
+                    files={"file": ("export.xlsx", html, "application/vnd.ms-excel")})
+    assert r.status_code == 200, r.text
+    assert r.json()["rows"] == 2 and r.json()["columns"] == ["LOT", "수량"]
+
+    xml = ('<?xml version="1.0"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"'
+           ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="S1"><Table>'
+           '<Row><Cell><Data ss:Type="String">LOT</Data></Cell><Cell><Data ss:Type="String">수량</Data></Cell></Row>'
+           '<Row><Cell><Data ss:Type="String">X001</Data></Cell><Cell ss:Index="2"><Data ss:Type="Number">5</Data></Cell></Row>'
+           '</Table></Worksheet></Workbook>').encode("utf-8")
+    r = client.post("/api/admin/upload", headers=ADMIN, data={"source_system_id": sid},
+                    files={"file": ("export2.xlsx", xml, "application/vnd.ms-excel")})
+    assert r.status_code == 200, r.text
+    assert r.json()["rows"] == 1 and r.json()["columns"] == ["LOT", "수량"]
+
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet("S")
+    for j, h in enumerate(["LOT", "수량", "일자"]):
+        ws.write(0, j, h)
+    ws.write(1, 0, "B001"); ws.write(1, 1, 7); ws.write(1, 2, "2026-10-01")
+    buf = io.BytesIO()
+    wb.save(buf)
+    r = client.post("/api/admin/upload", headers=ADMIN, data={"source_system_id": sid},
+                    files={"file": ("old.xlsx", buf.getvalue(), "application/vnd.ms-excel")})
+    assert r.status_code == 200, r.text
+    assert r.json()["rows"] == 1 and r.json()["columns"] == ["LOT", "수량", "일자"]
+
+    r = client.post("/api/admin/upload", headers=ADMIN, data={"source_system_id": sid},
+                    files={"file": ("junk.xlsx", b"\x00\x01\x02 not a spreadsheet", "application/octet-stream")})
+    assert r.status_code == 400 and "엑셀 파일이 아닌" in r.json()["detail"]
