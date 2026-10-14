@@ -227,13 +227,59 @@ def _rows_to_records(rows: list[list[Any]]) -> list[dict]:
     return out
 
 
+_MIN_STYLES = (
+    '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">{numfmts}'
+    '<fonts count="1"><font><sz val="11"/><name val="Calibri"/></font></fonts>'
+    '<fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>'
+    '<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>'
+    '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+    '<cellXfs count="{n}">{xfs}</cellXfs>'
+    '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>'
+)
+
+
+def _repair_xlsx_styles(data: bytes) -> bytes:
+    """MES·ERP 가 만든 .xlsx 는 styles.xml 이 규격에 어긋나 openpyxl 이 거부하는 일이 있다.
+    글꼴·채우기·테두리는 버리고 숫자 서식(날짜 구분에 필요)만 남긴 최소 스타일로 바꿔 끼운다."""
+    import re
+    import zipfile
+    from xml.sax.saxutils import quoteattr
+
+    src = zipfile.ZipFile(io.BytesIO(data))
+    name = next((n for n in src.namelist() if n.lower() == "xl/styles.xml"), None)
+    numfmts, xfs = "", ['<xf numFmtId="0" fontId="0" fillId="0" borderId="0"/>']
+    if name:
+        raw = src.read(name).decode("utf-8", "replace")
+        fmts = re.findall(r'<numFmt\b[^>]*?numFmtId="(\d+)"[^>]*?formatCode="([^"]*)"', raw)
+        if fmts:
+            numfmts = f'<numFmts count="{len(fmts)}">' + "".join(
+                f'<numFmt numFmtId="{i}" formatCode={quoteattr(c.replace("&quot;", chr(34)))}/>' for i, c in fmts) + "</numFmts>"
+        m = re.search(r"<cellXfs\b[^>]*>(.*?)</cellXfs>", raw, re.S)
+        if m:
+            ids = [re.search(r'numFmtId="(\d+)"', x) for x in re.findall(r"<xf\b[^>]*?/?>", m.group(1))]
+            if ids:
+                xfs = [f'<xf numFmtId="{i.group(1) if i else 0}" fontId="0" fillId="0" borderId="0" applyNumberFormat="1"/>' for i in ids]
+    styles = _MIN_STYLES.format(numfmts=numfmts, n=len(xfs), xfs="".join(xfs)).encode()
+    out = io.BytesIO()
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        for n in src.namelist():
+            if n == name:
+                continue
+            z.writestr(n, src.read(n))
+        z.writestr(name or "xl/styles.xml", styles)
+    return out.getvalue()
+
+
 def _parse_xlsx(data: bytes, sheet: str | None) -> list[dict]:
     from openpyxl import load_workbook
 
     try:
         wb = load_workbook(io.BytesIO(data), read_only=True, data_only=True)
-    except Exception as e:  # noqa: BLE001 - 어떤 이유든 사용자에게 짧게 알린다
-        raise HTTPException(400, f"엑셀(.xlsx) 파일을 열지 못했습니다: {type(e).__name__}: {str(e)[:120]}")
+    except Exception as first:  # noqa: BLE001 - 스타일 문제면 보정해서 한 번 더, 아니면 사용자에게 짧게 알린다
+        try:
+            wb = load_workbook(io.BytesIO(_repair_xlsx_styles(data)), read_only=True, data_only=True)
+        except Exception:  # noqa: BLE001
+            raise HTTPException(400, f"엑셀(.xlsx) 파일을 열지 못했습니다: {type(first).__name__}: {str(first)[:120]}")
     ws = wb[sheet] if sheet and sheet in wb.sheetnames else wb.worksheets[0]
     return _rows_to_records([list(r) for r in ws.iter_rows(values_only=True)])
 
