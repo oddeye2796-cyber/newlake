@@ -311,6 +311,7 @@ const d: Dict = {
   "열 이름·한글 설명·값 모양을 보고 {table} 표에 {n}개 열을 자동으로 맞춰 두었어요. 신뢰도가 낮은 열만 확인하고 넣으면 돼요.": "Matched {n} columns to {table} automatically, using column names, Korean descriptions and value patterns. Just check the low-confidence ones and load.",
   "다른 후보": "Other candidates",
   "{n}개 열": "{n} columns",
+  "키 열({cols}) 값이 비어 있는 행이 {d}행 있어요 (예: #{s}). 합계·소계 줄처럼 키가 없는 행은 넣을 때 거부돼요.": "{d} rows have an empty key column ({cols}) (e.g. #{s}). Rows without a key, such as total or subtotal lines, are rejected on load.",
   "앞 {n}행 가운데 {d}행이 같은 키를 가져서, 넣으면 뒤 행이 앞 행을 덮어써요. 키 열이 맞는지 확인해 주세요.": "{d} of the first {n} rows share a key, so later rows will overwrite earlier ones. Check that the key column is right.",
   "신뢰도": "Confidence",
   "품목·공급사처럼 참조하는 마스터에 없는 코드는 키만으로 먼저 등록하기": "Register codes missing from referenced masters (items, vendors, …) first, with just their keys",

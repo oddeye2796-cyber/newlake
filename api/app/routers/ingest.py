@@ -8,6 +8,7 @@ import hashlib
 import io
 import ipaddress
 import json
+import re
 import socket
 from datetime import date, datetime, time
 from decimal import Decimal
@@ -489,6 +490,62 @@ def _dup_keys(rows: list[dict], m: dict[str, str], table: dict) -> int:
     return len(keys) - len(set(keys))
 
 
+def _key_source_columns(m: dict[str, str], table: dict) -> list[str]:
+    """키를 이루는 원천 열: 기본키에 대응된 열 + 자동 키(순번·식별자)가 기대는 열."""
+    inv = {v: k for k, v in m.items()}
+    auto = automap.auto_keys(table, set(m.values()))
+    need = {c["name"] for c in table["columns"] if c["pk"] and c["name"] not in automap.SCOPE}
+    for sib in list(auto["seq"].values()) + list(auto["derived"].values()):
+        need.update(sib)
+    return [inv[c] for c in need if c in inv]
+
+
+def _blank_keys(s: Scoped, batch_id: UUID, m: dict[str, str], table: dict) -> dict:
+    """배치 전체에서 키 열 값이 비어 있는 행 수 (현장 내보내기의 합계·소계 줄 등). 넣을 때 거부된다."""
+    cols = _key_source_columns(m, table)
+    if not cols:
+        return {"rows": 0, "columns": []}
+    r = s.conn.execute("SELECT * FROM gov.ingest_batch_blank_keys(%s, %s)", (batch_id, cols)).fetchone()
+    return {"rows": r["n"], "first": r["first_seq"], "last": r["last_seq"], "columns": cols}
+
+
+_ERR_NULL = re.compile(r'null value in column "([^"]+)"')
+_ERR_FK = re.compile(r'violates foreign key constraint "([^"]+)"')
+_ERR_TYPE = re.compile(r'invalid input syntax for type ([a-z ]+?): "([^"]*)"')
+_ERR_LEN = re.compile(r'value too long for type character varying\((\d+)\)')
+_ERR_RANGE = re.compile(r'(date|time|timestamp)[a-z/ ]* field value out of range: "([^"]*)"')
+_TYPE_KO = {"numeric": "숫자", "integer": "정수", "bigint": "정수", "smallint": "정수", "double precision": "숫자",
+            "date": "날짜", "timestamp": "일시", "timestamp without time zone": "일시", "boolean": "참/거짓", "interval": "기간"}
+
+
+def _friendly_error(msg: str, table: dict, m: dict[str, str]) -> str:
+    """변환이 돌려준 PostgreSQL 오류문을 사람이 읽는 말로 바꾼다 (원문은 raw 로 함께 돌려준다)."""
+    inv = {v: k for k, v in m.items()}
+    pk = {c["name"] for c in table["columns"] if c["pk"]}
+    if x := _ERR_NULL.search(msg):
+        col = x.group(1)
+        src = f" (원천 열 '{inv[col]}')" if col in inv else ""
+        if not src:
+            # 자동 키(문서번호-순번 식별자 등)는 기대는 원천 열을 대신 보여 준다
+            auto = automap.auto_keys(table, set(m.values()))
+            sib = [inv[c] for c in (auto["derived"].get(col) or auto["seq"].get(col) or []) if c in inv]
+            if sib:
+                names = "', '".join(sib)
+                src = f" (원천 열 '{names}' 에서 만듦)"
+        if col in pk:
+            return f"키 열 {col}{src} 값이 비어 있어 뺐어요. 합계·소계 줄처럼 키가 없는 행이에요"
+        return f"꼭 채워야 하는 열 {col}{src} 값이 비어 있어요"
+    if x := _ERR_FK.search(msg):
+        return f"참조하는 마스터에 없는 값이에요 ({x.group(1)}). '참조 마스터 자동 등록' 을 켜거나 마스터를 먼저 넣어 주세요"
+    if x := _ERR_TYPE.search(msg):
+        return f"{_TYPE_KO.get(x.group(1), x.group(1))} 열에 맞지 않는 값 \"{x.group(2)}\" 이에요"
+    if x := _ERR_RANGE.search(msg):
+        return f"날짜·시간 범위를 벗어난 값 \"{x.group(2)}\" 이에요"
+    if x := _ERR_LEN.search(msg):
+        return f"값이 열 길이({x.group(1)}자)를 넘어요"
+    return msg
+
+
 @router.get("/batches/{batch_id}")
 def batch(batch_id: UUID, table: str | None = None, s: Scoped = Depends(admin_scoped)):
     """배치 미리보기와 자동 대응 제안. 표를 안 정하면 모든 표준 표를 견줘 가장 맞는 표를 고른다."""
@@ -517,7 +574,8 @@ def batch(batch_id: UUID, table: str | None = None, s: Scoped = Depends(admin_sc
             "candidates": [{k: x[k] for k in ("table", "label_ko", "score", "pk_ok")} | {"mapped": len(x["map"])}
                            for x in ranked[:3]],
             "sample_rows": len(sample), "dup_keys": _dup_keys(sample, m, tg[chosen]) if chosen else 0,
-            "auto_keys": automap.auto_keys(tg[chosen], set(m.values())) if chosen else {"seq": {}, "derived": {}}}
+            "auto_keys": automap.auto_keys(tg[chosen], set(m.values())) if chosen else {"seq": {}, "derived": {}},
+            "blank_keys": _blank_keys(s, batch_id, m, tg[chosen]) if chosen else {"rows": 0, "columns": []}}
 
 
 class StandardizeIn(BaseModel):
@@ -545,9 +603,12 @@ def standardize(batch_id: UUID, body: StandardizeIn, s: Scoped = Depends(admin_s
     out["extensions"] = None
     out["proposals"] = 0
     out["quality"] = []
+    tg = _targets(s).get(body.table)
+    if tg:
+        out["errors"] = [{"record_seq": e.get("record_seq"), "error": _friendly_error(e.get("error") or "", tg, cmap), "raw": e.get("error")}
+                         for e in (out.get("errors") or [])]
     if not out.get("rows_out"):
         return out
-    tg = _targets(s).get(body.table)
     class_iri = tg["class_iri"] if tg else None
 
     if body.keep_extras:
