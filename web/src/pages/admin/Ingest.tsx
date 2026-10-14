@@ -125,6 +125,7 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
       {detail.suggested_table && <p className="note">{t('열 이름·한글 설명·값 모양을 보고 {table} 표에 {n}개 열을 자동으로 맞춰 두었어요. 신뢰도가 낮은 열만 확인하고 넣으면 돼요.', { table: `ksx.${detail.suggested_table}`, n: Object.keys(detail.suggested_map).length })}</p>}
       {detail.candidates.length > 1 && <p className="small muted">{t('다른 후보')}: {detail.candidates.filter((x) => x.table !== table).map((x, i) => <span key={x.table}>{i > 0 && ', '}<button type="button" className="linkbtn" onClick={() => setTable(x.table)}>{x.label_ko ?? x.table}</button> <span className="muted">({t('{n}개 열', { n: x.mapped })})</span></span>)}</p>}
       {auto.size > 0 && <p className="small muted">{t('자동으로 채우는 키: {cols} — 순번은 같은 문서 안에서 1, 2, 3… 으로 매기고, 식별자는 "문서번호-순번" 으로 만들어요.', { cols: [...auto].join(', ') })}</p>}
+      {(detail.blank_keys?.rows ?? 0) > 0 && <p className="note">{t('키 열({cols}) 값이 비어 있는 행이 {d}행 있어요 (예: #{s}). 합계·소계 줄처럼 키가 없는 행은 넣을 때 거부돼요.', { cols: detail.blank_keys!.columns.join(', '), d: n0(detail.blank_keys!.rows), s: String(detail.blank_keys!.last ?? detail.blank_keys!.first ?? '') })}</p>}
       {detail.dup_keys > 0 && <p className="note">{t('앞 {n}행 가운데 {d}행이 같은 키를 가져서, 넣으면 뒤 행이 앞 행을 덮어써요. 키 열이 맞는지 확인해 주세요.', { n: n0(detail.sample_rows), d: n0(detail.dup_keys) })}</p>}
 
       {tgt && <div className="tablewrap" style={{ marginTop: 10 }}><table className="maptbl"><thead><tr><th>{t('원천 열')}</th><th>{t('예시 값')}</th><th>{t('표준 열')}</th><th className="r">{t('신뢰도')}</th></tr></thead><tbody>
@@ -158,7 +159,7 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
           <div><span>{t('거부된 행')}</span><b className="num" style={{ color: res.rows_rejected ? 'var(--crit)' : undefined }}>{n0(res.rows_rejected)}</b></div>
         </div>
         {res.refs_created && Object.keys(res.refs_created).length > 0 && <p className="small">{t('마스터에 새로 등록')}: {Object.entries(res.refs_created).map(([k, v]) => `${k} ${n0(v)}`).join(', ')}</p>}
-        {res.errors.length > 0 && <ul className="errs">{res.errors.map((e) => <li key={e.record_seq}><span className="mono">#{e.record_seq}</span> {e.error}</li>)}</ul>}
+        {res.errors.length > 0 && <ul className="errs">{res.errors.map((e) => <li key={e.record_seq} title={e.raw ?? undefined}><span className="mono">#{e.record_seq}</span> {e.error}</li>)}</ul>}
         {res.extensions && res.extensions.rows > 0 && <p className="small">{t('확장 속성으로 보관: {cols}개 열 · {rows}개 값', { cols: n0(res.extensions.columns), rows: n0(res.extensions.rows) })}{res.extensions.matched ? ` · ${t('기존 확장 속성에 이음 {n}', { n: n0(res.extensions.matched) })}` : ''}
           {(res.proposals ?? 0) > 0 && <> · <Link to="/admin/ontology/_proposals">{t('온톨로지 확장 제안 {n}건 보기', { n: n0(res.proposals ?? 0) })}</Link></>}</p>}
         {res.quality && res.quality.length > 0 && <div className="small" style={{ marginTop: 6 }}><b>{t('자동 품질 검증')}</b><ul className="evlist" style={{ marginTop: 4 }}>{res.quality.map((q) => (

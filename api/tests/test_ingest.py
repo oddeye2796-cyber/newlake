@@ -364,3 +364,28 @@ def test_po_lines_keep_every_line(client):
     r = client.post(f"/api/admin/batches/{bid}/standardize", headers=ADMIN,
                     json={"table": "purchase_order", "column_map": pv["suggested_map"], "site_id": "HQ", "plant_id": "P1", "keep_extras": False})
     assert r.status_code == 200 and r.json()["rows_out"] == 4
+
+
+def test_blank_key_rows_warned_and_rejected_readably(client):
+    """합계 줄처럼 키가 빈 행: 미리보기가 미리 세어 주고, 넣을 때 거부 사유가 사람 말로 나온다."""
+    sid = _source(client)
+    po = "PO" + uuid.uuid4().hex[:6].upper()
+    body = (f"발주번호,품번,발주수량,납품요청일\n{po},A-1,10,2026-10-01\n{po},A-2,20,2026-10-01\n,합계,30,\n").encode("utf-8")
+    r = client.post("/api/admin/upload", headers=ADMIN, data={"source_system_id": sid, "entity": "purchase_order"},
+                    files={"file": ("po_totals.csv", body, "text/csv")})
+    assert r.status_code == 200, r.text
+    bid = r.json()["batch_id"]
+    pv = client.get(f"/api/admin/batches/{bid}", headers=ADMIN).json()
+    assert pv["suggested_table"] == "purchase_order"
+    bk = pv["blank_keys"]
+    assert bk["rows"] == 1 and bk["first"] == 3 and "발주번호" in bk["columns"], bk
+    r = client.post(f"/api/admin/batches/{bid}/standardize", headers=ADMIN,
+                    json={"table": "purchase_order", "column_map": pv["suggested_map"], "site_id": "HQ", "plant_id": "P1",
+                          "create_refs": True, "keep_extras": False, "auto_quality": False})
+    assert r.status_code == 200, r.text
+    res = r.json()
+    assert (res["rows_out"], res["rows_rejected"]) == (2, 1), res["errors"]
+    err = res["errors"][0]
+    assert err["record_seq"] == 3
+    assert "키 열" in err["error"] and "비어" in err["error"] and "발주번호" in err["error"], err
+    assert err["raw"] and "null value" in err["raw"], err

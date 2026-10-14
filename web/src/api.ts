@@ -106,9 +106,10 @@ export interface Target { table: string; label_ko: string | null; class_name: st
 export interface AutoKeys { seq: Record<string, string[]>; derived: Record<string, string[]> }
 export interface BatchDetail { batch: BatchRow; columns: string[]; rows: Record<string, unknown>[]; suggested_table: string | null; suggested_map: Record<string, string>;
   confidence: Record<string, number>; profiles: Record<string, string>; sample_rows: number; dup_keys: number; auto_keys?: AutoKeys;
+  blank_keys?: { rows: number; first?: number | null; last?: number | null; columns: string[] };
   candidates: { table: string; label_ko: string | null; score: number; pk_ok: boolean; mapped: number }[] }
 export interface StdQuality { rule_id: string; label_ko: string; status: 'OK' | 'VIOLATED' | 'ERROR'; conformance_rate?: number | null; violation_count?: number; focus_count?: number; quality_run_id?: string; error?: string }
-export interface StdResult { run_id: string; mapping_id: string | null; target: string; std_dataset_id: string | null; rows_in: number; rows_out: number; rows_rejected: number; errors: { record_seq: number; error: string }[]; refs_created?: Record<string, number>;
+export interface StdResult { run_id: string; mapping_id: string | null; target: string; std_dataset_id: string | null; rows_in: number; rows_out: number; rows_rejected: number; errors: { record_seq: number; error: string; raw?: string | null }[]; refs_created?: Record<string, number>;
   extensions?: { rows: number; columns: number; matched?: number } | null; proposals?: number; quality?: StdQuality[] }
 export interface RollbackResult { batch_id: string; table: string; std_dataset_id: string | null; rows: number; extension_rows: number }
 export interface Loaded { batch_id: string; rows: number; columns: string[]; entity?: string }
