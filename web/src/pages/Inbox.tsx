@@ -1,14 +1,15 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TriangleAlert } from 'lucide-react';
-import { post, type InboxRow } from '../api';
+import { post, type InboxRow, type MyAccessRequest } from '../api';
+import { MyAccessRequests } from './admin/AccessManage';
 import { useAuth } from '../auth';
 import { Pill, State, Tier, TierLegend } from '../components/ui';
 import { execPill, fmtTs, iriId, iriKind, riskPill } from '../format';
 import { t } from '../i18n';
 import { useApi } from '../useApi';
 
-type Tab = 'approve' | 'mine' | 'all';
+type Tab = 'approve' | 'mine' | 'all' | 'access';
 
 // 실행 요청 상태 → 몇 번째 단계까지 왔는지 (IMPIX 사고 카드의 단계 표시)
 function stepOf(status: string): number { return status === 'PROPOSED' ? 3 : 4; }
@@ -78,6 +79,7 @@ function Card({ r, onDone }: { r: InboxRow; onDone: (msg: string) => void }) {
 export default function Inbox() {
   const { userId, refreshBadge, toast } = useAuth();
   const { data, error, loading, reload } = useApi<InboxRow[]>('/api/inbox?status=ALL');
+  const access = useApi<MyAccessRequest[]>('/api/access-requests');
   const [tab, setTab] = useState<Tab | null>(null);
   const rows = data || [];
   const approvable = useMemo(() => rows.filter((r) => r.status === 'PROPOSED' && r.can_decide), [rows]);
@@ -93,15 +95,19 @@ export default function Inbox() {
         <button type="button" role="tab" aria-selected={cur === 'approve'} onClick={() => setTab('approve')}>{t('승인할 일')}{approvable.length > 0 && <> <span className="badge-n">{approvable.length}</span></>}</button>
         <button type="button" role="tab" aria-selected={cur === 'mine'} onClick={() => setTab('mine')}>{t('내 요청')}</button>
         <button type="button" role="tab" aria-selected={cur === 'all'} onClick={() => setTab('all')}>{t('전체')}</button>
+        <button type="button" role="tab" aria-selected={cur === 'access'} onClick={() => setTab('access')}>{t('데이터 접근 요청')}{(access.data?.filter((r) => r.status === 'REQUESTED').length ?? 0) > 0 && <> <span className="badge-n">{access.data!.filter((r) => r.status === 'REQUESTED').length}</span></>}</button>
       </div>
-      <div className="chat">
+      {cur === 'access' ? <>
+        <State loading={access.loading && !access.data} error={access.error} />
+        {access.data && <MyAccessRequests requests={access.data} reload={() => access.reload()} />}
+      </> : <div className="chat">
         <div className="alerts">
           <State loading={loading} error={error} />
           {data && list.length === 0 && <div className="panel muted">{cur === 'approve' ? t('내가 승인할 요청이 없어요.') : cur === 'mine' ? t('내가 보낸 요청이 없어요.') : t('요청이 없어요.')}</div>}
           {list.map((r) => <Card key={r.execution_id} r={r} onDone={done} />)}
         </div>
         <TierLegend />
-      </div>
+      </div>}
     </>
   );
 }

@@ -168,3 +168,21 @@ export interface AuditRow { occurred_at: string; user_id: string; channel: strin
 
 export const ADMIN_ROLES = ['admin', 'data_steward', 'data_engineer', 'ontology_manager'];
 export const isAdminUser = (me: Me | null) => !!me && me.roles.some((r) => ADMIN_ROLES.includes(r));
+
+/* ---------- 권한·운영 CRUD ---------- */
+export interface AdminUser { user_id: string; display_name: string; email: string | null; personnel_id: string | null; status: string; created_at: string; roles: string[] }
+export interface Scopes { sites: { site_id: string; site_name: string | null }[]; plants: { plant_id: string; site_id: string; plant_name: string | null }[] }
+export interface AccessPolicy {
+  policy_id: string; role_id: string; role_label: string; target_class_iri: string | null; class_label: string | null; target_dataset_id: string | null; dataset_title: string | null;
+  max_sensitivity: string; actions: string[]; requires_approval: boolean;
+}
+export interface ActionPolicy {
+  policy_id: string; trigger_class_iri: string; trigger_label: string | null; condition: Record<string, unknown>; action_iri: string; action_label: string | null;
+  mode: string; approver_role_id: string | null; notify_role_ids: string[]; suppress_minutes: number; enabled: boolean; executions: number;
+}
+export interface OntoAction { action_iri: string; label_ko: string }
+export interface MyAccessRequest {
+  request_id: string; dataset_id: string; dataset_title: string | null; purpose: string; requested_actions: string[]; period_from: string; period_to: string;
+  status: string; approver_id: string | null; decided_at: string | null; decision_note: string | null; created_at: string;
+}
+export interface CatalogDataset { dataset_id: string; title_ko: string; zone_id: string; sensitivity: string }

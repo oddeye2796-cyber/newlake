@@ -296,7 +296,17 @@ function SourcesTab({ sources, reload }: { sources: SourceRow[]; reload: () => v
   );
 }
 
-function HistoryTab({ rows, open }: { rows: BatchRow[]; open: (id: string) => void }) {
+function HistoryTab({ rows, open, reload }: { rows: BatchRow[]; open: (id: string) => void; reload: () => void }) {
+  const { toast } = useAuth();
+  const [err, setErr] = useState<string | null>(null);
+  const remove = (b: BatchRow) => {
+    const msg = b.std_table
+      ? t('{name} 배치를 원천 존에서 지울까요? 표준 존({tbl})에 이미 넣은 행은 남아요.', { name: b.file_name ?? b.source_entity ?? b.batch_id, tbl: b.std_table })
+      : t('{name} 배치({n}행)를 원천 존에서 지울까요?', { name: b.file_name ?? b.source_entity ?? b.batch_id, n: n0(b.record_count) });
+    if (!window.confirm(msg)) return;
+    setErr(null);
+    del<{ records: number }>(`/api/admin/batches/${b.batch_id}`).then((r) => { toast(t('{n}행을 지웠어요.', { n: n0(r.records) })); reload(); }).catch((x: Error) => setErr(x.message));
+  };
   return (
     <section className="panel"><header><h2>{t('적재 기록')}</h2><span className="small muted">raw.ingest_batch</span></header>
       <div className="tablewrap"><table><thead><tr><th>{t('시각')}</th><th>{t('원천 · 데이터셋')}</th><th className="r">{t('행')}</th><th>{t('상태')}</th><th>{t('표준 존')}</th><th /></tr></thead><tbody>
@@ -308,10 +318,12 @@ function HistoryTab({ rows, open }: { rows: BatchRow[]; open: (id: string) => vo
             <td className="r num">{n0(b.record_count)}</td>
             <td><Pill cls={stc}>{st}</Pill></td>
             <td className="small">{b.std_table ? <><span className="mono">{b.std_table}</span><div className="muted">{t('넣음 {a} · 거부 {b}', { a: n0(b.std_rows_out), b: n0(b.std_rows_rejected) })}</div></> : '—'}</td>
-            <td className="r"><button className="btn" type="button" onClick={() => open(b.batch_id)}>{b.status === 'LANDED' ? t('표준 존에 넣기') : t('다시 넣기')}</button></td></tr>;
+            <td className="r" style={{ whiteSpace: 'nowrap' }}><button className="btn" type="button" onClick={() => open(b.batch_id)}>{b.status === 'LANDED' ? t('표준 존에 넣기') : t('다시 넣기')}</button>{' '}
+              <button className="btn icon" type="button" title={t('삭제')} aria-label={t('{id} 삭제', { id: b.file_name ?? b.batch_id })} disabled={DEMO} onClick={() => remove(b)}><Trash2 aria-hidden="true" /></button></td></tr>;
         })}
         {rows.length === 0 && <tr><td colSpan={6} className="muted">{t('아직 올린 데이터가 없어요.')}</td></tr>}
       </tbody></table></div>
+      {err && <div className="banner" role="alert">{err}</div>}
     </section>
   );
 }
@@ -345,7 +357,7 @@ export default function Ingest() {
         {tab === 'file' && <FileTab sources={sources.data} onLoaded={loaded} />}
         {tab === 'db' && <DbTab sources={sources.data} onLoaded={loaded} goSources={() => setTab('sources')} />}
         {tab === 'sources' && <SourcesTab sources={sources.data} reload={sources.reload} />}
-        {tab === 'history' && <HistoryTab rows={batches.data ?? []} open={open} />}
+        {tab === 'history' && <HistoryTab rows={batches.data ?? []} open={open} reload={() => { batches.reload(); sources.reload(); if (batch) setBatch(null); }} />}
       </>}
       {batch && <>
         {fresh && <p className="small" style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 6 }}><CheckCircle2 aria-hidden="true" style={{ width: 16, color: 'var(--ok)' }} />{t('원천 존에 올렸어요. 이제 표준 표의 열과 맞춰 주세요.')}</p>}
