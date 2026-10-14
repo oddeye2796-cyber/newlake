@@ -54,6 +54,7 @@ class GrantIn(BaseModel):
     site_id: str | None = Field(default=None, max_length=50)
     plant_id: str | None = Field(default=None, max_length=50)
     valid_until: date | None = None
+    create_scope: bool = False  # 직접 입력한 사업장·공장이 마스터에 없으면 새로 등록
 
 
 class RevokeIn(BaseModel):
@@ -65,9 +66,12 @@ class RevokeIn(BaseModel):
 
 @router.post("/admin/roles/grant")
 def grant_role(body: GrantIn, s: Scoped = Depends(only_admin)):
+    created = {"site_created": False, "plant_created": False}
+    if body.create_scope and (body.site_id or "").strip():
+        created = s.conn.execute("SELECT gov.ensure_scope(%s, %s) AS r", (body.site_id, body.plant_id or None)).fetchone()["r"]
     s.conn.execute("SELECT gov.grant_role(%s, %s, %s, %s, %s)",
-                   (body.user_id, body.role_id, body.site_id or None, body.plant_id or None, body.valid_until))
-    return {"ok": True}
+                   (body.user_id.strip(), body.role_id, (body.site_id or "").strip() or None, (body.plant_id or "").strip() or None, body.valid_until))
+    return {"ok": True, **created}
 
 
 @router.post("/admin/roles/revoke")

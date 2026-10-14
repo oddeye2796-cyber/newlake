@@ -132,7 +132,7 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
         {detail.columns.map((c) => (
           <tr key={c}><td className="mono">{c}</td><td className="small muted">{cell(detail.rows[0]?.[c])}</td>
             <td><select className="input" value={map[c] ?? ''} aria-label={t('{col} 의 표준 열', { col: c })} onChange={(e) => { const v = e.target.value; setMap((m) => ({ ...m, [c]: v })); setTouched((x) => new Set(x).add(c)); }}>
-              <option value="">{t('— 넣지 않음 —')}</option>
+              <option value="">{extras ? t('— 확장 속성으로 보관 —') : t('— 넣지 않음 —')}</option>
               {tgt.columns.map((tc) => <option key={tc.name} value={tc.name} disabled={used.has(tc.name) && map[c] !== tc.name}>{tc.name}{tc.label_ko ? ` · ${tc.label_ko}` : ''}{tc.pk ? (auto.has(tc.name) ? ` (${t('키·자동')})` : ` (${t('키')})`) : tc.required ? ' *' : ''}</option>)}
             </select></td>
             <td className="r">{map[c] ? confPill(detail.confidence[c], touched.has(c) || detail.suggested_map[c] !== map[c]) : null}</td></tr>))}
