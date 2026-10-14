@@ -298,3 +298,10 @@ button.reset{border:0;background:none;padding:0;color:var(--accent);cursor:point
 a.btn,a.chip{text-decoration:none;display:inline-block;color:var(--ink)}
 a.btn.primary{color:var(--accent-ink)}
 a.btn{display:inline-flex;align-items:center}
+
+/* 미리보기 모드 표시 */
+.demo-banner { position: fixed; right: 10px; bottom: 10px; z-index: 50; background: #1f2937; color: #fff; font-size: 12px; padding: 6px 10px; border-radius: 6px; opacity: .85; }
+
+/* 관리자 화면 */
+.wb-res .resbox{max-height:480px}
+.nav + .nav{margin-top:6px}
