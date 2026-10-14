@@ -15,6 +15,7 @@ class Decision(BaseModel):
 
 @router.get("")
 def inbox(status: str = "PROPOSED", s: Scoped = Depends(scoped)):
+    """status=ALL 이면 처리된 것까지 전부."""
     rows = s.conn.execute(
         "SELECT e.execution_id, e.policy_id, e.action_iri, a.label_ko AS action_label, e.target_iri, e.site_id, e.plant_id,"
         "       e.status, e.requested_by, e.approved_by, e.rationale, e.created_at,"
@@ -23,7 +24,7 @@ def inbox(status: str = "PROPOSED", s: Scoped = Depends(scoped)):
         "  JOIN onto.action a ON a.action_iri = e.action_iri"
         "  LEFT JOIN gov.action_policy p ON p.policy_id = e.policy_id"
         "  LEFT JOIN sem.risk_event r ON r.event_id = e.risk_event_id"
-        " WHERE e.status = %s ORDER BY e.created_at DESC LIMIT 100", (status,)).fetchall()
+        " WHERE %s = 'ALL' OR e.status = %s ORDER BY e.created_at DESC LIMIT 100", (status.upper(), status.upper())).fetchall()
     roles = set(s.user.roles)
     for r in rows:
         # 화면용 힌트. 최종 판정(역할 + 범위)은 gov.decide_action 이 한다.
