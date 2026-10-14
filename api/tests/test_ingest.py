@@ -156,3 +156,32 @@ def test_auto_map_purchase_order_file(client):
     res = client.post(f"/api/admin/batches/{bid}/standardize", headers=ADMIN, json=body | {"create_refs": True}).json()
     assert (res["rows_out"], res["rows_rejected"]) == (2, 0), res
     assert res["refs_created"] == {"ksx.item_master": 2}
+
+
+def test_source_crud(client):
+    sid = _source(client)
+    # 같은 ID 로 다시 등록하면 덮어쓰지 않고 거절
+    dup = client.post("/api/admin/sources", headers=ADMIN, json={"source_system_id": sid, "label": "x", "system_type": "MES", "db_kind": "FILE"})
+    assert dup.status_code == 409
+    r = client.put(f"/api/admin/sources/{sid}", headers=ADMIN,
+                   json={"source_system_id": sid, "label": "이름 바꿈", "system_type": "SCM", "db_kind": "FILE", "owner_dept": "구매팀"})
+    assert r.status_code == 200, r.text
+    row = {s["source_system_id"]: s for s in client.get("/api/admin/sources", headers=ADMIN).json()}[sid]
+    assert (row["label_ko"], row["system_type"], row["owner_dept"]) == ("이름 바꿈", "SCM", "구매팀")
+    assert client.put("/api/admin/sources/NOPE-404", headers=ADMIN,
+                      json={"source_system_id": "NOPE-404", "label": "x", "db_kind": "FILE"}).status_code == 404
+    assert client.delete(f"/api/admin/sources/{sid}", headers=as_user("u-jung")).status_code == 403
+
+    # 데이터가 있으면 함께 지우기를 골라야 지워진다
+    up = client.post("/api/admin/upload", headers=ADMIN, data={"source_system_id": sid},
+                     files={"file": ("x.csv", b"a,b\n1,2\n3,4\n", "text/csv")}).json()
+    r = client.delete(f"/api/admin/sources/{sid}", headers=ADMIN)
+    assert r.status_code == 409 and "함께 지우기" in r.json()["detail"]
+    r = client.delete(f"/api/admin/sources/{sid}?purge=true", headers=ADMIN)
+    assert r.status_code == 200, r.text
+    assert r.json() == {"source_system_id": sid, "datasets": 1, "batches": 1, "records": 2}
+    assert sid not in {s["source_system_id"] for s in client.get("/api/admin/sources", headers=ADMIN).json()}
+    assert client.get(f"/api/admin/batches/{up['batch_id']}", headers=ADMIN).status_code == 404
+
+    # 표준 존에 쓰인 시드 원천은 지울 수 없다
+    assert client.delete("/api/admin/sources/MES-A?purge=true", headers=ADMIN).status_code == 409

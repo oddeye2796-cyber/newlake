@@ -1,7 +1,7 @@
-import { CheckCircle2, Database, FileUp, Plug, RefreshCw } from 'lucide-react';
+import { CheckCircle2, Database, FileUp, Pencil, Plug, RefreshCw, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { get, post, postForm, type BatchDetail, type BatchRow, type Loaded, type SourceRow, type StdResult, type Target } from '../../api';
+import { del, get, post, postForm, put, type BatchDetail, type BatchRow, type Loaded, type SourceRow, type StdResult, type Target } from '../../api';
 import { useAuth } from '../../auth';
 import { Pill, State } from '../../components/ui';
 import { fmtTs, n0 } from '../../format';
@@ -219,39 +219,63 @@ function DbTab({ sources, onLoaded, goSources }: { sources: SourceRow[]; onLoade
 
 function SourcesTab({ sources, reload }: { sources: SourceRow[]; reload: () => void }) {
   const { toast } = useAuth();
-  const [f, setF] = useState({ source_system_id: '', label: '', system_type: 'MES', db_kind: 'POSTGRESQL', host: '', port: '5432', database: '', username: '', owner_dept: '' });
+  const blank = { source_system_id: '', label: '', system_type: 'MES', db_kind: 'POSTGRESQL', host: '', port: '5432', database: '', username: '', owner_dept: '' };
+  const [f, setF] = useState(blank);
+  const [editing, setEditing] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const isDb = f.db_kind !== 'FILE';
   const set = (k: keyof typeof f) => (e: { target: { value: string } }) => setF((x) => ({ ...x, [k]: e.target.value }));
+  const edit = (s: SourceRow) => {
+    setEditing(s.source_system_id); setErr(null);
+    setF({ source_system_id: s.source_system_id, label: s.label_ko, system_type: s.system_type, db_kind: s.db_kind ?? 'FILE',
+      host: s.host ?? '', port: s.port ? String(s.port) : '5432', database: s.database_name ?? '', username: s.username ?? '', owner_dept: s.owner_dept ?? '' });
+  };
+  const cancel = () => { setEditing(null); setF(blank); setErr(null); };
+  const remove = (s: SourceRow) => {
+    const purge = s.datasets > 0;
+    const msg = purge
+      ? t('원천 {id} 를 지울까요? 데이터셋 {n}개와 원천 존에 올린 데이터도 함께 지워져요. 표준 존에 이미 넣은 행은 남아요.', { id: s.source_system_id, n: s.datasets })
+      : t('원천 {id} 를 지울까요?', { id: s.source_system_id });
+    if (!window.confirm(msg)) return;
+    setErr(null);
+    del(`/api/admin/sources/${encodeURIComponent(s.source_system_id)}${purge ? '?purge=true' : ''}`)
+      .then(() => { toast(t('원천 {id} 를 지웠어요.', { id: s.source_system_id })); if (editing === s.source_system_id) cancel(); reload(); })
+      .catch((x: Error) => setErr(x.message));
+  };
   const submit = (e: FormEvent) => {
     e.preventDefault();
     setBusy(true); setErr(null);
-    post<{ source_system_id: string }>('/api/admin/sources', {
+    const save = editing ? put<{ source_system_id: string }> : post<{ source_system_id: string }>;
+    save(editing ? `/api/admin/sources/${encodeURIComponent(editing)}` : '/api/admin/sources', {
       source_system_id: f.source_system_id.trim(), label: f.label.trim(), system_type: f.system_type, db_kind: f.db_kind,
       owner_dept: f.owner_dept.trim() || null,
       ...(isDb ? { host: f.host.trim(), port: Number(f.port) || null, database: f.database.trim(), username: f.username.trim() || null } : {}),
-    }).then((r) => { toast(t('원천 {id} 를 등록했어요.', { id: r.source_system_id })); reload(); })
+    }).then((r) => { toast(editing ? t('원천 {id} 를 고쳤어요.', { id: r.source_system_id }) : t('원천 {id} 를 등록했어요.', { id: r.source_system_id })); cancel(); reload(); })
       .catch((x: Error) => setErr(x.message)).finally(() => setBusy(false));
   };
   return (
     <div className="grid g2" style={{ alignItems: 'start' }}>
       <section className="panel"><header><h2>{t('등록된 원천')}</h2><span className="small muted">catalog.source_system</span></header>
-        <div className="tablewrap"><table><thead><tr><th>{t('원천')}</th><th>{t('연결')}</th><th className="r">{t('데이터셋')}</th></tr></thead><tbody>
+        <div className="tablewrap"><table><thead><tr><th>{t('원천')}</th><th>{t('연결')}</th><th className="r">{t('데이터셋')}</th><th /></tr></thead><tbody>
           {sources.map((s) => {
             const [st, stc] = connSt(s.db_kind && s.db_kind !== 'FILE' ? s.status : null);
             return <tr key={s.source_system_id}>
               <td>{s.label_ko}<div className="mono muted small">{s.source_system_id} · {s.system_type}</div></td>
               <td><Pill cls={stc}>{st}</Pill>{s.host && <div className="mono small muted" style={{ overflowWrap: 'anywhere' }}>{s.db_kind?.toLowerCase()}://{s.host}{s.port ? `:${s.port}` : ''}/{s.database_name}</div>}
                 {s.last_error && <div className="small" style={{ color: 'var(--crit)' }}>{s.last_error}</div>}</td>
-              <td className="r num">{s.datasets}{s.last_ingested_at && <div className="small muted">{fmtTs(s.last_ingested_at)}</div>}</td></tr>;
+              <td className="r num">{s.datasets}{s.last_ingested_at && <div className="small muted">{fmtTs(s.last_ingested_at)}</div>}</td>
+              <td className="r" style={{ whiteSpace: 'nowrap' }}>
+                <button className="btn icon" type="button" title={t('수정')} aria-label={t('{id} 수정', { id: s.source_system_id })} disabled={DEMO} onClick={() => edit(s)}><Pencil aria-hidden="true" /></button>
+                <button className="btn icon" type="button" title={t('삭제')} aria-label={t('{id} 삭제', { id: s.source_system_id })} disabled={DEMO} onClick={() => remove(s)}><Trash2 aria-hidden="true" /></button>
+              </td></tr>;
           })}
-          {sources.length === 0 && <tr><td colSpan={3} className="muted">{t('등록된 원천이 없어요.')}</td></tr>}
+          {sources.length === 0 && <tr><td colSpan={4} className="muted">{t('등록된 원천이 없어요.')}</td></tr>}
         </tbody></table></div>
       </section>
-      <form className="panel" onSubmit={submit}><header><h2>{t('새 원천 등록')}</h2></header>
+      <form className="panel" onSubmit={submit}><header><h2>{editing ? t('원천 수정') : t('새 원천 등록')}</h2>{editing && <span className="small muted mono">{editing}</span>}</header>
         <div className="formgrid">
-          <label className="fld"><span>{t('원천 ID')}</span><input className="input mono" required pattern="[A-Za-z0-9][A-Za-z0-9_\-]{1,49}" placeholder="MES-B" value={f.source_system_id} onChange={set('source_system_id')} /></label>
+          <label className="fld"><span>{t('원천 ID')}</span><input className="input mono" required readOnly={!!editing} pattern="[A-Za-z0-9][A-Za-z0-9_\-]{1,49}" placeholder="MES-B" value={f.source_system_id} onChange={set('source_system_id')} /></label>
           <label className="fld"><span>{t('이름')}</span><input className="input" required placeholder={t('예: 2공장 MES')} value={f.label} onChange={set('label')} /></label>
           <label className="fld"><span>{t('시스템 종류')}</span><select className="input" value={f.system_type} onChange={set('system_type')}>{SYSTEM_TYPES.map((x) => <option key={x}>{x}</option>)}</select></label>
           <label className="fld"><span>{t('연결 방식')}</span><select className="input" value={f.db_kind} onChange={set('db_kind')}>{DB_KINDS.map((x) => <option key={x} value={x}>{x === 'FILE' ? t('파일만 올림') : x}</option>)}</select></label>
@@ -265,7 +289,8 @@ function SourcesTab({ sources, reload }: { sources: SourceRow[]; reload: () => v
         </div>
         {isDb && f.db_kind !== 'POSTGRESQL' && <p className="note">{t('{kind} 은 등록만 돼요. 지금 직접 가져오기는 PostgreSQL 만 되고, 다른 DB 는 CSV·엑셀로 내보내 올려 주세요.', { kind: f.db_kind })}</p>}
         {err && <div className="banner" role="alert">{err}</div>}
-        <div className="acts" style={{ marginTop: 12 }}><button className="btn primary" type="submit" disabled={busy || DEMO}>{t('등록')}</button></div>
+        <div className="acts" style={{ marginTop: 12 }}><button className="btn primary" type="submit" disabled={busy || DEMO}>{editing ? t('저장') : t('등록')}</button>
+          {editing && <button className="btn" type="button" onClick={cancel}>{t('취소')}</button>}</div>
       </form>
     </div>
   );

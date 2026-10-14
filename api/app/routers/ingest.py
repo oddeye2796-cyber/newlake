@@ -57,8 +57,7 @@ class SourceIn(BaseModel):
     owner_dept: str | None = Field(default=None, max_length=100)
 
 
-@router.post("/sources")
-def register_source(body: SourceIn, s: Scoped = Depends(admin_scoped)):
+def _save_source(body: SourceIn, s: Scoped) -> dict:
     if body.system_type not in SYSTEM_TYPES or body.db_kind not in DB_KINDS:
         raise HTTPException(400, "원천 종류나 연결 방식이 올바르지 않습니다")
     if body.db_kind not in ("FILE", "REST", "SFTP") and not (body.host and body.database):
@@ -69,6 +68,31 @@ def register_source(body: SourceIn, s: Scoped = Depends(admin_scoped)):
          body.port or (5432 if body.db_kind == "POSTGRESQL" else None), body.database, body.username,
          body.owner_dept)).fetchone()["id"]
     return {"source_system_id": sid}
+
+
+def _exists(s: Scoped, sid: str) -> bool:
+    return s.conn.execute("SELECT 1 FROM catalog.source_system WHERE source_system_id = %s", (sid,)).fetchone() is not None
+
+
+@router.post("/sources")
+def register_source(body: SourceIn, s: Scoped = Depends(admin_scoped)):
+    if _exists(s, body.source_system_id):
+        raise HTTPException(409, f"원천 ID {body.source_system_id} 는 이미 있습니다. 바꾸려면 수정을 쓰세요")
+    return _save_source(body, s)
+
+
+@router.put("/sources/{source_id}")
+def update_source(source_id: str, body: SourceIn, s: Scoped = Depends(admin_scoped)):
+    if body.source_system_id != source_id:
+        raise HTTPException(400, "원천 ID 는 바꿀 수 없습니다")
+    if not _exists(s, source_id):
+        raise HTTPException(404, f"원천 {source_id} 가 없습니다")
+    return _save_source(body, s)
+
+
+@router.delete("/sources/{source_id}")
+def delete_source(source_id: str, purge: bool = False, s: Scoped = Depends(admin_scoped)):
+    return s.conn.execute("SELECT gov.delete_source(%s, %s) AS r", (source_id, purge)).fetchone()["r"]
 
 
 def _connection(s: Scoped, source_id: str) -> dict:

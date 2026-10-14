@@ -314,5 +314,17 @@ const d: Dict = {
   "품목·공급사처럼 참조하는 마스터에 없는 코드는 키만으로 먼저 등록하기": "Register codes missing from referenced masters (items, vendors, …) first, with just their keys",
   "마스터에 새로 등록": "Newly registered in masters",
   "최신 내용으로 다시 불러왔어요.": "Reloaded the latest data.",
+  // 원천 수정·삭제
+  "원천 {id} 를 지울까요? 데이터셋 {n}개와 원천 존에 올린 데이터도 함께 지워져요. 표준 존에 이미 넣은 행은 남아요.": "Delete source {id}? Its {n} datasets and the data uploaded to the raw zone will be deleted too. Rows already loaded into the standard zone stay.",
+  "원천 {id} 를 지울까요?": "Delete source {id}?",
+  "원천 {id} 를 지웠어요.": "Deleted source {id}.",
+  "원천 {id} 를 고쳤어요.": "Updated source {id}.",
+  "수정": "Edit",
+  "{id} 수정": "Edit {id}",
+  "삭제": "Delete",
+  "{id} 삭제": "Delete {id}",
+  "원천 수정": "Edit source",
+  "저장": "Save",
+  "취소": "Cancel",
 };
 export default d;

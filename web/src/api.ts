@@ -34,6 +34,8 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const get = <T,>(path: string) => call<T>(path);
 export const post = <T,>(path: string, data: unknown) => call<T>(path, { method: 'POST', body: JSON.stringify(data) });
+export const put = <T,>(path: string, data: unknown) => call<T>(path, { method: 'PUT', body: JSON.stringify(data) });
+export const del = <T,>(path: string) => call<T>(path, { method: 'DELETE' });
 
 /** 파일 올리기 (multipart). 시연 모드에서는 서버가 없어 거절된다. */
 export async function postForm<T>(path: string, form: FormData): Promise<T> {
