@@ -16,7 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 BASE = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8000"
 USERS = ["u-jung", "u-kim", "u-lee", "u-choi"]
-ADMIN_USERS = {"u-choi"}
+ADMIN_USERS = {"u-choi", "u-kim"}   # 관리자·스튜어드, 품질 엔지니어
 Q = urllib.parse.quote
 
 
@@ -36,7 +36,7 @@ GETS = ["/api/me", "/api/home", "/api/inbox", "/api/inbox?status=ALL", "/api/acc
 ADMIN_GETS = ["/api/admin/overview", "/api/admin/datasets", "/api/admin/ontology/classes", "/api/admin/lineage",
               "/api/admin/quality", "/api/admin/access", "/api/admin/audit", "/api/admin/audit?limit=100",
               "/api/admin/sources", "/api/admin/users", "/api/admin/scopes", "/api/admin/access-policies", "/api/admin/action-policies",
-              "/api/admin/ontology/actions"]
+              "/api/admin/ontology/actions", "/api/admin/people", "/api/admin/ontology/properties"]
 
 out = {"get": {}, "query": {}}
 for u in USERS:

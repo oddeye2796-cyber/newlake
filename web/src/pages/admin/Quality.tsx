@@ -1,16 +1,26 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import type { QualityRule, QualityViolation } from '../../api';
+import { Plus } from 'lucide-react';
+import type { AdminClassRow, AdminDatasetRow, Person, QualityRule, QualityViolation } from '../../api';
+import { useAuth } from '../../auth';
 import { Pill, State } from '../../components/ui';
 import { fmtTs } from '../../format';
 import { useApi } from '../../useApi';
 import { t } from '../../i18n';
 import { Head, lastName, num, violStatus } from './common';
+import { DEMO, RuleForm, RuleRowButtons, ViolationActions, dimName, hasRole } from './Steward';
 
 export default function Quality() {
-  const { data, error, loading } = useApi<{ rules: QualityRule[]; violations: QualityViolation[] }>('/api/admin/quality');
+  const { me, toast } = useAuth();
+  const { data, error, loading, reload } = useApi<{ rules: QualityRule[]; violations: QualityViolation[] }>('/api/admin/quality');
   const [rule, setRule] = useState('ALL');
   const [st, setSt] = useState('ALL');
+  const canWrite = hasRole(me, 'quality_engineer', 'data_steward');
+  const [form, setForm] = useState<QualityRule | null | 'new'>(null);
+  const datasets = useApi<AdminDatasetRow[]>(form ? '/api/admin/datasets' : null);
+  const classes = useApi<AdminClassRow[]>(form ? '/api/admin/ontology/classes' : null);
+  const people = useApi<Person[]>(canWrite ? '/api/admin/people' : null);
+  const done = (msg: string) => { toast(msg); setForm(null); reload(); };
   useEffect(() => { document.title = `${t('품질 검증')} · ${t('뉴레이크')}`; }, []);
   const rules = data?.rules ?? [];
   const dims = useMemo(() => {
@@ -23,8 +33,10 @@ export default function Quality() {
   const open = (data?.violations ?? []).filter((v) => v.status === 'OPEN').length;
   return (
     <>
-      <Head title={t('품질 검증')} lede={t('품질 규칙은 SHACL 셰이프로 정의하고, 레이크에 들어오는 배치마다 돌려요. 위반이 있는 배치는 시맨틱 존으로 올라가지 않아요.')} />
+      <Head title={t('품질 검증')} lede={t('품질 규칙은 SHACL 셰이프로 정의하고, 레이크에 들어오는 배치마다 돌려요. 위반이 있는 배치는 시맨틱 존으로 올라가지 않아요.')}
+        right={canWrite && <button className="btn primary" type="button" disabled={DEMO} onClick={() => setForm('new')}><Plus aria-hidden="true" /> {t('새 규칙')}</button>} />
       <State loading={loading} error={error} />
+      {data && form && <div style={{ marginBottom: 14 }}><RuleForm rule={form === 'new' ? null : form} datasets={datasets.data ?? []} classes={classes.data ?? []} onDone={() => done(t('규칙을 저장했어요.'))} onCancel={() => setForm(null)} /></div>}
       {data && <>
         <div className="grid g4">
           {dims.map(([n, v]) => (
@@ -34,33 +46,35 @@ export default function Quality() {
         </div>
         <div className="grid g2" style={{ marginTop: 14 }}>
           <section className="panel"><header><h2>{t('규칙')}</h2><span className="small muted">catalog.quality_rule · {t('{n}개', { n: rules.length })}</span></header>
-            <div className="tablewrap"><table><thead><tr><th>{t('규칙')}</th><th>{t('대상')}</th><th className="r">{t('적합률')}</th><th className="r">{t('위반')}</th></tr></thead><tbody>
+            <div className="tablewrap"><table><thead><tr><th>{t('규칙')}</th><th>{t('대상')}</th><th className="r">{t('적합률')}</th><th className="r">{t('위반')}</th>{canWrite && <th />}</tr></thead><tbody>
               {rules.map((r) => (
                 <tr key={r.rule_id} className={`click ${rule === r.rule_id ? 'sel' : ''}`} tabIndex={0} onClick={() => setRule(rule === r.rule_id ? 'ALL' : r.rule_id)} onKeyDown={(e) => { if (e.key === 'Enter') setRule(rule === r.rule_id ? 'ALL' : r.rule_id); }}>
-                  <td>{r.label_ko}<div className="mono muted small">{r.shape_iri ? `ksx:${lastName(r.shape_iri)}` : r.rule_id} · {r.dimension ?? '—'} · {r.severity}{r.enabled ? '' : ` · ${t('꺼짐')}`}</div></td>
+                  <td style={{ minWidth: 170 }}>{r.label_ko}<div className="mono muted small">{r.shape_iri ? `ksx:${lastName(r.shape_iri)}` : r.rule_id} · {dimName(r.dimension)} · {r.severity}{r.sql_check ? ' · SQL' : ''}{r.enabled ? '' : ` · ${t('꺼짐')}`}</div></td>
                   <td className="small">{r.class_label ?? r.target_dataset_id ?? '—'}{r.last_dataset_id && <div className="mono muted">{r.last_dataset_id}</div>}</td>
-                  <td className="r num">{r.conformance_rate == null ? '—' : `${r.conformance_rate}%`}<div className="small muted">{t('기준 {v}%', { v: r.threshold ?? '—' })}</div></td>
+                  <td className="r num">{r.conformance_rate == null ? '—' : `${Math.round(r.conformance_rate * 10) / 10}%`}<div className="small muted">{t('기준 {v}%', { v: r.threshold ?? '—' })}</div></td>
                   <td className="r">{r.violation_count == null ? '—' : <Pill cls={r.violation_count === 0 ? 'p-ok' : (r.conformance_rate ?? 100) < (r.threshold ?? 0) ? 'p-crit' : 'p-warn'}>{num(r.violation_count)}</Pill>}
                     <div className="small muted">{fmtTs(r.last_run_at)}</div></td>
+                  {canWrite && <RuleRowButtons r={r} onEdit={() => setForm(r)} onDone={done} />}
                 </tr>))}
-              {rules.length === 0 && <tr><td colSpan={4} className="muted">{t('등록된 규칙이 없어요.')}</td></tr>}
+              {rules.length === 0 && <tr><td colSpan={canWrite ? 5 : 4} className="muted">{t('등록된 규칙이 없어요.')}</td></tr>}
             </tbody></table></div>
             <p className="hint" style={{ marginTop: 8 }}>{t('규칙 행을 누르면 그 규칙의 위반만 모아 봐요.')}</p>
           </section>
           <section className="panel">
             <header><h2>{t('위반 상세')}</h2><Pill cls={open ? 'p-crit' : 'p-ok'}>{t('미처리 {n}건', { n: open })}</Pill></header>
             <div className="toolbar">
-              {['ALL', 'OPEN', 'ACK', 'RESOLVED'].map((s) => <button key={s} className="chip" type="button" aria-pressed={st === s} onClick={() => setSt(s)}>{s === 'ALL' ? t('전체') : violStatus(s)![0]}</button>)}
+              {['ALL', 'OPEN', 'ACK', 'FIXED', 'WAIVED'].map((s) => <button key={s} className="chip" type="button" aria-pressed={st === s} onClick={() => setSt(s)}>{s === 'ALL' ? t('전체') : violStatus(s)![0]}</button>)}
               {rule !== 'ALL' && <button className="chip" type="button" onClick={() => setRule('ALL')}>{t('규칙 필터 해제 ✕')}</button>}
             </div>
             <div className="alerts">
               {viol.map((v) => {
                 const [vs, vsc] = violStatus(v.status) || [v.status, 'p-line'];
                 return (
-                  <article key={v.violation_id} className="alert task" style={{ ['--sc' as string]: v.status === 'OPEN' ? 'var(--crit)' : v.status === 'ACK' ? 'var(--warn)' : 'var(--ok)' }}>
+                  <article key={v.violation_id} className="alert task" style={{ ['--sc' as string]: v.status === 'OPEN' ? 'var(--crit)' : v.status === 'ACK' ? 'var(--warn)' : v.status === 'WAIVED' ? 'var(--muted)' : 'var(--ok)' }}>
                     <span className="sev" />
                     <div><b>{lastName(v.focus_node)}{v.result_path ? ` · ${v.result_path}` : ''}</b><p>{v.message}</p>
-                      <div className="meta"><Pill cls={vsc}>{vs}</Pill><Pill>{v.severity}</Pill><Pill>{ruleName(v.rule_id)}</Pill><Pill>{fmtTs(v.executed_at)}</Pill>{v.assignee_user_id && <Pill>{t('담당 {id}', { id: v.assignee_user_id })}</Pill>}</div></div>
+                      <div className="meta"><Pill cls={vsc}>{vs}</Pill><Pill>{v.severity}</Pill><Pill>{ruleName(v.rule_id)}</Pill><Pill>{fmtTs(v.executed_at)}</Pill>{v.assignee_user_id && <Pill>{t('담당 {id}', { id: v.assignee_user_id })}</Pill>}</div>
+                      {canWrite && <div className="acts" style={{ justifyContent: 'flex-start', marginTop: 8 }}><ViolationActions v={v} people={people.data ?? []} onDone={reload} /></div>}</div>
                     <div className="acts">{v.dataset_id && <Link className="btn" to={`/admin/catalog/${encodeURIComponent(v.dataset_id)}`}>{t('데이터셋')}</Link>}</div>
                   </article>);
               })}
