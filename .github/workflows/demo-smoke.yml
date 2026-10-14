@@ -1,0 +1,18 @@
+# 시연 사이트에서 데이터 넣기 → 확장 제안 흐름을 실제로 돌려 본다 (tools/demo_smoke.py).
+# 시연 DB 에 발주 3행과 확장 제안이 쌓이므로 손으로만 실행한다.
+name: demo-smoke
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 시연 사이트 주소
+        default: https://newlake.vercel.app
+      user:
+        description: 요청 사용자(X-User-Id, 관리 역할 필요)
+        default: u-choi
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/demo_smoke.py "${{ inputs.base_url }}" "${{ inputs.user }}"
