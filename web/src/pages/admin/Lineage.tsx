@@ -4,7 +4,8 @@ import type { AdminDatasetDetail, AdminOverview, LineageEdge } from '../../api';
 import { Pill, State, Tier } from '../../components/ui';
 import { fmtTs, n0 } from '../../format';
 import { useApi } from '../../useApi';
-import { Head, RUN_STATUS, ZONES, ZONE_KO, ZoneChip, lastName, zoneColor } from './common';
+import { t } from '../../i18n';
+import { Head, ZONES, ZoneChip, lastName, runStatus, zoneColor, zoneName } from './common';
 
 interface Node { id: string; title: string; zone: string }
 const clip = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
@@ -32,7 +33,7 @@ export default function Lineage() {
   const [sp, setSp] = useSearchParams();
   const { data, error, loading } = useApi<{ edges: LineageEdge[] }>('/api/admin/lineage');
   const ov = useApi<AdminOverview>('/api/admin/overview');
-  useEffect(() => { document.title = '계보 · 뉴레이크'; }, []);
+  useEffect(() => { document.title = `${t('계보')} · ${t('뉴레이크')}`; }, []);
   const edges = useMemo(() => data?.edges ?? [], [data]);
   const nodes = useMemo(() => {
     const m = new Map<string, Node>();
@@ -57,13 +58,13 @@ export default function Lineage() {
 
   return (
     <>
-      <Head title="계보" lede="원천에서 활용까지 데이터가 어떤 작업과 매핑을 거쳐 왔는지 기록해요. 노드를 누르면 연결 경로와 작업 실행 정보를 봅니다." />
+      <Head title={t('계보')} lede={t('원천에서 활용까지 데이터가 어떤 작업과 매핑을 거쳐 왔는지 기록해요. 노드를 누르면 연결 경로와 작업 실행 정보를 봅니다.')} />
       <State loading={loading} error={error} />
-      {data && edges.length === 0 && <div className="panel muted">기록된 계보가 없어요.</div>}
+      {data && edges.length === 0 && <div className="panel muted">{t('기록된 계보가 없어요.')}</div>}
       {edges.length > 0 && <>
         <section className="panel lineage"><div style={{ overflowX: 'auto' }}>
-          <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="데이터 계보 그래프">
-            {ZONES.map((z) => <text key={z} className="lhead" x={colX[z]} y={22} textAnchor="middle" fill={zoneColor(z)}>{ZONE_KO[z]} 존</text>)}
+          <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={t('데이터 계보 그래프')}>
+            {ZONES.map((z) => <text key={z} className="lhead" x={colX[z]} y={22} textAnchor="middle" fill={zoneColor(z)}>{t('{zone} 존', { zone: zoneName(z) ?? z })}</text>)}
             {edges.map((e) => {
               const A = P.get(e.from_dataset_id)!, B = P.get(e.to_dataset_id)!, x1 = A.x + bw / 2, x2 = B.x - bw / 2, mx = (x1 + x2) / 2;
               const on = hi.has(e.from_dataset_id) && hi.has(e.to_dataset_id);
@@ -82,25 +83,25 @@ export default function Lineage() {
           <section className="panel">
             {selNode && <>
               <header><div><h2>{selNode.title}</h2><div className="mono muted">{selNode.id}</div></div><ZoneChip z={selNode.zone} /></header>
-              {pipes.length === 0 ? <p className="muted">원천 존 데이터셋이에요. 외부 시스템에서 들어오며 바뀌지 않아요.</p> : pipes.map((e) => {
+              {pipes.length === 0 ? <p className="muted">{t('원천 존 데이터셋이에요. 외부 시스템에서 들어오며 바뀌지 않아요.')}</p> : pipes.map((e) => {
                 const p = ov.data?.pipelines.find((x) => x.pipeline_id === e.pipeline_id);
-                const [st, stc] = RUN_STATUS[p?.last_status ?? ''] || [p?.last_status ?? '—', 'p-line'];
+                const [st, stc] = runStatus(p?.last_status ?? '') || [p?.last_status ?? '—', 'p-line'];
                 return (
                   <dl key={e.pipeline_id} className="kv" style={{ marginBottom: 10 }}>
-                    <dt>생성 작업</dt><dd>{e.pipeline_label ?? e.pipeline_id}</dd>
-                    <dt>입력</dt><dd>{producing.filter((x) => x.pipeline_id === e.pipeline_id).map((x) => x.from_title).join(', ')}</dd>
-                    {p && <><dt>엔진</dt><dd>{p.engine} · {p.schedule_cron ?? '수동'}</dd><dt>최근 실행</dt><dd><Pill cls={stc}>{st}</Pill> {fmtTs(p.last_ended_at ?? p.last_started_at)}</dd>
-                      <dt>처리량</dt><dd className="num">입력 {n0(p.rows_in)} · 출력 {n0(p.rows_out)} · 거부 {n0(p.rows_rejected)}</dd>
-                      {p.error_message && <><dt>오류</dt><dd style={{ color: 'var(--crit)' }}>{p.error_message}</dd></>}</>}
+                    <dt>{t('생성 작업')}</dt><dd>{e.pipeline_label ?? e.pipeline_id}</dd>
+                    <dt>{t('입력')}</dt><dd>{producing.filter((x) => x.pipeline_id === e.pipeline_id).map((x) => x.from_title).join(', ')}</dd>
+                    {p && <><dt>{t('엔진')}</dt><dd>{p.engine} · {p.schedule_cron ?? t('수동')}</dd><dt>{t('최근 실행')}</dt><dd><Pill cls={stc}>{st}</Pill> {fmtTs(p.last_ended_at ?? p.last_started_at)}</dd>
+                      <dt>{t('처리량')}</dt><dd className="num">{t('입력 {a} · 출력 {b} · 거부 {c}', { a: n0(p.rows_in), b: n0(p.rows_out), c: n0(p.rows_rejected) })}</dd>
+                      {p.error_message && <><dt>{t('오류')}</dt><dd style={{ color: 'var(--crit)' }}>{p.error_message}</dd></>}</>}
                   </dl>);
               })}
-              <Link className="btn" to={`/admin/catalog/${encodeURIComponent(selNode.id)}`}>카탈로그에서 열기</Link>
+              <Link className="btn" to={`/admin/catalog/${encodeURIComponent(selNode.id)}`}>{t('카탈로그에서 열기')}</Link>
             </>}
           </section>
           <section className="panel">
-            <header><h2>필드 단위 계보 예시</h2><span className="small muted">catalog.lineage_edge.field_map</span></header>
-            {withMap.length === 0 ? <p className="muted small">필드 단위 매핑이 기록된 계보가 없어요.</p> : (
-              <div className="tablewrap"><table><thead><tr><th>원천 필드</th><th>표준 컬럼</th><th>온톨로지 속성</th><th>등급</th></tr></thead><tbody>
+            <header><h2>{t('필드 단위 계보 예시')}</h2><span className="small muted">catalog.lineage_edge.field_map</span></header>
+            {withMap.length === 0 ? <p className="muted small">{t('필드 단위 매핑이 기록된 계보가 없어요.')}</p> : (
+              <div className="tablewrap"><table><thead><tr><th>{t('원천 필드')}</th><th>{t('표준 컬럼')}</th><th>{t('온톨로지 속성')}</th><th>{t('등급')}</th></tr></thead><tbody>
                 {withMap.map((e) => <FieldRows key={e.edge_id} e={e} />)}
               </tbody></table></div>)}
           </section>

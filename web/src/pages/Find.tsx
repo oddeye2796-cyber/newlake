@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { get, type Kind, type SearchHit } from '../api';
 import { KIND_KO, LOT_STATE } from '../format';
+import { t } from '../i18n';
 import { getRecent } from '../recent';
 import { EquipmentPage, LotPage, OrderPage, SimplePage } from './entities';
 
-const FILTERS: [string, Kind | null][] = [['전체', null], ['로트', 'lot'], ['설비', 'equipment'], ['주문', 'order'], ['품목', 'item'], ['고객', 'customer']];
 // 빈 검색어는 API 가 허용하지 않아서, 전체 보기는 번호 접두어별로 나눠 조회해 합친다.
 const BROWSE = ['LOT-', 'EQ-', 'SO-', 'ITM-', 'C-'];
 
 export default function Find() {
+  const FILTERS: [string, Kind | null][] = [[t('전체'), null], [t('로트'), 'lot'], [t('설비'), 'equipment'], [t('주문'), 'order'], [t('품목'), 'item'], [t('고객'), 'customer']];
   const splat = useParams()['*'] || '';
   const [kind, id] = splat.split('/').map(decodeURIComponent);
   const nav = useNavigate();
@@ -42,19 +43,19 @@ export default function Find() {
 
   return (
     <>
-      <div className="head"><div><h1>찾아보기</h1>
-        <p className="lede">로트, 설비, 주문, 품목, 고객 번호나 이름으로 찾으면 관련된 것까지 한 화면에 모아 보여 드려요.</p></div></div>
+      <div className="head"><div><h1>{t('찾아보기')}</h1>
+        <p className="lede">{t('로트, 설비, 주문, 품목, 고객 번호나 이름으로 찾으면 관련된 것까지 한 화면에 모아 보여 드려요.')}</p></div></div>
       <div className="toolbar">
-        <input className="input grow" type="search" value={fq} onChange={(e) => setFq(e.target.value)} placeholder="번호나 이름 입력 (예: 0731, 오븐, 한빛)" autoComplete="off" aria-label="검색어" />
+        <input className="input grow" type="search" value={fq} onChange={(e) => setFq(e.target.value)} placeholder={t('번호나 이름 입력 (예: 0731, 오븐, 한빛)')} autoComplete="off" aria-label={t('검색어')} />
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {FILTERS.map(([label, k]) => <button key={label} className="chip" type="button" aria-pressed={ft === k} onClick={() => setFt(k)}>{label}</button>)}
         </div>
       </div>
       <div className="findwrap">
-        <section className="panel results" aria-label="검색 결과">
+        <section className="panel results" aria-label={t('검색 결과')}>
           {err && <p className="small" style={{ color: 'var(--crit)' }}>{err}</p>}
-          {!err && hits === null && <p className="muted small">찾는 중이에요…</p>}
-          {hits && shown.length === 0 && <p className="muted small">찾는 항목이 없어요. 번호 일부만 넣어 보세요.</p>}
+          {!err && hits === null && <p className="muted small">{t('찾는 중이에요…')}</p>}
+          {hits && shown.length === 0 && <p className="muted small">{t('찾는 항목이 없어요. 번호 일부만 넣어 보세요.')}</p>}
           {shown.map((x) => (
             <button key={x.kind + x.id} type="button" className="ritem" aria-current={x.kind === kind && x.id === id} onClick={() => nav(`/find/${x.kind}/${encodeURIComponent(x.id)}`)}>
               <span><b>{x.id}</b><span className="small muted"> {KIND_KO[x.kind]}</span><br /><span className="small">{x.label}</span></span>
@@ -65,8 +66,8 @@ export default function Find() {
         <section>
           {!kind || !id ? (
             <div className="panel muted">
-              왼쪽에서 항목을 고르세요.
-              {recent.length > 0 && <div style={{ marginTop: 10 }}><span className="small">최근 본 항목: </span>{recent.map((r) => <Link key={r.kind + r.id} className="lchip" to={`/find/${r.kind}/${r.id}`}>{r.id}</Link>)}</div>}
+              {t('왼쪽에서 항목을 고르세요.')}
+              {recent.length > 0 && <div style={{ marginTop: 10 }}><span className="small">{t('최근 본 항목:')} </span>{recent.map((r) => <Link key={r.kind + r.id} className="lchip" to={`/find/${r.kind}/${r.id}`}>{r.id}</Link>)}</div>}
             </div>
           ) : kind === 'lot' ? <LotPage key={id} id={id} />
             : kind === 'equipment' ? <EquipmentPage key={id} id={id} />
