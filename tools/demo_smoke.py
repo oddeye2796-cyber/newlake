@@ -4,9 +4,12 @@
   1) 원천(SCM, 파일) 등록 → 2) 표준에 없는 열(두께·폭·업체명·메모)이 든 발주 CSV 올리기
   3) 자동 대응으로 표준 존에 넣기(남는 열 보관·품질 검증 켬) → 4) 확장 제안 중 두께는 승인, 메모는 반려
   5) 확장 속성 요약과 적재 기록을 읽어 결과를 요약해 출력한다.
+  6) 실제 MES·SCM 내보내기와 같은 구조의 고정 파일(api/tests/fixtures/*.xlsx, 가짜 행) 두 개를 올려
+     생산실적·구매발주 표로 자동 대응되고 표준 존에 들어가는지 본다.
 시연 DB 에만 쓴다. 매번 꼬리표가 다른 발주번호를 넣으므로 반복 실행해도 겹치지 않는다.
 """
 import json
+import pathlib
 import sys
 import urllib.error
 import urllib.request
@@ -24,8 +27,9 @@ def call(method: str, path: str, body=None, files=None):
         for k, v in body.items():
             parts += f"--{boundary}\r\nContent-Disposition: form-data; name=\"{k}\"\r\n\r\n{v}\r\n".encode()
         name, data = files
+        ctype = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" if name.endswith(".xlsx") else "text/csv"
         parts += (f"--{boundary}\r\nContent-Disposition: form-data; name=\"file\"; filename=\"{name}\"\r\n"
-                  f"Content-Type: text/csv\r\n\r\n").encode() + data + f"\r\n--{boundary}--\r\n".encode()
+                  f"Content-Type: {ctype}\r\n\r\n").encode() + data + f"\r\n--{boundary}--\r\n".encode()
         headers["Content-Type"] = f"multipart/form-data; boundary={boundary}"
         payload = parts
     elif body is not None:
@@ -98,10 +102,35 @@ st, ea = call("GET", "/api/admin/extension-attributes?table=purchase_order&limit
 must(st, ea, "확장 속성")
 st, left = call("GET", "/api/admin/ontology/proposals?status=PROPOSED")
 
+# 6) 실제 내보내기 구조의 고정 파일 (가짜 행): MES 실적 → 생산실적, SCM 발주 → 구매발주
+FIX = pathlib.Path(__file__).resolve().parent.parent / "api" / "tests" / "fixtures"
+samples = {}
+for src_id, label, typ, fname, want in (("MES-DEMO", "MES 시연 파일", "MES", "mes_treegrid_export.xlsx", "production_performance"),
+                                        (sid, None, None, "scm_po_export.xlsx", "purchase_order")):
+    if label:
+        st, d = call("POST", "/api/admin/sources", {"source_system_id": src_id, "label": label, "system_type": typ, "db_kind": "FILE"})
+        if st not in (200, 409):
+            must(st, d, f"원천 등록 {src_id}")
+    st, u = call("POST", "/api/admin/upload", {"source_system_id": src_id}, files=(fname, (FIX / fname).read_bytes()))
+    must(st, u, f"고정 파일 올리기 {fname}")
+    st, p = call("GET", f"/api/admin/batches/{u['batch_id']}")
+    must(st, p, f"미리보기 {fname}")
+    st, r = call("POST", f"/api/admin/batches/{u['batch_id']}/standardize",
+                 {"table": p["suggested_table"], "column_map": p["suggested_map"], "site_id": "HQ", "plant_id": "P1",
+                  "create_refs": True, "keep_extras": True, "auto_quality": True})
+    must(st, r, f"표준 존 변환 {fname}")
+    samples[fname] = {"rows": u["rows"], "columns": len(u["columns"]), "suggested_table": p["suggested_table"], "table_ok": p["suggested_table"] == want,
+                      "mapped": len(p["suggested_map"]), "rows_out": r.get("rows_out"), "rows_rejected": r.get("rows_rejected"),
+                      "extensions": r.get("extensions"), "proposals": r.get("proposals"), "errors": r.get("errors")}
+
 print(json.dumps({
     "batch_id": bid, "tag": tag, "table": table, "rows_out": res.get("rows_out"), "rows_rejected": res.get("rows_rejected"),
     "column_map": cmap, "extensions": res.get("extensions"), "proposals_created": res.get("proposals"),
     "quality": res.get("quality"), "decided": decided,
     "ext_attr_summary": [(x["attr_name"], x.get("rows")) for x in ea.get("summary", [])],
     "proposals_pending": [(p["column_name"], p.get("suggested_local_name")) for p in (left or [])],
+    "samples": samples,
 }, ensure_ascii=False, indent=1, default=str))
+if not all(x["table_ok"] and x["rows_rejected"] == 0 for x in samples.values()):
+    print("!! 고정 파일이 기대한 표로 가지 않았거나 거부된 행이 있습니다")
+    sys.exit(1)

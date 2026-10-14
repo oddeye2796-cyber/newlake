@@ -31,7 +31,15 @@ SYNONYMS: list[tuple] = [
     ("설비코드", "설비식별자"), ("설비번호", "설비식별자"), ("호기", "설비식별자", 0.8),
     ("공정코드", "공정식별자"), ("창고코드", "창고식별자"), ("사번", "사원식별자"), ("담당자", "사원식별자", 0.7),
     ("단위", "단위코드"), ("통화", "환종코드"), ("두께", "두께"), ("폭", "너비"), ("길이", "길이"),
-    ("불량수량", "불량수량"), ("양품수량", "양품수량"), ("생산수량", "생산수량"), ("비고", "비고"), ("메모", "비고"),
+    ("불량수량", "불량수량"), ("양품수량", "생산수량", 0.85), ("생산수량", "생산수량"), ("실적수량", "생산수량"),
+    ("비고", "비고"), ("메모", "비고"),
+    # MES 생산실적 내보내기 (실제 현장 파일에서 본 머리글)
+    ("배정번호", "생산실적식별자", 0.8), ("실적번호", "생산실적식별자"), ("작업번호", "생산실적식별자", 0.7),
+    ("작업일자", "생산실적일자"), ("작업일", "생산실적일자"), ("생산일자", "생산실적일자"), ("생산일", "생산실적일자"),
+    ("실적일자", "생산실적일자"), ("실적일", "생산실적일자"),
+    ("작업시작", "생산시작일시"), ("시작시간", "생산시작일시", 0.8), ("시작일시", "생산시작일시"),
+    ("작업종료", "생산종료일시"), ("종료시간", "생산종료일시", 0.8), ("종료일시", "생산종료일시"),
+    ("작업자", "사원식별자", 0.7), ("재작업수량", "재작업수량"),
 ]
 
 # 영문 약어 → 표준 영문 열 이름 조각
@@ -196,6 +204,19 @@ def score(src: str, prof: dict, col: dict) -> float:
 MAP_MIN = 0.55
 
 
+def auto_default(col: dict):
+    """원천에 없어도 변환이 채워 주는 기본키 열의 값. 순번 기본키(…_sequence, 정수)는 1 (gov.standardize_batch 와 같은 규칙)."""
+    if col["pk"] and col["name"].endswith("_sequence") and col["type"].lower() in ("integer", "smallint", "bigint"):
+        return 1
+    return None
+
+
+def pk_columns(table: dict) -> list[str]:
+    """원천이 꼭 대응시켜야 하는 기본키 열 (회사·사업장·공장과 자동으로 채워지는 순번은 뺀다)."""
+    return [c["name"] for c in table["columns"]
+            if c["pk"] and c["name"] not in ("site_id", "plant_id") and auto_default(c) is None]
+
+
 def map_table(cols: list[str], profs: dict[str, dict], table: dict) -> tuple[dict[str, str], dict[str, float]]:
     """한 표에 대해 원천 열마다 가장 맞는 표준 열을 하나씩 (겹치지 않게) 고른다."""
     pairs = []
@@ -226,7 +247,7 @@ def pick(cols: list[str], profs: dict[str, dict], entity: str | None, targets: d
         m, conf = map_table(cols, profs, t)
         if not m:
             continue
-        pk = [c["name"] for c in t["columns"] if c["pk"] and c["name"] not in ("site_id", "plant_id")]
+        pk = pk_columns(t)
         pk_ok = all(p in m.values() for p in pk)
         sc = sum(conf.values()) + (1.0 if pk_ok else -1.5 * sum(p not in m.values() for p in pk))
         if ent and (norm(name) in ent or (t["label_ko"] and norm(t["label_ko"]) in ent)):
