@@ -1,18 +1,25 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import type { AdminClassDetail, AdminClassRow, AdminDatasetDetail, AdminDatasetRow } from '../../api';
+import { Pencil } from 'lucide-react';
+import type { AdminClassDetail, AdminClassRow, AdminDatasetDetail, AdminDatasetRow, OntoProperty } from '../../api';
+import { useAuth } from '../../auth';
 import { Pill, State, Tier } from '../../components/ui';
 import { fmtTs } from '../../format';
 import { useApi } from '../../useApi';
 import { t } from '../../i18n';
 import { Head, ZONES, ZoneChip, lastName, num, qstatus, sensName, zoneName } from './common';
+import { DEMO, DatasetDeleteButton, DatasetForm, FieldRow, MappingButtons, hasRole } from './Steward';
 
 type Tab = 'schema' | 'rel' | 'quality' | 'lineage';
 const tabs = (): [Tab, string][] => [['schema', t('스키마')], ['rel', t('관계')], ['quality', t('품질')], ['lineage', t('계보')]];
 
-function Detail({ id, index }: { id: string; index: Map<string, AdminDatasetRow> }) {
-  const { data, error, loading } = useApi<AdminDatasetDetail>(`/api/admin/datasets/${encodeURIComponent(id)}`);
+function Detail({ id, index, onDeleted }: { id: string; index: Map<string, AdminDatasetRow>; onDeleted: () => void }) {
+  const { me } = useAuth();
+  const { data, error, loading, reload } = useApi<AdminDatasetDetail>(`/api/admin/datasets/${encodeURIComponent(id)}`);
   const [tab, setTab] = useState<Tab>('schema');
+  const [editing, setEditing] = useState(false);
+  const canMeta = hasRole(me, 'data_steward', 'data_engineer'), canField = hasRole(me, 'data_steward', 'ontology_manager');
+  const props = useApi<OntoProperty[]>(canField && tab === 'schema' ? '/api/admin/ontology/properties' : null);
   const d = data?.dataset;
   const cls = d?.represents_class_iri ? lastName(d.represents_class_iri) : null;
   const rel = useApi<AdminClassDetail>(tab === 'rel' && cls ? `/api/admin/ontology/classes/${encodeURIComponent(cls)}` : null);
@@ -26,39 +33,38 @@ function Detail({ id, index }: { id: string; index: Map<string, AdminDatasetRow>
         <span>{refTitle(r.dataset_id)} <code className="mono muted">{r.dataset_id}</code>{r.pipeline_id && <span className="small muted"> · {r.pipeline_id}</span>}</span>
         {index.get(r.dataset_id) && <ZoneChip z={index.get(r.dataset_id)!.zone_id} />}
       </Link>))}</div>);
+  if (editing) return <DatasetForm d={d} onDone={() => { setEditing(false); reload(); onDeleted(); }} onCancel={() => setEditing(false)} />;
   return (
     <section className="panel">
-      <header><div><h2>{d.title_ko}</h2><div className="mono muted">{d.dataset_id}</div></div><ZoneChip z={d.zone_id} /></header>
+      <header><div><h2>{d.title_ko}</h2><div className="mono muted">{d.dataset_id}</div></div>
+        <div className="acts">{canMeta && <button className="btn" type="button" disabled={DEMO} onClick={() => setEditing(true)}><Pencil aria-hidden="true" /> {t('정보 수정')}</button>}
+          {canMeta && <DatasetDeleteButton id={d.dataset_id} zone={d.zone_id} onDone={onDeleted} />}<ZoneChip z={d.zone_id} /></div></header>
       <dl className="kv" style={{ marginBottom: 12 }}>
         <dt>{t('표현 클래스')}</dt><dd>{cls ? <><Link to={`/admin/ontology/${cls}`}>ksx:{cls}</Link> · {d.class_label}</> : '—'}</dd>
         <dt>{t('원천 시스템')}</dt><dd>{d.source_label ?? d.source_system_id ?? '—'}{d.ingest_mode ? ` · ${d.ingest_mode}` : ''}{d.schedule_cron ? ` · ${d.schedule_cron}` : ''}</dd>
         <dt>{t('형식')}</dt><dd>{d.format ?? '—'} · {t('레코드')} <span className="num">{num(d.record_count)}</span></dd>
         <dt>{t('위치')}</dt><dd className="mono small">{d.location_uri ?? '—'}</dd>
         <dt>{t('최근 적재')}</dt><dd>{fmtTs(d.last_ingested_at)}</dd>
-        <dt>{t('품질')}</dt><dd><Pill cls={qsc}>{qs}</Pill>{d.quality_score != null && <span className="num"> {d.quality_score}%</span>}</dd>
+        <dt>{t('품질')}</dt><dd><Pill cls={qsc}>{qs}</Pill>{d.quality_score != null && <span className="num"> {Math.round(d.quality_score * 10) / 10}%</span>}</dd>
         <dt>{t('민감도')}</dt><dd>{sensName(d.sensitivity) ?? d.sensitivity}{d.pseudonymized ? ` · ${t('가명처리')}` : ''}{d.retention ? ` · ${t('보존 {v}', { v: d.retention })}` : ''}</dd>
         <dt>{t('담당')}</dt><dd>{t('소유 {owner} · 스튜어드 {steward}', { owner: d.owner_user_id ?? '—', steward: d.steward_user_id ?? '—' })}</dd>
         {d.description && <><dt>{t('설명')}</dt><dd>{d.description}</dd></>}
       </dl>
       <div className="tabs" role="tablist">{tabs().map(([k, n]) => <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => setTab(k)}>{n}</button>)}</div>
       {tab === 'schema' && <>
-        {data.fields.length > 0 ? (
-          <div className="tablewrap" style={{ maxHeight: 420, overflow: 'auto' }}><table><thead><tr><th>{t('컬럼')}</th><th>{t('타입')}</th><th>{t('온톨로지 속성')}</th><th>{t('매핑')}</th></tr></thead><tbody>
-            {data.fields.map((f) => (
-              <tr key={f.field_name}>
-                <td><span className="mono">{f.field_name}</span>{f.is_pk && <> <Pill>PK</Pill></>}<div className="small muted">{f.label_ko ?? ''}{f.is_required ? ` · ${t('필수')}` : ''}</div></td>
-                <td className="mono small">{f.data_type ?? '—'}</td>
-                <td className="mono small">{f.maps_to_property_iri ? `ksx:${lastName(f.maps_to_property_iri)}` : <span className="muted">{t('레이크 메타')}</span>}</td>
-                <td className="small">{f.mapping_method ?? '—'}{f.mapping_confidence != null ? ` · ${f.mapping_confidence}` : ''}{f.mapping_status ? ` · ${f.mapping_status}` : ''}</td>
-              </tr>))}
+        {data.fields.length > 0 ? (<>
+          <div className="tablewrap" style={{ maxHeight: 420, overflow: 'auto' }}><table><thead><tr><th>{t('컬럼')}</th><th>{t('타입')}</th><th>{t('온톨로지 속성')}</th><th>{t('매핑')}</th>{canField && <th />}</tr></thead><tbody>
+            {data.fields.map((f) => <FieldRow key={f.field_name} f={f} canWrite={canField} props={props.data ?? []} onSaved={reload} />)}
           </tbody></table></div>
-        ) : <p className="muted">{t('컬럼 목록이 등록되지 않은 데이터셋이에요.')} {d.zone_id === 'RAW' ? t('원천 포맷 그대로 보관하며 스키마는 매핑 버전에 기록돼요.') : d.zone_id === 'SEMANTIC' ? t('RDF 트리플 저장소라 클래스 구조는 온톨로지 화면에서 봐요.') : ''}</p>}
+          {canField && <p className="hint">{t('제안된 매핑(human 이 아닌 것)은 ✓ 승인 · ✕ 반려로 결정해요. 결정은 catalog.mapping_review 에 남아요.')}</p>}
+        </>) : <p className="muted">{t('컬럼 목록이 등록되지 않은 데이터셋이에요.')} {d.zone_id === 'RAW' ? t('원천 포맷 그대로 보관하며 스키마는 매핑 버전에 기록돼요.') : d.zone_id === 'SEMANTIC' ? t('RDF 트리플 저장소라 클래스 구조는 온톨로지 화면에서 봐요.') : ''}</p>}
         {data.mappings.length > 0 && <>
           <h3 className="sub">{t('매핑 버전')}</h3>
           <div className="tablewrap"><table><thead><tr><th>{t('매핑')}</th><th>{t('대상 클래스')}</th><th>{t('상태')}</th><th className="r">F1</th></tr></thead><tbody>
             {data.mappings.map((m) => (
               <tr key={m.mapping_id}><td><span className="mono small">{m.mapping_id}</span><div className="small muted">{m.kind} v{m.version_no}</div></td><td className="mono small">ksx:{lastName(m.target_class_iri)}</td>
-                <td><Pill cls={m.status === 'APPROVED' ? 'p-ok' : 'p-warn'}>{m.status}</Pill>{m.approved_by && <div className="small muted">{m.approved_by} · {fmtTs(m.approved_at)}</div>}</td><td className="r num">{m.f1_score ?? '—'}</td></tr>))}
+                <td><Pill cls={m.status === 'APPROVED' ? 'p-ok' : m.status === 'RETIRED' ? 'p-line' : 'p-warn'}>{m.status}</Pill>{m.approved_by && <div className="small muted">{m.approved_by} · {fmtTs(m.approved_at)}</div>}
+                  {canField && <MappingButtons m={m} onDone={reload} />}</td><td className="r num">{m.f1_score ?? '—'}</td></tr>))}
           </tbody></table></div></>}
       </>}
       {tab === 'rel' && (!cls ? <p className="muted">{t('이 데이터셋은 단일 클래스를 표현하지 않아요.')}</p> : <>
@@ -137,7 +143,7 @@ export default function Catalog() {
             })}
             {rows.length === 0 && <tr><td colSpan={5} className="muted">{t('조건에 맞는 데이터셋이 없어요.')}</td></tr>}
           </tbody></table></div>
-          {sel ? <Detail key={sel} id={sel} index={index} /> : <section className="panel muted">{t('왼쪽에서 데이터셋을 고르세요.')}</section>}
+          {sel ? <Detail key={sel} id={sel} index={index} onDeleted={() => { list.reload(); if (id) nav('/admin/catalog'); }} /> : <section className="panel muted">{t('왼쪽에서 데이터셋을 고르세요.')}</section>}
         </div>)}
     </>
   );

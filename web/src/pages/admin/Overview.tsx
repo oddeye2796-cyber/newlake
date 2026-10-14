@@ -1,15 +1,20 @@
 import { Database, KeyRound, Network, ShieldAlert, Siren, type LucideIcon } from 'lucide-react';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import type { AdminOverview } from '../../api';
+import type { AdminOverview, Person } from '../../api';
+import { useAuth } from '../../auth';
 import { Pill, State, Tier } from '../../components/ui';
 import { daysLeft, fmtTs, n0, riskPill } from '../../format';
 import { useApi } from '../../useApi';
 import { t, getLang } from '../../i18n';
 import { Head, lastName, num, runStatus, zoneColor, zoneName } from './common';
+import { PipelineEditor, RiskActions, hasRole } from './Steward';
 
 export default function Overview() {
-  const { data, error, loading } = useApi<AdminOverview>('/api/admin/overview');
+  const { me } = useAuth();
+  const { data, error, loading, reload } = useApi<AdminOverview>('/api/admin/overview');
+  const canRisk = hasRole(me, 'production_manager', 'quality_engineer', 'data_steward'), canPipe = hasRole(me, 'data_engineer');
+  const people = useApi<Person[]>(canPipe ? '/api/admin/people' : null);
   useEffect(() => { document.title = `${t('오늘의 레이크')} · ${t('뉴레이크')}`; }, []);
   const c = data?.counts;
   const tiles: [string, number | undefined, string, string, LucideIcon, string][] = [
@@ -53,7 +58,7 @@ export default function Overview() {
                       <p>{t('로트 {lot} 불량률 {rate}%.', { lot: x.lot_id ?? '—', rate: x.defect_rate_pct ?? '—' })} {x.cause ?? ''}</p>
                       <div className="meta"><Pill cls={lvc}>{t('위험도 {level}', { level: lv })}</Pill><Tier t="INFERRED" />{r.derived_by && <Pill>{t('규칙 {name}', { name: lastName(r.derived_by) })}</Pill>}<Pill>{fmtTs(r.detected_at)}</Pill></div>
                     </div>
-                    <div className="acts">{x.lot_id && <Link className="btn" to={`/find/lot/${x.lot_id}`}>{t('로트 보기')}</Link>}<Link className="btn" to="/admin/lineage">{t('계보')}</Link></div>
+                    <div className="acts">{x.lot_id && <Link className="btn" to={`/find/lot/${x.lot_id}`}>{t('로트 보기')}</Link>}<Link className="btn" to="/admin/lineage">{t('계보')}</Link>{canRisk && <RiskActions r={r} onDone={reload} />}</div>
                   </article>);
               })}
             </div>
@@ -65,7 +70,8 @@ export default function Overview() {
                 const [st, stc] = runStatus(p.last_status ?? '') || [p.last_status ?? t('실행 기록 없음'), 'p-line'];
                 return (
                   <tr key={p.pipeline_id}>
-                    <td>{p.label_ko}<div className="small muted">{zoneName(p.from_zone) ?? p.from_zone} → {zoneName(p.to_zone) ?? p.to_zone} · {p.engine} · {p.schedule_cron ?? t('수동')}{p.enabled ? '' : ` · ${t('꺼짐')}`}</div></td>
+                    <td>{p.label_ko}<div className="small muted">{zoneName(p.from_zone) ?? p.from_zone} → {zoneName(p.to_zone) ?? p.to_zone} · {p.engine} · {p.schedule_cron ?? t('수동')}{p.owner_user_id ? ` · ${p.owner_user_id}` : ''}{p.enabled ? '' : ` · ${t('꺼짐')}`}</div>
+                      {canPipe && <PipelineEditor key={`${p.enabled}${p.schedule_cron}${p.owner_user_id}`} p={p} people={people.data ?? []} onDone={reload} />}</td>
                     <td><Pill cls={stc}>{st}</Pill>
                       <div className="small muted">{fmtTs(p.last_ended_at ?? p.last_started_at)}</div>
                       {p.rows_in != null && <div className="small muted num">{t('입력 {a} · 출력 {b}', { a: n0(p.rows_in), b: n0(p.rows_out) })}{p.rows_rejected ? ` · ${t('거부 {n}', { n: n0(p.rows_rejected) })}` : ''}</div>}

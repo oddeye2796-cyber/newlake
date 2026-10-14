@@ -79,6 +79,14 @@ https://newlake.vercel.app 은 화면과 API 를 Vercel 에 올리고 Neon(무�
 데이터 넣기 → 적재 기록에서 잘못 올린 배치를 원천 존에서 지울 수 있다(`gov.delete_batch`, 표준 존에 들어간 행은 남는다).
 전체 화면의 조회·CRUD 필요 여부는 `docs/crud-audit.md` 에 정리했다.
 
+## 데이터 스튜어드십 (CRUD 2차)
+
+- 데이터 카탈로그: 데이터셋 정보 수정(제목·설명·민감도·가명처리·보존 기간·소유자·스튜어드·태그, `gov.update_dataset`), 빈 원천 존 데이터셋 삭제(`gov.delete_dataset`),
+  필드 수정(한글 이름·설명·개인정보 여부·온톨로지 속성)과 제안된 매핑의 승인·반려(`gov.update_field`, 결정은 `catalog.mapping_review` 에 남음), 매핑 버전 상태(검토·승인·폐기, `gov.set_mapping_status`).
+- 품질 검증: 규칙 등록·수정·삭제(`gov.save_quality_rule`, 위반 기록이 있으면 삭제 대신 끄기), SQL 검사식 **바로 실행**(검사식은 `lake_agent` 읽기 전용·RLS 로 돌리고 결과만 `gov.record_quality_run` 이 기록), 위반 처리 상태·담당자(`gov.update_violation`).
+- 오늘의 레이크: 열린 위험 닫기·억제(`gov.set_risk_status`, 사업장·공장 범위 확인), 파이프라인 켜기/끄기·주기·담당자(`gov.update_pipeline`).
+- 쓰기 역할: 데이터셋·필드·매핑은 `data_steward`(필드는 `ontology_manager` 도), 품질 규칙은 `quality_engineer`·`data_steward`, 위험은 `production_manager`·`quality_engineer`·`data_steward`, 파이프라인은 `data_engineer`. `admin` 은 모두 된다(`gov.require_role`). 품질 엔지니어도 데이터 관리 화면을 볼 수 있다.
+
 ## 테스트
 
 ```bash

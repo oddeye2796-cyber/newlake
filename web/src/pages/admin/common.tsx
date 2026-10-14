@@ -10,10 +10,10 @@ export const zoneName = (z: string): string | undefined => ({ RAW: t('원천'), 
 export const zoneColor = (z: string) => ({ RAW: 'var(--z-raw)', STANDARD: 'var(--z-std)', SEMANTIC: 'var(--z-sem)', CURATED: 'var(--z-cur)' } as Record<string, string>)[z] || 'var(--muted)';
 export const ZoneChip = ({ z }: { z: string }) => <span className="zchip" style={{ ['--zc' as string]: zoneColor(z) }}>{zoneName(z) || z}</span>;
 
-export const sensName = (s: string): string | undefined => ({ PUBLIC: t('공개'), INTERNAL: t('내부'), CONFIDENTIAL: t('기밀'), RESTRICTED: t('제한') } as Record<string, string>)[s];
+export const sensName = (s: string): string | undefined => ({ PUBLIC: t('공개'), INTERNAL: t('내부'), CONFIDENTIAL: t('기밀'), PERSONAL: t('개인정보'), RESTRICTED: t('제한') } as Record<string, string>)[s];
 export const qstatus = (s: string): [string, string] | undefined => ({ PASS: [t('적합'), 'p-ok'], WARN: [t('주의'), 'p-warn'], FAIL: [t('부적합'), 'p-crit'], UNKNOWN: [t('미측정'), 'p-line'] } as Record<string, [string, string]>)[s];
 export const runStatus = (s: string): [string, string] | undefined => ({ SUCCESS: [t('성공'), 'p-ok'], RUNNING: [t('실행 중'), 'p-warn'], PARTIAL: [t('일부 실패'), 'p-warn'], FAILED: [t('실패'), 'p-crit'] } as Record<string, [string, string]>)[s];
-export const violStatus = (s: string): [string, string] | undefined => ({ OPEN: [t('미처리'), 'p-crit'], ACK: [t('확인함'), 'p-warn'], RESOLVED: [t('해결'), 'p-ok'], WAIVED: [t('예외 처리'), 'p-line'] } as Record<string, [string, string]>)[s];
+export const violStatus = (s: string): [string, string] | undefined => ({ OPEN: [t('미처리'), 'p-crit'], ACK: [t('확인함'), 'p-warn'], FIXED: [t('해결'), 'p-ok'], RESOLVED: [t('해결'), 'p-ok'], WAIVED: [t('예외 처리'), 'p-line'] } as Record<string, [string, string]>)[s];
 export const lastName = (iri: string | null | undefined) => (iri ? decodeURIComponent(iri.split('/').pop() || iri) : '—');
 export const num = (v: number | null | undefined) => (v == null ? '—' : v.toLocaleString(locale()));
 

@@ -10,12 +10,12 @@ from pydantic import BaseModel, Field
 
 from ..deps import Scoped, scoped
 
-ADMIN_ROLES = {"admin", "data_steward", "data_engineer", "ontology_manager"}
+ADMIN_ROLES = {"admin", "data_steward", "data_engineer", "ontology_manager", "quality_engineer"}
 
 
 def admin_scoped(s: Scoped = Depends(scoped)) -> Scoped:
     if not ADMIN_ROLES & set(s.user.roles):
-        raise HTTPException(403, "데이터 관리 화면은 관리 역할(관리자·스튜어드·엔지니어·온톨로지 관리자)이 있어야 볼 수 있습니다")
+        raise HTTPException(403, "데이터 관리 화면은 관리 역할(관리자·스튜어드·엔지니어·온톨로지 관리자·품질 엔지니어)이 있어야 볼 수 있습니다")
     return s
 
 
@@ -30,7 +30,7 @@ def overview(s: Scoped = Depends(admin_scoped)):
         "  FROM catalog.zone z LEFT JOIN catalog.dataset d ON d.zone_id = z.zone_id"
         " GROUP BY z.zone_id, z.label_ko, z.zone_order ORDER BY z.zone_order").fetchall()
     pipelines = c.execute(
-        "SELECT p.pipeline_id, p.label_ko, p.from_zone, p.to_zone, p.engine, p.schedule_cron, p.enabled,"
+        "SELECT p.pipeline_id, p.label_ko, p.from_zone, p.to_zone, p.engine, p.schedule_cron, p.enabled, p.owner_user_id,"
         "       r.status AS last_status, r.started_at AS last_started_at, r.ended_at AS last_ended_at,"
         "       r.rows_in, r.rows_out, r.rows_rejected, r.error_message"
         "  FROM catalog.pipeline p"
@@ -142,7 +142,7 @@ def quality(s: Scoped = Depends(admin_scoped)):
     c = s.conn
     rules = c.execute(
         "SELECT r.rule_id, r.label_ko, r.dimension, r.target_class_iri, cl.label_ko AS class_label, r.target_dataset_id,"
-        "       r.shape_iri, r.severity, r.threshold, r.enabled,"
+        "       r.shape_iri, r.sql_check, r.severity, r.threshold, r.enabled,"
         "       q.dataset_id AS last_dataset_id, q.executed_at AS last_run_at, q.focus_count, q.violation_count, q.conformance_rate"
         "  FROM catalog.quality_rule r LEFT JOIN onto.class cl ON cl.class_iri = r.target_class_iri"
         "  LEFT JOIN LATERAL (SELECT qr.* FROM catalog.quality_run qr"

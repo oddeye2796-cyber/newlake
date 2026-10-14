@@ -114,7 +114,7 @@ export const runQuery = (sql: string, question?: string) => post<QueryResult>('/
 /* ---------- 관리자(데이터 관리) 타입 ---------- */
 export interface AdminZone { zone_id: string; label_ko: string; zone_order: number; datasets: number; records: number | null }
 export interface AdminPipeline {
-  pipeline_id: string; label_ko: string; from_zone: string; to_zone: string; engine: string; schedule_cron: string | null; enabled: boolean;
+  pipeline_id: string; label_ko: string; from_zone: string; to_zone: string; engine: string; schedule_cron: string | null; enabled: boolean; owner_user_id: string | null;
   last_status: string | null; last_started_at: string | null; last_ended_at: string | null; rows_in: number | null; rows_out: number | null; rows_rejected: number | null; error_message: string | null;
 }
 export interface AdminRisk { event_id: string; risk_level: string; source_iri?: string; detail: RiskDetail; detected_at: string; derived_by?: string }
@@ -130,6 +130,7 @@ export interface AdminDatasetRow {
 export interface AdminField {
   dataset_id: string; field_name: string; label_ko: string | null; data_type: string | null; is_pk: boolean; is_required: boolean;
   maps_to_property_iri: string | null; mapping_method: string | null; mapping_confidence: number | null; mapping_status: string | null; null_ratio: number | null; distinct_count: number | null;
+  description: string | null; is_pii: boolean;
 }
 export interface AdminLineageRef { dataset_id: string; pipeline_id: string | null; relation: string; field_map?: Record<string, string[]> | null }
 export interface AdminMapping { mapping_id: string; source_dataset_id: string; target_class_iri: string; kind: string; version_no: number; artifact_uri: string | null; status: string; approved_by: string | null; approved_at: string | null; f1_score: number | null }
@@ -153,7 +154,7 @@ export interface LineageEdge {
   pipeline_id: string | null; pipeline_label: string | null; relation: string; field_map: Record<string, string[]> | null;
 }
 export interface QualityRule {
-  rule_id: string; label_ko: string; dimension: string | null; target_class_iri: string | null; class_label: string | null; target_dataset_id: string | null; shape_iri: string | null;
+  rule_id: string; label_ko: string; dimension: string | null; target_class_iri: string | null; class_label: string | null; target_dataset_id: string | null; shape_iri: string | null; sql_check: string | null;
   severity: string; threshold: number | null; enabled: boolean; last_dataset_id: string | null; last_run_at: string | null; focus_count: number | null; violation_count: number | null; conformance_rate: number | null;
 }
 export interface QualityViolation { violation_id: number; rule_id: string; focus_node: string; result_path: string | null; message: string; severity: string; status: string; assignee_user_id: string | null; dataset_id: string | null; executed_at: string }
@@ -166,7 +167,7 @@ export interface RoleAssignment { user_id: string; display_name: string; status:
 export interface AdminAccess { requests: AccessRequest[]; roles: AdminRole[]; assignments: RoleAssignment[] | null }
 export interface AuditRow { occurred_at: string; user_id: string; channel: string; action: string; dataset_id: string | null; object_ref: string | null; query_text: string | null; row_count: number | null; result: string }
 
-export const ADMIN_ROLES = ['admin', 'data_steward', 'data_engineer', 'ontology_manager'];
+export const ADMIN_ROLES = ['admin', 'data_steward', 'data_engineer', 'ontology_manager', 'quality_engineer'];
 export const isAdminUser = (me: Me | null) => !!me && me.roles.some((r) => ADMIN_ROLES.includes(r));
 
 /* ---------- 권한·운영 CRUD ---------- */
@@ -186,3 +187,8 @@ export interface MyAccessRequest {
   status: string; approver_id: string | null; decided_at: string | null; decision_note: string | null; created_at: string;
 }
 export interface CatalogDataset { dataset_id: string; title_ko: string; zone_id: string; sensitivity: string }
+
+/* ---------- 스튜어드십 CRUD ---------- */
+export interface Person { user_id: string; display_name: string }
+export interface OntoProperty { property_iri: string; local_name: string; kind: string; label_ko: string | null; range_iri: string | null }
+export interface QualityRunResult { quality_run_id: string; focus_count: number; violation_count: number; conformance_rate: number | null; dataset_id: string | null }
