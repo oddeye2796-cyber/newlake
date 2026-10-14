@@ -447,6 +447,13 @@ def _targets(s: Scoped) -> dict[str, dict]:
         "  JOIN pg_attribute a ON a.attrelid = c.oid AND a.attnum > 0 AND NOT a.attisdropped"
         " WHERE c.relkind IN ('r', 'p') AND NOT c.relispartition"
         " ORDER BY c.relname, a.attnum").fetchall()
+    uniques: dict[str, list[list[str]]] = {}
+    for r in s.conn.execute(
+        "SELECT c.relname AS tbl, ARRAY(SELECT a.attname::text FROM unnest(k.conkey) WITH ORDINALITY o(n, i)"
+        "                              JOIN pg_attribute a ON a.attrelid = k.conrelid AND a.attnum = o.n ORDER BY o.i) AS cols"
+        "  FROM pg_constraint k JOIN pg_class c ON c.oid = k.conrelid JOIN pg_namespace n ON n.oid = c.relnamespace"
+        " WHERE n.nspname = 'ksx' AND k.contype = 'u' ORDER BY c.relname, k.conname").fetchall():
+        uniques.setdefault(r["tbl"], []).append(list(r["cols"]))
     classes = {r["physical_table"]: r for r in s.conn.execute(
         "SELECT DISTINCT ON (physical_table) physical_table, label_ko, local_name, class_iri FROM onto.class"
         " WHERE physical_table IS NOT NULL ORDER BY physical_table, is_standard DESC").fetchall()}
@@ -456,11 +463,11 @@ def _targets(s: Scoped) -> dict[str, dict]:
             continue
         cl = classes.get(r["tbl"])
         t = out.setdefault(r["tbl"], {"table": r["tbl"], "label_ko": cl["label_ko"] if cl else None,
-                                      "class_name": cl["local_name"] if cl else None, "class_iri": cl["class_iri"] if cl else None, "columns": []})
-        col = {"name": r["col"], "label_ko": r["label"], "type": r["type"],
-               "required": r["required"] and not r["has_default"], "pk": r["pk"]}
-        col["default"] = automap.auto_default(col)   # 원천에 없어도 변환이 채우는 값 (순번 기본키 → 1)
-        t["columns"].append(col)
+                                      "class_name": cl["local_name"] if cl else None, "class_iri": cl["class_iri"] if cl else None,
+                                      "unique_keys": uniques.get(r["tbl"], []),   # 대체키: 순번 자동 번호·식별자 자동 생성의 근거
+                                      "columns": []})
+        t["columns"].append({"name": r["col"], "label_ko": r["label"], "type": r["type"],
+                             "required": r["required"] and not r["has_default"], "pk": r["pk"]})
     return out
 
 
@@ -471,8 +478,11 @@ def targets(s: Scoped = Depends(admin_scoped)):
 
 def _dup_keys(rows: list[dict], m: dict[str, str], table: dict) -> int:
     """표본에서 기본키 값이 겹치는 행 수 (겹치면 뒤 행이 앞 행을 덮어쓴다)."""
-    pk = automap.pk_columns(table)
     inv = {v: k for k, v in m.items()}
+    auto = automap.auto_keys(table, set(m.values()))
+    if auto["seq"] or auto["derived"]:
+        return 0              # 순번을 자동으로 매기므로 같은 키 값의 줄이 겹쳐 덮어쓰지 않는다
+    pk = [c["name"] for c in table["columns"] if c["pk"] and c["name"] not in automap.SCOPE]
     if not pk or not all(p in inv for p in pk):
         return 0
     keys = [tuple(str(r.get(inv[p])) for p in pk) for r in rows]
@@ -506,7 +516,8 @@ def batch(batch_id: UUID, table: str | None = None, s: Scoped = Depends(admin_sc
             "profiles": {c: p["kind"] for c, p in profs.items()},
             "candidates": [{k: x[k] for k in ("table", "label_ko", "score", "pk_ok")} | {"mapped": len(x["map"])}
                            for x in ranked[:3]],
-            "sample_rows": len(sample), "dup_keys": _dup_keys(sample, m, tg[chosen]) if chosen else 0}
+            "sample_rows": len(sample), "dup_keys": _dup_keys(sample, m, tg[chosen]) if chosen else 0,
+            "auto_keys": automap.auto_keys(tg[chosen], set(m.values())) if chosen else {"seq": {}, "derived": {}}}
 
 
 class StandardizeIn(BaseModel):
@@ -549,9 +560,7 @@ def standardize(batch_id: UUID, body: StandardizeIn, s: Scoped = Depends(admin_s
                     cols.append(k)
         extras = [c for c in cols if c not in cmap]
         if extras and tg:
-            pk = [c["name"] for c in tg["columns"] if c["pk"]]
-            inv = {v: k for k, v in cmap.items()}
-            key_map = {p: inv[p] for p in pk if p in inv}
+            key_map = {v: k for k, v in cmap.items()}   # 표준→원천 전체 대응표: 레코드 키와 자동 키(순번·'문서번호-순번')를 같은 규칙으로 만든다
             if key_map:
                 ext_props = s.conn.execute(
                     "SELECT property_iri, local_name, label_ko, kind, range_iri, unit, domain_class_iri FROM onto.property"
