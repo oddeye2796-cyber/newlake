@@ -35,6 +35,20 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
 export const get = <T,>(path: string) => call<T>(path);
 export const post = <T,>(path: string, data: unknown) => call<T>(path, { method: 'POST', body: JSON.stringify(data) });
 
+/** 파일 올리기 (multipart). 시연 모드에서는 서버가 없어 거절된다. */
+export async function postForm<T>(path: string, form: FormData): Promise<T> {
+  if (import.meta.env.VITE_DEMO === '1') throw new ApiError(400, t('미리보기에서는 데이터를 넣을 수 없어요. 실제 서버(newlake.vercel.app)에서 해 보세요.'));
+  let res: Response;
+  try {
+    res = await fetch(path, { method: 'POST', body: form, headers: { 'X-User-Id': currentUser } });
+  } catch {
+    throw new ApiError(0, t('API 서버에 연결할 수 없어요'));
+  }
+  const body = await res.json().catch(() => null);
+  if (!res.ok) throw new ApiError(res.status, detailText(body && typeof body === 'object' && 'detail' in body ? (body as { detail: unknown }).detail : null, res.status));
+  return body as T;
+}
+
 /* ---------- 타입 ---------- */
 export interface Me { user_id: string; display_name: string; enterprise_id: string; roles: string[]; site_ids: string | string[]; plant_ids: string | string[]; }
 export interface RiskDetail { cause?: string; lot_id?: string; customer_id?: string; sales_order_id?: string; defect_rate_pct?: number; requested_delivery_date?: string; [k: string]: unknown }
@@ -75,6 +89,21 @@ export interface InboxRow {
   risk_level: string | null; risk_detail: RiskDetail | null; can_decide: boolean;
 }
 export interface QueryResult { rows: Record<string, unknown>[]; row_count: number; truncated: boolean }
+
+export interface SourceRow {
+  source_system_id: string; label_ko: string; system_type: string; connection_kind: string | null; owner_dept: string | null;
+  db_kind: string | null; host: string | null; port: number | null; database_name: string | null; username: string | null;
+  status: string | null; last_tested_at: string | null; last_error: string | null; datasets: number; last_ingested_at: string | null;
+}
+export interface BatchRow {
+  batch_id: string; source_system_id: string; dataset_id: string; received_at: string; record_count: number; byte_size: number | null;
+  status: string; file_name: string | null; source_entity: string | null; std_rows_out: number | null; std_rows_rejected: number | null; std_table: string | null;
+}
+export interface TargetCol { name: string; label_ko: string | null; type: string; required: boolean; pk: boolean }
+export interface Target { table: string; label_ko: string | null; class_name: string | null; columns: TargetCol[] }
+export interface BatchDetail { batch: BatchRow; columns: string[]; rows: Record<string, unknown>[]; suggested_table: string | null; suggested_map: Record<string, string> }
+export interface StdResult { run_id: string; mapping_id: string | null; target: string; std_dataset_id: string | null; rows_in: number; rows_out: number; rows_rejected: number; errors: { record_seq: number; error: string }[] }
+export interface Loaded { batch_id: string; rows: number; columns: string[]; entity?: string }
 
 export const runQuery = (sql: string, question?: string) => post<QueryResult>('/api/agent/query', { sql, question });
 

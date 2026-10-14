@@ -34,7 +34,8 @@ presets = re.findall(r"sql: `(.*?)`", (ROOT / "web/src/askPresets.ts").read_text
 GETS = ["/api/me", "/api/home", "/api/inbox", "/api/inbox?status=ALL", "/api/kpi/otd", "/api/kpi/ppm", "/api/kpi/risks",
         "/api/kpi/utilization?days=30", "/api/kpi/wip", "/api/kpi/yield", "/api/catalog/datasets"]
 ADMIN_GETS = ["/api/admin/overview", "/api/admin/datasets", "/api/admin/ontology/classes", "/api/admin/lineage",
-              "/api/admin/quality", "/api/admin/access", "/api/admin/audit", "/api/admin/audit?limit=100"]
+              "/api/admin/quality", "/api/admin/access", "/api/admin/audit", "/api/admin/audit?limit=100",
+              "/api/admin/sources"]
 
 out = {"get": {}, "query": {}}
 for u in USERS:

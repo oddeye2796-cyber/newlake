@@ -19,6 +19,11 @@ class Settings(BaseSettings):
     # 서버리스(Vercel)는 인스턴스가 여러 개 뜨므로 인스턴스마다 접속을 적게 연다
     pool_max: int = 2 if os.environ.get("VERCEL") else 10
     agent_row_limit: int = 200
+    # 데이터 넣기: 올리는 파일 크기·행 수 상한 (Vercel 요청 본문은 4.5MB 까지)
+    ingest_max_bytes: int = 4 * 1024 * 1024
+    ingest_max_rows: int = 20000
+    # 원천 DB 연결 시험에서 사내망·로컬 주소 허용. 사내 설치는 허용, 공개 시연(Vercel)은 막는다 (SSRF)
+    ingest_allow_private_hosts: bool = not os.environ.get("VERCEL")
 
 
 settings = Settings()

@@ -509,3 +509,25 @@ a.tile:hover,button.tile:hover{border-color:color-mix(in srgb,var(--accent) 60%,
 }
 td.r,th.r,td.num{white-space:nowrap}
 td .mono,td code,td.mono,.kv dd{overflow-wrap:anywhere}
+
+/* 데이터 넣기 */
+.stepper.ing{grid-template-columns:repeat(4,minmax(0,1fr))}
+.formrow{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fld{display:flex;flex-direction:column;gap:5px;min-width:0;font-size:12px;color:var(--muted);font-weight:600}
+.fld.grow{flex:1 1 260px}
+.fld .input{color:var(--ink);font-weight:400;font-size:13.5px}
+.fld .btn svg,.head .btn svg{width:14px;height:14px;vertical-align:-2px}
+.drop{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px;padding:26px 16px;border:1.5px dashed var(--line2);border-radius:12px;background:var(--surface2);color:var(--muted);cursor:pointer;text-align:center;overflow-wrap:anywhere}
+.drop:hover,.drop.has{border-color:var(--accent);color:var(--ink)}
+.drop svg{width:22px;height:22px;flex:none;color:var(--accent)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.maptbl select{width:100%;min-width:180px}
+.result{margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface2)}
+.kv3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.kv3 div{display:flex;flex-direction:column;gap:2px}
+.kv3 span{font-size:12px;color:var(--muted)}
+.kv3 b{font-size:22px}
+.errs{margin:0 0 10px;padding-left:18px;font-size:12.5px;color:var(--crit)}
+.linkbtn{border:0;background:none;padding:0;color:var(--accent);cursor:pointer;font-weight:600}
+@media (max-width:640px){.formgrid{grid-template-columns:minmax(0,1fr)}.fld{flex:1 1 100%}.stepper.ing .st:not(.cur){font-size:0;gap:0}.stepper.ing .st.cur{white-space:nowrap}}

@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Link, NavLink, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import {
   Bell, Languages, ChevronRight, CircleCheck, Database, Factory, GitBranch, House, Inbox, KeyRound, Layers, LayoutDashboard,
-  MapPin, MessageSquareText, Moon, Network, Search, ShieldCheck, Sun, TerminalSquare, type LucideIcon,
+  MapPin, MessageSquareText, Moon, Network, Search, ShieldCheck, Sun, TerminalSquare, Upload, type LucideIcon,
 } from 'lucide-react';
 import { USERS, useAuth } from './auth';
 import { lsGet, lsSet } from './storage';
@@ -22,6 +22,7 @@ import Lineage from './pages/admin/Lineage';
 import Quality from './pages/admin/Quality';
 import Workbench from './pages/admin/Workbench';
 import Access from './pages/admin/Access';
+import Ingest from './pages/admin/Ingest';
 
 const ROLE_KO: Record<string, string> = { analyst: tk('분석가'), quality_engineer: tk('품질 엔지니어'), production_manager: tk('생산 관리자'), admin: tk('플랫폼 관리자'), data_steward: tk('데이터 스튜어드'), data_engineer: tk('데이터 엔지니어'), ontology_manager: tk('온톨로지 관리자') };
 
@@ -35,6 +36,7 @@ const WORK: NavItem[] = [
 ];
 const ADMIN: NavItem[] = [
   { to: '/admin', label: tk('오늘의 레이크'), sub: tk('존·파이프라인 상태'), icon: LayoutDashboard, end: true },
+  { to: '/admin/ingest', label: tk('데이터 넣기'), sub: tk('원천 연결·파일 올리기'), icon: Upload },
   { to: '/admin/catalog', label: tk('데이터 카탈로그'), sub: tk('데이터셋·스키마·매핑'), icon: Database },
   { to: '/admin/ontology', label: tk('온톨로지'), sub: tk('KS X 9101 클래스·관계'), icon: Network },
   { to: '/admin/lineage', label: tk('계보'), sub: tk('원천 → 활용 흐름'), icon: GitBranch },
@@ -138,6 +140,7 @@ export default function App() {
           <Route path="/kpi" element={<Kpi />} />
           <Route path="/inbox" element={<InboxPage />} />
           <Route path="/admin" element={<AdminOnly><Overview /></AdminOnly>} />
+          <Route path="/admin/ingest" element={<AdminOnly><Ingest /></AdminOnly>} />
           <Route path="/admin/catalog/:id?" element={<AdminOnly><Catalog /></AdminOnly>} />
           <Route path="/admin/ontology/:name?" element={<AdminOnly><Ontology /></AdminOnly>} />
           <Route path="/admin/lineage" element={<AdminOnly><Lineage /></AdminOnly>} />
