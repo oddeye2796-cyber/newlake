@@ -1,0 +1,32 @@
+@prefix ksx:   <https://ontology.impix.co.kr/ksx9101/> .
+@prefix arcon: <https://ontology.impix.co.kr/arcon/> .
+@prefix lake:  <https://ontology.impix.co.kr/lake/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+# 예시 A-Box — IRI 규칙: https://data.impix.co.kr/arcon/{EnterpriseID}/{Noun}/{PK…}
+# (Site/Plant 는 PK 가 아니므로 IRI 에 넣지 않고 Named Graph 로 격리)
+# 마지막 로트(LOT-2026-0799)는 의도적 위반 2건(사업장 누락, 품목 참조 대상 오류)을 담는다.
+
+<https://data.impix.co.kr/arcon/ACME/Enterprise/ACME> a ksx:Enterprise ; ksx:enterpriseId "ACME" .
+<https://data.impix.co.kr/arcon/ACME/Site/HQ> a ksx:Site ; ksx:refEnterprise <https://data.impix.co.kr/arcon/ACME/Enterprise/ACME> ; ksx:siteId "HQ" ; ksx:siteName "본사 사업장" .
+<https://data.impix.co.kr/arcon/ACME/Plant/P1> a ksx:Plant ; ksx:refEnterprise <https://data.impix.co.kr/arcon/ACME/Enterprise/ACME> ; ksx:refSite <https://data.impix.co.kr/arcon/ACME/Site/HQ> ; ksx:plantId "P1" ; ksx:plantName "후공정 1공장" .
+
+<https://data.impix.co.kr/arcon/ACME/ItemMaster/ITM-A100> a ksx:ItemMaster ; ksx:refEnterprise <https://data.impix.co.kr/arcon/ACME/Enterprise/ACME> ; ksx:refSite <https://data.impix.co.kr/arcon/ACME/Site/HQ> ; ksx:refPlant <https://data.impix.co.kr/arcon/ACME/Plant/P1> ;
+    ksx:itemId "ITM-A100" ; ksx:itemName "BGA 패키지 A100" .
+<https://data.impix.co.kr/arcon/ACME/Equipment/EQ-07> a ksx:Equipment ; ksx:refEnterprise <https://data.impix.co.kr/arcon/ACME/Enterprise/ACME> ; ksx:refSite <https://data.impix.co.kr/arcon/ACME/Site/HQ> ; ksx:refPlant <https://data.impix.co.kr/arcon/ACME/Plant/P1> ;
+    ksx:equipmentId "EQ-07" ; ksx:equipmentName "리플로우 오븐 7호기" .
+
+<https://data.impix.co.kr/arcon/ACME/Lot/LOT-2026-0730> a ksx:Lot ; ksx:refEnterprise <https://data.impix.co.kr/arcon/ACME/Enterprise/ACME> ; ksx:refSite <https://data.impix.co.kr/arcon/ACME/Site/HQ> ; ksx:refPlant <https://data.impix.co.kr/arcon/ACME/Plant/P1> ;
+    ksx:lotId "LOT-2026-0730" ; ksx:refItem <https://data.impix.co.kr/arcon/ACME/ItemMaster/ITM-A100> ; ksx:producedQuantity "1000"^^xsd:decimal ;
+    lake:tier lake:ASSERTED .
+<https://data.impix.co.kr/arcon/ACME/Lot/LOT-2026-0731> a ksx:Lot ; ksx:refEnterprise <https://data.impix.co.kr/arcon/ACME/Enterprise/ACME> ; ksx:refSite <https://data.impix.co.kr/arcon/ACME/Site/HQ> ; ksx:refPlant <https://data.impix.co.kr/arcon/ACME/Plant/P1> ;
+    ksx:lotId "LOT-2026-0731" ; ksx:lotName "A100 분할로트" ; ksx:refItem <https://data.impix.co.kr/arcon/ACME/ItemMaster/ITM-A100> ;
+    ksx:refParentLot <https://data.impix.co.kr/arcon/ACME/Lot/LOT-2026-0730> ; ksx:producedQuantity "980"^^xsd:decimal ; ksx:defectQuantity "34"^^xsd:decimal ;
+    ksx:holdIndicator false .
+
+<https://data.impix.co.kr/arcon/ACME/TraceParameter/EQ-07_TEMP01_20260726T101500> a ksx:TraceParameter ;
+    ksx:refEnterprise <https://data.impix.co.kr/arcon/ACME/Enterprise/ACME> ; ksx:refSite <https://data.impix.co.kr/arcon/ACME/Site/HQ> ; ksx:refPlant <https://data.impix.co.kr/arcon/ACME/Plant/P1> ;
+    ksx:refEquipment <https://data.impix.co.kr/arcon/ACME/Equipment/EQ-07> ; ksx:eventDateTime "2026-07-26T10:15:00"^^xsd:dateTime ;
+    ksx:parameterValue "262.4"^^xsd:decimal .
+
+<https://data.impix.co.kr/arcon/ACME/Lot/LOT-2026-0799> a ksx:Lot ; ksx:refEnterprise <https://data.impix.co.kr/arcon/ACME/Enterprise/ACME> ; ksx:refPlant <https://data.impix.co.kr/arcon/ACME/Plant/P1> ;
+    ksx:lotId "LOT-2026-0799" ; ksx:refItem <https://data.impix.co.kr/arcon/ACME/Equipment/EQ-07> .

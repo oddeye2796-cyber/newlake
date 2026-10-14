@@ -1,0 +1,1560 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix cl:   <https://data.impix.co.kr/arcon/codelist/> .
+@prefix ksx:  <https://ontology.impix.co.kr/ksx9101/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+# 공통코드 워크시트 → SKOS (코드그룹=ConceptScheme, 코드=Concept, 상위코드=skos:broader)
+
+<https://data.impix.co.kr/arcon/codelist/CountryID> a skos:ConceptScheme ; skos:prefLabel "국가"@ko ;
+    skos:definition "공장·고객사·공급사·회사의 국가. ISO 3166-1 alpha-2 코드 사용 권고(7.1). 아래는 주요 교역국 예시이며 실제 셋업 시 ISO 3166-1 전체 목록을 일괄 등록"@ko ; ksx:codeSystem "표준권고(ISO 3166-1)" .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode> a skos:ConceptScheme ; skos:prefLabel "통화(환종)"@ko ;
+    skos:definition "거래 통화(환종코드) 및 회사 기준통화. ISO 4217 알파벳 3자리 코드 사용 권고. CurrencyCode와 BaseCurrencyCode가 같은 그룹을 공유"@ko ; ksx:codeSystem "표준권고(ISO 4217)" .
+<https://data.impix.co.kr/arcon/codelist/EmploymentStatusType> a skos:ConceptScheme ; skos:prefLabel "재직유형"@ko ;
+    skos:definition "사원의 재직상태. 표준에 예시 없음 → 인사 기준 보완"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/CalendarType> a skos:ConceptScheme ; skos:prefLabel "달력유형"@ko ;
+    skos:definition "생산 현장 달력의 유형"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/DayOfWeek> a skos:ConceptScheme ; skos:prefLabel "요일"@ko ;
+    skos:definition "KS X ISO 8601 요일 번호(1: 월요일 ~ 7: 일요일) 사용 권고"@ko ; ksx:codeSystem "표준권고(KS X ISO 8601)" .
+<https://data.impix.co.kr/arcon/codelist/ScheduleType> a skos:ConceptScheme ; skos:prefLabel "근무일유형"@ko ;
+    skos:definition "해당일의 근무유형"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/ItemType> a skos:ConceptScheme ; skos:prefLabel "품목유형"@ko ;
+    skos:definition "품목의 유형. 품목식별자(ItemID) 설명의 품목 범위(제품, 반제품, 상품, 원자재, 부자재, 저장품, 소모품)를 반영"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/ItemLargeClass> a skos:ConceptScheme ; skos:prefLabel "품목대분류"@ko ;
+    skos:definition "회사 기준 분류체계. 아래는 부품·조립 제조업 예시"@ko ; ksx:codeSystem "회사정의(계층)" .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass> a skos:ConceptScheme ; skos:prefLabel "품목중분류"@ko ;
+    skos:definition "품목대분류 하위. 상위코드 = 품목대분류"@ko ; ksx:codeSystem "회사정의(계층)" .
+<https://data.impix.co.kr/arcon/codelist/ItemSmallClass> a skos:ConceptScheme ; skos:prefLabel "품목소분류"@ko ;
+    skos:definition "품목중분류 하위. 상위코드 = 품목중분류"@ko ; ksx:codeSystem "회사정의(계층)" .
+<https://data.impix.co.kr/arcon/codelist/ABCClass> a skos:ConceptScheme ; skos:prefLabel "에이비씨분류"@ko ;
+    skos:definition "A, B, C 세 종류(표준). 분류 기준은 회사가 정함 — 아래는 연간 사용금액 누계 비율 기준 예시"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/BOMType> a skos:ConceptScheme ; skos:prefLabel "자재명세서유형"@ko ;
+    skos:definition "자재명세서의 유형(부속서 A의 BOM 용도: 제조BOM, 설계BOM, 원가BOM 등)"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/LotType> a skos:ConceptScheme ; skos:prefLabel "로트유형"@ko ;
+    skos:definition "로트 유형"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/LotState> a skos:ConceptScheme ; skos:prefLabel "로트상태"@ko ;
+    skos:definition "로트의 상태"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/OperationType> a skos:ConceptScheme ; skos:prefLabel "공정유형"@ko ;
+    skos:definition "공정의 유형(회사가 공통코드에 등록하여 관리)"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/OperationLargeClass> a skos:ConceptScheme ; skos:prefLabel "공정대분류"@ko ;
+    skos:definition "회사 기준 분류체계. 아래는 부품·조립 제조업 예시"@ko ; ksx:codeSystem "회사정의(계층)" .
+<https://data.impix.co.kr/arcon/codelist/OperationMediumClass> a skos:ConceptScheme ; skos:prefLabel "공정중분류"@ko ;
+    skos:definition "공정대분류 하위. 상위코드 = 공정대분류"@ko ; ksx:codeSystem "회사정의(계층)" .
+<https://data.impix.co.kr/arcon/codelist/OperationSmallClass> a skos:ConceptScheme ; skos:prefLabel "공정소분류"@ko ;
+    skos:definition "공정중분류 하위. 상위코드 = 공정중분류"@ko ; ksx:codeSystem "회사정의(계층)" .
+<https://data.impix.co.kr/arcon/codelist/EquipmentType> a skos:ConceptScheme ; skos:prefLabel "설비유형"@ko ;
+    skos:definition "설비의 유형. 표준에 예시 없음 → 보완"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass> a skos:ConceptScheme ; skos:prefLabel "설비대분류"@ko ;
+    skos:definition "회사 기준 분류체계. 아래는 예시"@ko ; ksx:codeSystem "회사정의(계층)" .
+<https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass> a skos:ConceptScheme ; skos:prefLabel "설비중분류"@ko ;
+    skos:definition "설비대분류 하위. 상위코드 = 설비대분류"@ko ; ksx:codeSystem "회사정의(계층)" .
+<https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass> a skos:ConceptScheme ; skos:prefLabel "설비소분류"@ko ;
+    skos:definition "설비중분류 하위. 상위코드 = 설비중분류. 공정설비(OperationEquipment)에서도 사용"@ko ; ksx:codeSystem "회사정의(계층)" .
+<https://data.impix.co.kr/arcon/codelist/CarrierType> a skos:ConceptScheme ; skos:prefLabel "캐리어유형"@ko ;
+    skos:definition "캐리어의 유형(종류)"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/LoadState> a skos:ConceptScheme ; skos:prefLabel "적재상태"@ko ;
+    skos:definition "캐리어 적재 상태"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/CarrierState> a skos:ConceptScheme ; skos:prefLabel "캐리어상태"@ko ;
+    skos:definition "캐리어의 상태"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/WarehouseType> a skos:ConceptScheme ; skos:prefLabel "창고유형"@ko ;
+    skos:definition "창고의 유형. 표준에 예시 없음 → 보완(부속서 A 반품창고 시나리오 반영)"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/BatchType> a skos:ConceptScheme ; skos:prefLabel "배치유형"@ko ;
+    skos:definition "배치 유형"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/BatchState> a skos:ConceptScheme ; skos:prefLabel "배치상태"@ko ;
+    skos:definition "배치의 상태(IEC 61512-1 배치 상태 참고)"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/QualityDispositionCode> a skos:ConceptScheme ; skos:prefLabel "품질판정코드"@ko ;
+    skos:definition "배치의 품질 판정 결과"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/LineType> a skos:ConceptScheme ; skos:prefLabel "라인유형"@ko ;
+    skos:definition "라인의 유형(회사가 공통코드에 등록하여 관리)"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/ProductionMethodType> a skos:ConceptScheme ; skos:prefLabel "생산방식유형"@ko ;
+    skos:definition "라인의 생산 방식"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/ProjectStatusCode> a skos:ConceptScheme ; skos:prefLabel "프로젝트상태코드"@ko ;
+    skos:definition "프로젝트 상태(등록, 진행, 종료 등)"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/SalesOrderType> a skos:ConceptScheme ; skos:prefLabel "수주유형"@ko ;
+    skos:definition "수주 형태·성격"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/SalesStatus> a skos:ConceptScheme ; skos:prefLabel "수주상태"@ko ;
+    skos:definition "수주상태. 표준에 예시 없음 → 보완"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode> a skos:ConceptScheme ; skos:prefLabel "출하조건코드"@ko ;
+    skos:definition "출하·인도 조건. 국제 거래는 Incoterms 2020 코드 사용 권고"@ko ; ksx:codeSystem "표준권고(Incoterms 2020)" .
+<https://data.impix.co.kr/arcon/codelist/SalesTransactionType> a skos:ConceptScheme ; skos:prefLabel "거래유형(매출)"@ko ;
+    skos:definition "매출 거래유형"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/PaymentTermsCode> a skos:ConceptScheme ; skos:prefLabel "결제조건코드"@ko ;
+    skos:definition "대금결제조건(기준단가·구매발주에서 사용)"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode> a skos:ConceptScheme ; skos:prefLabel "구매그룹코드"@ko ;
+    skos:definition "구매그룹(구매조직 내 담당 단위). 세분화되지 않은 기업은 단일 코드로 운영"@ko ; ksx:codeSystem "회사정의" .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderTypeCode> a skos:ConceptScheme ; skos:prefLabel "발주유형코드"@ko ;
+    skos:definition "구매유형·형태·성격"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType> a skos:ConceptScheme ; skos:prefLabel "거래유형(매입)"@ko ;
+    skos:definition "매입 거래유형"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/ItemPurchaseType> a skos:ConceptScheme ; skos:prefLabel "구매라인유형"@ko ;
+    skos:definition "품목별 구매유형"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode> a skos:ConceptScheme ; skos:prefLabel "발주라인상태코드"@ko ;
+    skos:definition "발주라인 상태"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/TaxCode> a skos:ConceptScheme ; skos:prefLabel "세무코드"@ko ;
+    skos:definition "매입 세무코드(부가가치세 신고 구분과 연계)"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/AccountCode> a skos:ConceptScheme ; skos:prefLabel "계정코드"@ko ;
+    skos:definition "구매 거래가 기표되는 회계 계정과목. ERP 계정과목 코드로 대체하여 등록(아래 코드값은 예시)"@ko ; ksx:codeSystem "회사정의" .
+<https://data.impix.co.kr/arcon/codelist/GoodsReceiptType> a skos:ConceptScheme ; skos:prefLabel "입고처리유형"@ko ;
+    skos:definition "입고처리유형"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/GoodsReceiptReturnType> a skos:ConceptScheme ; skos:prefLabel "입고반품유형"@ko ;
+    skos:definition "구매발주 품목의 입고 반품 처리 유형"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionType> a skos:ConceptScheme ; skos:prefLabel "수불유형"@ko ;
+    skos:definition "재고 변동의 대분류"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/InventoryVariationType> a skos:ConceptScheme ; skos:prefLabel "재고증감유형"@ko ;
+    skos:definition "재고 수량의 증감 구분"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransferType> a skos:ConceptScheme ; skos:prefLabel "입출고유형"@ko ;
+    skos:definition "입고·출고 사유 구분. 상위코드 = 수불유형"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> a skos:ConceptScheme ; skos:prefLabel "수불유형코드"@ko ;
+    skos:definition "재고 변동(수불)의 성격과 원인을 구분하는 상세 코드. 상위 = 입출고유형(이동·조정은 수불유형). 수불유형코드가 정해지면 수불유형·입출고유형·재고증감유형이 정해짐(ERP 이동유형에 대응) — 수불유형 대응표 시트 참조"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/LocationType> a skos:ConceptScheme ; skos:prefLabel "위치유형(출발지·목적지)"@ko ;
+    skos:definition "이동지시·운행시작·운행완료의 출발지유형(SourceType)·목적지유형(DestinationType)이 같은 그룹을 공유"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/TransferErrorCode> a skos:ConceptScheme ; skos:prefLabel "반송오류코드"@ko ;
+    skos:definition "운행시작(TransferStart)의 오류코드(ErrorCode)가 참조하는 반송 오류 그룹. 코드값은 접두어 TR-로 시작"@ko ; ksx:codeSystem "회사정의(접두어 TR-)" .
+<https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode> a skos:ConceptScheme ; skos:prefLabel "설비오류코드"@ko ;
+    skos:definition "설비상태(EquipmentState)·알람(Alarm)의 오류코드(ErrorCode)가 참조하는 설비 오류 그룹. 코드값은 접두어 EQ-로 시작. 설비 제작사 오류코드를 쓰는 경우 EQ- 뒤에 제작사 코드를 붙임(예: EQ-E1023)"@ko ; ksx:codeSystem "회사정의(접두어 EQ-)" .
+<https://data.impix.co.kr/arcon/codelist/ServiceErrorCode> a skos:ConceptScheme ; skos:prefLabel "서비스오류코드"@ko ;
+    skos:definition "사후서비스접수결과(AfterSalesServiceRequestResult)의 오류코드(ErrorCode)가 참조하는 제품 고장 오류 그룹. 코드값은 접두어 AS-로 시작"@ko ; ksx:codeSystem "회사정의(접두어 AS-)" .
+<https://data.impix.co.kr/arcon/codelist/EquipmentState> a skos:ConceptScheme ; skos:prefLabel "설비상태"@ko ;
+    skos:definition "설비 상태 값(Run, Idle, Down). 보완 코드는 SEMI E10 설비 상태 분류 참고"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/EquipmentControlMode> a skos:ConceptScheme ; skos:prefLabel "설비제어모드"@ko ;
+    skos:definition "설비 제어모드 값(SEMI E30 통신 상태 참고)"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/EquipmentOperationMode> a skos:ConceptScheme ; skos:prefLabel "설비운영모드"@ko ;
+    skos:definition "설비 운영모드 값"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/AlarmState> a skos:ConceptScheme ; skos:prefLabel "알람상태"@ko ;
+    skos:definition "알람상태"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/InspectionMethod> a skos:ConceptScheme ; skos:prefLabel "검사방법"@ko ;
+    skos:definition "검사의 방법"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/InspectionStatusCode> a skos:ConceptScheme ; skos:prefLabel "검사상태코드"@ko ;
+    skos:definition "검사 진행 상태. 합격·불합격 등 판정은 검사결과(InspectionResult)로 구분"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/InspectionResult> a skos:ConceptScheme ; skos:prefLabel "검사결과"@ko ;
+    skos:definition "검사 결과"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode> a skos:ConceptScheme ; skos:prefLabel "시정조치상태코드"@ko ;
+    skos:definition "시정조치 진행 상태"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/PackingType> a skos:ConceptScheme ; skos:prefLabel "포장유형"@ko ;
+    skos:definition "포장유형"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/ParameterType> a skos:ConceptScheme ; skos:prefLabel "파라미터유형"@ko ;
+    skos:definition "설비에서 수집하는 파라미터의 유형"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/ParameterGrade> a skos:ConceptScheme ; skos:prefLabel "파라미터등급"@ko ;
+    skos:definition "파라미터의 중요도·위험성 등급"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/ValidationResultCode> a skos:ConceptScheme ; skos:prefLabel "검증결과코드"@ko ;
+    skos:definition "수집 데이터의 규격 범위 검증 결과"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/TaskGroupCode> a skos:ConceptScheme ; skos:prefLabel "근무조코드"@ko ;
+    skos:definition "작업자가 속한 근무조. 표준에 예시 없음 → 보완"@ko ; ksx:codeSystem "회사정의" .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeCode> a skos:ConceptScheme ; skos:prefLabel "불량유형코드"@ko ;
+    skos:definition "불량의 유형(회사 기준 분류체계). 아래는 예시"@ko ; ksx:codeSystem "회사정의(계층)" .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> a skos:ConceptScheme ; skos:prefLabel "불량유형상세코드"@ko ;
+    skos:definition "불량유형 하위. 상위코드 = 불량유형코드"@ko ; ksx:codeSystem "회사정의(계층)" .
+<https://data.impix.co.kr/arcon/codelist/ProductReleaseRequestType> a skos:ConceptScheme ; skos:prefLabel "납품구분유형"@ko ;
+    skos:definition "납품구분유형"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/ReturnType> a skos:ConceptScheme ; skos:prefLabel "반품유형"@ko ;
+    skos:definition "반품 유형(구매·제품 반품)과 세부 사유(불량, 수량오류, 오배송, 계약위반). 상위코드로 2단계 구성"@ko ; ksx:codeSystem "고정형(계층)" .
+<https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode> a skos:ConceptScheme ; skos:prefLabel "접수내용단순처리코드"@ko ;
+    skos:definition "이관 없이 단순처리한 사유. 표준에 예시 없음 → 보완"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/TransferRegistrationCode> a skos:ConceptScheme ; skos:prefLabel "이관등록코드"@ko ;
+    skos:definition "사후서비스를 이관 받아 수행할 주체"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/FaultLargeClass> a skos:ConceptScheme ; skos:prefLabel "하자현상대분류"@ko ;
+    skos:definition "제품고장 현상 대분류(회사 기준). 아래는 예시"@ko ; ksx:codeSystem "회사정의(계층)" .
+<https://data.impix.co.kr/arcon/codelist/FaultSmallClass> a skos:ConceptScheme ; skos:prefLabel "하자현상소분류"@ko ;
+    skos:definition "하자현상대분류 하위. 상위코드 = 하자현상대분류"@ko ; ksx:codeSystem "회사정의(계층)" .
+<https://data.impix.co.kr/arcon/codelist/WorkType> a skos:ConceptScheme ; skos:prefLabel "작업유형"@ko ;
+    skos:definition "사후서비스 처리 내용(교환, 수리, 점검 등)"@ko ; ksx:codeSystem "고정형" .
+<https://data.impix.co.kr/arcon/codelist/RepairType> a skos:ConceptScheme ; skos:prefLabel "수리유형"@ko ;
+    skos:definition "부품 교체 사유가 된 현상 유형(회사 기준). 아래는 예시"@ko ; ksx:codeSystem "회사정의" .
+<https://data.impix.co.kr/arcon/codelist/합계> a skos:ConceptScheme ; skos:prefLabel ""@ko ;
+    skos:definition ""@ko ; ksx:codeSystem "" .
+<https://data.impix.co.kr/arcon/codelist/CountryID/KR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "KR" ;
+    skos:prefLabel "대한민국"@ko , "Republic of Korea"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/US> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "US" ;
+    skos:prefLabel "미국"@ko , "United States of America"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/CN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "CN" ;
+    skos:prefLabel "중국"@ko , "China"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/JP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "JP" ;
+    skos:prefLabel "일본"@ko , "Japan"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/VN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "VN" ;
+    skos:prefLabel "베트남"@ko , "Viet Nam"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/TW> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "TW" ;
+    skos:prefLabel "대만"@ko , "Taiwan"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/HK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "HK" ;
+    skos:prefLabel "홍콩"@ko , "Hong Kong"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/SG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "SG" ;
+    skos:prefLabel "싱가포르"@ko , "Singapore"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/IN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "IN" ;
+    skos:prefLabel "인도"@ko , "India"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/ID> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "ID" ;
+    skos:prefLabel "인도네시아"@ko , "Indonesia"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/TH> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "TH" ;
+    skos:prefLabel "태국"@ko , "Thailand"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/MY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "MY" ;
+    skos:prefLabel "말레이시아"@ko , "Malaysia"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/PH> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "PH" ;
+    skos:prefLabel "필리핀"@ko , "Philippines"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/MX> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "MX" ;
+    skos:prefLabel "멕시코"@ko , "Mexico"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/CA> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "CA" ;
+    skos:prefLabel "캐나다"@ko , "Canada"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/BR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "BR" ;
+    skos:prefLabel "브라질"@ko , "Brazil"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/DE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "DE" ;
+    skos:prefLabel "독일"@ko , "Germany"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/FR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "FR" ;
+    skos:prefLabel "프랑스"@ko , "France"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/GB> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "GB" ;
+    skos:prefLabel "영국"@ko , "United Kingdom"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/IT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "IT" ;
+    skos:prefLabel "이탈리아"@ko , "Italy"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/NL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "NL" ;
+    skos:prefLabel "네덜란드"@ko , "Netherlands"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/PL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "PL" ;
+    skos:prefLabel "폴란드"@ko , "Poland"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/HU> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "HU" ;
+    skos:prefLabel "헝가리"@ko , "Hungary"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/CZ> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "CZ" ;
+    skos:prefLabel "체코"@ko , "Czechia"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/TR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "TR" ;
+    skos:prefLabel "튀르키예"@ko , "Türkiye"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/SA> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "SA" ;
+    skos:prefLabel "사우디아라비아"@ko , "Saudi Arabia"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/AE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "AE" ;
+    skos:prefLabel "아랍에미리트"@ko , "United Arab Emirates"@en .
+<https://data.impix.co.kr/arcon/codelist/CountryID/AU> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "AU" ;
+    skos:prefLabel "호주"@ko , "Australia"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/KRW> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "KRW" ;
+    skos:prefLabel "원"@ko , "Korean won"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/USD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "USD" ;
+    skos:prefLabel "미국 달러"@ko , "US dollar"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/JPY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "JPY" ;
+    skos:prefLabel "엔"@ko , "Japanese yen"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/EUR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "EUR" ;
+    skos:prefLabel "유로"@ko , "Euro"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/CNY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "CNY" ;
+    skos:prefLabel "위안"@ko , "Chinese yuan renminbi"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/VND> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "VND" ;
+    skos:prefLabel "동"@ko , "Vietnamese dong"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/GBP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "GBP" ;
+    skos:prefLabel "파운드"@ko , "Pound sterling"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/HKD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "HKD" ;
+    skos:prefLabel "홍콩 달러"@ko , "Hong Kong dollar"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/TWD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "TWD" ;
+    skos:prefLabel "대만 달러"@ko , "New Taiwan dollar"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/SGD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "SGD" ;
+    skos:prefLabel "싱가포르 달러"@ko , "Singapore dollar"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/INR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "INR" ;
+    skos:prefLabel "루피"@ko , "Indian rupee"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/IDR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "IDR" ;
+    skos:prefLabel "루피아"@ko , "Indonesian rupiah"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/THB> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "THB" ;
+    skos:prefLabel "바트"@ko , "Thai baht"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/MXN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "MXN" ;
+    skos:prefLabel "멕시코 페소"@ko , "Mexican peso"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/CAD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "CAD" ;
+    skos:prefLabel "캐나다 달러"@ko , "Canadian dollar"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/AUD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "AUD" ;
+    skos:prefLabel "호주 달러"@ko , "Australian dollar"@en .
+<https://data.impix.co.kr/arcon/codelist/CurrencyCode/CHF> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CurrencyCode> ; skos:notation "CHF" ;
+    skos:prefLabel "스위스 프랑"@ko , "Swiss franc"@en .
+<https://data.impix.co.kr/arcon/codelist/EmploymentStatusType/ACTIVE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EmploymentStatusType> ; skos:notation "ACTIVE" ;
+    skos:prefLabel "재직"@ko , "Active"@en .
+<https://data.impix.co.kr/arcon/codelist/EmploymentStatusType/PROBATION> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EmploymentStatusType> ; skos:notation "PROBATION" ;
+    skos:prefLabel "수습"@ko , "Probation"@en .
+<https://data.impix.co.kr/arcon/codelist/EmploymentStatusType/LEAVE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EmploymentStatusType> ; skos:notation "LEAVE" ;
+    skos:prefLabel "휴직"@ko , "Leave of absence"@en .
+<https://data.impix.co.kr/arcon/codelist/EmploymentStatusType/DISPATCHED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EmploymentStatusType> ; skos:notation "DISPATCHED" ;
+    skos:prefLabel "파견"@ko , "Dispatched"@en .
+<https://data.impix.co.kr/arcon/codelist/EmploymentStatusType/RETIRED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EmploymentStatusType> ; skos:notation "RETIRED" ;
+    skos:prefLabel "퇴직"@ko , "Retired"@en .
+<https://data.impix.co.kr/arcon/codelist/CalendarType/PLANT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CalendarType> ; skos:notation "PLANT" ;
+    skos:prefLabel "공장 달력"@ko , "Plant calendar"@en .
+<https://data.impix.co.kr/arcon/codelist/CalendarType/LINE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CalendarType> ; skos:notation "LINE" ;
+    skos:prefLabel "라인 달력"@ko , "Line calendar"@en .
+<https://data.impix.co.kr/arcon/codelist/CalendarType/SHIFT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CalendarType> ; skos:notation "SHIFT" ;
+    skos:prefLabel "교대 달력"@ko , "Shift calendar"@en .
+<https://data.impix.co.kr/arcon/codelist/CalendarType/EQUIPMENT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CalendarType> ; skos:notation "EQUIPMENT" ;
+    skos:prefLabel "설비 달력"@ko , "Equipment calendar"@en .
+<https://data.impix.co.kr/arcon/codelist/CalendarType/ENTERPRISE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CalendarType> ; skos:notation "ENTERPRISE" ;
+    skos:prefLabel "회사 달력"@ko , "Enterprise calendar"@en .
+<https://data.impix.co.kr/arcon/codelist/DayOfWeek/1> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DayOfWeek> ; skos:notation "1" ;
+    skos:prefLabel "월요일"@ko , "Monday"@en .
+<https://data.impix.co.kr/arcon/codelist/DayOfWeek/2> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DayOfWeek> ; skos:notation "2" ;
+    skos:prefLabel "화요일"@ko , "Tuesday"@en .
+<https://data.impix.co.kr/arcon/codelist/DayOfWeek/3> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DayOfWeek> ; skos:notation "3" ;
+    skos:prefLabel "수요일"@ko , "Wednesday"@en .
+<https://data.impix.co.kr/arcon/codelist/DayOfWeek/4> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DayOfWeek> ; skos:notation "4" ;
+    skos:prefLabel "목요일"@ko , "Thursday"@en .
+<https://data.impix.co.kr/arcon/codelist/DayOfWeek/5> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DayOfWeek> ; skos:notation "5" ;
+    skos:prefLabel "금요일"@ko , "Friday"@en .
+<https://data.impix.co.kr/arcon/codelist/DayOfWeek/6> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DayOfWeek> ; skos:notation "6" ;
+    skos:prefLabel "토요일"@ko , "Saturday"@en .
+<https://data.impix.co.kr/arcon/codelist/DayOfWeek/7> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DayOfWeek> ; skos:notation "7" ;
+    skos:prefLabel "일요일"@ko , "Sunday"@en .
+<https://data.impix.co.kr/arcon/codelist/ScheduleType/NORMAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ScheduleType> ; skos:notation "NORMAL" ;
+    skos:prefLabel "정상근무"@ko , "Normal workday"@en .
+<https://data.impix.co.kr/arcon/codelist/ScheduleType/HOLIDAY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ScheduleType> ; skos:notation "HOLIDAY" ;
+    skos:prefLabel "휴일"@ko , "Holiday"@en .
+<https://data.impix.co.kr/arcon/codelist/ScheduleType/OVERTIME> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ScheduleType> ; skos:notation "OVERTIME" ;
+    skos:prefLabel "특근"@ko , "Special work"@en .
+<https://data.impix.co.kr/arcon/codelist/ScheduleType/OFF> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ScheduleType> ; skos:notation "OFF" ;
+    skos:prefLabel "휴무"@ko , "Day off"@en .
+<https://data.impix.co.kr/arcon/codelist/ScheduleType/HALF> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ScheduleType> ; skos:notation "HALF" ;
+    skos:prefLabel "반일근무"@ko , "Half day"@en .
+<https://data.impix.co.kr/arcon/codelist/ScheduleType/PM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ScheduleType> ; skos:notation "PM" ;
+    skos:prefLabel "정기보수"@ko , "Planned maintenance"@en .
+<https://data.impix.co.kr/arcon/codelist/ScheduleType/SHUTDOWN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ScheduleType> ; skos:notation "SHUTDOWN" ;
+    skos:prefLabel "계획정지"@ko , "Planned shutdown"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemType/FG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemType> ; skos:notation "FG" ;
+    skos:prefLabel "제품"@ko , "Finished good"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemType/SFG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemType> ; skos:notation "SFG" ;
+    skos:prefLabel "반제품"@ko , "Semi-finished good"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemType/MER> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemType> ; skos:notation "MER" ;
+    skos:prefLabel "상품"@ko , "Merchandise"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemType/RM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemType> ; skos:notation "RM" ;
+    skos:prefLabel "원자재"@ko , "Raw material"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemType/SM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemType> ; skos:notation "SM" ;
+    skos:prefLabel "부자재"@ko , "Sub material"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemType/SUP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemType> ; skos:notation "SUP" ;
+    skos:prefLabel "저장품"@ko , "Supplies"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemType/CON> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemType> ; skos:notation "CON" ;
+    skos:prefLabel "소모품"@ko , "Consumables"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemType/PKG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemType> ; skos:notation "PKG" ;
+    skos:prefLabel "포장재"@ko , "Packaging material"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemType/BYP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemType> ; skos:notation "BYP" ;
+    skos:prefLabel "부산물"@ko , "By-product"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemLargeClass/MTL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemLargeClass> ; skos:notation "MTL" ;
+    skos:prefLabel "금속소재"@ko , "Metal material"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemLargeClass/RES> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemLargeClass> ; skos:notation "RES" ;
+    skos:prefLabel "수지소재"@ko , "Resin material"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemLargeClass/ELC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemLargeClass> ; skos:notation "ELC" ;
+    skos:prefLabel "전자부품"@ko , "Electronic part"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemLargeClass/MEC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemLargeClass> ; skos:notation "MEC" ;
+    skos:prefLabel "기계부품"@ko , "Mechanical part"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemLargeClass/PKG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemLargeClass> ; skos:notation "PKG" ;
+    skos:prefLabel "포장자재"@ko , "Packaging"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemLargeClass/PRD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemLargeClass> ; skos:notation "PRD" ;
+    skos:prefLabel "완제품"@ko , "Product"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MTL-STL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "MTL-STL" ;
+    skos:prefLabel "철강"@ko , "Steel"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/MTL> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MTL-ALU> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "MTL-ALU" ;
+    skos:prefLabel "알루미늄"@ko , "Aluminium"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/MTL> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MTL-CU> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "MTL-CU" ;
+    skos:prefLabel "동"@ko , "Copper"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/MTL> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/RES-PP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "RES-PP" ;
+    skos:prefLabel "PP"@ko , "Polypropylene"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/RES> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/RES-ABS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "RES-ABS" ;
+    skos:prefLabel "ABS"@ko , "ABS"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/RES> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/RES-PC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "RES-PC" ;
+    skos:prefLabel "PC"@ko , "Polycarbonate"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/RES> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/ELC-SEM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "ELC-SEM" ;
+    skos:prefLabel "반도체"@ko , "Semiconductor"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/ELC> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/ELC-PAS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "ELC-PAS" ;
+    skos:prefLabel "수동소자"@ko , "Passive component"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/ELC> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/ELC-PCB> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "ELC-PCB" ;
+    skos:prefLabel "PCB"@ko , "Printed circuit board"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/ELC> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MEC-FST> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "MEC-FST" ;
+    skos:prefLabel "체결부품"@ko , "Fastener"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/MEC> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MEC-BRG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "MEC-BRG" ;
+    skos:prefLabel "베어링"@ko , "Bearing"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/MEC> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MEC-SPR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "MEC-SPR" ;
+    skos:prefLabel "스프링"@ko , "Spring"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/MEC> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/PKG-BOX> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "PKG-BOX" ;
+    skos:prefLabel "박스"@ko , "Box"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/PKG> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/PKG-CUS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "PKG-CUS" ;
+    skos:prefLabel "완충재"@ko , "Cushion"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/PKG> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/PRD-MOD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "PRD-MOD" ;
+    skos:prefLabel "모듈"@ko , "Module"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/PRD> .
+<https://data.impix.co.kr/arcon/codelist/ItemMediumClass/PRD-ASY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemMediumClass> ; skos:notation "PRD-ASY" ;
+    skos:prefLabel "조립완제품"@ko , "Assembly"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemLargeClass/PRD> .
+<https://data.impix.co.kr/arcon/codelist/ItemSmallClass/MTL-STL-PL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemSmallClass> ; skos:notation "MTL-STL-PL" ;
+    skos:prefLabel "강판"@ko , "Steel plate"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MTL-STL> .
+<https://data.impix.co.kr/arcon/codelist/ItemSmallClass/MTL-STL-BAR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemSmallClass> ; skos:notation "MTL-STL-BAR" ;
+    skos:prefLabel "봉강"@ko , "Steel bar"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MTL-STL> .
+<https://data.impix.co.kr/arcon/codelist/ItemSmallClass/MTL-STL-PIPE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemSmallClass> ; skos:notation "MTL-STL-PIPE" ;
+    skos:prefLabel "강관"@ko , "Steel pipe"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MTL-STL> .
+<https://data.impix.co.kr/arcon/codelist/ItemSmallClass/MTL-ALU-EXT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemSmallClass> ; skos:notation "MTL-ALU-EXT" ;
+    skos:prefLabel "알루미늄 압출재"@ko , "Aluminium extrusion"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MTL-ALU> .
+<https://data.impix.co.kr/arcon/codelist/ItemSmallClass/MTL-ALU-SHT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemSmallClass> ; skos:notation "MTL-ALU-SHT" ;
+    skos:prefLabel "알루미늄 판재"@ko , "Aluminium sheet"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MTL-ALU> .
+<https://data.impix.co.kr/arcon/codelist/ItemSmallClass/ELC-PAS-RES> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemSmallClass> ; skos:notation "ELC-PAS-RES" ;
+    skos:prefLabel "저항"@ko , "Resistor"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemMediumClass/ELC-PAS> .
+<https://data.impix.co.kr/arcon/codelist/ItemSmallClass/ELC-PAS-CAP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemSmallClass> ; skos:notation "ELC-PAS-CAP" ;
+    skos:prefLabel "커패시터"@ko , "Capacitor"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemMediumClass/ELC-PAS> .
+<https://data.impix.co.kr/arcon/codelist/ItemSmallClass/MEC-FST-BLT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemSmallClass> ; skos:notation "MEC-FST-BLT" ;
+    skos:prefLabel "볼트"@ko , "Bolt"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MEC-FST> .
+<https://data.impix.co.kr/arcon/codelist/ItemSmallClass/MEC-FST-NUT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemSmallClass> ; skos:notation "MEC-FST-NUT" ;
+    skos:prefLabel "너트"@ko , "Nut"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MEC-FST> .
+<https://data.impix.co.kr/arcon/codelist/ItemSmallClass/MEC-FST-SCR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemSmallClass> ; skos:notation "MEC-FST-SCR" ;
+    skos:prefLabel "스크루"@ko , "Screw"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ItemMediumClass/MEC-FST> .
+<https://data.impix.co.kr/arcon/codelist/ABCClass/A> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ABCClass> ; skos:notation "A" ;
+    skos:prefLabel "A등급"@ko , "Class A"@en .
+<https://data.impix.co.kr/arcon/codelist/ABCClass/B> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ABCClass> ; skos:notation "B" ;
+    skos:prefLabel "B등급"@ko , "Class B"@en .
+<https://data.impix.co.kr/arcon/codelist/ABCClass/C> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ABCClass> ; skos:notation "C" ;
+    skos:prefLabel "C등급"@ko , "Class C"@en .
+<https://data.impix.co.kr/arcon/codelist/BOMType/MBOM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BOMType> ; skos:notation "MBOM" ;
+    skos:prefLabel "제조BOM"@ko , "Manufacturing BOM"@en .
+<https://data.impix.co.kr/arcon/codelist/BOMType/CBOM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BOMType> ; skos:notation "CBOM" ;
+    skos:prefLabel "원가BOM"@ko , "Costing BOM"@en .
+<https://data.impix.co.kr/arcon/codelist/BOMType/EBOM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BOMType> ; skos:notation "EBOM" ;
+    skos:prefLabel "설계BOM"@ko , "Engineering BOM"@en .
+<https://data.impix.co.kr/arcon/codelist/BOMType/SBOM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BOMType> ; skos:notation "SBOM" ;
+    skos:prefLabel "서비스BOM"@ko , "Service BOM"@en .
+<https://data.impix.co.kr/arcon/codelist/LotType/PRODUCTION> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LotType> ; skos:notation "PRODUCTION" ;
+    skos:prefLabel "양산"@ko , "Production"@en .
+<https://data.impix.co.kr/arcon/codelist/LotType/DEVELOPMENT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LotType> ; skos:notation "DEVELOPMENT" ;
+    skos:prefLabel "개발"@ko , "Development"@en .
+<https://data.impix.co.kr/arcon/codelist/LotType/ENGINEERING> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LotType> ; skos:notation "ENGINEERING" ;
+    skos:prefLabel "엔지니어링"@ko , "Engineering"@en .
+<https://data.impix.co.kr/arcon/codelist/LotType/REWORK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LotType> ; skos:notation "REWORK" ;
+    skos:prefLabel "재작업"@ko , "Rework"@en .
+<https://data.impix.co.kr/arcon/codelist/LotType/SAMPLE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LotType> ; skos:notation "SAMPLE" ;
+    skos:prefLabel "샘플"@ko , "Sample"@en .
+<https://data.impix.co.kr/arcon/codelist/LotState/OPEN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LotState> ; skos:notation "OPEN" ;
+    skos:prefLabel "등록"@ko , "Open"@en .
+<https://data.impix.co.kr/arcon/codelist/LotState/RELEASE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LotState> ; skos:notation "RELEASE" ;
+    skos:prefLabel "발행"@ko , "Release"@en .
+<https://data.impix.co.kr/arcon/codelist/LotState/START> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LotState> ; skos:notation "START" ;
+    skos:prefLabel "시작"@ko , "Start"@en .
+<https://data.impix.co.kr/arcon/codelist/LotState/CLOSING> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LotState> ; skos:notation "CLOSING" ;
+    skos:prefLabel "마감"@ko , "Closing"@en .
+<https://data.impix.co.kr/arcon/codelist/LotState/HOLD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LotState> ; skos:notation "HOLD" ;
+    skos:prefLabel "보류"@ko , "Hold"@en .
+<https://data.impix.co.kr/arcon/codelist/LotState/SCRAP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LotState> ; skos:notation "SCRAP" ;
+    skos:prefLabel "폐기"@ko , "Scrap"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationType/PROD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationType> ; skos:notation "PROD" ;
+    skos:prefLabel "생산공정"@ko , "Production"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationType/OUTSRC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationType> ; skos:notation "OUTSRC" ;
+    skos:prefLabel "외주공정"@ko , "Outsourcing"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationType/MEAS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationType> ; skos:notation "MEAS" ;
+    skos:prefLabel "계측공정"@ko , "Measurement"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationType/INSP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationType> ; skos:notation "INSP" ;
+    skos:prefLabel "검사공정"@ko , "Inspection"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationType/PACK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationType> ; skos:notation "PACK" ;
+    skos:prefLabel "포장공정"@ko , "Packing"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationType/REWORK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationType> ; skos:notation "REWORK" ;
+    skos:prefLabel "재작업공정"@ko , "Rework"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationType/MOVE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationType> ; skos:notation "MOVE" ;
+    skos:prefLabel "이송공정"@ko , "Transfer"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationLargeClass/MFG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationLargeClass> ; skos:notation "MFG" ;
+    skos:prefLabel "가공"@ko , "Manufacturing"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationLargeClass/ASSY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationLargeClass> ; skos:notation "ASSY" ;
+    skos:prefLabel "조립"@ko , "Assembly"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationLargeClass/SURF> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationLargeClass> ; skos:notation "SURF" ;
+    skos:prefLabel "표면처리"@ko , "Surface treatment"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationLargeClass/HEAT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationLargeClass> ; skos:notation "HEAT" ;
+    skos:prefLabel "열처리"@ko , "Heat treatment"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationLargeClass/INSP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationLargeClass> ; skos:notation "INSP" ;
+    skos:prefLabel "검사"@ko , "Inspection"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationLargeClass/PACK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationLargeClass> ; skos:notation "PACK" ;
+    skos:prefLabel "포장"@ko , "Packing"@en .
+<https://data.impix.co.kr/arcon/codelist/OperationMediumClass/MFG-CUT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationMediumClass> ; skos:notation "MFG-CUT" ;
+    skos:prefLabel "절삭"@ko , "Cutting"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationLargeClass/MFG> .
+<https://data.impix.co.kr/arcon/codelist/OperationMediumClass/MFG-PRS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationMediumClass> ; skos:notation "MFG-PRS" ;
+    skos:prefLabel "프레스"@ko , "Pressing"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationLargeClass/MFG> .
+<https://data.impix.co.kr/arcon/codelist/OperationMediumClass/MFG-WLD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationMediumClass> ; skos:notation "MFG-WLD" ;
+    skos:prefLabel "용접"@ko , "Welding"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationLargeClass/MFG> .
+<https://data.impix.co.kr/arcon/codelist/OperationMediumClass/MFG-INJ> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationMediumClass> ; skos:notation "MFG-INJ" ;
+    skos:prefLabel "사출"@ko , "Injection molding"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationLargeClass/MFG> .
+<https://data.impix.co.kr/arcon/codelist/OperationMediumClass/ASSY-SUB> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationMediumClass> ; skos:notation "ASSY-SUB" ;
+    skos:prefLabel "서브조립"@ko , "Sub assembly"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationLargeClass/ASSY> .
+<https://data.impix.co.kr/arcon/codelist/OperationMediumClass/ASSY-FIN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationMediumClass> ; skos:notation "ASSY-FIN" ;
+    skos:prefLabel "최종조립"@ko , "Final assembly"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationLargeClass/ASSY> .
+<https://data.impix.co.kr/arcon/codelist/OperationMediumClass/SURF-PNT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationMediumClass> ; skos:notation "SURF-PNT" ;
+    skos:prefLabel "도장"@ko , "Painting"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationLargeClass/SURF> .
+<https://data.impix.co.kr/arcon/codelist/OperationMediumClass/SURF-PLT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationMediumClass> ; skos:notation "SURF-PLT" ;
+    skos:prefLabel "도금"@ko , "Plating"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationLargeClass/SURF> .
+<https://data.impix.co.kr/arcon/codelist/OperationMediumClass/INSP-INC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationMediumClass> ; skos:notation "INSP-INC" ;
+    skos:prefLabel "수입검사"@ko , "Incoming inspection"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationLargeClass/INSP> .
+<https://data.impix.co.kr/arcon/codelist/OperationMediumClass/INSP-PRC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationMediumClass> ; skos:notation "INSP-PRC" ;
+    skos:prefLabel "공정검사"@ko , "In-process inspection"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationLargeClass/INSP> .
+<https://data.impix.co.kr/arcon/codelist/OperationMediumClass/INSP-FIN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationMediumClass> ; skos:notation "INSP-FIN" ;
+    skos:prefLabel "출하검사"@ko , "Final inspection"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationLargeClass/INSP> .
+<https://data.impix.co.kr/arcon/codelist/OperationSmallClass/MFG-CUT-TRN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationSmallClass> ; skos:notation "MFG-CUT-TRN" ;
+    skos:prefLabel "선삭"@ko , "Turning"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationMediumClass/MFG-CUT> .
+<https://data.impix.co.kr/arcon/codelist/OperationSmallClass/MFG-CUT-MIL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationSmallClass> ; skos:notation "MFG-CUT-MIL" ;
+    skos:prefLabel "밀링"@ko , "Milling"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationMediumClass/MFG-CUT> .
+<https://data.impix.co.kr/arcon/codelist/OperationSmallClass/MFG-CUT-DRL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationSmallClass> ; skos:notation "MFG-CUT-DRL" ;
+    skos:prefLabel "드릴링"@ko , "Drilling"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationMediumClass/MFG-CUT> .
+<https://data.impix.co.kr/arcon/codelist/OperationSmallClass/MFG-PRS-BLK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationSmallClass> ; skos:notation "MFG-PRS-BLK" ;
+    skos:prefLabel "블랭킹"@ko , "Blanking"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationMediumClass/MFG-PRS> .
+<https://data.impix.co.kr/arcon/codelist/OperationSmallClass/MFG-PRS-BND> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationSmallClass> ; skos:notation "MFG-PRS-BND" ;
+    skos:prefLabel "벤딩"@ko , "Bending"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationMediumClass/MFG-PRS> .
+<https://data.impix.co.kr/arcon/codelist/OperationSmallClass/MFG-WLD-SPT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationSmallClass> ; skos:notation "MFG-WLD-SPT" ;
+    skos:prefLabel "스폿용접"@ko , "Spot welding"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationMediumClass/MFG-WLD> .
+<https://data.impix.co.kr/arcon/codelist/OperationSmallClass/MFG-WLD-ARC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationSmallClass> ; skos:notation "MFG-WLD-ARC" ;
+    skos:prefLabel "아크용접"@ko , "Arc welding"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationMediumClass/MFG-WLD> .
+<https://data.impix.co.kr/arcon/codelist/OperationSmallClass/ASSY-FIN-SCR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationSmallClass> ; skos:notation "ASSY-FIN-SCR" ;
+    skos:prefLabel "체결"@ko , "Screwing"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationMediumClass/ASSY-FIN> .
+<https://data.impix.co.kr/arcon/codelist/OperationSmallClass/ASSY-FIN-TST> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/OperationSmallClass> ; skos:notation "ASSY-FIN-TST" ;
+    skos:prefLabel "기능시험"@ko , "Function test"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/OperationMediumClass/ASSY-FIN> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentType/PROD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentType> ; skos:notation "PROD" ;
+    skos:prefLabel "생산설비"@ko , "Production equipment"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentType/INSP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentType> ; skos:notation "INSP" ;
+    skos:prefLabel "검사설비"@ko , "Inspection equipment"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentType/MEAS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentType> ; skos:notation "MEAS" ;
+    skos:prefLabel "계측기"@ko , "Measuring instrument"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentType/LOGI> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentType> ; skos:notation "LOGI" ;
+    skos:prefLabel "물류·반송설비"@ko , "Material handling"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentType/UTIL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentType> ; skos:notation "UTIL" ;
+    skos:prefLabel "유틸리티설비"@ko , "Utility"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentType/TOOL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentType> ; skos:notation "TOOL" ;
+    skos:prefLabel "금형·치공구"@ko , "Tooling"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/MCH> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass> ; skos:notation "MCH" ;
+    skos:prefLabel "공작기계"@ko , "Machine tool"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/PRS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass> ; skos:notation "PRS" ;
+    skos:prefLabel "프레스"@ko , "Press"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/INJ> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass> ; skos:notation "INJ" ;
+    skos:prefLabel "사출성형기"@ko , "Injection molding machine"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/WLD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass> ; skos:notation "WLD" ;
+    skos:prefLabel "용접기"@ko , "Welder"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/ROB> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass> ; skos:notation "ROB" ;
+    skos:prefLabel "로봇"@ko , "Robot"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/TST> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass> ; skos:notation "TST" ;
+    skos:prefLabel "시험·검사기"@ko , "Tester"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/MHS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass> ; skos:notation "MHS" ;
+    skos:prefLabel "물류설비"@ko , "Material handling system"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/MCH-LTH> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass> ; skos:notation "MCH-LTH" ;
+    skos:prefLabel "CNC 선반"@ko , "CNC lathe"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/MCH> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/MCH-MCT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass> ; skos:notation "MCH-MCT" ;
+    skos:prefLabel "머시닝센터"@ko , "Machining center"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/MCH> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/PRS-MEC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass> ; skos:notation "PRS-MEC" ;
+    skos:prefLabel "기계식 프레스"@ko , "Mechanical press"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/PRS> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/PRS-HYD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass> ; skos:notation "PRS-HYD" ;
+    skos:prefLabel "유압 프레스"@ko , "Hydraulic press"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/PRS> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/INJ-HYD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass> ; skos:notation "INJ-HYD" ;
+    skos:prefLabel "유압식 사출기"@ko , "Hydraulic injection"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/INJ> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/INJ-ELE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass> ; skos:notation "INJ-ELE" ;
+    skos:prefLabel "전동식 사출기"@ko , "Electric injection"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/INJ> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/ROB-ART> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass> ; skos:notation "ROB-ART" ;
+    skos:prefLabel "다관절 로봇"@ko , "Articulated robot"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/ROB> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/ROB-SCA> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass> ; skos:notation "ROB-SCA" ;
+    skos:prefLabel "스카라 로봇"@ko , "SCARA robot"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/ROB> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/TST-VIS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass> ; skos:notation "TST-VIS" ;
+    skos:prefLabel "비전검사기"@ko , "Vision inspection"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/TST> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/TST-CMM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass> ; skos:notation "TST-CMM" ;
+    skos:prefLabel "3차원 측정기"@ko , "CMM"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/TST> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/MHS-AGV> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass> ; skos:notation "MHS-AGV" ;
+    skos:prefLabel "AGV/AMR"@ko , "AGV/AMR"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/MHS> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/MHS-CNV> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass> ; skos:notation "MHS-CNV" ;
+    skos:prefLabel "컨베이어"@ko , "Conveyor"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentLargeClass/MHS> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass/MCH-MCT-V> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass> ; skos:notation "MCH-MCT-V" ;
+    skos:prefLabel "수직형 머시닝센터"@ko , "Vertical MC"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/MCH-MCT> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass/MCH-MCT-H> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass> ; skos:notation "MCH-MCT-H" ;
+    skos:prefLabel "수평형 머시닝센터"@ko , "Horizontal MC"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/MCH-MCT> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass/PRS-MEC-200> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass> ; skos:notation "PRS-MEC-200" ;
+    skos:prefLabel "기계식 프레스 200톤급"@ko , "200t press"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/PRS-MEC> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass/PRS-MEC-400> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass> ; skos:notation "PRS-MEC-400" ;
+    skos:prefLabel "기계식 프레스 400톤급"@ko , "400t press"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/PRS-MEC> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass/INJ-ELE-150> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass> ; skos:notation "INJ-ELE-150" ;
+    skos:prefLabel "전동식 사출기 150톤급"@ko , "150t injection"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/INJ-ELE> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass/TST-VIS-2D> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass> ; skos:notation "TST-VIS-2D" ;
+    skos:prefLabel "2D 비전검사기"@ko , "2D vision"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/TST-VIS> .
+<https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass/TST-VIS-3D> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentSmallClass> ; skos:notation "TST-VIS-3D" ;
+    skos:prefLabel "3D 비전검사기"@ko , "3D vision"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/EquipmentMediumClass/TST-VIS> .
+<https://data.impix.co.kr/arcon/codelist/CarrierType/FOUP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CarrierType> ; skos:notation "FOUP" ;
+    skos:prefLabel "FOUP"@ko , "Front opening unified pod"@en .
+<https://data.impix.co.kr/arcon/codelist/CarrierType/CASSETTE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CarrierType> ; skos:notation "CASSETTE" ;
+    skos:prefLabel "카세트"@ko , "Cassette"@en .
+<https://data.impix.co.kr/arcon/codelist/CarrierType/MAGAZINE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CarrierType> ; skos:notation "MAGAZINE" ;
+    skos:prefLabel "매거진"@ko , "Magazine"@en .
+<https://data.impix.co.kr/arcon/codelist/CarrierType/TRAY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CarrierType> ; skos:notation "TRAY" ;
+    skos:prefLabel "트레이"@ko , "Tray"@en .
+<https://data.impix.co.kr/arcon/codelist/CarrierType/PALLET> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CarrierType> ; skos:notation "PALLET" ;
+    skos:prefLabel "팔레트"@ko , "Pallet"@en .
+<https://data.impix.co.kr/arcon/codelist/CarrierType/TOTE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CarrierType> ; skos:notation "TOTE" ;
+    skos:prefLabel "토트박스"@ko , "Tote box"@en .
+<https://data.impix.co.kr/arcon/codelist/CarrierType/REEL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CarrierType> ; skos:notation "REEL" ;
+    skos:prefLabel "릴"@ko , "Reel"@en .
+<https://data.impix.co.kr/arcon/codelist/LoadState/EMPTY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LoadState> ; skos:notation "EMPTY" ;
+    skos:prefLabel "공"@ko , "Empty"@en .
+<https://data.impix.co.kr/arcon/codelist/LoadState/FULL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LoadState> ; skos:notation "FULL" ;
+    skos:prefLabel "만재"@ko , "Full"@en .
+<https://data.impix.co.kr/arcon/codelist/LoadState/PARTIAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LoadState> ; skos:notation "PARTIAL" ;
+    skos:prefLabel "부분적재"@ko , "Partial"@en .
+<https://data.impix.co.kr/arcon/codelist/CarrierState/AVAILABLE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CarrierState> ; skos:notation "AVAILABLE" ;
+    skos:prefLabel "사용가능"@ko , "Available"@en .
+<https://data.impix.co.kr/arcon/codelist/CarrierState/NOT_AVAILABLE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CarrierState> ; skos:notation "NOT_AVAILABLE" ;
+    skos:prefLabel "사용불가"@ko , "Not available"@en .
+<https://data.impix.co.kr/arcon/codelist/CarrierState/IN_USE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CarrierState> ; skos:notation "IN_USE" ;
+    skos:prefLabel "사용중"@ko , "In use"@en .
+<https://data.impix.co.kr/arcon/codelist/CarrierState/CLEANING> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CarrierState> ; skos:notation "CLEANING" ;
+    skos:prefLabel "세정중"@ko , "Cleaning"@en .
+<https://data.impix.co.kr/arcon/codelist/CarrierState/DAMAGED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CarrierState> ; skos:notation "DAMAGED" ;
+    skos:prefLabel "파손"@ko , "Damaged"@en .
+<https://data.impix.co.kr/arcon/codelist/WarehouseType/RM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WarehouseType> ; skos:notation "RM" ;
+    skos:prefLabel "자재창고"@ko , "Raw material warehouse"@en .
+<https://data.impix.co.kr/arcon/codelist/WarehouseType/WIP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WarehouseType> ; skos:notation "WIP" ;
+    skos:prefLabel "공정창고"@ko , "WIP warehouse"@en .
+<https://data.impix.co.kr/arcon/codelist/WarehouseType/FG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WarehouseType> ; skos:notation "FG" ;
+    skos:prefLabel "제품창고"@ko , "Finished goods warehouse"@en .
+<https://data.impix.co.kr/arcon/codelist/WarehouseType/QC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WarehouseType> ; skos:notation "QC" ;
+    skos:prefLabel "검사대기창고"@ko , "Quality inspection warehouse"@en .
+<https://data.impix.co.kr/arcon/codelist/WarehouseType/RTN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WarehouseType> ; skos:notation "RTN" ;
+    skos:prefLabel "반품창고"@ko , "Return warehouse"@en .
+<https://data.impix.co.kr/arcon/codelist/WarehouseType/DEF> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WarehouseType> ; skos:notation "DEF" ;
+    skos:prefLabel "불량창고"@ko , "Defect warehouse"@en .
+<https://data.impix.co.kr/arcon/codelist/WarehouseType/OSP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WarehouseType> ; skos:notation "OSP" ;
+    skos:prefLabel "외주창고"@ko , "Subcontractor warehouse"@en .
+<https://data.impix.co.kr/arcon/codelist/WarehouseType/BONDED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WarehouseType> ; skos:notation "BONDED" ;
+    skos:prefLabel "보세창고"@ko , "Bonded warehouse"@en .
+<https://data.impix.co.kr/arcon/codelist/BatchType/PRODUCTION> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BatchType> ; skos:notation "PRODUCTION" ;
+    skos:prefLabel "사내 생산"@ko , "Production"@en .
+<https://data.impix.co.kr/arcon/codelist/BatchType/REWORK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BatchType> ; skos:notation "REWORK" ;
+    skos:prefLabel "재작업"@ko , "Rework"@en .
+<https://data.impix.co.kr/arcon/codelist/BatchType/TRIAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BatchType> ; skos:notation "TRIAL" ;
+    skos:prefLabel "시험 생산"@ko , "Trial"@en .
+<https://data.impix.co.kr/arcon/codelist/BatchType/PURCHASE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BatchType> ; skos:notation "PURCHASE" ;
+    skos:prefLabel "공급사 생산"@ko , "Purchase"@en .
+<https://data.impix.co.kr/arcon/codelist/BatchState/IDLE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BatchState> ; skos:notation "IDLE" ;
+    skos:prefLabel "대기"@ko , "Idle"@en .
+<https://data.impix.co.kr/arcon/codelist/BatchState/RUNNING> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BatchState> ; skos:notation "RUNNING" ;
+    skos:prefLabel "진행"@ko , "Running"@en .
+<https://data.impix.co.kr/arcon/codelist/BatchState/HOLD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BatchState> ; skos:notation "HOLD" ;
+    skos:prefLabel "보류"@ko , "Hold"@en .
+<https://data.impix.co.kr/arcon/codelist/BatchState/COMPLETE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BatchState> ; skos:notation "COMPLETE" ;
+    skos:prefLabel "완료"@ko , "Complete"@en .
+<https://data.impix.co.kr/arcon/codelist/BatchState/ABORT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BatchState> ; skos:notation "ABORT" ;
+    skos:prefLabel "중단"@ko , "Abort"@en .
+<https://data.impix.co.kr/arcon/codelist/QualityDispositionCode/PENDING> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/QualityDispositionCode> ; skos:notation "PENDING" ;
+    skos:prefLabel "판정대기"@ko , "Pending"@en .
+<https://data.impix.co.kr/arcon/codelist/QualityDispositionCode/ACCEPTED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/QualityDispositionCode> ; skos:notation "ACCEPTED" ;
+    skos:prefLabel "합격"@ko , "Accepted"@en .
+<https://data.impix.co.kr/arcon/codelist/QualityDispositionCode/REJECTED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/QualityDispositionCode> ; skos:notation "REJECTED" ;
+    skos:prefLabel "불합격"@ko , "Rejected"@en .
+<https://data.impix.co.kr/arcon/codelist/QualityDispositionCode/CONDITIONAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/QualityDispositionCode> ; skos:notation "CONDITIONAL" ;
+    skos:prefLabel "조건부 합격"@ko , "Conditional"@en .
+<https://data.impix.co.kr/arcon/codelist/QualityDispositionCode/REWORK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/QualityDispositionCode> ; skos:notation "REWORK" ;
+    skos:prefLabel "재작업 판정"@ko , "Rework"@en .
+<https://data.impix.co.kr/arcon/codelist/LineType/ASSEMBLY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LineType> ; skos:notation "ASSEMBLY" ;
+    skos:prefLabel "조립"@ko , "Assembly"@en .
+<https://data.impix.co.kr/arcon/codelist/LineType/MACHINING> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LineType> ; skos:notation "MACHINING" ;
+    skos:prefLabel "가공"@ko , "Machining"@en .
+<https://data.impix.co.kr/arcon/codelist/LineType/PROCESS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LineType> ; skos:notation "PROCESS" ;
+    skos:prefLabel "장치"@ko , "Process"@en .
+<https://data.impix.co.kr/arcon/codelist/LineType/PACKING> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LineType> ; skos:notation "PACKING" ;
+    skos:prefLabel "포장"@ko , "Packing"@en .
+<https://data.impix.co.kr/arcon/codelist/LineType/INSPECTION> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LineType> ; skos:notation "INSPECTION" ;
+    skos:prefLabel "검사"@ko , "Inspection"@en .
+<https://data.impix.co.kr/arcon/codelist/ProductionMethodType/DISCRETE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProductionMethodType> ; skos:notation "DISCRETE" ;
+    skos:prefLabel "개별 생산"@ko , "Discrete"@en .
+<https://data.impix.co.kr/arcon/codelist/ProductionMethodType/BATCH> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProductionMethodType> ; skos:notation "BATCH" ;
+    skos:prefLabel "배치 생산"@ko , "Batch"@en .
+<https://data.impix.co.kr/arcon/codelist/ProductionMethodType/CONTINUOUS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProductionMethodType> ; skos:notation "CONTINUOUS" ;
+    skos:prefLabel "연속 생산"@ko , "Continuous"@en .
+<https://data.impix.co.kr/arcon/codelist/ProductionMethodType/REPETITIVE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProductionMethodType> ; skos:notation "REPETITIVE" ;
+    skos:prefLabel "반복 생산"@ko , "Repetitive"@en .
+<https://data.impix.co.kr/arcon/codelist/ProjectStatusCode/PLANNED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProjectStatusCode> ; skos:notation "PLANNED" ;
+    skos:prefLabel "계획"@ko , "Planned"@en .
+<https://data.impix.co.kr/arcon/codelist/ProjectStatusCode/REGISTERED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProjectStatusCode> ; skos:notation "REGISTERED" ;
+    skos:prefLabel "등록"@ko , "Registered"@en .
+<https://data.impix.co.kr/arcon/codelist/ProjectStatusCode/IN_PROGRESS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProjectStatusCode> ; skos:notation "IN_PROGRESS" ;
+    skos:prefLabel "진행"@ko , "In progress"@en .
+<https://data.impix.co.kr/arcon/codelist/ProjectStatusCode/HOLD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProjectStatusCode> ; skos:notation "HOLD" ;
+    skos:prefLabel "보류"@ko , "On hold"@en .
+<https://data.impix.co.kr/arcon/codelist/ProjectStatusCode/CLOSED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProjectStatusCode> ; skos:notation "CLOSED" ;
+    skos:prefLabel "종료"@ko , "Closed"@en .
+<https://data.impix.co.kr/arcon/codelist/ProjectStatusCode/CANCELLED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProjectStatusCode> ; skos:notation "CANCELLED" ;
+    skos:prefLabel "취소"@ko , "Cancelled"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesOrderType/DOMESTIC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesOrderType> ; skos:notation "DOMESTIC" ;
+    skos:prefLabel "내수"@ko , "Domestic"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesOrderType/EXPORT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesOrderType> ; skos:notation "EXPORT" ;
+    skos:prefLabel "수출"@ko , "Export"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesOrderType/LOCAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesOrderType> ; skos:notation "LOCAL" ;
+    skos:prefLabel "로컬수출"@ko , "Local export"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesOrderType/SAMPLE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesOrderType> ; skos:notation "SAMPLE" ;
+    skos:prefLabel "견본"@ko , "Sample"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesOrderType/FREE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesOrderType> ; skos:notation "FREE" ;
+    skos:prefLabel "무상"@ko , "Free of charge"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesOrderType/CONSIGN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesOrderType> ; skos:notation "CONSIGN" ;
+    skos:prefLabel "위탁판매"@ko , "Consignment"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesStatus/REGISTERED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesStatus> ; skos:notation "REGISTERED" ;
+    skos:prefLabel "수주등록"@ko , "Registered"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesStatus/CONFIRMED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesStatus> ; skos:notation "CONFIRMED" ;
+    skos:prefLabel "수주확정"@ko , "Confirmed"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesStatus/PART_SHIPPED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesStatus> ; skos:notation "PART_SHIPPED" ;
+    skos:prefLabel "부분출하"@ko , "Partially shipped"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesStatus/SHIPPED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesStatus> ; skos:notation "SHIPPED" ;
+    skos:prefLabel "출하완료"@ko , "Shipped"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesStatus/INVOICED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesStatus> ; skos:notation "INVOICED" ;
+    skos:prefLabel "매출확정"@ko , "Invoiced"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesStatus/CLOSED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesStatus> ; skos:notation "CLOSED" ;
+    skos:prefLabel "종결"@ko , "Closed"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesStatus/HOLD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesStatus> ; skos:notation "HOLD" ;
+    skos:prefLabel "보류"@ko , "Hold"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesStatus/CANCELLED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesStatus> ; skos:notation "CANCELLED" ;
+    skos:prefLabel "취소"@ko , "Cancelled"@en .
+<https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode/EXW> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode> ; skos:notation "EXW" ;
+    skos:prefLabel "공장인도"@ko , "Ex Works"@en .
+<https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode/FCA> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode> ; skos:notation "FCA" ;
+    skos:prefLabel "운송인인도"@ko , "Free Carrier"@en .
+<https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode/CPT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode> ; skos:notation "CPT" ;
+    skos:prefLabel "운송비지급인도"@ko , "Carriage Paid To"@en .
+<https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode/CIP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode> ; skos:notation "CIP" ;
+    skos:prefLabel "운송비·보험료지급인도"@ko , "Carriage and Insurance Paid To"@en .
+<https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode/DAP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode> ; skos:notation "DAP" ;
+    skos:prefLabel "도착지인도"@ko , "Delivered at Place"@en .
+<https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode/DPU> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode> ; skos:notation "DPU" ;
+    skos:prefLabel "도착지양하인도"@ko , "Delivered at Place Unloaded"@en .
+<https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode/DDP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode> ; skos:notation "DDP" ;
+    skos:prefLabel "관세지급인도"@ko , "Delivered Duty Paid"@en .
+<https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode/FAS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode> ; skos:notation "FAS" ;
+    skos:prefLabel "선측인도"@ko , "Free Alongside Ship"@en .
+<https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode/FOB> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode> ; skos:notation "FOB" ;
+    skos:prefLabel "본선인도"@ko , "Free On Board"@en .
+<https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode/CFR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode> ; skos:notation "CFR" ;
+    skos:prefLabel "운임포함인도"@ko , "Cost and Freight"@en .
+<https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode/CIF> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ShipmentTermsCode> ; skos:notation "CIF" ;
+    skos:prefLabel "운임·보험료포함인도"@ko , "Cost, Insurance and Freight"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesTransactionType/TAX> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesTransactionType> ; skos:notation "TAX" ;
+    skos:prefLabel "과세"@ko , "Taxable"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesTransactionType/ZERO> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesTransactionType> ; skos:notation "ZERO" ;
+    skos:prefLabel "영세율"@ko , "Zero-rated"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesTransactionType/EXEMPT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesTransactionType> ; skos:notation "EXEMPT" ;
+    skos:prefLabel "면세"@ko , "Tax exempt"@en .
+<https://data.impix.co.kr/arcon/codelist/SalesTransactionType/EXPORT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/SalesTransactionType> ; skos:notation "EXPORT" ;
+    skos:prefLabel "수출"@ko , "Export"@en .
+<https://data.impix.co.kr/arcon/codelist/PaymentTermsCode/CASH> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PaymentTermsCode> ; skos:notation "CASH" ;
+    skos:prefLabel "현금"@ko , "Cash"@en .
+<https://data.impix.co.kr/arcon/codelist/PaymentTermsCode/NOTE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PaymentTermsCode> ; skos:notation "NOTE" ;
+    skos:prefLabel "어음"@ko , "Promissory note"@en .
+<https://data.impix.co.kr/arcon/codelist/PaymentTermsCode/EOM30> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PaymentTermsCode> ; skos:notation "EOM30" ;
+    skos:prefLabel "월말 마감 후 30일"@ko , "EOM + 30 days"@en .
+<https://data.impix.co.kr/arcon/codelist/PaymentTermsCode/EOM60> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PaymentTermsCode> ; skos:notation "EOM60" ;
+    skos:prefLabel "월말 마감 후 60일"@ko , "EOM + 60 days"@en .
+<https://data.impix.co.kr/arcon/codelist/PaymentTermsCode/NET30> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PaymentTermsCode> ; skos:notation "NET30" ;
+    skos:prefLabel "송장일 후 30일"@ko , "Net 30"@en .
+<https://data.impix.co.kr/arcon/codelist/PaymentTermsCode/ADV> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PaymentTermsCode> ; skos:notation "ADV" ;
+    skos:prefLabel "선급"@ko , "Advance payment"@en .
+<https://data.impix.co.kr/arcon/codelist/PaymentTermsCode/ENOTE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PaymentTermsCode> ; skos:notation "ENOTE" ;
+    skos:prefLabel "전자어음"@ko , "Electronic note"@en .
+<https://data.impix.co.kr/arcon/codelist/PaymentTermsCode/ARLOAN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PaymentTermsCode> ; skos:notation "ARLOAN" ;
+    skos:prefLabel "외상매출채권 담보대출"@ko , "Accounts receivable loan"@en .
+<https://data.impix.co.kr/arcon/codelist/PaymentTermsCode/WINWIN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PaymentTermsCode> ; skos:notation "WINWIN" ;
+    skos:prefLabel "상생결제"@ko , "Win-win payment"@en .
+<https://data.impix.co.kr/arcon/codelist/PaymentTermsCode/TT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PaymentTermsCode> ; skos:notation "TT" ;
+    skos:prefLabel "전신환 송금"@ko , "Telegraphic transfer"@en .
+<https://data.impix.co.kr/arcon/codelist/PaymentTermsCode/LC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PaymentTermsCode> ; skos:notation "LC" ;
+    skos:prefLabel "신용장"@ko , "Letter of credit"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode/PG00> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode> ; skos:notation "PG00" ;
+    skos:prefLabel "단일 구매그룹"@ko , "Default"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode/PG01> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode> ; skos:notation "PG01" ;
+    skos:prefLabel "원자재 구매"@ko , "Raw material"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode/PG02> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode> ; skos:notation "PG02" ;
+    skos:prefLabel "부자재 구매"@ko , "Sub material"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode/PG03> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode> ; skos:notation "PG03" ;
+    skos:prefLabel "외주 구매"@ko , "Subcontracting"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode/PG04> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode> ; skos:notation "PG04" ;
+    skos:prefLabel "설비·자산 구매"@ko , "Capital"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode/PG05> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode> ; skos:notation "PG05" ;
+    skos:prefLabel "MRO 구매"@ko , "MRO"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode/PG06> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseGroupCode> ; skos:notation "PG06" ;
+    skos:prefLabel "수입 구매"@ko , "Import"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderTypeCode/STANDARD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseOrderTypeCode> ; skos:notation "STANDARD" ;
+    skos:prefLabel "일반 발주"@ko , "Standard"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderTypeCode/SUBCON> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseOrderTypeCode> ; skos:notation "SUBCON" ;
+    skos:prefLabel "외주 가공 발주"@ko , "Subcontracting"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderTypeCode/CONSIGN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseOrderTypeCode> ; skos:notation "CONSIGN" ;
+    skos:prefLabel "위탁 발주"@ko , "Consignment"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderTypeCode/STO> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseOrderTypeCode> ; skos:notation "STO" ;
+    skos:prefLabel "사내 이관 발주"@ko , "Stock transport"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderTypeCode/SERVICE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseOrderTypeCode> ; skos:notation "SERVICE" ;
+    skos:prefLabel "서비스/공사 발주"@ko , "Service"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderTypeCode/BLANKET> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseOrderTypeCode> ; skos:notation "BLANKET" ;
+    skos:prefLabel "단가계약 발주"@ko , "Blanket"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType/TAX> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType> ; skos:notation "TAX" ;
+    skos:prefLabel "과세"@ko , "Taxable"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType/ZERO> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType> ; skos:notation "ZERO" ;
+    skos:prefLabel "영세율"@ko , "Zero-rated"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType/EXEMPT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType> ; skos:notation "EXEMPT" ;
+    skos:prefLabel "면세"@ko , "Tax exempt"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType/NONDED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType> ; skos:notation "NONDED" ;
+    skos:prefLabel "불공제"@ko , "Non-deductible"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType/IMPORT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType> ; skos:notation "IMPORT" ;
+    skos:prefLabel "수입"@ko , "Import"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType/CARD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType> ; skos:notation "CARD" ;
+    skos:prefLabel "카드과세"@ko , "Card taxable"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType/CASHRCPT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseTransactionType> ; skos:notation "CASHRCPT" ;
+    skos:prefLabel "현금영수증"@ko , "Cash receipt"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemPurchaseType/ITEM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemPurchaseType> ; skos:notation "ITEM" ;
+    skos:prefLabel "품목"@ko , "Item"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemPurchaseType/SERVICE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemPurchaseType> ; skos:notation "SERVICE" ;
+    skos:prefLabel "서비스"@ko , "Service"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemPurchaseType/ASSET> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemPurchaseType> ; skos:notation "ASSET" ;
+    skos:prefLabel "고정자산"@ko , "Fixed asset"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemPurchaseType/FIXTURE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemPurchaseType> ; skos:notation "FIXTURE" ;
+    skos:prefLabel "비품"@ko , "Fixture"@en .
+<https://data.impix.co.kr/arcon/codelist/ItemPurchaseType/EXPENSE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ItemPurchaseType> ; skos:notation "EXPENSE" ;
+    skos:prefLabel "비용"@ko , "Expense"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode/OPEN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode> ; skos:notation "OPEN" ;
+    skos:prefLabel "발주 진행 중"@ko , "Open"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode/PART_RECEIVED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode> ; skos:notation "PART_RECEIVED" ;
+    skos:prefLabel "부분입고"@ko , "Partially received"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode/RECEIVED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode> ; skos:notation "RECEIVED" ;
+    skos:prefLabel "입고완료"@ko , "Received"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode/INVOICED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode> ; skos:notation "INVOICED" ;
+    skos:prefLabel "송장 처리 완료"@ko , "Invoiced"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode/CLOSED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode> ; skos:notation "CLOSED" ;
+    skos:prefLabel "최종 종결"@ko , "Closed"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode/CANCELLED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode> ; skos:notation "CANCELLED" ;
+    skos:prefLabel "취소"@ko , "Cancelled"@en .
+<https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode/HOLD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PurchaseOrderLineStatusCode> ; skos:notation "HOLD" ;
+    skos:prefLabel "보류"@ko , "Hold"@en .
+<https://data.impix.co.kr/arcon/codelist/TaxCode/P_TAX10> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TaxCode> ; skos:notation "P_TAX10" ;
+    skos:prefLabel "과세 매입(10%)"@ko , "Taxable purchase"@en .
+<https://data.impix.co.kr/arcon/codelist/TaxCode/P_ZERO> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TaxCode> ; skos:notation "P_ZERO" ;
+    skos:prefLabel "영세율 매입"@ko , "Zero-rated purchase"@en .
+<https://data.impix.co.kr/arcon/codelist/TaxCode/P_EXEMPT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TaxCode> ; skos:notation "P_EXEMPT" ;
+    skos:prefLabel "면세 매입"@ko , "Exempt purchase"@en .
+<https://data.impix.co.kr/arcon/codelist/TaxCode/P_NONDED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TaxCode> ; skos:notation "P_NONDED" ;
+    skos:prefLabel "불공제 매입"@ko , "Non-deductible"@en .
+<https://data.impix.co.kr/arcon/codelist/TaxCode/P_IMPORT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TaxCode> ; skos:notation "P_IMPORT" ;
+    skos:prefLabel "수입 매입"@ko , "Import"@en .
+<https://data.impix.co.kr/arcon/codelist/TaxCode/P_CARD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TaxCode> ; skos:notation "P_CARD" ;
+    skos:prefLabel "카드과세 매입"@ko , "Card"@en .
+<https://data.impix.co.kr/arcon/codelist/TaxCode/P_CASHRCPT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TaxCode> ; skos:notation "P_CASHRCPT" ;
+    skos:prefLabel "현금영수증과세 매입"@ko , "Cash receipt"@en .
+<https://data.impix.co.kr/arcon/codelist/AccountCode/ACC_RM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AccountCode> ; skos:notation "ACC_RM" ;
+    skos:prefLabel "원재료"@ko , "Raw materials"@en .
+<https://data.impix.co.kr/arcon/codelist/AccountCode/ACC_SM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AccountCode> ; skos:notation "ACC_SM" ;
+    skos:prefLabel "부재료"@ko , "Sub materials"@en .
+<https://data.impix.co.kr/arcon/codelist/AccountCode/ACC_MER> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AccountCode> ; skos:notation "ACC_MER" ;
+    skos:prefLabel "상품"@ko , "Merchandise"@en .
+<https://data.impix.co.kr/arcon/codelist/AccountCode/ACC_SUPPLY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AccountCode> ; skos:notation "ACC_SUPPLY" ;
+    skos:prefLabel "소모품비"@ko , "Supplies expense"@en .
+<https://data.impix.co.kr/arcon/codelist/AccountCode/ACC_STORE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AccountCode> ; skos:notation "ACC_STORE" ;
+    skos:prefLabel "저장품"@ko , "Stored supplies"@en .
+<https://data.impix.co.kr/arcon/codelist/AccountCode/ACC_SUBCON> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AccountCode> ; skos:notation "ACC_SUBCON" ;
+    skos:prefLabel "외주가공비"@ko , "Subcontract cost"@en .
+<https://data.impix.co.kr/arcon/codelist/AccountCode/ACC_REPAIR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AccountCode> ; skos:notation "ACC_REPAIR" ;
+    skos:prefLabel "수선비"@ko , "Repair expense"@en .
+<https://data.impix.co.kr/arcon/codelist/AccountCode/ACC_FREIGHT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AccountCode> ; skos:notation "ACC_FREIGHT" ;
+    skos:prefLabel "운반비"@ko , "Freight"@en .
+<https://data.impix.co.kr/arcon/codelist/AccountCode/ACC_FEE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AccountCode> ; skos:notation "ACC_FEE" ;
+    skos:prefLabel "지급수수료"@ko , "Commission"@en .
+<https://data.impix.co.kr/arcon/codelist/AccountCode/ACC_MACHINE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AccountCode> ; skos:notation "ACC_MACHINE" ;
+    skos:prefLabel "기계장치"@ko , "Machinery"@en .
+<https://data.impix.co.kr/arcon/codelist/AccountCode/ACC_TOOL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AccountCode> ; skos:notation "ACC_TOOL" ;
+    skos:prefLabel "공구와기구"@ko , "Tools"@en .
+<https://data.impix.co.kr/arcon/codelist/AccountCode/ACC_CIP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AccountCode> ; skos:notation "ACC_CIP" ;
+    skos:prefLabel "건설중인자산"@ko , "Construction in progress"@en .
+<https://data.impix.co.kr/arcon/codelist/GoodsReceiptType/PO> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/GoodsReceiptType> ; skos:notation "PO" ;
+    skos:prefLabel "발주입고"@ko , "PO receipt"@en .
+<https://data.impix.co.kr/arcon/codelist/GoodsReceiptType/INSP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/GoodsReceiptType> ; skos:notation "INSP" ;
+    skos:prefLabel "검사입고"@ko , "Receipt after inspection"@en .
+<https://data.impix.co.kr/arcon/codelist/GoodsReceiptType/EXCEPT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/GoodsReceiptType> ; skos:notation "EXCEPT" ;
+    skos:prefLabel "예외입고"@ko , "Exceptional receipt"@en .
+<https://data.impix.co.kr/arcon/codelist/GoodsReceiptType/SUBCON> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/GoodsReceiptType> ; skos:notation "SUBCON" ;
+    skos:prefLabel "외주가공입고"@ko , "Subcontract receipt"@en .
+<https://data.impix.co.kr/arcon/codelist/GoodsReceiptReturnType/VENDOR_RTN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/GoodsReceiptReturnType> ; skos:notation "VENDOR_RTN" ;
+    skos:prefLabel "공급업체 반품"@ko , "Return to vendor"@en .
+<https://data.impix.co.kr/arcon/codelist/GoodsReceiptReturnType/GR_CANCEL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/GoodsReceiptReturnType> ; skos:notation "GR_CANCEL" ;
+    skos:prefLabel "입고 취소"@ko , "Receipt cancel"@en .
+<https://data.impix.co.kr/arcon/codelist/GoodsReceiptReturnType/RTN_PO> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/GoodsReceiptReturnType> ; skos:notation "RTN_PO" ;
+    skos:prefLabel "반품 PO 기반 입고"@ko , "Return PO"@en .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/RCV> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType> ; skos:notation "RCV" ;
+    skos:prefLabel "입고"@ko , "Receipt"@en .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/ISS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType> ; skos:notation "ISS" ;
+    skos:prefLabel "출고"@ko , "Issue"@en .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/TRF> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType> ; skos:notation "TRF" ;
+    skos:prefLabel "이동"@ko , "Transfer"@en .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/ADJ> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType> ; skos:notation "ADJ" ;
+    skos:prefLabel "조정"@ko , "Adjustment"@en .
+<https://data.impix.co.kr/arcon/codelist/InventoryVariationType/INC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryVariationType> ; skos:notation "INC" ;
+    skos:prefLabel "증가"@ko , "Increase"@en .
+<https://data.impix.co.kr/arcon/codelist/InventoryVariationType/DEC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryVariationType> ; skos:notation "DEC" ;
+    skos:prefLabel "감소"@ko , "Decrease"@en .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransferType/RCV_PUR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransferType> ; skos:notation "RCV_PUR" ;
+    skos:prefLabel "구매입고"@ko , "Purchase receipt"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/RCV> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransferType/RCV_PRD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransferType> ; skos:notation "RCV_PRD" ;
+    skos:prefLabel "생산입고"@ko , "Production receipt"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/RCV> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransferType/RCV_SUB> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransferType> ; skos:notation "RCV_SUB" ;
+    skos:prefLabel "외주입고"@ko , "Subcontract receipt"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/RCV> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransferType/RCV_SRTN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransferType> ; skos:notation "RCV_SRTN" ;
+    skos:prefLabel "매출반품입고"@ko , "Sales return receipt"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/RCV> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransferType/RCV_OTH> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransferType> ; skos:notation "RCV_OTH" ;
+    skos:prefLabel "타계정입고"@ko , "Other account receipt"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/RCV> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransferType/ISS_SAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransferType> ; skos:notation "ISS_SAL" ;
+    skos:prefLabel "판매출고"@ko , "Sales issue"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/ISS> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransferType/ISS_PRD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransferType> ; skos:notation "ISS_PRD" ;
+    skos:prefLabel "생산출고"@ko , "Production issue"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/ISS> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransferType/ISS_SUB> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransferType> ; skos:notation "ISS_SUB" ;
+    skos:prefLabel "외주출고"@ko , "Subcontract issue"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/ISS> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransferType/ISS_PRTN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransferType> ; skos:notation "ISS_PRTN" ;
+    skos:prefLabel "매입반품출고"@ko , "Purchase return issue"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/ISS> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransferType/ISS_OTH> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransferType> ; skos:notation "ISS_OTH" ;
+    skos:prefLabel "타계정출고"@ko , "Other account issue"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/ISS> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransferType/ISS_SCR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransferType> ; skos:notation "ISS_SCR" ;
+    skos:prefLabel "폐기출고"@ko , "Scrap issue"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/ISS> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/R100> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "R100" ;
+    skos:prefLabel "구매입고"@ko , "Purchase receipt"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransferType/RCV_PUR> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/R101> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "R101" ;
+    skos:prefLabel "구매입고 취소"@ko , "Purchase receipt cancel"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransferType/RCV_PUR> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/R200> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "R200" ;
+    skos:prefLabel "생산입고"@ko , "Production receipt"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransferType/RCV_PRD> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/R300> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "R300" ;
+    skos:prefLabel "외주입고"@ko , "Subcontract receipt"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransferType/RCV_SUB> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/R400> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "R400" ;
+    skos:prefLabel "매출반품입고"@ko , "Sales return"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransferType/RCV_SRTN> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/R900> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "R900" ;
+    skos:prefLabel "타계정입고"@ko , "Other receipt"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransferType/RCV_OTH> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/I100> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "I100" ;
+    skos:prefLabel "판매출고"@ko , "Sales issue"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransferType/ISS_SAL> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/I200> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "I200" ;
+    skos:prefLabel "생산출고(자재불출)"@ko , "Production issue"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransferType/ISS_PRD> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/I201> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "I201" ;
+    skos:prefLabel "생산출고 반납"@ko , "Production return"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransferType/ISS_PRD> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/I300> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "I300" ;
+    skos:prefLabel "외주출고"@ko , "Subcontract issue"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransferType/ISS_SUB> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/I400> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "I400" ;
+    skos:prefLabel "매입반품출고"@ko , "Purchase return"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransferType/ISS_PRTN> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/I800> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "I800" ;
+    skos:prefLabel "폐기출고"@ko , "Scrap"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransferType/ISS_SCR> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/I900> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "I900" ;
+    skos:prefLabel "타계정출고"@ko , "Other issue"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransferType/ISS_OTH> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/T100> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "T100" ;
+    skos:prefLabel "창고간 이동"@ko , "Warehouse transfer"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/TRF> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/T200> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "T200" ;
+    skos:prefLabel "사업장간 이동"@ko , "Site transfer"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/TRF> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/A100> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "A100" ;
+    skos:prefLabel "실사 조정(증가)"@ko , "Count adjustment +"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/ADJ> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/A101> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "A101" ;
+    skos:prefLabel "실사 조정(감소)"@ko , "Count adjustment -"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/ADJ> .
+<https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode/A200> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InventoryTransactionTypeCode> ; skos:notation "A200" ;
+    skos:prefLabel "품목 대체"@ko , "Item conversion"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/InventoryTransactionType/ADJ> .
+<https://data.impix.co.kr/arcon/codelist/LocationType/EQP_PORT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LocationType> ; skos:notation "EQP_PORT" ;
+    skos:prefLabel "설비 포트"@ko , "Equipment port"@en .
+<https://data.impix.co.kr/arcon/codelist/LocationType/STOCKER> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LocationType> ; skos:notation "STOCKER" ;
+    skos:prefLabel "저장소"@ko , "Stocker"@en .
+<https://data.impix.co.kr/arcon/codelist/LocationType/CARRIER> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LocationType> ; skos:notation "CARRIER" ;
+    skos:prefLabel "캐리어"@ko , "Carrier"@en .
+<https://data.impix.co.kr/arcon/codelist/LocationType/BUFFER> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LocationType> ; skos:notation "BUFFER" ;
+    skos:prefLabel "버퍼"@ko , "Buffer"@en .
+<https://data.impix.co.kr/arcon/codelist/LocationType/VEHICLE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LocationType> ; skos:notation "VEHICLE" ;
+    skos:prefLabel "반송장치"@ko , "Vehicle"@en .
+<https://data.impix.co.kr/arcon/codelist/LocationType/MANUAL_PORT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/LocationType> ; skos:notation "MANUAL_PORT" ;
+    skos:prefLabel "수동 포트"@ko , "Manual port"@en .
+<https://data.impix.co.kr/arcon/codelist/TransferErrorCode/TR-001> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransferErrorCode> ; skos:notation "TR-001" ;
+    skos:prefLabel "목적지 포트 점유"@ko , "Destination occupied"@en .
+<https://data.impix.co.kr/arcon/codelist/TransferErrorCode/TR-002> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransferErrorCode> ; skos:notation "TR-002" ;
+    skos:prefLabel "반송 경로 차단"@ko , "Route blocked"@en .
+<https://data.impix.co.kr/arcon/codelist/TransferErrorCode/TR-003> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransferErrorCode> ; skos:notation "TR-003" ;
+    skos:prefLabel "캐리어 식별자 불일치"@ko , "Carrier ID mismatch"@en .
+<https://data.impix.co.kr/arcon/codelist/TransferErrorCode/TR-004> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransferErrorCode> ; skos:notation "TR-004" ;
+    skos:prefLabel "반송 시간 초과"@ko , "Transfer timeout"@en .
+<https://data.impix.co.kr/arcon/codelist/TransferErrorCode/TR-005> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransferErrorCode> ; skos:notation "TR-005" ;
+    skos:prefLabel "반송장치 이상"@ko , "Vehicle fault"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode/EQ-001> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode> ; skos:notation "EQ-001" ;
+    skos:prefLabel "비상정지"@ko , "Emergency stop"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode/EQ-002> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode> ; skos:notation "EQ-002" ;
+    skos:prefLabel "과부하"@ko , "Overload"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode/EQ-003> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode> ; skos:notation "EQ-003" ;
+    skos:prefLabel "온도 이상"@ko , "Temperature abnormal"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode/EQ-004> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode> ; skos:notation "EQ-004" ;
+    skos:prefLabel "압력 이상"@ko , "Pressure abnormal"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode/EQ-005> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode> ; skos:notation "EQ-005" ;
+    skos:prefLabel "통신 이상"@ko , "Communication error"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode/EQ-006> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode> ; skos:notation "EQ-006" ;
+    skos:prefLabel "자재 공급 부족"@ko , "Material shortage"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode/EQ-007> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentErrorCode> ; skos:notation "EQ-007" ;
+    skos:prefLabel "공구 마모·파손"@ko , "Tool wear/broken"@en .
+<https://data.impix.co.kr/arcon/codelist/ServiceErrorCode/AS-001> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ServiceErrorCode> ; skos:notation "AS-001" ;
+    skos:prefLabel "전원 불량"@ko , "Power failure"@en .
+<https://data.impix.co.kr/arcon/codelist/ServiceErrorCode/AS-002> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ServiceErrorCode> ; skos:notation "AS-002" ;
+    skos:prefLabel "동작 불량"@ko , "Malfunction"@en .
+<https://data.impix.co.kr/arcon/codelist/ServiceErrorCode/AS-003> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ServiceErrorCode> ; skos:notation "AS-003" ;
+    skos:prefLabel "소음·진동"@ko , "Noise/vibration"@en .
+<https://data.impix.co.kr/arcon/codelist/ServiceErrorCode/AS-004> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ServiceErrorCode> ; skos:notation "AS-004" ;
+    skos:prefLabel "누수·누유"@ko , "Leakage"@en .
+<https://data.impix.co.kr/arcon/codelist/ServiceErrorCode/AS-005> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ServiceErrorCode> ; skos:notation "AS-005" ;
+    skos:prefLabel "표시부 오류"@ko , "Display error"@en .
+<https://data.impix.co.kr/arcon/codelist/ServiceErrorCode/AS-006> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ServiceErrorCode> ; skos:notation "AS-006" ;
+    skos:prefLabel "통신·소프트웨어 오류"@ko , "Software error"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentState/RUN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentState> ; skos:notation "RUN" ;
+    skos:prefLabel "가동"@ko , "Run"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentState/IDLE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentState> ; skos:notation "IDLE" ;
+    skos:prefLabel "대기"@ko , "Idle"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentState/DOWN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentState> ; skos:notation "DOWN" ;
+    skos:prefLabel "정지(고장)"@ko , "Down"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentState/SETUP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentState> ; skos:notation "SETUP" ;
+    skos:prefLabel "셋업"@ko , "Setup"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentState/PM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentState> ; skos:notation "PM" ;
+    skos:prefLabel "계획보전"@ko , "Planned maintenance"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentState/ENG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentState> ; skos:notation "ENG" ;
+    skos:prefLabel "엔지니어링"@ko , "Engineering"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentState/NONSCHED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentState> ; skos:notation "NONSCHED" ;
+    skos:prefLabel "비가동 계획"@ko , "Non-scheduled"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentControlMode/ONLINE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentControlMode> ; skos:notation "ONLINE" ;
+    skos:prefLabel "온라인(원격)"@ko , "Online"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentControlMode/LOCAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentControlMode> ; skos:notation "LOCAL" ;
+    skos:prefLabel "로컬"@ko , "Local"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentControlMode/OFFLINE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentControlMode> ; skos:notation "OFFLINE" ;
+    skos:prefLabel "오프라인"@ko , "Offline"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentOperationMode/FULL_AUTO> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentOperationMode> ; skos:notation "FULL_AUTO" ;
+    skos:prefLabel "완전자동"@ko , "Full-Auto"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentOperationMode/SEMI_AUTO> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentOperationMode> ; skos:notation "SEMI_AUTO" ;
+    skos:prefLabel "반자동"@ko , "Semi-Auto"@en .
+<https://data.impix.co.kr/arcon/codelist/EquipmentOperationMode/MANUAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/EquipmentOperationMode> ; skos:notation "MANUAL" ;
+    skos:prefLabel "수동"@ko , "Manual"@en .
+<https://data.impix.co.kr/arcon/codelist/AlarmState/ALARM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AlarmState> ; skos:notation "ALARM" ;
+    skos:prefLabel "알람 발생"@ko , "Alarm"@en .
+<https://data.impix.co.kr/arcon/codelist/AlarmState/NO_ALARM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AlarmState> ; skos:notation "NO_ALARM" ;
+    skos:prefLabel "알람 해제"@ko , "No Alarm"@en .
+<https://data.impix.co.kr/arcon/codelist/AlarmState/MAINTENANCE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AlarmState> ; skos:notation "MAINTENANCE" ;
+    skos:prefLabel "보전 중"@ko , "Maintenance"@en .
+<https://data.impix.co.kr/arcon/codelist/AlarmState/NORMAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AlarmState> ; skos:notation "NORMAL" ;
+    skos:prefLabel "정상"@ko , "Normal"@en .
+<https://data.impix.co.kr/arcon/codelist/AlarmState/WARNING> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/AlarmState> ; skos:notation "WARNING" ;
+    skos:prefLabel "경고"@ko , "Warning"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionMethod/VISUAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionMethod> ; skos:notation "VISUAL" ;
+    skos:prefLabel "육안검사"@ko , "Visual"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionMethod/NDT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionMethod> ; skos:notation "NDT" ;
+    skos:prefLabel "비파괴검사"@ko , "Non-destructive"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionMethod/DIMENSION> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionMethod> ; skos:notation "DIMENSION" ;
+    skos:prefLabel "치수검사"@ko , "Dimensional"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionMethod/FUNCTION> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionMethod> ; skos:notation "FUNCTION" ;
+    skos:prefLabel "기능·성능검사"@ko , "Functional"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionMethod/MATERIAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionMethod> ; skos:notation "MATERIAL" ;
+    skos:prefLabel "재질·성분분석"@ko , "Material analysis"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionMethod/RELIABILITY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionMethod> ; skos:notation "RELIABILITY" ;
+    skos:prefLabel "신뢰성시험"@ko , "Reliability test"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionMethod/DOCUMENT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionMethod> ; skos:notation "DOCUMENT" ;
+    skos:prefLabel "서류검사"@ko , "Document review"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionStatusCode/WAIT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionStatusCode> ; skos:notation "WAIT" ;
+    skos:prefLabel "신청대기"@ko , "Waiting"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionStatusCode/APPLIED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionStatusCode> ; skos:notation "APPLIED" ;
+    skos:prefLabel "신청"@ko , "Applied"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionStatusCode/ACCEPTED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionStatusCode> ; skos:notation "ACCEPTED" ;
+    skos:prefLabel "접수"@ko , "Accepted"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionStatusCode/IN_PROGRESS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionStatusCode> ; skos:notation "IN_PROGRESS" ;
+    skos:prefLabel "검사중"@ko , "In progress"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionStatusCode/COMPLETED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionStatusCode> ; skos:notation "COMPLETED" ;
+    skos:prefLabel "완료"@ko , "Completed"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionStatusCode/CANCELLED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionStatusCode> ; skos:notation "CANCELLED" ;
+    skos:prefLabel "취소"@ko , "Cancelled"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionResult/PASS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionResult> ; skos:notation "PASS" ;
+    skos:prefLabel "합격"@ko , "Pass"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionResult/FAIL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionResult> ; skos:notation "FAIL" ;
+    skos:prefLabel "불합격"@ko , "Fail"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionResult/CONDITIONAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionResult> ; skos:notation "CONDITIONAL" ;
+    skos:prefLabel "조건부 합격"@ko , "Conditional"@en .
+<https://data.impix.co.kr/arcon/codelist/InspectionResult/HOLD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/InspectionResult> ; skos:notation "HOLD" ;
+    skos:prefLabel "판정보류"@ko , "Hold"@en .
+<https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode/ISSUED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode> ; skos:notation "ISSUED" ;
+    skos:prefLabel "발행"@ko , "Issued"@en .
+<https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode/RECEIVED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode> ; skos:notation "RECEIVED" ;
+    skos:prefLabel "접수"@ko , "Received"@en .
+<https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode/IN_PROGRESS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode> ; skos:notation "IN_PROGRESS" ;
+    skos:prefLabel "진행"@ko , "In progress"@en .
+<https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode/REJECTED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode> ; skos:notation "REJECTED" ;
+    skos:prefLabel "반려"@ko , "Rejected"@en .
+<https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode/COMPLETED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode> ; skos:notation "COMPLETED" ;
+    skos:prefLabel "완료"@ko , "Completed"@en .
+<https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode/CLOSED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode> ; skos:notation "CLOSED" ;
+    skos:prefLabel "종결"@ko , "Closed"@en .
+<https://data.impix.co.kr/arcon/codelist/PackingType/BOX> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PackingType> ; skos:notation "BOX" ;
+    skos:prefLabel "박스"@ko , "Box"@en .
+<https://data.impix.co.kr/arcon/codelist/PackingType/PALLET> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PackingType> ; skos:notation "PALLET" ;
+    skos:prefLabel "파렛트"@ko , "Pallet"@en .
+<https://data.impix.co.kr/arcon/codelist/PackingType/BULK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PackingType> ; skos:notation "BULK" ;
+    skos:prefLabel "벌크"@ko , "Bulk"@en .
+<https://data.impix.co.kr/arcon/codelist/PackingType/BAG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PackingType> ; skos:notation "BAG" ;
+    skos:prefLabel "포대"@ko , "Bag"@en .
+<https://data.impix.co.kr/arcon/codelist/PackingType/DRUM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PackingType> ; skos:notation "DRUM" ;
+    skos:prefLabel "드럼"@ko , "Drum"@en .
+<https://data.impix.co.kr/arcon/codelist/PackingType/REEL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PackingType> ; skos:notation "REEL" ;
+    skos:prefLabel "릴"@ko , "Reel"@en .
+<https://data.impix.co.kr/arcon/codelist/PackingType/CRATE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/PackingType> ; skos:notation "CRATE" ;
+    skos:prefLabel "목상자"@ko , "Crate"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterType/TEMP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterType> ; skos:notation "TEMP" ;
+    skos:prefLabel "온도"@ko , "Temperature"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterType/PRESS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterType> ; skos:notation "PRESS" ;
+    skos:prefLabel "압력"@ko , "Pressure"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterType/CURRENT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterType> ; skos:notation "CURRENT" ;
+    skos:prefLabel "전류"@ko , "Current"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterType/VIB> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterType> ; skos:notation "VIB" ;
+    skos:prefLabel "진동"@ko , "Vibration"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterType/VOLT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterType> ; skos:notation "VOLT" ;
+    skos:prefLabel "전압"@ko , "Voltage"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterType/POWER> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterType> ; skos:notation "POWER" ;
+    skos:prefLabel "전력"@ko , "Power"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterType/SPEED> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterType> ; skos:notation "SPEED" ;
+    skos:prefLabel "속도·회전수"@ko , "Speed"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterType/FLOW> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterType> ; skos:notation "FLOW" ;
+    skos:prefLabel "유량"@ko , "Flow"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterType/HUMID> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterType> ; skos:notation "HUMID" ;
+    skos:prefLabel "습도"@ko , "Humidity"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterType/TORQUE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterType> ; skos:notation "TORQUE" ;
+    skos:prefLabel "토크"@ko , "Torque"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterType/POSITION> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterType> ; skos:notation "POSITION" ;
+    skos:prefLabel "위치"@ko , "Position"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterType/CYCLE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterType> ; skos:notation "CYCLE" ;
+    skos:prefLabel "사이클타임"@ko , "Cycle time"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterType/COUNT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterType> ; skos:notation "COUNT" ;
+    skos:prefLabel "카운트"@ko , "Count"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterGrade/CRITICAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterGrade> ; skos:notation "CRITICAL" ;
+    skos:prefLabel "핵심"@ko , "Critical"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterGrade/MAJOR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterGrade> ; skos:notation "MAJOR" ;
+    skos:prefLabel "주요"@ko , "Major"@en .
+<https://data.impix.co.kr/arcon/codelist/ParameterGrade/MINOR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ParameterGrade> ; skos:notation "MINOR" ;
+    skos:prefLabel "일반"@ko , "Minor"@en .
+<https://data.impix.co.kr/arcon/codelist/ValidationResultCode/NORMAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ValidationResultCode> ; skos:notation "NORMAL" ;
+    skos:prefLabel "정상"@ko , "Normal"@en .
+<https://data.impix.co.kr/arcon/codelist/ValidationResultCode/OVER_USL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ValidationResultCode> ; skos:notation "OVER_USL" ;
+    skos:prefLabel "상한 초과"@ko , "OverUSL"@en .
+<https://data.impix.co.kr/arcon/codelist/ValidationResultCode/UNDER_LSL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ValidationResultCode> ; skos:notation "UNDER_LSL" ;
+    skos:prefLabel "하한 미달"@ko , "UnderLSL"@en .
+<https://data.impix.co.kr/arcon/codelist/ValidationResultCode/OVER_UCL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ValidationResultCode> ; skos:notation "OVER_UCL" ;
+    skos:prefLabel "관리상한 초과"@ko , "OverUCL"@en .
+<https://data.impix.co.kr/arcon/codelist/ValidationResultCode/UNDER_LCL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ValidationResultCode> ; skos:notation "UNDER_LCL" ;
+    skos:prefLabel "관리하한 미달"@ko , "UnderLCL"@en .
+<https://data.impix.co.kr/arcon/codelist/ValidationResultCode/NO_DATA> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ValidationResultCode> ; skos:notation "NO_DATA" ;
+    skos:prefLabel "데이터 누락"@ko , "No data"@en .
+<https://data.impix.co.kr/arcon/codelist/TaskGroupCode/DAY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TaskGroupCode> ; skos:notation "DAY" ;
+    skos:prefLabel "주간조"@ko , "Day shift"@en .
+<https://data.impix.co.kr/arcon/codelist/TaskGroupCode/NIGHT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TaskGroupCode> ; skos:notation "NIGHT" ;
+    skos:prefLabel "야간조"@ko , "Night shift"@en .
+<https://data.impix.co.kr/arcon/codelist/TaskGroupCode/A> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TaskGroupCode> ; skos:notation "A" ;
+    skos:prefLabel "A조"@ko , "Shift A"@en .
+<https://data.impix.co.kr/arcon/codelist/TaskGroupCode/B> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TaskGroupCode> ; skos:notation "B" ;
+    skos:prefLabel "B조"@ko , "Shift B"@en .
+<https://data.impix.co.kr/arcon/codelist/TaskGroupCode/C> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TaskGroupCode> ; skos:notation "C" ;
+    skos:prefLabel "C조"@ko , "Shift C"@en .
+<https://data.impix.co.kr/arcon/codelist/TaskGroupCode/D> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TaskGroupCode> ; skos:notation "D" ;
+    skos:prefLabel "D조"@ko , "Shift D"@en .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeCode/APP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeCode> ; skos:notation "APP" ;
+    skos:prefLabel "외관불량"@ko , "Appearance"@en .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeCode/DIM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeCode> ; skos:notation "DIM" ;
+    skos:prefLabel "치수불량"@ko , "Dimension"@en .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeCode/FUNC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeCode> ; skos:notation "FUNC" ;
+    skos:prefLabel "기능불량"@ko , "Function"@en .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeCode/MAT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeCode> ; skos:notation "MAT" ;
+    skos:prefLabel "재질불량"@ko , "Material"@en .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeCode/ASSY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeCode> ; skos:notation "ASSY" ;
+    skos:prefLabel "조립불량"@ko , "Assembly"@en .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeCode/PKG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeCode> ; skos:notation "PKG" ;
+    skos:prefLabel "포장불량"@ko , "Packing"@en .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/APP-SCR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "APP-SCR" ;
+    skos:prefLabel "스크래치"@ko , "Scratch"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/APP> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/APP-DNT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "APP-DNT" ;
+    skos:prefLabel "찍힘"@ko , "Dent"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/APP> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/APP-STN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "APP-STN" ;
+    skos:prefLabel "얼룩·오염"@ko , "Stain"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/APP> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/APP-BUR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "APP-BUR" ;
+    skos:prefLabel "버"@ko , "Burr"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/APP> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/APP-CRK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "APP-CRK" ;
+    skos:prefLabel "크랙"@ko , "Crack"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/APP> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/DIM-OVR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "DIM-OVR" ;
+    skos:prefLabel "치수 초과"@ko , "Oversize"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/DIM> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/DIM-UND> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "DIM-UND" ;
+    skos:prefLabel "치수 미달"@ko , "Undersize"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/DIM> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/DIM-FLT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "DIM-FLT" ;
+    skos:prefLabel "평탄도 불량"@ko , "Flatness"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/DIM> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/FUNC-NOP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "FUNC-NOP" ;
+    skos:prefLabel "작동 불량"@ko , "No operation"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/FUNC> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/FUNC-NOI> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "FUNC-NOI" ;
+    skos:prefLabel "이음"@ko , "Noise"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/FUNC> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/FUNC-LEK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "FUNC-LEK" ;
+    skos:prefLabel "누설"@ko , "Leak"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/FUNC> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/MAT-HRD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "MAT-HRD" ;
+    skos:prefLabel "경도 불량"@ko , "Hardness"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/MAT> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/MAT-CMP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "MAT-CMP" ;
+    skos:prefLabel "성분 불량"@ko , "Composition"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/MAT> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/ASSY-MIS> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "ASSY-MIS" ;
+    skos:prefLabel "오조립"@ko , "Misassembly"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/ASSY> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/ASSY-MSG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "ASSY-MSG" ;
+    skos:prefLabel "부품 누락"@ko , "Missing part"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/ASSY> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/ASSY-TRQ> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "ASSY-TRQ" ;
+    skos:prefLabel "체결 토크 불량"@ko , "Torque"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/ASSY> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/PKG-DMG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "PKG-DMG" ;
+    skos:prefLabel "포장 파손"@ko , "Damaged packing"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/PKG> .
+<https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode/PKG-LBL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/DefectTypeDetailCode> ; skos:notation "PKG-LBL" ;
+    skos:prefLabel "라벨 오류"@ko , "Label error"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/DefectTypeCode/PKG> .
+<https://data.impix.co.kr/arcon/codelist/ProductReleaseRequestType/NORMAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProductReleaseRequestType> ; skos:notation "NORMAL" ;
+    skos:prefLabel "일반 납품"@ko , "Normal"@en .
+<https://data.impix.co.kr/arcon/codelist/ProductReleaseRequestType/URGENT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProductReleaseRequestType> ; skos:notation "URGENT" ;
+    skos:prefLabel "긴급 납품"@ko , "Urgent"@en .
+<https://data.impix.co.kr/arcon/codelist/ProductReleaseRequestType/FREE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProductReleaseRequestType> ; skos:notation "FREE" ;
+    skos:prefLabel "무상 납품"@ko , "Free of charge"@en .
+<https://data.impix.co.kr/arcon/codelist/ProductReleaseRequestType/TRIAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProductReleaseRequestType> ; skos:notation "TRIAL" ;
+    skos:prefLabel "시방/시운전 납품"@ko , "Trial"@en .
+<https://data.impix.co.kr/arcon/codelist/ProductReleaseRequestType/OTHER> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ProductReleaseRequestType> ; skos:notation "OTHER" ;
+    skos:prefLabel "타계정 출하"@ko , "Other account"@en .
+<https://data.impix.co.kr/arcon/codelist/ReturnType/PUR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ReturnType> ; skos:notation "PUR" ;
+    skos:prefLabel "구매반품"@ko , "Purchase return"@en .
+<https://data.impix.co.kr/arcon/codelist/ReturnType/SAL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ReturnType> ; skos:notation "SAL" ;
+    skos:prefLabel "제품반품"@ko , "Sales return"@en .
+<https://data.impix.co.kr/arcon/codelist/ReturnType/PUR-DEF> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ReturnType> ; skos:notation "PUR-DEF" ;
+    skos:prefLabel "구매반품-불량"@ko , "Purchase return - defect"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ReturnType/PUR> .
+<https://data.impix.co.kr/arcon/codelist/ReturnType/PUR-QTY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ReturnType> ; skos:notation "PUR-QTY" ;
+    skos:prefLabel "구매반품-수량오류"@ko , "Purchase return - quantity"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ReturnType/PUR> .
+<https://data.impix.co.kr/arcon/codelist/ReturnType/PUR-WRG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ReturnType> ; skos:notation "PUR-WRG" ;
+    skos:prefLabel "구매반품-오배송"@ko , "Purchase return - wrong item"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ReturnType/PUR> .
+<https://data.impix.co.kr/arcon/codelist/ReturnType/PUR-CTR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ReturnType> ; skos:notation "PUR-CTR" ;
+    skos:prefLabel "구매반품-계약위반"@ko , "Purchase return - contract"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ReturnType/PUR> .
+<https://data.impix.co.kr/arcon/codelist/ReturnType/SAL-DEF> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ReturnType> ; skos:notation "SAL-DEF" ;
+    skos:prefLabel "제품반품-불량"@ko , "Sales return - defect"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ReturnType/SAL> .
+<https://data.impix.co.kr/arcon/codelist/ReturnType/SAL-QTY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ReturnType> ; skos:notation "SAL-QTY" ;
+    skos:prefLabel "제품반품-수량오류"@ko , "Sales return - quantity"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ReturnType/SAL> .
+<https://data.impix.co.kr/arcon/codelist/ReturnType/SAL-WRG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ReturnType> ; skos:notation "SAL-WRG" ;
+    skos:prefLabel "제품반품-오배송"@ko , "Sales return - wrong item"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ReturnType/SAL> .
+<https://data.impix.co.kr/arcon/codelist/ReturnType/SAL-CTR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ReturnType> ; skos:notation "SAL-CTR" ;
+    skos:prefLabel "제품반품-계약위반"@ko , "Sales return - contract"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ReturnType/SAL> .
+<https://data.impix.co.kr/arcon/codelist/ReturnType/SAL-CHG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/ReturnType> ; skos:notation "SAL-CHG" ;
+    skos:prefLabel "제품반품-단순변심"@ko , "Sales return - change of mind"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/ReturnType/SAL> .
+<https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode/GUIDE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode> ; skos:notation "GUIDE" ;
+    skos:prefLabel "사용법 안내"@ko , "Usage guide"@en .
+<https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode/SETTING> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode> ; skos:notation "SETTING" ;
+    skos:prefLabel "설정 변경 안내"@ko , "Setting guide"@en .
+<https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode/REMOTE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode> ; skos:notation "REMOTE" ;
+    skos:prefLabel "원격 조치"@ko , "Remote fix"@en .
+<https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode/NO_FAULT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode> ; skos:notation "NO_FAULT" ;
+    skos:prefLabel "이상 없음 확인"@ko , "No fault found"@en .
+<https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode/DUPLICATE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode> ; skos:notation "DUPLICATE" ;
+    skos:prefLabel "중복 접수"@ko , "Duplicate"@en .
+<https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode/CUST_CANCEL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode> ; skos:notation "CUST_CANCEL" ;
+    skos:prefLabel "고객 취소"@ko , "Customer cancel"@en .
+<https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode/OUT_OF_SCOPE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/BasicAcceptProcessCode> ; skos:notation "OUT_OF_SCOPE" ;
+    skos:prefLabel "서비스 대상 아님"@ko , "Out of scope"@en .
+<https://data.impix.co.kr/arcon/codelist/TransferRegistrationCode/ENGINEER> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransferRegistrationCode> ; skos:notation "ENGINEER" ;
+    skos:prefLabel "기사"@ko , "Service engineer"@en .
+<https://data.impix.co.kr/arcon/codelist/TransferRegistrationCode/HQ> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransferRegistrationCode> ; skos:notation "HQ" ;
+    skos:prefLabel "본사"@ko , "Headquarters"@en .
+<https://data.impix.co.kr/arcon/codelist/TransferRegistrationCode/AGENCY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransferRegistrationCode> ; skos:notation "AGENCY" ;
+    skos:prefLabel "대리점"@ko , "Agency"@en .
+<https://data.impix.co.kr/arcon/codelist/TransferRegistrationCode/CENTER> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransferRegistrationCode> ; skos:notation "CENTER" ;
+    skos:prefLabel "서비스센터"@ko , "Service center"@en .
+<https://data.impix.co.kr/arcon/codelist/TransferRegistrationCode/PARTNER> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransferRegistrationCode> ; skos:notation "PARTNER" ;
+    skos:prefLabel "협력 서비스업체"@ko , "Partner"@en .
+<https://data.impix.co.kr/arcon/codelist/FaultLargeClass/PWR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultLargeClass> ; skos:notation "PWR" ;
+    skos:prefLabel "전원"@ko , "Power"@en .
+<https://data.impix.co.kr/arcon/codelist/FaultLargeClass/OPR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultLargeClass> ; skos:notation "OPR" ;
+    skos:prefLabel "동작"@ko , "Operation"@en .
+<https://data.impix.co.kr/arcon/codelist/FaultLargeClass/NVH> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultLargeClass> ; skos:notation "NVH" ;
+    skos:prefLabel "소음·진동"@ko , "Noise/vibration"@en .
+<https://data.impix.co.kr/arcon/codelist/FaultLargeClass/LEAK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultLargeClass> ; skos:notation "LEAK" ;
+    skos:prefLabel "누수·누유"@ko , "Leak"@en .
+<https://data.impix.co.kr/arcon/codelist/FaultLargeClass/DISP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultLargeClass> ; skos:notation "DISP" ;
+    skos:prefLabel "표시·제어"@ko , "Display/control"@en .
+<https://data.impix.co.kr/arcon/codelist/FaultLargeClass/APPR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultLargeClass> ; skos:notation "APPR" ;
+    skos:prefLabel "외관"@ko , "Appearance"@en .
+<https://data.impix.co.kr/arcon/codelist/FaultSmallClass/PWR-NOON> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultSmallClass> ; skos:notation "PWR-NOON" ;
+    skos:prefLabel "전원 안 켜짐"@ko , "No power on"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/FaultLargeClass/PWR> .
+<https://data.impix.co.kr/arcon/codelist/FaultSmallClass/PWR-TRIP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultSmallClass> ; skos:notation "PWR-TRIP" ;
+    skos:prefLabel "전원 차단 반복"@ko , "Power trip"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/FaultLargeClass/PWR> .
+<https://data.impix.co.kr/arcon/codelist/FaultSmallClass/OPR-STOP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultSmallClass> ; skos:notation "OPR-STOP" ;
+    skos:prefLabel "동작 멈춤"@ko , "Stop"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/FaultLargeClass/OPR> .
+<https://data.impix.co.kr/arcon/codelist/FaultSmallClass/OPR-WEAK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultSmallClass> ; skos:notation "OPR-WEAK" ;
+    skos:prefLabel "성능 저하"@ko , "Low performance"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/FaultLargeClass/OPR> .
+<https://data.impix.co.kr/arcon/codelist/FaultSmallClass/NVH-NOISE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultSmallClass> ; skos:notation "NVH-NOISE" ;
+    skos:prefLabel "이상음"@ko , "Abnormal noise"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/FaultLargeClass/NVH> .
+<https://data.impix.co.kr/arcon/codelist/FaultSmallClass/NVH-VIB> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultSmallClass> ; skos:notation "NVH-VIB" ;
+    skos:prefLabel "이상 진동"@ko , "Abnormal vibration"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/FaultLargeClass/NVH> .
+<https://data.impix.co.kr/arcon/codelist/FaultSmallClass/LEAK-WTR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultSmallClass> ; skos:notation "LEAK-WTR" ;
+    skos:prefLabel "누수"@ko , "Water leak"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/FaultLargeClass/LEAK> .
+<https://data.impix.co.kr/arcon/codelist/FaultSmallClass/LEAK-OIL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultSmallClass> ; skos:notation "LEAK-OIL" ;
+    skos:prefLabel "누유"@ko , "Oil leak"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/FaultLargeClass/LEAK> .
+<https://data.impix.co.kr/arcon/codelist/FaultSmallClass/DISP-ERR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultSmallClass> ; skos:notation "DISP-ERR" ;
+    skos:prefLabel "에러 표시"@ko , "Error display"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/FaultLargeClass/DISP> .
+<https://data.impix.co.kr/arcon/codelist/FaultSmallClass/DISP-KEY> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultSmallClass> ; skos:notation "DISP-KEY" ;
+    skos:prefLabel "버튼 불량"@ko , "Key failure"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/FaultLargeClass/DISP> .
+<https://data.impix.co.kr/arcon/codelist/FaultSmallClass/APPR-DMG> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultSmallClass> ; skos:notation "APPR-DMG" ;
+    skos:prefLabel "파손"@ko , "Damage"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/FaultLargeClass/APPR> .
+<https://data.impix.co.kr/arcon/codelist/FaultSmallClass/APPR-DISC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/FaultSmallClass> ; skos:notation "APPR-DISC" ;
+    skos:prefLabel "변색"@ko , "Discoloration"@en ;
+    skos:broader <https://data.impix.co.kr/arcon/codelist/FaultLargeClass/APPR> .
+<https://data.impix.co.kr/arcon/codelist/WorkType/EXCHANGE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WorkType> ; skos:notation "EXCHANGE" ;
+    skos:prefLabel "교환"@ko , "Exchange"@en .
+<https://data.impix.co.kr/arcon/codelist/WorkType/REPAIR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WorkType> ; skos:notation "REPAIR" ;
+    skos:prefLabel "수리"@ko , "Repair"@en .
+<https://data.impix.co.kr/arcon/codelist/WorkType/INSPECT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WorkType> ; skos:notation "INSPECT" ;
+    skos:prefLabel "점검"@ko , "Inspection"@en .
+<https://data.impix.co.kr/arcon/codelist/WorkType/INSTALL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WorkType> ; skos:notation "INSTALL" ;
+    skos:prefLabel "설치"@ko , "Installation"@en .
+<https://data.impix.co.kr/arcon/codelist/WorkType/RELOCATE> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WorkType> ; skos:notation "RELOCATE" ;
+    skos:prefLabel "이전설치"@ko , "Relocation"@en .
+<https://data.impix.co.kr/arcon/codelist/WorkType/REFUND> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/WorkType> ; skos:notation "REFUND" ;
+    skos:prefLabel "환불"@ko , "Refund"@en .
+<https://data.impix.co.kr/arcon/codelist/RepairType/WEAR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/RepairType> ; skos:notation "WEAR" ;
+    skos:prefLabel "마모"@ko , "Wear"@en .
+<https://data.impix.co.kr/arcon/codelist/RepairType/BREAK> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/RepairType> ; skos:notation "BREAK" ;
+    skos:prefLabel "파손"@ko , "Breakage"@en .
+<https://data.impix.co.kr/arcon/codelist/RepairType/BURN> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/RepairType> ; skos:notation "BURN" ;
+    skos:prefLabel "소손"@ko , "Burnout"@en .
+<https://data.impix.co.kr/arcon/codelist/RepairType/CORROSION> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/RepairType> ; skos:notation "CORROSION" ;
+    skos:prefLabel "부식"@ko , "Corrosion"@en .
+<https://data.impix.co.kr/arcon/codelist/RepairType/CONTAM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/RepairType> ; skos:notation "CONTAM" ;
+    skos:prefLabel "오염"@ko , "Contamination"@en .
+<https://data.impix.co.kr/arcon/codelist/RepairType/MALFUNC> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/RepairType> ; skos:notation "MALFUNC" ;
+    skos:prefLabel "기능 불량"@ko , "Malfunction"@en .
+<https://data.impix.co.kr/arcon/codelist/RepairType/PREVENT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/RepairType> ; skos:notation "PREVENT" ;
+    skos:prefLabel "예방 교체"@ko , "Preventive"@en .
+
+<https://data.impix.co.kr/arcon/codelist/UOM> a skos:ConceptScheme ; skos:prefLabel "단위코드"@ko .
+<https://data.impix.co.kr/arcon/codelist/UOM/EA> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "EA" ;
+    skos:prefLabel "낱개"@ko ; ksx:uneceRec20 "EA" ;
+    rdfs:comment "그룹 QTY, 환산계수 1" .
+<https://data.impix.co.kr/arcon/codelist/UOM/DZ> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "DZ" ;
+    skos:prefLabel "타"@ko ; ksx:uneceRec20 "DZN" ;
+    rdfs:comment "그룹 QTY, 환산계수 12" .
+<https://data.impix.co.kr/arcon/codelist/UOM/HD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "HD" ;
+    skos:prefLabel "백"@ko ; ksx:uneceRec20 "CEN" ;
+    rdfs:comment "그룹 QTY, 환산계수 100" .
+<https://data.impix.co.kr/arcon/codelist/UOM/PR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "PR" ;
+    skos:prefLabel "쌍"@ko ; ksx:uneceRec20 "PR" ;
+    rdfs:comment "그룹 QTY, 환산계수 2" .
+<https://data.impix.co.kr/arcon/codelist/UOM/SET> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "SET" ;
+    skos:prefLabel "세트"@ko ; ksx:uneceRec20 "SET" ;
+    rdfs:comment "그룹 QTY, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/BOX> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "BOX" ;
+    skos:prefLabel "박스"@ko ; ksx:uneceRec20 "BX" ;
+    rdfs:comment "그룹 QTY, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/ROL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "ROL" ;
+    skos:prefLabel "롤"@ko ; ksx:uneceRec20 "RO" ;
+    rdfs:comment "그룹 QTY, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/SHT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "SHT" ;
+    skos:prefLabel "매"@ko ; ksx:uneceRec20 "ST" ;
+    rdfs:comment "그룹 QTY, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/mg> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "mg" ;
+    skos:prefLabel "밀리그램"@ko ; ksx:uneceRec20 "MGM" ;
+    rdfs:comment "그룹 WGT, 환산계수 9.9999999999999995E-7" .
+<https://data.impix.co.kr/arcon/codelist/UOM/g> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "g" ;
+    skos:prefLabel "그램"@ko ; ksx:uneceRec20 "GRM" ;
+    rdfs:comment "그룹 WGT, 환산계수 1E-3" .
+<https://data.impix.co.kr/arcon/codelist/UOM/kg> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "kg" ;
+    skos:prefLabel "킬로그램"@ko ; ksx:uneceRec20 "KGM" ;
+    rdfs:comment "그룹 WGT, 환산계수 1" .
+<https://data.impix.co.kr/arcon/codelist/UOM/t> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "t" ;
+    skos:prefLabel "톤"@ko ; ksx:uneceRec20 "TNE" ;
+    rdfs:comment "그룹 WGT, 환산계수 1000" .
+<https://data.impix.co.kr/arcon/codelist/UOM/mL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "mL" ;
+    skos:prefLabel "밀리리터"@ko ; ksx:uneceRec20 "MLT" ;
+    rdfs:comment "그룹 VOL, 환산계수 1E-3" .
+<https://data.impix.co.kr/arcon/codelist/UOM/L> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "L" ;
+    skos:prefLabel "리터"@ko ; ksx:uneceRec20 "LTR" ;
+    rdfs:comment "그룹 VOL, 환산계수 1" .
+<https://data.impix.co.kr/arcon/codelist/UOM/cm3> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "cm3" ;
+    skos:prefLabel "세제곱센티미터"@ko ; ksx:uneceRec20 "CMQ" ;
+    rdfs:comment "그룹 VOL, 환산계수 1E-3" .
+<https://data.impix.co.kr/arcon/codelist/UOM/m3> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "m3" ;
+    skos:prefLabel "세제곱미터"@ko ; ksx:uneceRec20 "MTQ" ;
+    rdfs:comment "그룹 VOL, 환산계수 1000" .
+<https://data.impix.co.kr/arcon/codelist/UOM/mm> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "mm" ;
+    skos:prefLabel "밀리미터"@ko ; ksx:uneceRec20 "MMT" ;
+    rdfs:comment "그룹 LEN, 환산계수 1E-3" .
+<https://data.impix.co.kr/arcon/codelist/UOM/cm> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "cm" ;
+    skos:prefLabel "센티미터"@ko ; ksx:uneceRec20 "CMT" ;
+    rdfs:comment "그룹 LEN, 환산계수 0.01" .
+<https://data.impix.co.kr/arcon/codelist/UOM/m> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "m" ;
+    skos:prefLabel "미터"@ko ; ksx:uneceRec20 "MTR" ;
+    rdfs:comment "그룹 LEN, 환산계수 1" .
+<https://data.impix.co.kr/arcon/codelist/UOM/km> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "km" ;
+    skos:prefLabel "킬로미터"@ko ; ksx:uneceRec20 "KMT" ;
+    rdfs:comment "그룹 LEN, 환산계수 1000" .
+<https://data.impix.co.kr/arcon/codelist/UOM/mm2> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "mm2" ;
+    skos:prefLabel "제곱밀리미터"@ko ; ksx:uneceRec20 "MMK" ;
+    rdfs:comment "그룹 AREA, 환산계수 9.9999999999999995E-7" .
+<https://data.impix.co.kr/arcon/codelist/UOM/cm2> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "cm2" ;
+    skos:prefLabel "제곱센티미터"@ko ; ksx:uneceRec20 "CMK" ;
+    rdfs:comment "그룹 AREA, 환산계수 1E-4" .
+<https://data.impix.co.kr/arcon/codelist/UOM/m2> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "m2" ;
+    skos:prefLabel "제곱미터"@ko ; ksx:uneceRec20 "MTK" ;
+    rdfs:comment "그룹 AREA, 환산계수 1" .
+<https://data.impix.co.kr/arcon/codelist/UOM/s> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "s" ;
+    skos:prefLabel "초"@ko ; ksx:uneceRec20 "SEC" ;
+    rdfs:comment "그룹 TIME, 환산계수 2.7777777777777799E-4" .
+<https://data.impix.co.kr/arcon/codelist/UOM/min> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "min" ;
+    skos:prefLabel "분"@ko ; ksx:uneceRec20 "MIN" ;
+    rdfs:comment "그룹 TIME, 환산계수 1.6666666666666701E-2" .
+<https://data.impix.co.kr/arcon/codelist/UOM/h> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "h" ;
+    skos:prefLabel "시간"@ko ; ksx:uneceRec20 "HUR" ;
+    rdfs:comment "그룹 TIME, 환산계수 1" .
+<https://data.impix.co.kr/arcon/codelist/UOM/d> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "d" ;
+    skos:prefLabel "일"@ko ; ksx:uneceRec20 "DAY" ;
+    rdfs:comment "그룹 TIME, 환산계수 24" .
+<https://data.impix.co.kr/arcon/codelist/UOM/EA_h> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "EA/h" ;
+    skos:prefLabel "시간당 개수"@ko ; ksx:uneceRec20 "" ;
+    rdfs:comment "그룹 RATE, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/kg_h> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "kg/h" ;
+    skos:prefLabel "시간당 킬로그램"@ko ; ksx:uneceRec20 "" ;
+    rdfs:comment "그룹 RATE, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/EA_min> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "EA/min" ;
+    skos:prefLabel "분당 개수"@ko ; ksx:uneceRec20 "" ;
+    rdfs:comment "그룹 RATE, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/EA_d> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "EA/d" ;
+    skos:prefLabel "일당 개수"@ko ; ksx:uneceRec20 "" ;
+    rdfs:comment "그룹 RATE, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/m_min> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "m/min" ;
+    skos:prefLabel "분당 미터"@ko ; ksx:uneceRec20 "" ;
+    rdfs:comment "그룹 RATE, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/Cel> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "Cel" ;
+    skos:prefLabel "섭씨온도"@ko ; ksx:uneceRec20 "CEL" ;
+    rdfs:comment "그룹 TEMP, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/mV> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "mV" ;
+    skos:prefLabel "밀리볼트"@ko ; ksx:uneceRec20 "2Z" ;
+    rdfs:comment "그룹 ELEC, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/V> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "V" ;
+    skos:prefLabel "볼트"@ko ; ksx:uneceRec20 "VLT" ;
+    rdfs:comment "그룹 ELEC, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/A> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "A" ;
+    skos:prefLabel "암페어"@ko ; ksx:uneceRec20 "AMP" ;
+    rdfs:comment "그룹 ELEC, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/kW> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "kW" ;
+    skos:prefLabel "킬로와트"@ko ; ksx:uneceRec20 "KWT" ;
+    rdfs:comment "그룹 ELEC, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/kWh> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "kWh" ;
+    skos:prefLabel "킬로와트시"@ko ; ksx:uneceRec20 "KWH" ;
+    rdfs:comment "그룹 ELEC, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/kPa> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "kPa" ;
+    skos:prefLabel "킬로파스칼"@ko ; ksx:uneceRec20 "KPA" ;
+    rdfs:comment "그룹 PRES, 환산계수 1" .
+<https://data.impix.co.kr/arcon/codelist/UOM/MPa> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "MPa" ;
+    skos:prefLabel "메가파스칼"@ko ; ksx:uneceRec20 "MPA" ;
+    rdfs:comment "그룹 PRES, 환산계수 1000" .
+<https://data.impix.co.kr/arcon/codelist/UOM/bar> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "bar" ;
+    skos:prefLabel "바"@ko ; ksx:uneceRec20 "BAR" ;
+    rdfs:comment "그룹 PRES, 환산계수 100" .
+<https://data.impix.co.kr/arcon/codelist/UOM/PCT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "PCT" ;
+    skos:prefLabel "퍼센트"@ko ; ksx:uneceRec20 "P1" ;
+    rdfs:comment "그룹 RATIO, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/RH> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "RH" ;
+    skos:prefLabel "상대습도(%)"@ko ; ksx:uneceRec20 "" ;
+    rdfs:comment "그룹 RATIO, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/PPM> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "PPM" ;
+    skos:prefLabel "백만분율"@ko ; ksx:uneceRec20 "59" ;
+    rdfs:comment "그룹 RATIO, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/Hz> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "Hz" ;
+    skos:prefLabel "헤르츠"@ko ; ksx:uneceRec20 "HTZ" ;
+    rdfs:comment "그룹 FREQ, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/r_min> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "r/min" ;
+    skos:prefLabel "분당 회전수"@ko ; ksx:uneceRec20 "" ;
+    rdfs:comment "그룹 FREQ, 환산계수 " .
+<https://data.impix.co.kr/arcon/codelist/UOM/mm_s> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "mm/s" ;
+    skos:prefLabel "초당 밀리미터"@ko ; ksx:uneceRec20 "" ;
+    rdfs:comment "그룹 VIBV, 환산계수 " .

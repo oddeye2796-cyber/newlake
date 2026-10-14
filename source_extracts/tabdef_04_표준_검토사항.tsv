@@ -1,0 +1,36 @@
+No	구분	대상(최종본 표 번호)	내용	검토 의견	최종본 반영	반영 내용 / 후속 조치
+1	타입	duration 타입 속성(준비·가동·이동시간, 투입시간, 수집주기)	KS X ISO 8601 기간 표기를 따르는지, 숫자+단위코드(예: 투입시간단위코드)로 표현하는지 혼재	정의서는 INTERVAL로 권장. 투입시간처럼 단위코드가 있는 속성은 NUMERIC 사용 검토	미반영	표준에 duration 표현 규칙 없음 → 7.1 또는 7.3에 기간 표기 규칙(KS X ISO 8601 기간 또는 숫자+단위코드) 명시 검토
+2	식별자	공정설비(OperationEquipment) 표 27	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: OperationID + EquipmentID	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+3	식별자	기준가격(BasePrice) 표 38	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: ItemID + CurrencyCode — 품목·통화별 기준가격	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+4	식별자	자재도착(MaterialArrival) 표 41	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: PurchaseDocumentNumber + PurchaseDocumentSequence + LotID — 구매발주 행별 도착 로트	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+5	식별자	착공(OperationStart) 표 46	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: LotID + OperationID + OperationStartTime	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+6	식별자	완공(OperationEnd) 표 47	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: LotID + OperationID + OperationEndTime	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+7	식별자	운행시작(TransferStart) 표 49	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: TransferCommandID — 이동지시 1건당 운행시작 1건	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+8	식별자	운행완료(TransferEnd) 표 50	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: TransferCommandID — 이동지시 1건당 운행완료 1건	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+9	식별자	운송위치(InTransitLocation) 표 51	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: TransferCommandID + CurrentLocation — 보고 일시 속성이 없어 위치로 구분(검토사항 참조)	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+10	식별자	설비상태(EquipmentState) 표 52	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: EquipmentID — 설비별 현재 상태(이력 관리 시 상태변경일시 추가 필요 — 검토사항 참조)	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+11	식별자	알람(Alarm) 표 53	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: EquipmentID + EventDateTime + ErrorCode	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+12	식별자	제품포장(ProductPacking) 표 60	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: BoxNumber + PackingSequence — 포장박스 내 포장 순번	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+13	식별자	설비파라미터이력(TraceParameter) 표 62	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: EquipmentID + ParameterID + EventDateTime	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+14	식별자	생산실적투입품목(ProductionPerformanceItem) 표 64	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: ProductionPerformanceID + ProductionPerformanceSequence + ItemID	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+15	식별자	생산실적투입인력(ProductionPerformancePersonnel) 표 65	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: ProductionPerformanceID + ProductionPerformanceSequence + PersonnelID	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+16	식별자	설비활용실적(ProductionPerformanceEquipment) 표 66	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: ProductionPerformanceID + ProductionPerformanceSequence + EquipmentID	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+17	식별자	생산품질실적(ProductionPerformanceQuality) 표 67	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: ProductionPerformanceID + ProductionPerformanceSequence + DefectTypeCode + DefectTypeDetailCode	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+18	식별자	재고(Inventory) 표 68	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: WarehouseID + ItemID — 창고·품목별 현재고	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+19	식별자	재고실사(InventoryCount) 표 71	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: InventoryCountDocumentNumber + WarehouseID + ItemID	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+20	식별자	고객제품데이터(ProductTraceParameterOnCustomer) 표 76	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: ItemID + SerialNumber + ParameterName + CollectionDateTime	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+21	식별자	사후서비스결과(AfterSalesServiceRequestResult) 표 78	데이터 타입 ID 속성이 없어 식별 속성(PK)이 정의되지 않음	PK 제안: RequestNumber + TransferSequence + RegisterSequence + RepairSequence	미반영(정의서 처리)	최종본에도 ID 속성 없음 → 정의서는 제안 PK 적용. 표준 개정 시 식별 속성 규정 또는 ID 속성 추가 검토
+22	오기	구매요청(PurchaseRequisition) 표 39	구매요청식별자의 영문 속성명이 "PurchaseRequisitionIDEmploymentStatusType"로 기재됨(셀 안에 "EmploymentStatusType" 문자열이 덧붙어 있음)	"PurchaseRequisitionID"로 정정	반영	최종본 표 39 영문 속성명 정정(원문 대비 변경 표시·메모)
+23	타입	사후서비스결과(AfterSalesServiceRequestResult) 표 78	신청번호(RequestNumber)의 데이터 타입이 string인데 참조 대상(사후서비스신청)이 명시됨	7.1에 따라 IDREF·대상으로 정정	반영	최종본 표 78 데이터 타입 string→IDREF 정정. 정의서는 사후서비스신청(AfterSalesServiceRequest) FK로 연결
+24	참조	로트 표 23, 배치 표 31, 프로젝트마스터 표 34, 생산지시 표 45, 제품출고 표 74	복합 키 참조 대상(생산지시, 자재명세서, 수주오더)의 키 일부 속성이 없어 부분 참조가 됨	참조하는 쪽에 키 나머지 속성 추가	반영	최종본에 속성 6개 추가: 로트·배치 생산지시순번, 배치·생산지시 자재명세서버전, 프로젝트마스터·제품출고 수주문서순번. 정의서는 모두 정식 FK(부분 참조 0건)
+25	참조	생산지시(ProductionOrder) 표 45	생산지시가 공정경로의 특정 공정 행을 참조하는지 공정경로 전체를 참조하는지 불분명	생산지시는 공정경로 전체를 따름(공정순번 미지정)	반영	최종본 표 45 공정경로식별자 설명에 "공정경로 전체를 따르며, 공정순번은 지정하지 않음" 추가. 정의서는 헤더 보조 테이블 RoutingHeader 경유 FK
+26	참조	배치(Batch) 표 31	배치의 공정경로·레시피 참조 범위 불분명	배치는 공정 단위로 추적하므로 공정경로식별자를 두지 않고, 레시피는 선택 입력	반영	최종본 표 31: 공정경로식별자 없음, 레시피식별자·레시피버전 "레시피를 관리하는 경우에 기재(선택 입력)", 자재명세서는 식별자+버전으로 참조(BOMHeader 경유 FK)
+27	식별자	자재명세서(BOM) 표 22	자재명세서식별자(BOMID)가 BOM 문서 단위인지 모·자품목 행 단위인지 설명이 없음	(나)안: 자재명세서식별자는 모품목의 자재명세서 단위, 행은 식별자+버전+자품목식별자로 구분	반영	최종본 표 22 설명 2곳 추가·수정. 정의서 PK = 회사+자재명세서식별자+자재명세서버전+자품목식별자, 헤더 보조 테이블 BOMHeader. 잔여 검토: 같은 자품목을 여러 공정에 나누어 투입하면 행 구분 불가 → 필요 시 자재명세서순번 추가
+28	식별자	입고 표 42, 제품입고 표 72, 출하의뢰 표 73, 제품출고 표 74, 반품 표 75, 생산실적 표 63	식별자(ID)와 별도로 순번 속성(입고순번, 납품순번, 출고순번 등)이 있어 ID가 문서 단위인지 행 단위인지 불분명	자재명세서·공정경로와 같이 식별자는 문서 단위, 행은 식별자+순번으로 구분	반영	최종본 6개 표의 식별자·순번 설명 추가, 제품입고에 제품입고순번(ProductIncomingSequence) 속성 추가, 제품출고의 출하요청식별자는 출하의뢰 문서 전체 참조로 명시. 하위 실적 명사 4개(표 64~67)의 생산실적순번을 대상으로 바꾸고 생산실적 참조 문구 추가. 정의서 PK = 회사+식별자+순번, 헤더 보조 테이블 ProductReleaseRequestHeader 추가
+29	식별자	공정경로(Routing) 표 24	공정경로식별자가 공정경로 단위인지 공정 행 단위인지 설명이 없음	공정경로식별자는 공정경로 단위, 공정 행은 식별자+공정순번으로 구분	반영	최종본 표 24 공정경로식별자·공정순번 설명 각 1줄 추가. 정의서 PK = 회사+공정경로식별자+공정순번, 헤더 보조 테이블 RoutingHeader
+30	기타	해설 6.3 3차 개정 작성 및 검토	정의서 작성 과정의 표준 변경(속성 추가)이 해설 개정 내용에 빠져 있었음	해설 주요 개정 내용에 추가 속성 반영	반영	최종본 해설 6.3 "일부 명사의 속성 추가(… 생산지시순번, 수주문서순번, 자재명세서버전, 제품입고순번 등), 헤더·라인 구조 명사의 식별 단위 명시" 반영
+	집계
+	반영	9
+	미반영	1
+	미반영(정의서 처리)	20
+	기준: KS X 9101-1:2025 개정(안) v1.0 최종본(원문 대비 변경 추적본, 2026-10-12)

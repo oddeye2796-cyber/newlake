@@ -1,0 +1,72 @@
+No	업무영역	조항	표	테이블명(국문)	테이블명(영문)	물리 테이블명	테이블 설명(표준 정의)	PK	PK 근거	PK 비고	컬럼 수	기본 속성 수	FK 수(명사 참조)
+1	기준정보	7.4.1.1	12	사업장	Site	site	회사 내 하위 관리단위로서의 사업장을 의미한다.	EnterpriseID + SiteID	표준 ID		14	6	0
+2	기준정보	7.4.1.2	13	공장	Plant	plant	회사 내 하위 관리단위로서의 공장을 의미한다.	EnterpriseID + PlantID	표준 ID		14	7	0
+3	기준정보	7.4.1.3	14	부서	Department	department	회사 내 하위 관리 단위로서의 부서를 의미한다.	EnterpriseID + DepartmentID	표준 ID		11	8	0
+4	기준정보	7.4.1.4	15	사원	Personnel	personnel	사원코드, 사원명, 인적정보 등을 관리하는 사원 마스터를 의미한다. 일반적으로 HRMS(Human Resource Management System)에서 사용되지만 작업 스케줄링 또는 자원 할당에서 사용될 수도 있다.	EnterpriseID + PersonnelID	표준 ID		14	8	1
+5	기준정보	7.4.1.5	16	고객사	CustomerPartyMaster	customer_party_master	고객사 코드, 고객사명, 사업자등록번호 등 고객사 정보를 관리하는 고객사 마스터를 의미한다.	EnterpriseID + CustomerID	표준 ID		22	8	0
+6	기준정보	7.4.1.6	17	공급사	VendorPartyMaster	vendor_party_master	공급사 코드, 공급사명, 사업자등록번호 등 공급사 정보를 관리하는 공급사 마스터를 의미한다.	EnterpriseID + VendorID	표준 ID		22	8	0
+7	기준정보	7.4.1.7	18	공통코드정보	CommonCodeMaster	common_code_master	애플리케이션 내에서 사용되는 각종 코드를 모아 놓은 통합 코드를 의미한다.	EnterpriseID + CommonCodeGroup + CommonCodeID	표준 명시	표 18: 공통코드그룹과 공통코드식별자의 조합은 회사 내에서 유일	15	8	0
+8	기준정보	7.4.1.8	19	달력	WorkCalendar	work_calendar	생산 현장의 달력을 의미한다. 단, 인사에서 사용하는 일반 달력과는 차이가 있다.	EnterpriseID + CalendarID	표준 ID		15	8	0
+9	기준정보	7.4.1.9	20	단위그룹	UOMGroup	uom_group	측정 단위의 집합을 의미한다. 일반적으로 재고관리 단위가 기본단위가 되며 특정 프로세스에서 변경될 수 있고, 재고에 반영될 때는 환산계수가 적용된다.	EnterpriseID + UOMGroupID + UOMCode	제안	단위그룹 행이 단위코드 단위로 구성되므로 단위코드 포함	13	8	0
+10	기준정보	7.4.1.10	21	품목마스터	ItemMaster	item_master	품목코드, 품목명, 규격 등과 각종 속성값을 관리하는 품목마스터를 의미한다. 단, 수량정보는 포함하지 않는다.	EnterpriseID + ItemID	표준 ID		48	8	4
+11	기준정보	7.4.1.11	22	자재명세서	BOM	bom	품목을 구성하거나 품목을 생산하기 위해 투입되는 자재명세서를 의미한다.	EnterpriseID + BOMID + BOMRevisionNumber + ChildItemID	표준 명시	표 22(개정): 자재명세서식별자는 모품목의 자재명세서 단위로 부여하고, 자품목 행은 자재명세서식별자+자재명세서버전+자품목식별자로 구분	22	8	3
+12	기준정보	—	—	자재명세서헤더	BOMHeader	bom_header	물리 보조 테이블(표준 외): 자재명세서의 자재명세서식별자+자재명세서버전 단위 헤더. 자재명세서 전체를 참조하는 FK를 위해 둠	EnterpriseID + BOMID + BOMRevisionNumber	보조 테이블	자재명세서식별자+자재명세서버전 단위로 1행 — BOM 적재 전 헤더 행을 먼저 생성	10	8	0
+13	기준정보	7.4.1.12	23	로트	Lot	lot	묶음 생산 단위의 정보를 의미한다.	EnterpriseID + LotID	표준 ID		34	8	6
+14	기준정보	7.4.1.13	24	공정경로	Routing	routing	생산 시 필요한 공정의 순서를 의미하며, 작업자, 기계를 포함한 경로와 관련된 모든 리소스, 활동에 대한 정보를 의미한다.	EnterpriseID + RoutingID + OperationSequence	표준 명시	표 24(개정): 공정경로식별자는 공정경로 단위로 부여하고, 공정 행은 공정경로식별자+공정순번으로 구분	18	8	2
+15	기준정보	—	—	공정경로헤더	RoutingHeader	routing_header	물리 보조 테이블(표준 외): 공정경로의 공정경로식별자 단위 헤더. 공정경로 전체를 참조하는 FK를 위해 둠	EnterpriseID + RoutingID	보조 테이블	공정경로식별자 단위로 1행 — Routing 적재 전 헤더 행을 먼저 생성	9	8	0
+16	기준정보	7.4.1.14	25	공정	Operation	operation	생산작업을 수행하는 작업장 또는 작업장 내 세부 작업단위를 의미한다.	EnterpriseID + OperationID	표준 ID		16	8	0
+17	기준정보	7.4.1.15	26	설비	Equipment	equipment	설비명, 설비유형 등 설비 관리 및 회사의 자산으로서 관리를 위한 설비정보를 의미한다.	EnterpriseID + EquipmentID	표준 ID		27	8	3
+18	기준정보	7.4.1.16	27	공정설비	OperationEquipment	operation_equipment	공정별 사용되는 설비 정보 데이터를 의미한다.	EnterpriseID + OperationID + EquipmentID	제안		14	8	2
+19	기준정보	7.4.1.17	28	캐리어	Carrier	carrier	제조 공정 내 이동에 필요한 물리적 용기를 의미한다.	EnterpriseID + CarrierID	표준 ID		14	8	0
+20	기준정보	7.4.1.18	29	저장소재공정보	StockerInventory	stocker_inventory	공장 내 공정 물류 저장소 정보를 의미한다. 이는 공정 내 물류 최적화를 위해 Lot Dispatcher를 사용하는데 SCS(StockerControlSystem), Dispatcher, MES 상호연동을 위해 존재한다.	EnterpriseID + StockerID	표준 ID		15	8	2
+21	기준정보	7.4.1.19	30	창고	WarehouseLocation	warehouse_location	재고를 모아 놓고 관리하는 위치를 의미한다.	EnterpriseID + WarehouseID	표준 ID		14	8	0
+22	기준정보	7.4.1.20	31	배치	Batch	batch	배치 공정의 1회 실행으로 생산되고 있거나 생산된 물질의 단위를 의미한다. 원료를 정해진 양만큼 투입하여 일괄 처리하는 공정(배합, 반응, 발효, 열처리 등)의 생산 단위이며, 공급사에서 생산하여 납품한 구매품의 배치를 포함한다.	EnterpriseID + BatchID	표준 ID		38	8	6
+23	기준정보	7.4.1.21	32	라인	Line	line	같은 공장 안에서 공정과 설비를 일정한 흐름으로 배치하여 특정 품목 또는 품목군을 생산하는 생산 단위를 의미한다. 라인은 공장에 속하며, 하나 이상의 공정과 설비로 구성된다.	EnterpriseID + LineID	표준 ID		28	8	5
+24	기준정보	7.4.1.22	33	회사	Enterprise	enterprise	기업업무시스템 간 제조업무데이터를 교환하는 법인 단위의 회사를 의미한다. 회사는 하나 이상의 사업장으로 구성되며, 모든 명사 정보의 최상위 소유 범위가 된다.	EnterpriseID	표준 ID		19	5	0
+25	프로젝트관리	7.4.2.1	34	프로젝트마스터	ProjectMaster	project_master	프로젝트 코드, 프로젝트명 등을 관리하는 프로젝트마스터를 의미한다. 주요 프로젝트 필드의 ProjectAccounting 관련 애플리케이션 활성화를 위한정보로 활용되기도 한다.	EnterpriseID + ProjectID	표준 ID		23	8	5
+26	프로젝트관리	7.4.2.2	35	설계변경지시	EngineeringChangeOrder	engineering_change_order	제품의 설계를 변경하는 지시를 의미한다. 설계변경지시 수행 결과는 BOM 및 공정경로BOM에 반영된다.	EnterpriseID + EngineeringChangeOrderID	표준 ID		20	8	3
+27	판매관리	7.4.3.1	36	수주오더	SalesOrder	sales_order	고객사 주문정보를 의미한다.	EnterpriseID + SalesOrderID	표준 ID		28	8	2
+28	판매관리	7.4.3.2	37	판매계획	SalesPlan	sales_plan	고객사 Forecast정보 및 수요예측정보를 토대로 작성된 판매계획을 의미한다.	EnterpriseID + SalesPlanID	표준 ID		14	8	1
+29	구매관리	7.4.4.1	38	기준가격	BasePrice	base_price	구매요청 시 참조하기 위한 구매품의 기준가격 정보를 의미한다.	EnterpriseID + ItemID + CurrencyCode	제안	품목·통화별 기준가격	13	8	1
+30	구매관리	7.4.4.2	39	구매요청	PurchaseRequisition	purchase_requisition	생산 또는 판매를 위해 수급되어야 할 품목을 요청하는 것을 의미한다(원부자재, 소모품, 상품 등).	EnterpriseID + PurchaseRequisitionID	표준 ID		21	8	4
+31	구매관리	7.4.4.3	40	구매발주	PurchaseOrder	purchase_order	구매자가 공급자의 품목을 구매하기 위한 주문을 의미한다.	EnterpriseID + PurchaseOrderID	표준 ID		47	8	3
+32	자재관리	7.4.5.1	41	자재도착	MaterialArrival	material_arrival	자재가 입고 전 수입검사를 위해 도착한 정보를 의미한다.	EnterpriseID + PurchaseDocumentNumber + PurchaseDocumentSequence + LotID	제안	구매발주 행별 도착 로트	17	8	5
+33	자재관리	7.4.5.2	42	입고	GoodsReceipt	goods_receipt	구매 발주된 품목을 협력업체로부터 납품 받은 정보를 의미한다.	EnterpriseID + GoodsReceiptID + GoodsReceiptSequence	표준 명시	표 42(개정): 입고식별자는 입고 문서 단위, 행은 입고식별자+입고순번으로 구분	32	8	4
+34	자재관리	7.4.5.3	43	자재불출	GoodsIssue	goods_issue	자재불출 요청된 자재를 불출하는 것을 의미한다(일반적으로 재고 관리주체가 다를 경우 창고관리부서에서 사용).	EnterpriseID + GoodsIssueID	표준 ID		24	8	4
+35	생산관리	7.4.6.1	44	생산계획	ProductionPlanning	production_planning	특정 제품을 생산하기 위한 계획을 의미한다.	EnterpriseID + ProductionPlanID	표준 ID		13	8	1
+36	생산관리	7.4.6.2	45	생산지시	ProductionOrder	production_order	특정 제품의 생산을 지시하는 정보를 의미한다.	EnterpriseID + ProductionOrderID + ProductionOrderSequence	표준 명시	표 45: 생산지시의 식별자는 생산지시식별자, 생산지시순번 조합	22	8	3
+37	생산관리	7.4.6.3	46	착공	OperationStart	operation_start	설비에 해당 공정의 생산을 지시한다.	EnterpriseID + LotID + OperationID + OperationStartTime	제안		16	8	4
+38	생산관리	7.4.6.4	47	완공	OperationEnd	operation_end	해당 공정의 생산 완료를 보고한다.	EnterpriseID + LotID + OperationID + OperationEndTime	제안		19	8	4
+39	생산관리	7.4.6.5	48	이동지시	TransferCommand	transfer_command	현재 공정에서 다음 공정으로 작업할 Lot의 이동을 지시한다.	EnterpriseID + TransferCommandID	표준 ID		19	8	2
+40	생산관리	7.4.6.6	49	운행시작	TransferStart	transfer_start	이동지시 명령을 받아 운행 시작 시 시작 정보를 보고한다.	EnterpriseID + TransferCommandID	제안	이동지시 1건당 운행시작 1건	20	8	3
+41	생산관리	7.4.6.7	50	운행완료	TransferEnd	transfer_end	이동지시 명령을 받아 운행 완료 시 완료 정보를 보고한다.	EnterpriseID + TransferCommandID	제안	이동지시 1건당 운행완료 1건	17	8	3
+42	생산관리	7.4.6.8	51	운송위치	InTransitLocation	in_transit_location	이동 중 현재 운송 위치 정보를 보고한다.	EnterpriseID + TransferCommandID + CurrentLocation	제안	보고 일시 속성이 없어 위치로 구분(검토사항 참조)	14	8	3
+43	생산관리	7.4.6.9	52	설비상태	EquipmentState	equipment_state	설비의 상태가 변경될 시 상태 정보를 보고한다.	EnterpriseID + EquipmentID	제안	설비별 현재 상태(이력 관리 시 상태변경일시 추가 필요 — 검토사항 참조)	17	8	3
+44	생산관리	7.4.6.10	53	알람	Alarm	alarm	설비에서 발생하는 알람 정보를 의미한다.	EnterpriseID + EquipmentID + EventDateTime + ErrorCode	제안		14	8	1
+45	생산관리	7.4.6.11	54	협력업체품질검사계획	SupplierInspectionPlan	supplier_inspection_plan	수주산업에서 프로젝트성으로 추진하고 있는 협력업체 발주품에 대해 발주처 및 협력업체 품질부서에서 품질검사를 하기 위한 일정 계획을 의미한다.	EnterpriseID + InspectionPlanID + InspectionID	표준 ID	데이터 타입 ID 속성 2개(검사계획·검사항목)	28	8	6
+46	생산관리	7.4.6.12	55	협력업체품질검사신청	SupplierInspectionApplication	supplier_inspection_application	품질검사계획에 따라 협력업체에 품질검사를 신청하는 것을 의미한다.	EnterpriseID + InspectionApplicationID	표준 ID		31	8	8
+47	생산관리	7.4.6.13	56	협력업체품질검사결과	SupplierInspectionResult	supplier_inspection_result	검사결과를 품질관리 부서에 전달하는 것을 의미한다.	EnterpriseID + InspectionResultID	표준 ID		26	8	7
+48	생산관리	7.4.6.14	57	시정조치요청	CorrectiveActionRequest	corrective_action_request	공급사에 시정조치를 요청하는 것을 의미한다.	EnterpriseID + CorrectiveActionRequestID	표준 ID		19	8	6
+49	생산관리	7.4.6.15	58	시정조치계획	CorrectiveActionPlan	corrective_action_plan	공급사에서 시정조치 사항을 기술하고, 시정조치 계획을 수립하여 고객사에게 전달하는 것을 의미한다.	EnterpriseID + CorrectiveActionPlanID	표준 ID		23	8	6
+50	생산관리	7.4.6.16	59	시정조치결과	CorrectiveActionResult	corrective_action_result	시정조치계획에 따라 수행 결과를 고객사에 전달하는 것을 의미한다.	EnterpriseID + CorrectiveActionResultID	표준 ID		26	8	8
+51	생산관리	7.4.6.17	60	제품포장	ProductPacking	product_packing	제품 출하를 위해 완성된 제품을 포장하기 위한 정보를 의미한다.	EnterpriseID + BoxNumber + PackingSequence	제안	포장박스 내 포장 순번	16	8	3
+52	생산관리	7.4.6.18	61	설비파라미터	EquipmentParameter	equipment_parameter	설비에서 수집되는 Parameter 값의 집합을 의미한다.	EnterpriseID + ParameterID	표준 ID		18	8	1
+53	생산관리	7.4.6.19	62	설비파라미터이력	TraceParameter	trace_parameter	설비에서 수집되는 Parameter 값의 적재 및 검증 이력을 의미한다.	EnterpriseID + EquipmentID + ParameterID + EventDateTime	제안		14	8	2
+54	생산관리	7.4.6.20	63	생산실적	ProductionPerformance	production_performance	생산지시에 의해 실행된 생산의 실적 결과 정보를 의미한다.	EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence	표준 명시	표 63(개정): 생산실적식별자는 생산실적 단위, 행은 생산실적식별자+생산실적순번으로 구분(하위 실적 명사가 이 조합으로 참조)	28	8	7
+55	생산관리	7.4.6.21	64	생산실적투입품목	ProductionPerformanceItem	production_performance_item	생산 과정에서 투입되는 모든 품목(원자재, 부자재, 반제품, 완제품 등) 관련 정보를 의미한다.	EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence + ItemID	제안		23	8	8
+56	생산관리	7.4.6.22	65	생산실적투입인력	ProductionPerformancePersonnel	production_performance_personnel	생산 과정에서 투입된 인력정보를 의미한다. 생산실적투입인력 명사는 표 65와같은 정보 속성을 포함하고 있다.	EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence + PersonnelID	제안		20	8	4
+57	생산관리	7.4.6.23	66	설비활용실적	ProductionPerformanceEquipment	production_performance_equipment	생산 과정에서 사용된 설비의 활용실적 정보를 의미한다.	EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence + EquipmentID	제안		27	8	6
+58	생산관리	7.4.6.24	67	생산품질실적	ProductionPerformanceQuality	production_performance_quality	생산 과정에서 발생한 품질정보를 의미한다.	EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence + DefectTypeCode + DefectTypeDetailCode	제안		24	8	7
+59	재고관리	7.4.7.1	68	재고	Inventory	inventory	저장위치에 있는 품목의 실제 보유(On-hand) 수량을 의미한다.	EnterpriseID + WarehouseID + ItemID	제안	창고·품목별 현재고	12	8	2
+60	재고관리	7.4.7.2	69	가용재고	AvailableInventory	available_inventory	현 재고와 특정 시점까지의 예상 입출고를 감안하여 사용 가능한 재고를 의미한다.	EnterpriseID + AvailableInventoryID	표준 ID		16	8	1
+61	재고관리	7.4.7.3	70	재고이동	StockTransfer	stock_transfer	재고가 다른 창고로 이동하기 위해 필요한 정보를 의미한다.	EnterpriseID + StockTransferID	표준 ID		15	8	3
+62	재고관리	7.4.7.4	71	재고실사	InventoryCount	inventory_count	보관된 재고에 대해 실수량을 파악하기 위한 정보를 의미한다.	EnterpriseID + InventoryCountDocumentNumber + WarehouseID + ItemID	제안		15	8	2
+63	창고관리	7.4.8.1	72	제품입고	ProductIncoming	product_incoming	생산된 제품을 창고에 저장하는 것을 의미한다.	EnterpriseID + ProductIncomingID + ProductIncomingSequence	표준 명시	표 72(개정): 제품입고식별자는 제품입고 문서 단위, 행은 제품입고식별자+제품입고순번(속성 추가)으로 구분	27	8	4
+64	창고관리	7.4.8.2	73	출하의뢰	ProductReleaseRequest	product_release_request	수주된 품목에 대한 출하를 의뢰하는 것을 의미한다.	EnterpriseID + ProductReleaseRequestID + ProductReleaseRequestSequence	표준 명시	표 73(개정): 출하요청식별자는 출하의뢰 문서 단위, 행은 출하요청식별자+납품순번으로 구분	31	8	5
+65	창고관리	—	—	출하의뢰헤더	ProductReleaseRequestHeader	product_release_request_header	물리 보조 테이블(표준 외): 출하의뢰의 출하요청식별자 단위 헤더. 출하의뢰 전체를 참조하는 FK를 위해 둠	EnterpriseID + ProductReleaseRequestID	보조 테이블	출하요청식별자 단위로 1행 — ProductReleaseRequest 적재 전 헤더 행을 먼저 생성	9	8	0
+66	창고관리	7.4.8.3	74	제품출고	ProductRelease	product_release	수주된 품목을 고객에게 보내는 것을 의미한다.	EnterpriseID + ProductReleaseID + ProductReleaseSequence	표준 명시	표 74(개정): 출고식별자는 제품출고 문서 단위, 행은 출고식별자+출고순번으로 구분	30	8	6
+67	서비스관리	7.4.9.1	75	반품	Return	return	반품(구매반품, 제품반품)에 대한 정보를 의미한다.	EnterpriseID + ReturnID + ReturnSequence	표준 명시	표 75(개정): 반품식별자는 반품 문서 단위, 행은 반품식별자+반품순서로 구분	21	8	6
+68	서비스관리	7.4.9.2	76	고객제품데이터	ProductTraceParameterOnCustomer	product_trace_parameter_on_customer	고객에게 판매 완료 후 부가적인 서비스 제공 및 가치창출을 위해 고객 제품에서 수집되는 데이터를 의미한다.	EnterpriseID + ItemID + SerialNumber + ParameterName + CollectionDateTime	제안		15	8	1
+69	서비스관리	7.4.9.3	77	사후서비스신청	AfterSalesServiceRequest	after_sales_service_request	고객에게 판매된 제품의 고장으로 제조자 혹은 대리점 등에 고장 접수 시 필요한 데이터를 의미한다.	EnterpriseID + RequestNumber	표준 ID		16	8	1
+70	서비스관리	7.4.9.4	78	사후서비스결과	AfterSalesServiceRequestResult	after_sales_service_request_result	고객의 사후서비스 접수 이후 제조사 혹은 대리점의 처리결과를 교환하기 위해 필요한 데이터를 의미한다.	EnterpriseID + RequestNumber + TransferSequence + RegisterSequence + RepairSequence	제안		26	8	3
+				합계							1432	554	206

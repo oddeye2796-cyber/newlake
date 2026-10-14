@@ -1,0 +1,576 @@
+No	자식 테이블	FK 컬럼	부모 테이블	부모 키 컬럼	관계 구분	비고
+1	Site	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+2	Site	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+3	Site	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+4	Plant	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+5	Plant	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+6	Plant	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+7	Plant	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+8	Department	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+9	Department	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+10	Department	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+11	Department	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+12	Department	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+13	Department	EnterpriseID, ParentDepartmentID	Department	EnterpriseID, DepartmentID	자기 참조	
+14	Personnel	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+15	Personnel	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+16	Personnel	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+17	Personnel	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+18	Personnel	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+19	Personnel	EnterpriseID, DepartmentID	Department	EnterpriseID, DepartmentID	명사 참조	
+20	CustomerPartyMaster	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+21	CustomerPartyMaster	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+22	CustomerPartyMaster	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+23	CustomerPartyMaster	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+24	CustomerPartyMaster	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+25	VendorPartyMaster	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+26	VendorPartyMaster	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+27	VendorPartyMaster	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+28	VendorPartyMaster	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+29	VendorPartyMaster	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+30	CommonCodeMaster	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+31	CommonCodeMaster	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+32	CommonCodeMaster	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+33	CommonCodeMaster	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+34	CommonCodeMaster	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+35	CommonCodeMaster	EnterpriseID, ParentCommonCodeGroup, ParentCommonCodeID	CommonCodeMaster	EnterpriseID, CommonCodeGroup, CommonCodeID	자기 참조	상위 코드(복합 참조)
+36	WorkCalendar	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+37	WorkCalendar	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+38	WorkCalendar	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+39	WorkCalendar	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+40	WorkCalendar	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+41	UOMGroup	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+42	UOMGroup	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+43	UOMGroup	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+44	UOMGroup	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+45	UOMGroup	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+46	ItemMaster	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+47	ItemMaster	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+48	ItemMaster	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+49	ItemMaster	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+50	ItemMaster	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+51	ItemMaster	EnterpriseID, MainCustomerID	CustomerPartyMaster	EnterpriseID, CustomerID	명사 참조	
+52	ItemMaster	EnterpriseID, MainVendorID	VendorPartyMaster	EnterpriseID, VendorID	명사 참조	
+53	ItemMaster	EnterpriseID, ReceiptWarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+54	ItemMaster	EnterpriseID, IssueWarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+55	ItemMaster	EnterpriseID, ReplacementItemID	ItemMaster	EnterpriseID, ItemID	자기 참조	
+56	BOM	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+57	BOM	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+58	BOM	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+59	BOM	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+60	BOM	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+61	BOM	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+62	BOM	EnterpriseID, ChildItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+63	BOM	EnterpriseID, RoutingID, OperationSequence	Routing	EnterpriseID, RoutingID, OperationSequence	명사 참조	
+64	BOMHeader	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+65	BOMHeader	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+66	BOMHeader	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+67	BOMHeader	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+68	BOMHeader	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+69	Lot	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+70	Lot	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+71	Lot	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+72	Lot	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+73	Lot	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+74	Lot	EnterpriseID, ParentLotID	Lot	EnterpriseID, LotID	자기 참조	
+75	Lot	EnterpriseID, ChildLotID	Lot	EnterpriseID, LotID	자기 참조	
+76	Lot	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+77	Lot	EnterpriseID, CarrierID	Carrier	EnterpriseID, CarrierID	명사 참조	
+78	Lot	EnterpriseID, ProductionOrderID, ProductionOrderSequence	ProductionOrder	EnterpriseID, ProductionOrderID, ProductionOrderSequence	명사 참조	
+79	Lot	EnterpriseID, CurrentOperationID	Operation	EnterpriseID, OperationID	명사 참조	
+80	Lot	EnterpriseID, NextOperationID	Operation	EnterpriseID, OperationID	명사 참조	
+81	Lot	EnterpriseID, PersonnelID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+82	Routing	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+83	Routing	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+84	Routing	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+85	Routing	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+86	Routing	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+87	Routing	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+88	Routing	EnterpriseID, OperationID	Operation	EnterpriseID, OperationID	명사 참조	
+89	RoutingHeader	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+90	RoutingHeader	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+91	RoutingHeader	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+92	RoutingHeader	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+93	RoutingHeader	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+94	Operation	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+95	Operation	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+96	Operation	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+97	Operation	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+98	Operation	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+99	Equipment	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+100	Equipment	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+101	Equipment	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+102	Equipment	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+103	Equipment	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+104	Equipment	EnterpriseID, ParentEquipmentID	Equipment	EnterpriseID, EquipmentID	자기 참조	
+105	Equipment	EnterpriseID, DepartmentInChargeID	Department	EnterpriseID, DepartmentID	명사 참조	
+106	Equipment	EnterpriseID, PersonInChargeID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+107	Equipment	EnterpriseID, OperationID	Operation	EnterpriseID, OperationID	명사 참조	
+108	OperationEquipment	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+109	OperationEquipment	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+110	OperationEquipment	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+111	OperationEquipment	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+112	OperationEquipment	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+113	OperationEquipment	EnterpriseID, OperationID	Operation	EnterpriseID, OperationID	명사 참조	
+114	OperationEquipment	EnterpriseID, EquipmentID	Equipment	EnterpriseID, EquipmentID	명사 참조	
+115	Carrier	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+116	Carrier	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+117	Carrier	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+118	Carrier	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+119	Carrier	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+120	StockerInventory	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+121	StockerInventory	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+122	StockerInventory	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+123	StockerInventory	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+124	StockerInventory	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+125	StockerInventory	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+126	StockerInventory	EnterpriseID, CarrierID	Carrier	EnterpriseID, CarrierID	명사 참조	
+127	StockerInventory	EnterpriseID, AlternateStockerID	StockerInventory	EnterpriseID, StockerID	자기 참조	
+128	WarehouseLocation	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+129	WarehouseLocation	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+130	WarehouseLocation	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+131	WarehouseLocation	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+132	WarehouseLocation	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+133	Batch	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+134	Batch	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+135	Batch	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+136	Batch	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+137	Batch	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+138	Batch	EnterpriseID, ParentBatchID	Batch	EnterpriseID, BatchID	자기 참조	
+139	Batch	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+140	Batch	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+141	Batch	EnterpriseID, ProductionOrderID, ProductionOrderSequence	ProductionOrder	EnterpriseID, ProductionOrderID, ProductionOrderSequence	명사 참조	
+142	Batch	EnterpriseID, BOMID, BOMRevisionNumber	BOMHeader	EnterpriseID, BOMID, BOMRevisionNumber	헤더 참조	자재명세서 전체 참조 — 헤더 테이블 BOMHeader 경유 FK
+143	Batch	EnterpriseID, OperationID	Operation	EnterpriseID, OperationID	명사 참조	
+144	Batch	EnterpriseID, EquipmentID	Equipment	EnterpriseID, EquipmentID	명사 참조	
+145	Batch	EnterpriseID, PersonnelID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+146	Line	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+147	Line	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+148	Line	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+149	Line	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+150	Line	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+151	Line	EnterpriseID, ParentLineID	Line	EnterpriseID, LineID	자기 참조	
+152	Line	EnterpriseID, DepartmentInChargeID	Department	EnterpriseID, DepartmentID	명사 참조	
+153	Line	EnterpriseID, PersonInChargeID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+154	Line	EnterpriseID, CalendarID	WorkCalendar	EnterpriseID, CalendarID	명사 참조	
+155	Line	EnterpriseID, IssueWarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+156	Line	EnterpriseID, ReceiptWarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+157	Enterprise	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+158	Enterprise	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+159	Enterprise	ParentEnterpriseID	Enterprise	EnterpriseID	자기 참조	
+160	ProjectMaster	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+161	ProjectMaster	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+162	ProjectMaster	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+163	ProjectMaster	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+164	ProjectMaster	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+165	ProjectMaster	EnterpriseID, ResponsibleDepartmentID	Department	EnterpriseID, DepartmentID	명사 참조	
+166	ProjectMaster	EnterpriseID, PersonInChargeID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+167	ProjectMaster	EnterpriseID, SalesDocumentNumber, SalesDocumentSequence	SalesOrder	EnterpriseID, SalesDocumentNumber, SalesDocumentSequence	명사 참조	대체키(문서번호+순번) 참조
+168	ProjectMaster	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+169	ProjectMaster	EnterpriseID, DivisionID	Department	EnterpriseID, DepartmentID	명사 참조	
+170	EngineeringChangeOrder	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+171	EngineeringChangeOrder	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+172	EngineeringChangeOrder	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+173	EngineeringChangeOrder	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+174	EngineeringChangeOrder	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+175	EngineeringChangeOrder	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+176	EngineeringChangeOrder	EnterpriseID, BOMID, BOMRevisionNumber, ChildItemID	BOM	EnterpriseID, BOMID, BOMRevisionNumber, ChildItemID	명사 참조	
+177	EngineeringChangeOrder	EnterpriseID, ChildItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+178	SalesOrder	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+179	SalesOrder	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+180	SalesOrder	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+181	SalesOrder	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+182	SalesOrder	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+183	SalesOrder	EnterpriseID, CustomerID	CustomerPartyMaster	EnterpriseID, CustomerID	명사 참조	
+184	SalesOrder	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+185	SalesPlan	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+186	SalesPlan	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+187	SalesPlan	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+188	SalesPlan	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+189	SalesPlan	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+190	SalesPlan	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+191	BasePrice	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+192	BasePrice	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+193	BasePrice	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+194	BasePrice	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+195	BasePrice	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+196	BasePrice	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+197	PurchaseRequisition	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+198	PurchaseRequisition	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+199	PurchaseRequisition	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+200	PurchaseRequisition	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+201	PurchaseRequisition	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+202	PurchaseRequisition	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+203	PurchaseRequisition	EnterpriseID, VendorID	VendorPartyMaster	EnterpriseID, VendorID	명사 참조	
+204	PurchaseRequisition	EnterpriseID, RequesterDepartmentID	Department	EnterpriseID, DepartmentID	명사 참조	
+205	PurchaseRequisition	EnterpriseID, RequesterPersonnelID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+206	PurchaseOrder	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+207	PurchaseOrder	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+208	PurchaseOrder	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+209	PurchaseOrder	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+210	PurchaseOrder	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+211	PurchaseOrder	EnterpriseID, VendorID	VendorPartyMaster	EnterpriseID, VendorID	명사 참조	
+212	PurchaseOrder	EnterpriseID, PersonnelID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+213	PurchaseOrder	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+214	MaterialArrival	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+215	MaterialArrival	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+216	MaterialArrival	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+217	MaterialArrival	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+218	MaterialArrival	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+219	MaterialArrival	EnterpriseID, PurchaseDocumentNumber, PurchaseDocumentSequence	PurchaseOrder	EnterpriseID, PurchaseDocumentNumber, PurchaseDocumentSequence	명사 참조	대체키(문서번호+순번) 참조
+220	MaterialArrival	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+221	MaterialArrival	EnterpriseID, ReceiptWarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+222	MaterialArrival	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+223	MaterialArrival	EnterpriseID, VendorID	VendorPartyMaster	EnterpriseID, VendorID	명사 참조	
+224	GoodsReceipt	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+225	GoodsReceipt	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+226	GoodsReceipt	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+227	GoodsReceipt	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+228	GoodsReceipt	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+229	GoodsReceipt	EnterpriseID, WarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+230	GoodsReceipt	EnterpriseID, PersonnelID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+231	GoodsReceipt	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+232	GoodsReceipt	EnterpriseID, VendorID	VendorPartyMaster	EnterpriseID, VendorID	명사 참조	
+233	GoodsIssue	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+234	GoodsIssue	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+235	GoodsIssue	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+236	GoodsIssue	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+237	GoodsIssue	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+238	GoodsIssue	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+239	GoodsIssue	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+240	GoodsIssue	EnterpriseID, VendorID	VendorPartyMaster	EnterpriseID, VendorID	명사 참조	
+241	GoodsIssue	EnterpriseID, WarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+242	ProductionPlanning	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+243	ProductionPlanning	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+244	ProductionPlanning	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+245	ProductionPlanning	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+246	ProductionPlanning	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+247	ProductionPlanning	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+248	ProductionOrder	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+249	ProductionOrder	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+250	ProductionOrder	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+251	ProductionOrder	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+252	ProductionOrder	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+253	ProductionOrder	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+254	ProductionOrder	EnterpriseID, LineID	Line	EnterpriseID, LineID	명사 참조	
+255	ProductionOrder	EnterpriseID, RoutingID	RoutingHeader	EnterpriseID, RoutingID	헤더 참조	공정경로 전체 참조(표준 v1.0 표 45): 생산지시는 공정경로 전체를 따르며 공정순번은 지정하지 않음 — 헤더 테이블 RoutingHeader 경유 FK
+256	ProductionOrder	EnterpriseID, BOMID, BOMRevisionNumber	BOMHeader	EnterpriseID, BOMID, BOMRevisionNumber	헤더 참조	자재명세서 전체 참조 — 헤더 테이블 BOMHeader 경유 FK
+257	ProductionOrder	EnterpriseID, SalesDocumentNumber, SalesDocumentSequence	SalesOrder	EnterpriseID, SalesDocumentNumber, SalesDocumentSequence	명사 참조	대체키(문서번호+순번) 참조
+258	OperationStart	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+259	OperationStart	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+260	OperationStart	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+261	OperationStart	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+262	OperationStart	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+263	OperationStart	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+264	OperationStart	EnterpriseID, OperationID	Operation	EnterpriseID, OperationID	명사 참조	
+265	OperationStart	EnterpriseID, EquipmentID	Equipment	EnterpriseID, EquipmentID	명사 참조	
+266	OperationStart	EnterpriseID, PersonnelID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+267	OperationEnd	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+268	OperationEnd	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+269	OperationEnd	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+270	OperationEnd	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+271	OperationEnd	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+272	OperationEnd	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+273	OperationEnd	EnterpriseID, OperationID	Operation	EnterpriseID, OperationID	명사 참조	
+274	OperationEnd	EnterpriseID, EquipmentID	Equipment	EnterpriseID, EquipmentID	명사 참조	
+275	OperationEnd	EnterpriseID, PersonnelID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+276	TransferCommand	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+277	TransferCommand	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+278	TransferCommand	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+279	TransferCommand	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+280	TransferCommand	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+281	TransferCommand	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+282	TransferCommand	EnterpriseID, CarrierID	Carrier	EnterpriseID, CarrierID	명사 참조	
+283	TransferCommand	SourceID	Operation / Equipment / StockerInventory / Carrier	—	다형 참조	출발지·목적지유형 등으로 대상 명사를 구분 — 물리 FK 제약 대신 애플리케이션 검증
+284	TransferCommand	DestinationID	Operation / Equipment / StockerInventory / Carrier	—	다형 참조	출발지·목적지유형 등으로 대상 명사를 구분 — 물리 FK 제약 대신 애플리케이션 검증
+285	TransferStart	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+286	TransferStart	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+287	TransferStart	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+288	TransferStart	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+289	TransferStart	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+290	TransferStart	EnterpriseID, TransferCommandID	TransferCommand	EnterpriseID, TransferCommandID	명사 참조	
+291	TransferStart	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+292	TransferStart	EnterpriseID, CarrierID	Carrier	EnterpriseID, CarrierID	명사 참조	
+293	TransferStart	DestinationID	Operation / Equipment / StockerInventory / Carrier	—	다형 참조	출발지·목적지유형 등으로 대상 명사를 구분 — 물리 FK 제약 대신 애플리케이션 검증
+294	TransferEnd	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+295	TransferEnd	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+296	TransferEnd	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+297	TransferEnd	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+298	TransferEnd	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+299	TransferEnd	EnterpriseID, TransferCommandID	TransferCommand	EnterpriseID, TransferCommandID	명사 참조	
+300	TransferEnd	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+301	TransferEnd	EnterpriseID, CarrierID	Carrier	EnterpriseID, CarrierID	명사 참조	
+302	TransferEnd	DestinationID	Operation / Equipment / StockerInventory / Carrier	—	다형 참조	출발지·목적지유형 등으로 대상 명사를 구분 — 물리 FK 제약 대신 애플리케이션 검증
+303	InTransitLocation	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+304	InTransitLocation	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+305	InTransitLocation	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+306	InTransitLocation	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+307	InTransitLocation	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+308	InTransitLocation	EnterpriseID, TransferCommandID	TransferCommand	EnterpriseID, TransferCommandID	명사 참조	
+309	InTransitLocation	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+310	InTransitLocation	EnterpriseID, CarrierID	Carrier	EnterpriseID, CarrierID	명사 참조	
+311	EquipmentState	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+312	EquipmentState	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+313	EquipmentState	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+314	EquipmentState	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+315	EquipmentState	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+316	EquipmentState	EnterpriseID, EquipmentID	Equipment	EnterpriseID, EquipmentID	명사 참조	
+317	EquipmentState	EnterpriseID, LastProcessedLotID	Lot	EnterpriseID, LotID	명사 참조	
+318	EquipmentState	EnterpriseID, LastProcessedOperationID	Operation	EnterpriseID, OperationID	명사 참조	
+319	Alarm	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+320	Alarm	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+321	Alarm	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+322	Alarm	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+323	Alarm	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+324	Alarm	EnterpriseID, EquipmentID	Equipment	EnterpriseID, EquipmentID	명사 참조	
+325	SupplierInspectionPlan	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+326	SupplierInspectionPlan	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+327	SupplierInspectionPlan	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+328	SupplierInspectionPlan	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+329	SupplierInspectionPlan	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+330	SupplierInspectionPlan	EnterpriseID, VendorID	VendorPartyMaster	EnterpriseID, VendorID	명사 참조	
+331	SupplierInspectionPlan	EnterpriseID, ProjectID	ProjectMaster	EnterpriseID, ProjectID	명사 참조	
+332	SupplierInspectionPlan	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+333	SupplierInspectionPlan	EnterpriseID, PurchaseOrderID	PurchaseOrder	EnterpriseID, PurchaseOrderID	명사 참조	
+334	SupplierInspectionPlan	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+335	SupplierInspectionPlan	EnterpriseID, BatchID	Batch	EnterpriseID, BatchID	명사 참조	
+336	SupplierInspectionApplication	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+337	SupplierInspectionApplication	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+338	SupplierInspectionApplication	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+339	SupplierInspectionApplication	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+340	SupplierInspectionApplication	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+341	SupplierInspectionApplication	EnterpriseID, VendorID	VendorPartyMaster	EnterpriseID, VendorID	명사 참조	
+342	SupplierInspectionApplication	EnterpriseID, ProjectID	ProjectMaster	EnterpriseID, ProjectID	명사 참조	
+343	SupplierInspectionApplication	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+344	SupplierInspectionApplication	EnterpriseID, PurchaseOrderID	PurchaseOrder	EnterpriseID, PurchaseOrderID	명사 참조	
+345	SupplierInspectionApplication	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+346	SupplierInspectionApplication	EnterpriseID, BatchID	Batch	EnterpriseID, BatchID	명사 참조	
+347	SupplierInspectionApplication	EnterpriseID, InspectionPlanID, InspectionID	SupplierInspectionPlan	EnterpriseID, InspectionPlanID, InspectionID	명사 참조	
+348	SupplierInspectionApplication	EnterpriseID, ApplicationPersonnelID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+349	SupplierInspectionResult	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+350	SupplierInspectionResult	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+351	SupplierInspectionResult	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+352	SupplierInspectionResult	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+353	SupplierInspectionResult	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+354	SupplierInspectionResult	EnterpriseID, VendorID	VendorPartyMaster	EnterpriseID, VendorID	명사 참조	
+355	SupplierInspectionResult	EnterpriseID, ProjectID	ProjectMaster	EnterpriseID, ProjectID	명사 참조	
+356	SupplierInspectionResult	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+357	SupplierInspectionResult	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+358	SupplierInspectionResult	EnterpriseID, BatchID	Batch	EnterpriseID, BatchID	명사 참조	
+359	SupplierInspectionResult	EnterpriseID, InspectionPlanID, InspectionID	SupplierInspectionPlan	EnterpriseID, InspectionPlanID, InspectionID	명사 참조	
+360	SupplierInspectionResult	EnterpriseID, InspectionApplicationID	SupplierInspectionApplication	EnterpriseID, InspectionApplicationID	명사 참조	
+361	CorrectiveActionRequest	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+362	CorrectiveActionRequest	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+363	CorrectiveActionRequest	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+364	CorrectiveActionRequest	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+365	CorrectiveActionRequest	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+366	CorrectiveActionRequest	EnterpriseID, VendorID	VendorPartyMaster	EnterpriseID, VendorID	명사 참조	
+367	CorrectiveActionRequest	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+368	CorrectiveActionRequest	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+369	CorrectiveActionRequest	EnterpriseID, BatchID	Batch	EnterpriseID, BatchID	명사 참조	
+370	CorrectiveActionRequest	EnterpriseID, InspectionApplicationID	SupplierInspectionApplication	EnterpriseID, InspectionApplicationID	명사 참조	
+371	CorrectiveActionRequest	EnterpriseID, CorrectiveActionRequestIssuerID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+372	CorrectiveActionPlan	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+373	CorrectiveActionPlan	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+374	CorrectiveActionPlan	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+375	CorrectiveActionPlan	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+376	CorrectiveActionPlan	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+377	CorrectiveActionPlan	EnterpriseID, VendorID	VendorPartyMaster	EnterpriseID, VendorID	명사 참조	
+378	CorrectiveActionPlan	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+379	CorrectiveActionPlan	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+380	CorrectiveActionPlan	EnterpriseID, BatchID	Batch	EnterpriseID, BatchID	명사 참조	
+381	CorrectiveActionPlan	EnterpriseID, CorrectiveActionRequestID	CorrectiveActionRequest	EnterpriseID, CorrectiveActionRequestID	명사 참조	
+382	CorrectiveActionPlan	EnterpriseID, PersonInChargeID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+383	CorrectiveActionResult	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+384	CorrectiveActionResult	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+385	CorrectiveActionResult	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+386	CorrectiveActionResult	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+387	CorrectiveActionResult	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+388	CorrectiveActionResult	EnterpriseID, VendorID	VendorPartyMaster	EnterpriseID, VendorID	명사 참조	
+389	CorrectiveActionResult	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+390	CorrectiveActionResult	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+391	CorrectiveActionResult	EnterpriseID, BatchID	Batch	EnterpriseID, BatchID	명사 참조	
+392	CorrectiveActionResult	EnterpriseID, CorrectiveActionRequestID	CorrectiveActionRequest	EnterpriseID, CorrectiveActionRequestID	명사 참조	
+393	CorrectiveActionResult	EnterpriseID, CorrectiveActionPlanID	CorrectiveActionPlan	EnterpriseID, CorrectiveActionPlanID	명사 참조	
+394	CorrectiveActionResult	EnterpriseID, PersonInChargeID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+395	CorrectiveActionResult	EnterpriseID, CorrectiveActionConfirmorID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+396	ProductPacking	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+397	ProductPacking	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+398	ProductPacking	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+399	ProductPacking	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+400	ProductPacking	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+401	ProductPacking	EnterpriseID, WarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+402	ProductPacking	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+403	ProductPacking	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+404	EquipmentParameter	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+405	EquipmentParameter	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+406	EquipmentParameter	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+407	EquipmentParameter	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+408	EquipmentParameter	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+409	EquipmentParameter	EnterpriseID, EquipmentID	Equipment	EnterpriseID, EquipmentID	명사 참조	
+410	TraceParameter	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+411	TraceParameter	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+412	TraceParameter	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+413	TraceParameter	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+414	TraceParameter	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+415	TraceParameter	EnterpriseID, EquipmentID	Equipment	EnterpriseID, EquipmentID	명사 참조	
+416	TraceParameter	EnterpriseID, ParameterID	EquipmentParameter	EnterpriseID, ParameterID	명사 참조	
+417	ProductionPerformance	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+418	ProductionPerformance	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+419	ProductionPerformance	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+420	ProductionPerformance	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+421	ProductionPerformance	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+422	ProductionPerformance	EnterpriseID, ProductionOrderID, ProductionOrderSequence	ProductionOrder	EnterpriseID, ProductionOrderID, ProductionOrderSequence	명사 참조	
+423	ProductionPerformance	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+424	ProductionPerformance	EnterpriseID, OperationID	Operation	EnterpriseID, OperationID	명사 참조	
+425	ProductionPerformance	EnterpriseID, RoutingID, OperationSequence	Routing	EnterpriseID, RoutingID, OperationSequence	명사 참조	
+426	ProductionPerformance	EnterpriseID, PersonnelID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+427	ProductionPerformance	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+428	ProductionPerformance	EnterpriseID, BatchID	Batch	EnterpriseID, BatchID	명사 참조	
+429	ProductionPerformanceItem	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+430	ProductionPerformanceItem	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+431	ProductionPerformanceItem	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+432	ProductionPerformanceItem	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+433	ProductionPerformanceItem	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+434	ProductionPerformanceItem	EnterpriseID, ProductionPerformanceID, ProductionPerformanceSequence	ProductionPerformance	EnterpriseID, ProductionPerformanceID, ProductionPerformanceSequence	명사 참조	
+435	ProductionPerformanceItem	EnterpriseID, ProductionOrderID, ProductionOrderSequence	ProductionOrder	EnterpriseID, ProductionOrderID, ProductionOrderSequence	명사 참조	
+436	ProductionPerformanceItem	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+437	ProductionPerformanceItem	EnterpriseID, LineID	Line	EnterpriseID, LineID	명사 참조	
+438	ProductionPerformanceItem	EnterpriseID, OperationID	Operation	EnterpriseID, OperationID	명사 참조	
+439	ProductionPerformanceItem	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+440	ProductionPerformanceItem	EnterpriseID, ReplacementChildItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+441	ProductionPerformanceItem	EnterpriseID, WarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+442	ProductionPerformanceItem	EnterpriseID, WarehouseID, WarehouseSection	WarehouseLocation	EnterpriseID, WarehouseID, WarehouseSectionList	하위 목록 참조	창고섹션은 창고의 WarehouseSectionList 항목을 가리킴 — 물리 FK 불가, 섹션 테이블 분리 검토
+443	ProductionPerformancePersonnel	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+444	ProductionPerformancePersonnel	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+445	ProductionPerformancePersonnel	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+446	ProductionPerformancePersonnel	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+447	ProductionPerformancePersonnel	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+448	ProductionPerformancePersonnel	EnterpriseID, ProductionPerformanceID, ProductionPerformanceSequence	ProductionPerformance	EnterpriseID, ProductionPerformanceID, ProductionPerformanceSequence	명사 참조	
+449	ProductionPerformancePersonnel	EnterpriseID, ProductionOrderID, ProductionOrderSequence	ProductionOrder	EnterpriseID, ProductionOrderID, ProductionOrderSequence	명사 참조	
+450	ProductionPerformancePersonnel	EnterpriseID, OperationID	Operation	EnterpriseID, OperationID	명사 참조	
+451	ProductionPerformancePersonnel	EnterpriseID, PersonnelID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+452	ProductionPerformanceEquipment	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+453	ProductionPerformanceEquipment	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+454	ProductionPerformanceEquipment	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+455	ProductionPerformanceEquipment	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+456	ProductionPerformanceEquipment	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+457	ProductionPerformanceEquipment	EnterpriseID, ProductionPerformanceID, ProductionPerformanceSequence	ProductionPerformance	EnterpriseID, ProductionPerformanceID, ProductionPerformanceSequence	명사 참조	
+458	ProductionPerformanceEquipment	EnterpriseID, ProductionOrderID, ProductionOrderSequence	ProductionOrder	EnterpriseID, ProductionOrderID, ProductionOrderSequence	명사 참조	
+459	ProductionPerformanceEquipment	EnterpriseID, OperationID	Operation	EnterpriseID, OperationID	명사 참조	
+460	ProductionPerformanceEquipment	EnterpriseID, RoutingID, OperationSequence	Routing	EnterpriseID, RoutingID, OperationSequence	명사 참조	
+461	ProductionPerformanceEquipment	EnterpriseID, PersonnelID	Personnel	EnterpriseID, PersonnelID	명사 참조	
+462	ProductionPerformanceEquipment	EnterpriseID, EquipmentID	Equipment	EnterpriseID, EquipmentID	명사 참조	
+463	ProductionPerformanceQuality	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+464	ProductionPerformanceQuality	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+465	ProductionPerformanceQuality	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+466	ProductionPerformanceQuality	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+467	ProductionPerformanceQuality	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+468	ProductionPerformanceQuality	EnterpriseID, ProductionPerformanceID, ProductionPerformanceSequence	ProductionPerformance	EnterpriseID, ProductionPerformanceID, ProductionPerformanceSequence	명사 참조	
+469	ProductionPerformanceQuality	EnterpriseID, ProductionOrderID, ProductionOrderSequence	ProductionOrder	EnterpriseID, ProductionOrderID, ProductionOrderSequence	명사 참조	
+470	ProductionPerformanceQuality	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+471	ProductionPerformanceQuality	EnterpriseID, OperationID	Operation	EnterpriseID, OperationID	명사 참조	
+472	ProductionPerformanceQuality	EnterpriseID, RoutingID, OperationSequence	Routing	EnterpriseID, RoutingID, OperationSequence	명사 참조	
+473	ProductionPerformanceQuality	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+474	ProductionPerformanceQuality	EnterpriseID, BatchID	Batch	EnterpriseID, BatchID	명사 참조	
+475	Inventory	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+476	Inventory	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+477	Inventory	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+478	Inventory	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+479	Inventory	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+480	Inventory	EnterpriseID, WarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+481	Inventory	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+482	AvailableInventory	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+483	AvailableInventory	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+484	AvailableInventory	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+485	AvailableInventory	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+486	AvailableInventory	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+487	AvailableInventory	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+488	StockTransfer	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+489	StockTransfer	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+490	StockTransfer	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+491	StockTransfer	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+492	StockTransfer	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+493	StockTransfer	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+494	StockTransfer	EnterpriseID, WarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+495	StockTransfer	EnterpriseID, ReceiptWarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+496	InventoryCount	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+497	InventoryCount	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+498	InventoryCount	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+499	InventoryCount	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+500	InventoryCount	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+501	InventoryCount	EnterpriseID, WarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+502	InventoryCount	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+503	ProductIncoming	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+504	ProductIncoming	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+505	ProductIncoming	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+506	ProductIncoming	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+507	ProductIncoming	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+508	ProductIncoming	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+509	ProductIncoming	EnterpriseID, CustomerID	CustomerPartyMaster	EnterpriseID, CustomerID	명사 참조	
+510	ProductIncoming	EnterpriseID, WarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+511	ProductIncoming	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+512	ProductReleaseRequest	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+513	ProductReleaseRequest	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+514	ProductReleaseRequest	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+515	ProductReleaseRequest	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+516	ProductReleaseRequest	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+517	ProductReleaseRequest	EnterpriseID, LineID	Line	EnterpriseID, LineID	명사 참조	
+518	ProductReleaseRequest	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+519	ProductReleaseRequest	EnterpriseID, WarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+520	ProductReleaseRequest	EnterpriseID, SalesDocumentNumber, SalesDocumentSequence	SalesOrder	EnterpriseID, SalesDocumentNumber, SalesDocumentSequence	명사 참조	대체키(문서번호+순번) 참조
+521	ProductReleaseRequest	EnterpriseID, CustomerID	CustomerPartyMaster	EnterpriseID, CustomerID	명사 참조	
+522	ProductReleaseRequestHeader	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+523	ProductReleaseRequestHeader	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+524	ProductReleaseRequestHeader	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+525	ProductReleaseRequestHeader	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+526	ProductReleaseRequestHeader	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+527	ProductRelease	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+528	ProductRelease	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+529	ProductRelease	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+530	ProductRelease	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+531	ProductRelease	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+532	ProductRelease	EnterpriseID, ProductReleaseRequestID	ProductReleaseRequestHeader	EnterpriseID, ProductReleaseRequestID	헤더 참조	출하의뢰 문서 전체 참조(표 74 개정): 출하의뢰 행과는 품목식별자·수주문서순번으로 대응 — 헤더 테이블 ProductReleaseRequestHeader 경유 FK
+533	ProductRelease	EnterpriseID, SalesDocumentNumber, SalesDocumentSequence	SalesOrder	EnterpriseID, SalesDocumentNumber, SalesDocumentSequence	명사 참조	대체키(문서번호+순번) 참조
+534	ProductRelease	EnterpriseID, LineID	Line	EnterpriseID, LineID	명사 참조	
+535	ProductRelease	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+536	ProductRelease	EnterpriseID, CustomerID	CustomerPartyMaster	EnterpriseID, CustomerID	명사 참조	
+537	ProductRelease	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+538	ProductRelease	EnterpriseID, WarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+539	Return	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+540	Return	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+541	Return	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+542	Return	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+543	Return	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+544	Return	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+545	Return	EnterpriseID, LotID	Lot	EnterpriseID, LotID	명사 참조	
+546	Return	EnterpriseID, BatchID	Batch	EnterpriseID, BatchID	명사 참조	
+547	Return	EnterpriseID, WarehouseID	WarehouseLocation	EnterpriseID, WarehouseID	명사 참조	
+548	Return	EnterpriseID, CustomerID	CustomerPartyMaster	EnterpriseID, CustomerID	명사 참조	
+549	Return	EnterpriseID, VendorID	VendorPartyMaster	EnterpriseID, VendorID	명사 참조	
+550	ProductTraceParameterOnCustomer	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+551	ProductTraceParameterOnCustomer	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+552	ProductTraceParameterOnCustomer	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+553	ProductTraceParameterOnCustomer	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+554	ProductTraceParameterOnCustomer	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+555	ProductTraceParameterOnCustomer	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+556	ProductTraceParameterOnCustomer	SerialNumber	고객 설치 제품(제조번호 단위)	—	표준 외 대상	확장 명사(KS X 9101-2 절차) 정의 후 연결
+557	AfterSalesServiceRequest	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+558	AfterSalesServiceRequest	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+559	AfterSalesServiceRequest	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+560	AfterSalesServiceRequest	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+561	AfterSalesServiceRequest	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+562	AfterSalesServiceRequest	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+563	AfterSalesServiceRequest	SerialNumber	고객 설치 제품(제조번호 단위)	—	표준 외 대상	확장 명사(KS X 9101-2 절차) 정의 후 연결
+564	AfterSalesServiceRequestResult	EnterpriseID	Enterprise	EnterpriseID	기본 속성	
+565	AfterSalesServiceRequestResult	EnterpriseID, SiteID	Site	EnterpriseID, SiteID	기본 속성	
+566	AfterSalesServiceRequestResult	EnterpriseID, PlantID	Plant	EnterpriseID, PlantID	기본 속성	
+567	AfterSalesServiceRequestResult	EnterpriseID, CreatorID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+568	AfterSalesServiceRequestResult	EnterpriseID, ModifierID	Personnel	EnterpriseID, PersonnelID	기본 속성	
+569	AfterSalesServiceRequestResult	EnterpriseID, ItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+570	AfterSalesServiceRequestResult	EnterpriseID, RequestNumber	AfterSalesServiceRequest	EnterpriseID, RequestNumber	명사 참조	
+571	AfterSalesServiceRequestResult	SerialNumber	고객 설치 제품(제조번호 단위)	—	표준 외 대상	확장 명사(KS X 9101-2 절차) 정의 후 연결
+572	AfterSalesServiceRequestResult	EnterpriseID, ChildItemID	ItemMaster	EnterpriseID, ItemID	명사 참조	
+573	Routing	EnterpriseID, RoutingID	RoutingHeader	EnterpriseID, RoutingID	헤더-라인	공정경로 행은 같은 RoutingID의 헤더 행을 참조
+574	BOM	EnterpriseID, BOMID, BOMRevisionNumber	BOMHeader	EnterpriseID, BOMID, BOMRevisionNumber	헤더-라인	자재명세서 행은 같은 BOMID+BOMRevisionNumber의 헤더 행을 참조
+575	ProductReleaseRequest	EnterpriseID, ProductReleaseRequestID	ProductReleaseRequestHeader	EnterpriseID, ProductReleaseRequestID	헤더-라인	출하의뢰 행은 같은 ProductReleaseRequestID의 헤더 행을 참조

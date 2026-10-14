@@ -1,0 +1,108 @@
+@prefix arcon: <https://ontology.impix.co.kr/arcon/> .
+@prefix ksx:   <https://ontology.impix.co.kr/ksx9101/> .
+@prefix ksxv:  <https://ontology.impix.co.kr/ksx9101/verb/> .
+@prefix lake:  <https://ontology.impix.co.kr/lake/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+
+# =============================================================================
+# 기업 확장 온톨로지 (arcon:) + 동사/액션 (ksxv:)
+# 표준 코어(ksx:)는 불변. 표준이 덮지 못하는 영역만 여기 둔다.
+#   1) Kinetic: 동사 12종 · 비즈니스 액션
+#   2) 추론 결과 클래스: 리스크 이벤트 · KPI 관측
+#   3) 표준 외 영역: 유지보수/금형, 원가, 인과(Causal)
+# =============================================================================
+
+<https://ontology.impix.co.kr/arcon> a owl:Ontology ;
+    rdfs:label "아크온 기업 확장 온톨로지"@ko ;
+    owl:imports <https://ontology.impix.co.kr/ksx9101> , <https://ontology.impix.co.kr/lake> .
+
+# ------------------------------------------------------------ 1. 동사 (6절)
+ksxv:Verb a owl:Class ; rdfs:label "BOD 동사"@ko .
+ksxv:ActionVerb a owl:Class ; rdfs:subClassOf ksxv:Verb ; rdfs:label "액션형 동사"@ko .
+ksxv:RequestVerb a owl:Class ; rdfs:subClassOf ksxv:Verb ; rdfs:label "요청형 동사"@ko .
+ksxv:ResponseVerb a owl:Class ; rdfs:subClassOf ksxv:Verb ; rdfs:label "응답형 동사"@ko .
+ksxv:responseVerb a owl:ObjectProperty ; rdfs:domain ksxv:Verb ; rdfs:range ksxv:ResponseVerb ; rdfs:label "종속 응답"@ko .
+
+ksxv:Process a ksxv:ActionVerb ; rdfs:label "처리"@ko ; ksxv:responseVerb ksxv:Acknowledge .
+ksxv:Cancel  a ksxv:ActionVerb ; rdfs:label "취소"@ko ; ksxv:responseVerb ksxv:CancelAcknowledge .
+ksxv:Change  a ksxv:ActionVerb ; rdfs:label "변경"@ko ; ksxv:responseVerb ksxv:ChangeAcknowledge .
+ksxv:Sync    a ksxv:ActionVerb ; rdfs:label "동기화"@ko ; ksxv:responseVerb ksxv:SyncResponse .
+ksxv:Notify  a ksxv:ActionVerb ; rdfs:label "통보"@ko .
+ksxv:Get     a ksxv:RequestVerb ; rdfs:label "조회"@ko ; ksxv:responseVerb ksxv:Show .
+ksxv:Acknowledge a ksxv:ResponseVerb ; rdfs:label "처리 응답"@ko .
+ksxv:CancelAcknowledge a ksxv:ResponseVerb ; rdfs:label "취소 응답"@ko .
+ksxv:ChangeAcknowledge a ksxv:ResponseVerb ; rdfs:label "변경 응답"@ko .
+ksxv:SyncResponse a ksxv:ResponseVerb ; rdfs:label "동기화 응답"@ko .
+ksxv:Show a ksxv:ResponseVerb ; rdfs:label "조회 응답"@ko .
+ksxv:Confirm a ksxv:ResponseVerb ; rdfs:label "독립 확인"@ko .
+
+# ------------------------------------------------------------ 2. 비즈니스 액션
+# 액션 "정의"는 온톨로지, "실행 정책(언제·누가 승인)"은 Decision Engine 설정(gov.action_policy)
+arcon:BusinessAction a owl:Class ; rdfs:label "비즈니스 액션"@ko .
+arcon:usesVerb a owl:ObjectProperty ; rdfs:domain arcon:BusinessAction ; rdfs:range ksxv:Verb .
+arcon:targetClass a owl:ObjectProperty ; rdfs:domain arcon:BusinessAction ; rdfs:range owl:Class .
+arcon:setsProperty a owl:ObjectProperty ; rdfs:domain arcon:BusinessAction .
+arcon:precondition a owl:ObjectProperty ; rdfs:domain arcon:BusinessAction ; rdfs:range sh:NodeShape .
+arcon:scenarioRef a owl:DatatypeProperty ; rdfs:range xsd:string ; rdfs:label "교환 시나리오(부속서 A)"@ko .
+
+arcon:HoldLot a arcon:BusinessAction ; rdfs:label "로트 보류"@ko ;
+    arcon:usesVerb ksxv:Change ; arcon:targetClass ksx:Lot ; arcon:setsProperty ksx:holdIndicator ;
+    arcon:scenarioRef "25" .
+arcon:StopEquipment a arcon:BusinessAction ; rdfs:label "설비 정지"@ko ;
+    arcon:usesVerb ksxv:Change ; arcon:targetClass ksx:EquipmentState ; arcon:scenarioRef "33" .
+arcon:CreateMaintenanceRequest a arcon:BusinessAction ; rdfs:label "정비 요청 생성"@ko ;
+    arcon:usesVerb ksxv:Process ; arcon:targetClass arcon:MaintenanceRequest .
+arcon:NotifyEngineer a arcon:BusinessAction ; rdfs:label "엔지니어 알림"@ko ;
+    arcon:usesVerb ksxv:Notify ; arcon:targetClass ksx:Personnel .
+arcon:IssueCorrectiveAction a arcon:BusinessAction ; rdfs:label "시정조치 요청"@ko ;
+    arcon:usesVerb ksxv:Process ; arcon:targetClass ksx:CorrectiveActionRequest ; arcon:scenarioRef "20" .
+
+# ------------------------------------------------------------ 3. 추론 결과 클래스
+arcon:RiskEvent a owl:Class ; rdfs:subClassOf arcon:Event ; rdfs:label "리스크 이벤트"@ko .
+arcon:OTDRiskEvent a owl:Class ; rdfs:subClassOf arcon:RiskEvent ; rdfs:label "납기 리스크"@ko ;
+    rdfs:comment "불량률 임계 초과 로트 → 생산지시 → 수주 납기 7일 이내 (규칙 rules/otd-risk)"@ko .
+arcon:SpecOutEvent a owl:Class ; rdfs:subClassOf arcon:RiskEvent ; rdfs:label "규격 이탈"@ko ;
+    rdfs:comment "TraceParameter 값이 EquipmentParameter LSL/USL 밖 — 시계열 → 트리플 승격 기준"@ko .
+arcon:SupplyRiskEvent a owl:Class ; rdfs:subClassOf arcon:RiskEvent ; rdfs:label "공급 리스크"@ko ;
+    rdfs:comment "공급사 사건(재해·품질) → 자재 → 품목 → 수주로 전이 추론 (SCM 리스크 데모 패턴)"@ko .
+arcon:riskSource a owl:ObjectProperty ; rdfs:domain arcon:RiskEvent .
+arcon:affects a owl:ObjectProperty , owl:TransitiveProperty ; rdfs:label "영향"@ko .
+arcon:riskLevel a owl:DatatypeProperty ; rdfs:range xsd:string .
+arcon:affectedSalesOrder a owl:ObjectProperty ; rdfs:label "영향 받는 수주"@ko ;
+    owl:propertyChainAxiom ( ksx:refLot ksx:refProductionOrder ksx:refSalesOrder ) .
+arcon:recommendedAction a owl:ObjectProperty ; rdfs:range arcon:BusinessAction .
+
+arcon:KPI a owl:Class ; rdfs:label "KPI 정의"@ko .
+arcon:KPIObservation a owl:Class ; rdfs:label "KPI 관측값"@ko .
+arcon:derivedFromClass a owl:ObjectProperty ; rdfs:domain arcon:KPI ; rdfs:range owl:Class .
+arcon:OEE a arcon:KPI ; rdfs:label "설비종합효율"@ko ;
+    arcon:derivedFromClass ksx:ProductionPerformanceEquipment , ksx:EquipmentState , ksx:ProductionPerformance .
+arcon:ProcessPPM a arcon:KPI ; rdfs:label "공정 불량 PPM"@ko ;
+    arcon:derivedFromClass ksx:ProductionPerformanceQuality , ksx:ProductionPerformance .
+arcon:OTD a arcon:KPI ; rdfs:label "납기준수율"@ko ; arcon:derivedFromClass ksx:SalesOrder , ksx:ProductRelease .
+arcon:Yield a arcon:KPI ; rdfs:label "양품율"@ko ; arcon:derivedFromClass ksx:ProductionPerformance .
+arcon:WIP a arcon:KPI ; rdfs:label "재공재고"@ko ; arcon:derivedFromClass ksx:Lot , ksx:StockerInventory .
+
+# ------------------------------------------------------------ 4. 표준 외 영역
+arcon:MaintenanceRequest a owl:Class ; rdfs:subClassOf ksx:ProductionObject ; rdfs:label "정비 요청"@ko ;
+    rdfs:comment "KS X 9101 적용범위 제외(유지보수 관리) 영역 확장"@ko .
+arcon:Mold a owl:Class ; rdfs:subClassOf ksx:Equipment ; rdfs:label "금형"@ko .
+arcon:CostElement a owl:Class ; rdfs:label "원가 요소"@ko .
+
+# ------------------------------------------------------------ 5. 인과 확장 (KG 와 분리된 인과 그래프)
+arcon:CausalVariable a owl:Class ; rdfs:label "인과 변수"@ko .
+arcon:measures a owl:ObjectProperty ; rdfs:domain arcon:CausalVariable ; rdfs:comment "예: ksx:parameterValue of 설비 X 파라미터 Y"@ko .
+arcon:CausalEdge a owl:Class ; rdfs:label "인과 엣지"@ko ;
+    rdfs:comment "관계 술어와 분리. 발견→엔지니어 승인→식별→효과추정 순. 시간 역행 금지."@ko .
+arcon:cause a owl:ObjectProperty ; rdfs:domain arcon:CausalEdge ; rdfs:range arcon:CausalVariable .
+arcon:effect a owl:ObjectProperty ; rdfs:domain arcon:CausalEdge ; rdfs:range arcon:CausalVariable .
+arcon:EffectEstimate a owl:Class ; rdfs:label "효과 추정치(ATE/CATE)"@ko .
+arcon:evidence a owl:ObjectProperty ; rdfs:range prov:Entity ; rdfs:label "근거"@ko .
+arcon:approvalStatus a owl:DatatypeProperty ; rdfs:range xsd:string .
+arcon:validFrom a owl:DatatypeProperty ; rdfs:range xsd:dateTime .
+arcon:validTo a owl:DatatypeProperty ; rdfs:range xsd:dateTime .

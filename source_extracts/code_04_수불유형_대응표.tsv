@@ -1,0 +1,20 @@
+No	수불유형코드 / (InventoryTransactionTypeCode)	수불유형코드명	입출고유형 / (InventoryTransferType)	입출고유형명	수불유형 / (InventoryTransactionType)	수불유형명	재고증감유형 / (InventoryVariationType)	재고증감유형명	비고
+1	R100	구매입고	RCV_PUR	구매입고	RCV	입고	INC	증가	
+2	R101	구매입고 취소	RCV_PUR	구매입고	RCV	입고	DEC	감소	원거래 역처리
+3	R200	생산입고	RCV_PRD	생산입고	RCV	입고	INC	증가	
+4	R300	외주입고	RCV_SUB	외주입고	RCV	입고	INC	증가	
+5	R400	매출반품입고	RCV_SRTN	매출반품입고	RCV	입고	INC	증가	
+6	R900	타계정입고	RCV_OTH	타계정입고	RCV	입고	INC	증가	
+7	I100	판매출고	ISS_SAL	판매출고	ISS	출고	DEC	감소	
+8	I200	생산출고(자재불출)	ISS_PRD	생산출고	ISS	출고	DEC	감소	
+9	I201	생산출고 반납	ISS_PRD	생산출고	ISS	출고	INC	증가	원거래 역처리
+10	I300	외주출고	ISS_SUB	외주출고	ISS	출고	DEC	감소	
+11	I400	매입반품출고	ISS_PRTN	매입반품출고	ISS	출고	DEC	감소	
+12	I800	폐기출고	ISS_SCR	폐기출고	ISS	출고	DEC	감소	
+13	I900	타계정출고	ISS_OTH	타계정출고	ISS	출고	DEC	감소	
+14	T100	창고간 이동		(해당 없음)	TRF	이동	INC / DEC	출발 감소 · 도착 증가	
+15	T200	사업장간 이동		(해당 없음)	TRF	이동	INC / DEC	출발 감소 · 도착 증가	
+16	A100	실사 조정(증가)		(해당 없음)	ADJ	조정	INC	증가	재고실사 차이
+17	A101	실사 조정(감소)		(해당 없음)	ADJ	조정	DEC	감소	재고실사 차이
+18	A200	품목 대체		(해당 없음)	ADJ	조정	INC / DEC	대체 전 감소 · 대체 후 증가	품번 변경·등급 전환
+	수불유형코드가 정해지면 수불유형·입출고유형·재고증감유형이 정해진다(표준 v1.0 입고·자재불출·제품입고 명사 설명 및 비고). BOD에 네 속성을 함께 기재하는 경우 이 표와 일치해야 한다.

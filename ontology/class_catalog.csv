@@ -1,0 +1,71 @@
+﻿클래스 IRI,국문,업무영역,물리 테이블,조항,PK,컬럼 수,이벤트형,나가는 관계 수
+ksx:Site,사업장,기준정보,site,7.4.1.1,EnterpriseID + SiteID,14,,0
+ksx:Plant,공장,기준정보,plant,7.4.1.2,EnterpriseID + PlantID,14,,0
+ksx:Department,부서,기준정보,department,7.4.1.3,EnterpriseID + DepartmentID,11,,1
+ksx:Personnel,사원,기준정보,personnel,7.4.1.4,EnterpriseID + PersonnelID,14,,1
+ksx:CustomerPartyMaster,고객사,기준정보,customer_party_master,7.4.1.5,EnterpriseID + CustomerID,22,,0
+ksx:VendorPartyMaster,공급사,기준정보,vendor_party_master,7.4.1.6,EnterpriseID + VendorID,22,,0
+ksx:CommonCodeMaster,공통코드정보,기준정보,common_code_master,7.4.1.7,EnterpriseID + CommonCodeGroup + CommonCodeID,15,,1
+ksx:WorkCalendar,달력,기준정보,work_calendar,7.4.1.8,EnterpriseID + CalendarID,15,,0
+ksx:UOMGroup,단위그룹,기준정보,uom_group,7.4.1.9,EnterpriseID + UOMGroupID + UOMCode,13,,0
+ksx:ItemMaster,품목마스터,기준정보,item_master,7.4.1.10,EnterpriseID + ItemID,48,,5
+ksx:BOM,자재명세서,기준정보,bom,7.4.1.11,EnterpriseID + BOMID + BOMRevisionNumber + ChildItemID,22,,4
+arcon:BOMHeader,자재명세서헤더,기준정보,bom_header,—,EnterpriseID + BOMID + BOMRevisionNumber,10,,0
+ksx:Lot,로트,기준정보,lot,7.4.1.12,EnterpriseID + LotID,34,,8
+ksx:Routing,공정경로,기준정보,routing,7.4.1.13,EnterpriseID + RoutingID + OperationSequence,18,,3
+arcon:RoutingHeader,공정경로헤더,기준정보,routing_header,—,EnterpriseID + RoutingID,9,,0
+ksx:Operation,공정,기준정보,operation,7.4.1.14,EnterpriseID + OperationID,16,,0
+ksx:Equipment,설비,기준정보,equipment,7.4.1.15,EnterpriseID + EquipmentID,27,,4
+ksx:OperationEquipment,공정설비,기준정보,operation_equipment,7.4.1.16,EnterpriseID + OperationID + EquipmentID,14,,2
+ksx:Carrier,캐리어,기준정보,carrier,7.4.1.17,EnterpriseID + CarrierID,14,,0
+ksx:StockerInventory,저장소재공정보,기준정보,stocker_inventory,7.4.1.18,EnterpriseID + StockerID,15,,3
+ksx:WarehouseLocation,창고,기준정보,warehouse_location,7.4.1.19,EnterpriseID + WarehouseID,14,,0
+ksx:Batch,배치,기준정보,batch,7.4.1.20,EnterpriseID + BatchID,38,,8
+ksx:Line,라인,기준정보,line,7.4.1.21,EnterpriseID + LineID,28,,6
+ksx:Enterprise,회사,기준정보,enterprise,7.4.1.22,EnterpriseID,19,,1
+ksx:ProjectMaster,프로젝트마스터,프로젝트관리,project_master,7.4.2.1,EnterpriseID + ProjectID,23,,5
+ksx:EngineeringChangeOrder,설계변경지시,프로젝트관리,engineering_change_order,7.4.2.2,EnterpriseID + EngineeringChangeOrderID,20,,3
+ksx:SalesOrder,수주오더,판매관리,sales_order,7.4.3.1,EnterpriseID + SalesOrderID,28,,2
+ksx:SalesPlan,판매계획,판매관리,sales_plan,7.4.3.2,EnterpriseID + SalesPlanID,14,,1
+ksx:BasePrice,기준가격,구매관리,base_price,7.4.4.1,EnterpriseID + ItemID + CurrencyCode,13,,1
+ksx:PurchaseRequisition,구매요청,구매관리,purchase_requisition,7.4.4.2,EnterpriseID + PurchaseRequisitionID,21,,4
+ksx:PurchaseOrder,구매발주,구매관리,purchase_order,7.4.4.3,EnterpriseID + PurchaseOrderID,47,,3
+ksx:MaterialArrival,자재도착,자재관리,material_arrival,7.4.5.1,EnterpriseID + PurchaseDocumentNumber + PurchaseDocumentSequence + LotID,17,,5
+ksx:GoodsReceipt,입고,자재관리,goods_receipt,7.4.5.2,EnterpriseID + GoodsReceiptID + GoodsReceiptSequence,32,,4
+ksx:GoodsIssue,자재불출,자재관리,goods_issue,7.4.5.3,EnterpriseID + GoodsIssueID,24,,4
+ksx:ProductionPlanning,생산계획,생산관리,production_planning,7.4.6.1,EnterpriseID + ProductionPlanID,13,,1
+ksx:ProductionOrder,생산지시,생산관리,production_order,7.4.6.2,EnterpriseID + ProductionOrderID + ProductionOrderSequence,22,,5
+ksx:OperationStart,착공,생산관리,operation_start,7.4.6.3,EnterpriseID + LotID + OperationID + OperationStartTime,16,Y,4
+ksx:OperationEnd,완공,생산관리,operation_end,7.4.6.4,EnterpriseID + LotID + OperationID + OperationEndTime,19,Y,4
+ksx:TransferCommand,이동지시,생산관리,transfer_command,7.4.6.5,EnterpriseID + TransferCommandID,19,,4
+ksx:TransferStart,운행시작,생산관리,transfer_start,7.4.6.6,EnterpriseID + TransferCommandID,20,Y,4
+ksx:TransferEnd,운행완료,생산관리,transfer_end,7.4.6.7,EnterpriseID + TransferCommandID,17,Y,4
+ksx:InTransitLocation,운송위치,생산관리,in_transit_location,7.4.6.8,EnterpriseID + TransferCommandID + CurrentLocation,14,Y,3
+ksx:EquipmentState,설비상태,생산관리,equipment_state,7.4.6.9,EnterpriseID + EquipmentID,17,,3
+ksx:Alarm,알람,생산관리,alarm,7.4.6.10,EnterpriseID + EquipmentID + EventDateTime + ErrorCode,14,Y,1
+ksx:SupplierInspectionPlan,협력업체품질검사계획,생산관리,supplier_inspection_plan,7.4.6.11,EnterpriseID + InspectionPlanID + InspectionID,28,,6
+ksx:SupplierInspectionApplication,협력업체품질검사신청,생산관리,supplier_inspection_application,7.4.6.12,EnterpriseID + InspectionApplicationID,31,,8
+ksx:SupplierInspectionResult,협력업체품질검사결과,생산관리,supplier_inspection_result,7.4.6.13,EnterpriseID + InspectionResultID,26,,7
+ksx:CorrectiveActionRequest,시정조치요청,생산관리,corrective_action_request,7.4.6.14,EnterpriseID + CorrectiveActionRequestID,19,,6
+ksx:CorrectiveActionPlan,시정조치계획,생산관리,corrective_action_plan,7.4.6.15,EnterpriseID + CorrectiveActionPlanID,23,,6
+ksx:CorrectiveActionResult,시정조치결과,생산관리,corrective_action_result,7.4.6.16,EnterpriseID + CorrectiveActionResultID,26,,8
+ksx:ProductPacking,제품포장,생산관리,product_packing,7.4.6.17,EnterpriseID + BoxNumber + PackingSequence,16,,3
+ksx:EquipmentParameter,설비파라미터,생산관리,equipment_parameter,7.4.6.18,EnterpriseID + ParameterID,18,,1
+ksx:TraceParameter,설비파라미터이력,생산관리,trace_parameter,7.4.6.19,EnterpriseID + EquipmentID + ParameterID + EventDateTime,14,Y,2
+ksx:ProductionPerformance,생산실적,생산관리,production_performance,7.4.6.20,EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence,28,,7
+ksx:ProductionPerformanceItem,생산실적투입품목,생산관리,production_performance_item,7.4.6.21,EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence + ItemID,23,,9
+ksx:ProductionPerformancePersonnel,생산실적투입인력,생산관리,production_performance_personnel,7.4.6.22,EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence + PersonnelID,20,,4
+ksx:ProductionPerformanceEquipment,설비활용실적,생산관리,production_performance_equipment,7.4.6.23,EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence + EquipmentID,27,,6
+ksx:ProductionPerformanceQuality,생산품질실적,생산관리,production_performance_quality,7.4.6.24,EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence + DefectTypeCode + DefectTypeDetailCode,24,,7
+ksx:Inventory,재고,재고관리,inventory,7.4.7.1,EnterpriseID + WarehouseID + ItemID,12,,2
+ksx:AvailableInventory,가용재고,재고관리,available_inventory,7.4.7.2,EnterpriseID + AvailableInventoryID,16,,1
+ksx:StockTransfer,재고이동,재고관리,stock_transfer,7.4.7.3,EnterpriseID + StockTransferID,15,,3
+ksx:InventoryCount,재고실사,재고관리,inventory_count,7.4.7.4,EnterpriseID + InventoryCountDocumentNumber + WarehouseID + ItemID,15,,2
+ksx:ProductIncoming,제품입고,창고관리,product_incoming,7.4.8.1,EnterpriseID + ProductIncomingID + ProductIncomingSequence,27,,4
+ksx:ProductReleaseRequest,출하의뢰,창고관리,product_release_request,7.4.8.2,EnterpriseID + ProductReleaseRequestID + ProductReleaseRequestSequence,31,,6
+arcon:ProductReleaseRequestHeader,출하의뢰헤더,창고관리,product_release_request_header,—,EnterpriseID + ProductReleaseRequestID,9,,0
+ksx:ProductRelease,제품출고,창고관리,product_release,7.4.8.3,EnterpriseID + ProductReleaseID + ProductReleaseSequence,30,,7
+ksx:Return,반품,서비스관리,return,7.4.9.1,EnterpriseID + ReturnID + ReturnSequence,21,,6
+ksx:ProductTraceParameterOnCustomer,고객제품데이터,서비스관리,product_trace_parameter_on_customer,7.4.9.2,EnterpriseID + ItemID + SerialNumber + ParameterName + CollectionDateTime,15,Y,2
+ksx:AfterSalesServiceRequest,사후서비스신청,서비스관리,after_sales_service_request,7.4.9.3,EnterpriseID + RequestNumber,16,,2
+ksx:AfterSalesServiceRequestResult,사후서비스결과,서비스관리,after_sales_service_request_result,7.4.9.4,EnterpriseID + RequestNumber + TransferSequence + RegisterSequence + RepairSequence,26,,4

@@ -1,0 +1,130 @@
+@prefix lake:  <https://ontology.impix.co.kr/lake/> .
+@prefix ksx:   <https://ontology.impix.co.kr/ksx9101/> .
+@prefix arcon: <https://ontology.impix.co.kr/arcon/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcat:  <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix dqv:   <http://www.w3.org/ns/dqv#> .
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix odrl:  <http://www.w3.org/ns/odrl/2/> .
+
+# =============================================================================
+# 데이터레이크 메타 온톨로지 (lake:)
+# "레이크 안의 모든 데이터가 무엇(온톨로지 클래스)이고, 어디서 왔고(PROV),
+#  얼마나 믿을 만하고(DQV/SHACL), 누가 쓸 수 있는가(ODRL)"를 기술한다.
+# W3C DCAT 3 · PROV-O · DQV · ODRL 을 재사용하고, 제조 도메인 연결점만 새로 정의한다.
+# =============================================================================
+
+<https://ontology.impix.co.kr/lake> a owl:Ontology ;
+    rdfs:label "온톨로지 기반 데이터레이크 메타 온톨로지"@ko ;
+    owl:versionInfo "0.1.0" ;
+    owl:imports <http://www.w3.org/ns/dcat#> , <http://www.w3.org/ns/prov#> .
+
+# ---------------------------------------------------------------- 1. 존(Zone)
+lake:Zone a owl:Class ; rdfs:label "레이크 존"@ko ;
+    rdfs:comment "데이터 성숙 단계. 존 이동은 반드시 prov:Activity(작업 실행)를 거친다."@ko .
+lake:RawZone       a lake:Zone ; rdfs:label "원천 존(Raw)"@ko ;
+    rdfs:comment "원천 시스템 포맷 그대로. 불변(append-only). 보존 기본 6개월."@ko ; lake:zoneOrder 1 .
+lake:StandardZone  a lake:Zone ; rdfs:label "표준 존(KS X 9101)"@ko ;
+    rdfs:comment "KS X 9101-1 테이블 구조로 정규화·코드 표준화된 데이터. 온톨로지 가상화(Ontop)의 원장."@ko ; lake:zoneOrder 2 .
+lake:SemanticZone  a lake:Zone ; rdfs:label "시맨틱 존(KG)"@ko ;
+    rdfs:comment "RDF 트리플·추론 결과·동일성 판정·임베딩. 근거 등급(tier) 필수."@ko ; lake:zoneOrder 3 .
+lake:CuratedZone   a lake:Zone ; rdfs:label "활용 존(Curated)"@ko ;
+    rdfs:comment "KPI 마트·피처셋·학습데이터·API 서빙 뷰. 보존 기본 2년."@ko ; lake:zoneOrder 4 .
+lake:zoneOrder a owl:DatatypeProperty ; rdfs:domain lake:Zone ; rdfs:range xsd:integer .
+
+# ---------------------------------------------------------------- 2. 데이터셋
+lake:Dataset a owl:Class ; rdfs:subClassOf dcat:Dataset ; rdfs:label "레이크 데이터셋"@ko .
+lake:inZone a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:domain lake:Dataset ; rdfs:range lake:Zone ; rdfs:label "소속 존"@ko .
+lake:represents a owl:ObjectProperty ;
+    rdfs:domain lake:Dataset ; rdfs:range owl:Class ; rdfs:label "표현하는 온톨로지 클래스"@ko ;
+    rdfs:comment "핵심 연결점. 데이터셋이 담는 개체의 유형(예: ksx:Lot). 카탈로그 검색·권한·품질 규칙이 이 링크로 상속된다."@ko .
+lake:sourceSystem a owl:ObjectProperty ; rdfs:domain lake:Dataset ; rdfs:range lake:SourceSystem ; rdfs:label "원천 시스템"@ko .
+lake:SourceSystem a owl:Class ; rdfs:label "원천 시스템"@ko ;
+    rdfs:comment "MES·ERP·QMS·SCADA·SECS/GEM·EDMS 등. KS X 9101 부속서 A 시나리오의 관여 시스템과 동일 어휘."@ko .
+lake:ingestMode a owl:DatatypeProperty ; rdfs:range xsd:string ; rdfs:label "수집 방식(batch|stream|cdc|file)"@ko .
+lake:schemaVersion a owl:DatatypeProperty ; rdfs:range xsd:string ; rdfs:label "스키마 버전"@ko .
+lake:recordCount a owl:DatatypeProperty ; rdfs:range xsd:long ; rdfs:label "레코드 수"@ko .
+lake:retention a owl:DatatypeProperty ; rdfs:range xsd:duration ; rdfs:label "보존 기간"@ko .
+lake:sensitivity a owl:ObjectProperty ; rdfs:range lake:SensitivityLevel ; rdfs:label "민감도 등급"@ko .
+lake:SensitivityLevel a owl:Class ; rdfs:label "민감도 등급"@ko .
+lake:Public a lake:SensitivityLevel ; rdfs:label "공개"@ko .
+lake:Internal a lake:SensitivityLevel ; rdfs:label "내부"@ko .
+lake:Confidential a lake:SensitivityLevel ; rdfs:label "기밀"@ko .
+lake:Personal a lake:SensitivityLevel ; rdfs:label "개인정보(가명처리 대상)"@ko .
+
+lake:Field a owl:Class ; rdfs:label "필드(컬럼)"@ko .
+lake:hasField a owl:ObjectProperty ; rdfs:domain lake:Dataset ; rdfs:range lake:Field .
+lake:mapsToProperty a owl:ObjectProperty ; rdfs:domain lake:Field ; rdfs:range rdf:Property ;
+    rdfs:label "대응 온톨로지 속성"@ko ; rdfs:comment "예: lot.produced_quantity → ksx:producedQuantity"@ko .
+lake:mappingConfidence a owl:DatatypeProperty ; rdfs:domain lake:Field ; rdfs:range xsd:decimal .
+lake:mappingMethod a owl:DatatypeProperty ; rdfs:range xsd:string ;
+    rdfs:comment "rule(결정론 규칙) | embedding | llm | human — 자동 매핑 4단계 중 해소 단계"@ko .
+
+# ---------------------------------------------------------------- 3. 계보 (PROV-O)
+lake:Pipeline a owl:Class ; rdfs:subClassOf prov:Plan ; rdfs:label "파이프라인 정의"@ko .
+lake:JobRun a owl:Class ; rdfs:subClassOf prov:Activity ; rdfs:label "작업 실행"@ko .
+lake:Mapping a owl:Class ; rdfs:subClassOf prov:Plan ; rdfs:label "RML/OBDA 매핑(버전)"@ko .
+lake:usedMapping a owl:ObjectProperty ; rdfs:subPropertyOf prov:qualifiedAssociation ;
+    rdfs:domain lake:JobRun ; rdfs:range lake:Mapping .
+# 데이터셋 간 계보는 prov:wasDerivedFrom / prov:wasGeneratedBy / prov:used 로 기술
+
+lake:SourceDocument a owl:Class ; rdfs:subClassOf prov:Entity ; rdfs:label "원천 문서"@ko ;
+    rdfs:comment "비정형 문서(규격서·SOP·보고서)에서 추출한 지식의 근거. 문서·페이지·섹션 단위 인용."@ko .
+lake:pageNumber a owl:DatatypeProperty ; rdfs:range xsd:integer .
+lake:sectionPath a owl:DatatypeProperty ; rdfs:range xsd:string .
+
+# 레코드 단위 계보 — 표준 존 모든 테이블의 기술 컬럼 5개 (lake_batch_id 등)
+lake:IngestBatch a owl:Class ; rdfs:subClassOf prov:Activity ; rdfs:label "적재 배치"@ko .
+lake:ingestBatch a owl:ObjectProperty ; rdfs:subPropertyOf prov:wasGeneratedBy ; rdfs:range lake:IngestBatch ; rdfs:label "적재 배치"@ko .
+lake:recordSourceSystem a owl:ObjectProperty ; rdfs:range lake:SourceSystem ; rdfs:label "레코드 원천 시스템"@ko .
+lake:loadedAt a owl:DatatypeProperty ; rdfs:range xsd:dateTime ; rdfs:label "표준 존 적재 시각"@ko .
+lake:recordHash a owl:DatatypeProperty ; rdfs:range xsd:string ; rdfs:label "업무 컬럼 해시"@ko .
+lake:shaclStatus a owl:DatatypeProperty ; rdfs:range xsd:string ; rdfs:label "SHACL 검증 상태(PENDING|CONFORMS|VIOLATION)"@ko .
+
+# ---------------------------------------------------------------- 4. 근거 등급 (fact tier)
+lake:AssertionTier a owl:Class ; rdfs:label "근거 등급"@ko ;
+    rdfs:comment "E2E 보고서 권고: 모든 트리플은 출처 등급을 가진다. 답변 화면에 등급을 노출한다."@ko .
+lake:STANDARD  a lake:AssertionTier ; rdfs:label "표준(KS X 9101 정의)"@ko .
+lake:ASSERTED  a lake:AssertionTier ; rdfs:label "원천 기록(시스템 데이터)"@ko .
+lake:INFERRED  a lake:AssertionTier ; rdfs:label "추론(OWL RL/SHACL-AF 규칙)"@ko .
+lake:GENERATED a lake:AssertionTier ; rdfs:label "생성(LLM·ML 예측, 검토 전)"@ko .
+lake:tier a owl:ObjectProperty ; rdfs:range lake:AssertionTier .
+lake:derivedBy a owl:ObjectProperty ; rdfs:range prov:Plan ; rdfs:label "파생 규칙/모델"@ko .
+lake:fromFacts a owl:ObjectProperty ; rdfs:label "근거 사실"@ko .
+
+# 동일성 판정 (CKD 교훈: not_same_as 영속화)
+lake:IdentityDecision a owl:Class ; rdfs:label "동일성 판정"@ko .
+lake:sameAsWithinGroup a owl:ObjectProperty , owl:SymmetricProperty ; rdfs:label "동일(검증 그룹 내)"@ko ;
+    rdfs:comment "owl:sameAs 를 전역으로 쓰지 않는다. 검증된 그룹 안에서만 폐포를 계산."@ko .
+lake:notSameAs a owl:ObjectProperty , owl:SymmetricProperty ; rdfs:label "동일 아님(확정)"@ko .
+
+# ---------------------------------------------------------------- 5. 품질 (DQV + SHACL)
+lake:QualityRule a owl:Class ; rdfs:subClassOf dqv:Metric ; rdfs:label "품질 규칙"@ko .
+lake:shape a owl:ObjectProperty ; rdfs:domain lake:QualityRule ; rdfs:range sh:NodeShape ;
+    rdfs:comment "KS X 9101 적합성 셰이프(ksx:LotShape 등)와 결속"@ko .
+lake:dimension a owl:DatatypeProperty ; rdfs:range xsd:string ;
+    rdfs:comment "완전성|유일성|유효성|일관성|정확성 + KSX 4차원(구조·값·관계·의미)"@ko .
+lake:QualityResult a owl:Class ; rdfs:subClassOf dqv:QualityMeasurement ; rdfs:label "품질 측정 결과"@ko .
+lake:conformanceRate a owl:DatatypeProperty ; rdfs:range xsd:decimal ; rdfs:label "적합률"@ko .
+
+# ---------------------------------------------------------------- 6. 접근 (ODRL)
+lake:AccessPolicy a owl:Class ; rdfs:subClassOf odrl:Policy ; rdfs:label "접근 정책"@ko ;
+    rdfs:comment "주체 클레임(회사·사업장·공장·역할) × 데이터셋/클래스/Named Graph. OPA 정책으로 컴파일."@ko .
+lake:scopeEnterprise a owl:DatatypeProperty ; rdfs:range xsd:string .
+lake:scopeSite a owl:DatatypeProperty ; rdfs:range xsd:string .
+lake:scopePlant a owl:DatatypeProperty ; rdfs:range xsd:string .
+
+# ---------------------------------------------------------------- 7. AI 자산
+lake:EmbeddingIndex a owl:Class ; rdfs:subClassOf dcat:Dataset ; rdfs:label "임베딩 인덱스"@ko .
+lake:FeatureSet a owl:Class ; rdfs:subClassOf lake:Dataset ; rdfs:label "피처셋"@ko .
+lake:Model a owl:Class ; rdfs:subClassOf prov:Plan ; rdfs:label "ML 모델(레지스트리 버전)"@ko .
+lake:trainedOn a owl:ObjectProperty ; rdfs:domain lake:Model ; rdfs:range lake:Dataset .
+lake:Prediction a owl:Class ; rdfs:label "예측 결과"@ko ;
+    rdfs:comment "KG 에 tier=GENERATED 로 재적재. 실측값 도착 시 비교 기록."@ko .

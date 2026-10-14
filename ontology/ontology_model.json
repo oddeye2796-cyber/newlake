@@ -1,0 +1,3186 @@
+{
+ "classes": [
+  {
+   "name": "Site",
+   "iri": "ksx:Site",
+   "label": "사업장",
+   "group": "기준정보",
+   "table": "site",
+   "clause": "7.4.1.1",
+   "pk": "EnterpriseID + SiteID",
+   "columns": 14,
+   "event": false,
+   "definition": "회사 내 하위 관리단위로서의 사업장을 의미한다."
+  },
+  {
+   "name": "Plant",
+   "iri": "ksx:Plant",
+   "label": "공장",
+   "group": "기준정보",
+   "table": "plant",
+   "clause": "7.4.1.2",
+   "pk": "EnterpriseID + PlantID",
+   "columns": 14,
+   "event": false,
+   "definition": "회사 내 하위 관리단위로서의 공장을 의미한다."
+  },
+  {
+   "name": "Department",
+   "iri": "ksx:Department",
+   "label": "부서",
+   "group": "기준정보",
+   "table": "department",
+   "clause": "7.4.1.3",
+   "pk": "EnterpriseID + DepartmentID",
+   "columns": 11,
+   "event": false,
+   "definition": "회사 내 하위 관리 단위로서의 부서를 의미한다."
+  },
+  {
+   "name": "Personnel",
+   "iri": "ksx:Personnel",
+   "label": "사원",
+   "group": "기준정보",
+   "table": "personnel",
+   "clause": "7.4.1.4",
+   "pk": "EnterpriseID + PersonnelID",
+   "columns": 14,
+   "event": false,
+   "definition": "사원코드, 사원명, 인적정보 등을 관리하는 사원 마스터를 의미한다. 일반적으로 HRMS(Human Resource Management System)에서 사용되지만 작업 스케줄링 또는 자원 할당에서 사용될 수도 있다."
+  },
+  {
+   "name": "CustomerPartyMaster",
+   "iri": "ksx:CustomerPartyMaster",
+   "label": "고객사",
+   "group": "기준정보",
+   "table": "customer_party_master",
+   "clause": "7.4.1.5",
+   "pk": "EnterpriseID + CustomerID",
+   "columns": 22,
+   "event": false,
+   "definition": "고객사 코드, 고객사명, 사업자등록번호 등 고객사 정보를 관리하는 고객사 마스터를 의미한다."
+  },
+  {
+   "name": "VendorPartyMaster",
+   "iri": "ksx:VendorPartyMaster",
+   "label": "공급사",
+   "group": "기준정보",
+   "table": "vendor_party_master",
+   "clause": "7.4.1.6",
+   "pk": "EnterpriseID + VendorID",
+   "columns": 22,
+   "event": false,
+   "definition": "공급사 코드, 공급사명, 사업자등록번호 등 공급사 정보를 관리하는 공급사 마스터를 의미한다."
+  },
+  {
+   "name": "CommonCodeMaster",
+   "iri": "ksx:CommonCodeMaster",
+   "label": "공통코드정보",
+   "group": "기준정보",
+   "table": "common_code_master",
+   "clause": "7.4.1.7",
+   "pk": "EnterpriseID + CommonCodeGroup + CommonCodeID",
+   "columns": 15,
+   "event": false,
+   "definition": "애플리케이션 내에서 사용되는 각종 코드를 모아 놓은 통합 코드를 의미한다."
+  },
+  {
+   "name": "WorkCalendar",
+   "iri": "ksx:WorkCalendar",
+   "label": "달력",
+   "group": "기준정보",
+   "table": "work_calendar",
+   "clause": "7.4.1.8",
+   "pk": "EnterpriseID + CalendarID",
+   "columns": 15,
+   "event": false,
+   "definition": "생산 현장의 달력을 의미한다. 단, 인사에서 사용하는 일반 달력과는 차이가 있다."
+  },
+  {
+   "name": "UOMGroup",
+   "iri": "ksx:UOMGroup",
+   "label": "단위그룹",
+   "group": "기준정보",
+   "table": "uom_group",
+   "clause": "7.4.1.9",
+   "pk": "EnterpriseID + UOMGroupID + UOMCode",
+   "columns": 13,
+   "event": false,
+   "definition": "측정 단위의 집합을 의미한다. 일반적으로 재고관리 단위가 기본단위가 되며 특정 프로세스에서 변경될 수 있고, 재고에 반영될 때는 환산계수가 적용된다."
+  },
+  {
+   "name": "ItemMaster",
+   "iri": "ksx:ItemMaster",
+   "label": "품목마스터",
+   "group": "기준정보",
+   "table": "item_master",
+   "clause": "7.4.1.10",
+   "pk": "EnterpriseID + ItemID",
+   "columns": 48,
+   "event": false,
+   "definition": "품목코드, 품목명, 규격 등과 각종 속성값을 관리하는 품목마스터를 의미한다. 단, 수량정보는 포함하지 않는다."
+  },
+  {
+   "name": "BOM",
+   "iri": "ksx:BOM",
+   "label": "자재명세서",
+   "group": "기준정보",
+   "table": "bom",
+   "clause": "7.4.1.11",
+   "pk": "EnterpriseID + BOMID + BOMRevisionNumber + ChildItemID",
+   "columns": 22,
+   "event": false,
+   "definition": "품목을 구성하거나 품목을 생산하기 위해 투입되는 자재명세서를 의미한다."
+  },
+  {
+   "name": "BOMHeader",
+   "iri": "arcon:BOMHeader",
+   "label": "자재명세서헤더",
+   "group": "기준정보",
+   "table": "bom_header",
+   "clause": "—",
+   "pk": "EnterpriseID + BOMID + BOMRevisionNumber",
+   "columns": 10,
+   "event": false,
+   "definition": "물리 보조 테이블(표준 외): 자재명세서의 자재명세서식별자+자재명세서버전 단위 헤더. 자재명세서 전체를 참조하는 FK를 위해 둠"
+  },
+  {
+   "name": "Lot",
+   "iri": "ksx:Lot",
+   "label": "로트",
+   "group": "기준정보",
+   "table": "lot",
+   "clause": "7.4.1.12",
+   "pk": "EnterpriseID + LotID",
+   "columns": 34,
+   "event": false,
+   "definition": "묶음 생산 단위의 정보를 의미한다."
+  },
+  {
+   "name": "Routing",
+   "iri": "ksx:Routing",
+   "label": "공정경로",
+   "group": "기준정보",
+   "table": "routing",
+   "clause": "7.4.1.13",
+   "pk": "EnterpriseID + RoutingID + OperationSequence",
+   "columns": 18,
+   "event": false,
+   "definition": "생산 시 필요한 공정의 순서를 의미하며, 작업자, 기계를 포함한 경로와 관련된 모든 리소스, 활동에 대한 정보를 의미한다."
+  },
+  {
+   "name": "RoutingHeader",
+   "iri": "arcon:RoutingHeader",
+   "label": "공정경로헤더",
+   "group": "기준정보",
+   "table": "routing_header",
+   "clause": "—",
+   "pk": "EnterpriseID + RoutingID",
+   "columns": 9,
+   "event": false,
+   "definition": "물리 보조 테이블(표준 외): 공정경로의 공정경로식별자 단위 헤더. 공정경로 전체를 참조하는 FK를 위해 둠"
+  },
+  {
+   "name": "Operation",
+   "iri": "ksx:Operation",
+   "label": "공정",
+   "group": "기준정보",
+   "table": "operation",
+   "clause": "7.4.1.14",
+   "pk": "EnterpriseID + OperationID",
+   "columns": 16,
+   "event": false,
+   "definition": "생산작업을 수행하는 작업장 또는 작업장 내 세부 작업단위를 의미한다."
+  },
+  {
+   "name": "Equipment",
+   "iri": "ksx:Equipment",
+   "label": "설비",
+   "group": "기준정보",
+   "table": "equipment",
+   "clause": "7.4.1.15",
+   "pk": "EnterpriseID + EquipmentID",
+   "columns": 27,
+   "event": false,
+   "definition": "설비명, 설비유형 등 설비 관리 및 회사의 자산으로서 관리를 위한 설비정보를 의미한다."
+  },
+  {
+   "name": "OperationEquipment",
+   "iri": "ksx:OperationEquipment",
+   "label": "공정설비",
+   "group": "기준정보",
+   "table": "operation_equipment",
+   "clause": "7.4.1.16",
+   "pk": "EnterpriseID + OperationID + EquipmentID",
+   "columns": 14,
+   "event": false,
+   "definition": "공정별 사용되는 설비 정보 데이터를 의미한다."
+  },
+  {
+   "name": "Carrier",
+   "iri": "ksx:Carrier",
+   "label": "캐리어",
+   "group": "기준정보",
+   "table": "carrier",
+   "clause": "7.4.1.17",
+   "pk": "EnterpriseID + CarrierID",
+   "columns": 14,
+   "event": false,
+   "definition": "제조 공정 내 이동에 필요한 물리적 용기를 의미한다."
+  },
+  {
+   "name": "StockerInventory",
+   "iri": "ksx:StockerInventory",
+   "label": "저장소재공정보",
+   "group": "기준정보",
+   "table": "stocker_inventory",
+   "clause": "7.4.1.18",
+   "pk": "EnterpriseID + StockerID",
+   "columns": 15,
+   "event": false,
+   "definition": "공장 내 공정 물류 저장소 정보를 의미한다. 이는 공정 내 물류 최적화를 위해 Lot Dispatcher를 사용하는데 SCS(StockerControlSystem), Dispatcher, MES 상호연동을 위해 존재한다."
+  },
+  {
+   "name": "WarehouseLocation",
+   "iri": "ksx:WarehouseLocation",
+   "label": "창고",
+   "group": "기준정보",
+   "table": "warehouse_location",
+   "clause": "7.4.1.19",
+   "pk": "EnterpriseID + WarehouseID",
+   "columns": 14,
+   "event": false,
+   "definition": "재고를 모아 놓고 관리하는 위치를 의미한다."
+  },
+  {
+   "name": "Batch",
+   "iri": "ksx:Batch",
+   "label": "배치",
+   "group": "기준정보",
+   "table": "batch",
+   "clause": "7.4.1.20",
+   "pk": "EnterpriseID + BatchID",
+   "columns": 38,
+   "event": false,
+   "definition": "배치 공정의 1회 실행으로 생산되고 있거나 생산된 물질의 단위를 의미한다. 원료를 정해진 양만큼 투입하여 일괄 처리하는 공정(배합, 반응, 발효, 열처리 등)의 생산 단위이며, 공급사에서 생산하여 납품한 구매품의 배치를 포함한다."
+  },
+  {
+   "name": "Line",
+   "iri": "ksx:Line",
+   "label": "라인",
+   "group": "기준정보",
+   "table": "line",
+   "clause": "7.4.1.21",
+   "pk": "EnterpriseID + LineID",
+   "columns": 28,
+   "event": false,
+   "definition": "같은 공장 안에서 공정과 설비를 일정한 흐름으로 배치하여 특정 품목 또는 품목군을 생산하는 생산 단위를 의미한다. 라인은 공장에 속하며, 하나 이상의 공정과 설비로 구성된다."
+  },
+  {
+   "name": "Enterprise",
+   "iri": "ksx:Enterprise",
+   "label": "회사",
+   "group": "기준정보",
+   "table": "enterprise",
+   "clause": "7.4.1.22",
+   "pk": "EnterpriseID",
+   "columns": 19,
+   "event": false,
+   "definition": "기업업무시스템 간 제조업무데이터를 교환하는 법인 단위의 회사를 의미한다. 회사는 하나 이상의 사업장으로 구성되며, 모든 명사 정보의 최상위 소유 범위가 된다."
+  },
+  {
+   "name": "ProjectMaster",
+   "iri": "ksx:ProjectMaster",
+   "label": "프로젝트마스터",
+   "group": "프로젝트관리",
+   "table": "project_master",
+   "clause": "7.4.2.1",
+   "pk": "EnterpriseID + ProjectID",
+   "columns": 23,
+   "event": false,
+   "definition": "프로젝트 코드, 프로젝트명 등을 관리하는 프로젝트마스터를 의미한다. 주요 프로젝트 필드의 ProjectAccounting 관련 애플리케이션 활성화를 위한정보로 활용되기도 한다."
+  },
+  {
+   "name": "EngineeringChangeOrder",
+   "iri": "ksx:EngineeringChangeOrder",
+   "label": "설계변경지시",
+   "group": "프로젝트관리",
+   "table": "engineering_change_order",
+   "clause": "7.4.2.2",
+   "pk": "EnterpriseID + EngineeringChangeOrderID",
+   "columns": 20,
+   "event": false,
+   "definition": "제품의 설계를 변경하는 지시를 의미한다. 설계변경지시 수행 결과는 BOM 및 공정경로BOM에 반영된다."
+  },
+  {
+   "name": "SalesOrder",
+   "iri": "ksx:SalesOrder",
+   "label": "수주오더",
+   "group": "판매관리",
+   "table": "sales_order",
+   "clause": "7.4.3.1",
+   "pk": "EnterpriseID + SalesOrderID",
+   "columns": 28,
+   "event": false,
+   "definition": "고객사 주문정보를 의미한다."
+  },
+  {
+   "name": "SalesPlan",
+   "iri": "ksx:SalesPlan",
+   "label": "판매계획",
+   "group": "판매관리",
+   "table": "sales_plan",
+   "clause": "7.4.3.2",
+   "pk": "EnterpriseID + SalesPlanID",
+   "columns": 14,
+   "event": false,
+   "definition": "고객사 Forecast정보 및 수요예측정보를 토대로 작성된 판매계획을 의미한다."
+  },
+  {
+   "name": "BasePrice",
+   "iri": "ksx:BasePrice",
+   "label": "기준가격",
+   "group": "구매관리",
+   "table": "base_price",
+   "clause": "7.4.4.1",
+   "pk": "EnterpriseID + ItemID + CurrencyCode",
+   "columns": 13,
+   "event": false,
+   "definition": "구매요청 시 참조하기 위한 구매품의 기준가격 정보를 의미한다."
+  },
+  {
+   "name": "PurchaseRequisition",
+   "iri": "ksx:PurchaseRequisition",
+   "label": "구매요청",
+   "group": "구매관리",
+   "table": "purchase_requisition",
+   "clause": "7.4.4.2",
+   "pk": "EnterpriseID + PurchaseRequisitionID",
+   "columns": 21,
+   "event": false,
+   "definition": "생산 또는 판매를 위해 수급되어야 할 품목을 요청하는 것을 의미한다(원부자재, 소모품, 상품 등)."
+  },
+  {
+   "name": "PurchaseOrder",
+   "iri": "ksx:PurchaseOrder",
+   "label": "구매발주",
+   "group": "구매관리",
+   "table": "purchase_order",
+   "clause": "7.4.4.3",
+   "pk": "EnterpriseID + PurchaseOrderID",
+   "columns": 47,
+   "event": false,
+   "definition": "구매자가 공급자의 품목을 구매하기 위한 주문을 의미한다."
+  },
+  {
+   "name": "MaterialArrival",
+   "iri": "ksx:MaterialArrival",
+   "label": "자재도착",
+   "group": "자재관리",
+   "table": "material_arrival",
+   "clause": "7.4.5.1",
+   "pk": "EnterpriseID + PurchaseDocumentNumber + PurchaseDocumentSequence + LotID",
+   "columns": 17,
+   "event": false,
+   "definition": "자재가 입고 전 수입검사를 위해 도착한 정보를 의미한다."
+  },
+  {
+   "name": "GoodsReceipt",
+   "iri": "ksx:GoodsReceipt",
+   "label": "입고",
+   "group": "자재관리",
+   "table": "goods_receipt",
+   "clause": "7.4.5.2",
+   "pk": "EnterpriseID + GoodsReceiptID + GoodsReceiptSequence",
+   "columns": 32,
+   "event": false,
+   "definition": "구매 발주된 품목을 협력업체로부터 납품 받은 정보를 의미한다."
+  },
+  {
+   "name": "GoodsIssue",
+   "iri": "ksx:GoodsIssue",
+   "label": "자재불출",
+   "group": "자재관리",
+   "table": "goods_issue",
+   "clause": "7.4.5.3",
+   "pk": "EnterpriseID + GoodsIssueID",
+   "columns": 24,
+   "event": false,
+   "definition": "자재불출 요청된 자재를 불출하는 것을 의미한다(일반적으로 재고 관리주체가 다를 경우 창고관리부서에서 사용)."
+  },
+  {
+   "name": "ProductionPlanning",
+   "iri": "ksx:ProductionPlanning",
+   "label": "생산계획",
+   "group": "생산관리",
+   "table": "production_planning",
+   "clause": "7.4.6.1",
+   "pk": "EnterpriseID + ProductionPlanID",
+   "columns": 13,
+   "event": false,
+   "definition": "특정 제품을 생산하기 위한 계획을 의미한다."
+  },
+  {
+   "name": "ProductionOrder",
+   "iri": "ksx:ProductionOrder",
+   "label": "생산지시",
+   "group": "생산관리",
+   "table": "production_order",
+   "clause": "7.4.6.2",
+   "pk": "EnterpriseID + ProductionOrderID + ProductionOrderSequence",
+   "columns": 22,
+   "event": false,
+   "definition": "특정 제품의 생산을 지시하는 정보를 의미한다."
+  },
+  {
+   "name": "OperationStart",
+   "iri": "ksx:OperationStart",
+   "label": "착공",
+   "group": "생산관리",
+   "table": "operation_start",
+   "clause": "7.4.6.3",
+   "pk": "EnterpriseID + LotID + OperationID + OperationStartTime",
+   "columns": 16,
+   "event": true,
+   "definition": "설비에 해당 공정의 생산을 지시한다."
+  },
+  {
+   "name": "OperationEnd",
+   "iri": "ksx:OperationEnd",
+   "label": "완공",
+   "group": "생산관리",
+   "table": "operation_end",
+   "clause": "7.4.6.4",
+   "pk": "EnterpriseID + LotID + OperationID + OperationEndTime",
+   "columns": 19,
+   "event": true,
+   "definition": "해당 공정의 생산 완료를 보고한다."
+  },
+  {
+   "name": "TransferCommand",
+   "iri": "ksx:TransferCommand",
+   "label": "이동지시",
+   "group": "생산관리",
+   "table": "transfer_command",
+   "clause": "7.4.6.5",
+   "pk": "EnterpriseID + TransferCommandID",
+   "columns": 19,
+   "event": false,
+   "definition": "현재 공정에서 다음 공정으로 작업할 Lot의 이동을 지시한다."
+  },
+  {
+   "name": "TransferStart",
+   "iri": "ksx:TransferStart",
+   "label": "운행시작",
+   "group": "생산관리",
+   "table": "transfer_start",
+   "clause": "7.4.6.6",
+   "pk": "EnterpriseID + TransferCommandID",
+   "columns": 20,
+   "event": true,
+   "definition": "이동지시 명령을 받아 운행 시작 시 시작 정보를 보고한다."
+  },
+  {
+   "name": "TransferEnd",
+   "iri": "ksx:TransferEnd",
+   "label": "운행완료",
+   "group": "생산관리",
+   "table": "transfer_end",
+   "clause": "7.4.6.7",
+   "pk": "EnterpriseID + TransferCommandID",
+   "columns": 17,
+   "event": true,
+   "definition": "이동지시 명령을 받아 운행 완료 시 완료 정보를 보고한다."
+  },
+  {
+   "name": "InTransitLocation",
+   "iri": "ksx:InTransitLocation",
+   "label": "운송위치",
+   "group": "생산관리",
+   "table": "in_transit_location",
+   "clause": "7.4.6.8",
+   "pk": "EnterpriseID + TransferCommandID + CurrentLocation",
+   "columns": 14,
+   "event": true,
+   "definition": "이동 중 현재 운송 위치 정보를 보고한다."
+  },
+  {
+   "name": "EquipmentState",
+   "iri": "ksx:EquipmentState",
+   "label": "설비상태",
+   "group": "생산관리",
+   "table": "equipment_state",
+   "clause": "7.4.6.9",
+   "pk": "EnterpriseID + EquipmentID",
+   "columns": 17,
+   "event": false,
+   "definition": "설비의 상태가 변경될 시 상태 정보를 보고한다."
+  },
+  {
+   "name": "Alarm",
+   "iri": "ksx:Alarm",
+   "label": "알람",
+   "group": "생산관리",
+   "table": "alarm",
+   "clause": "7.4.6.10",
+   "pk": "EnterpriseID + EquipmentID + EventDateTime + ErrorCode",
+   "columns": 14,
+   "event": true,
+   "definition": "설비에서 발생하는 알람 정보를 의미한다."
+  },
+  {
+   "name": "SupplierInspectionPlan",
+   "iri": "ksx:SupplierInspectionPlan",
+   "label": "협력업체품질검사계획",
+   "group": "생산관리",
+   "table": "supplier_inspection_plan",
+   "clause": "7.4.6.11",
+   "pk": "EnterpriseID + InspectionPlanID + InspectionID",
+   "columns": 28,
+   "event": false,
+   "definition": "수주산업에서 프로젝트성으로 추진하고 있는 협력업체 발주품에 대해 발주처 및 협력업체 품질부서에서 품질검사를 하기 위한 일정 계획을 의미한다."
+  },
+  {
+   "name": "SupplierInspectionApplication",
+   "iri": "ksx:SupplierInspectionApplication",
+   "label": "협력업체품질검사신청",
+   "group": "생산관리",
+   "table": "supplier_inspection_application",
+   "clause": "7.4.6.12",
+   "pk": "EnterpriseID + InspectionApplicationID",
+   "columns": 31,
+   "event": false,
+   "definition": "품질검사계획에 따라 협력업체에 품질검사를 신청하는 것을 의미한다."
+  },
+  {
+   "name": "SupplierInspectionResult",
+   "iri": "ksx:SupplierInspectionResult",
+   "label": "협력업체품질검사결과",
+   "group": "생산관리",
+   "table": "supplier_inspection_result",
+   "clause": "7.4.6.13",
+   "pk": "EnterpriseID + InspectionResultID",
+   "columns": 26,
+   "event": false,
+   "definition": "검사결과를 품질관리 부서에 전달하는 것을 의미한다."
+  },
+  {
+   "name": "CorrectiveActionRequest",
+   "iri": "ksx:CorrectiveActionRequest",
+   "label": "시정조치요청",
+   "group": "생산관리",
+   "table": "corrective_action_request",
+   "clause": "7.4.6.14",
+   "pk": "EnterpriseID + CorrectiveActionRequestID",
+   "columns": 19,
+   "event": false,
+   "definition": "공급사에 시정조치를 요청하는 것을 의미한다."
+  },
+  {
+   "name": "CorrectiveActionPlan",
+   "iri": "ksx:CorrectiveActionPlan",
+   "label": "시정조치계획",
+   "group": "생산관리",
+   "table": "corrective_action_plan",
+   "clause": "7.4.6.15",
+   "pk": "EnterpriseID + CorrectiveActionPlanID",
+   "columns": 23,
+   "event": false,
+   "definition": "공급사에서 시정조치 사항을 기술하고, 시정조치 계획을 수립하여 고객사에게 전달하는 것을 의미한다."
+  },
+  {
+   "name": "CorrectiveActionResult",
+   "iri": "ksx:CorrectiveActionResult",
+   "label": "시정조치결과",
+   "group": "생산관리",
+   "table": "corrective_action_result",
+   "clause": "7.4.6.16",
+   "pk": "EnterpriseID + CorrectiveActionResultID",
+   "columns": 26,
+   "event": false,
+   "definition": "시정조치계획에 따라 수행 결과를 고객사에 전달하는 것을 의미한다."
+  },
+  {
+   "name": "ProductPacking",
+   "iri": "ksx:ProductPacking",
+   "label": "제품포장",
+   "group": "생산관리",
+   "table": "product_packing",
+   "clause": "7.4.6.17",
+   "pk": "EnterpriseID + BoxNumber + PackingSequence",
+   "columns": 16,
+   "event": false,
+   "definition": "제품 출하를 위해 완성된 제품을 포장하기 위한 정보를 의미한다."
+  },
+  {
+   "name": "EquipmentParameter",
+   "iri": "ksx:EquipmentParameter",
+   "label": "설비파라미터",
+   "group": "생산관리",
+   "table": "equipment_parameter",
+   "clause": "7.4.6.18",
+   "pk": "EnterpriseID + ParameterID",
+   "columns": 18,
+   "event": false,
+   "definition": "설비에서 수집되는 Parameter 값의 집합을 의미한다."
+  },
+  {
+   "name": "TraceParameter",
+   "iri": "ksx:TraceParameter",
+   "label": "설비파라미터이력",
+   "group": "생산관리",
+   "table": "trace_parameter",
+   "clause": "7.4.6.19",
+   "pk": "EnterpriseID + EquipmentID + ParameterID + EventDateTime",
+   "columns": 14,
+   "event": true,
+   "definition": "설비에서 수집되는 Parameter 값의 적재 및 검증 이력을 의미한다."
+  },
+  {
+   "name": "ProductionPerformance",
+   "iri": "ksx:ProductionPerformance",
+   "label": "생산실적",
+   "group": "생산관리",
+   "table": "production_performance",
+   "clause": "7.4.6.20",
+   "pk": "EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence",
+   "columns": 28,
+   "event": false,
+   "definition": "생산지시에 의해 실행된 생산의 실적 결과 정보를 의미한다."
+  },
+  {
+   "name": "ProductionPerformanceItem",
+   "iri": "ksx:ProductionPerformanceItem",
+   "label": "생산실적투입품목",
+   "group": "생산관리",
+   "table": "production_performance_item",
+   "clause": "7.4.6.21",
+   "pk": "EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence + ItemID",
+   "columns": 23,
+   "event": false,
+   "definition": "생산 과정에서 투입되는 모든 품목(원자재, 부자재, 반제품, 완제품 등) 관련 정보를 의미한다."
+  },
+  {
+   "name": "ProductionPerformancePersonnel",
+   "iri": "ksx:ProductionPerformancePersonnel",
+   "label": "생산실적투입인력",
+   "group": "생산관리",
+   "table": "production_performance_personnel",
+   "clause": "7.4.6.22",
+   "pk": "EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence + PersonnelID",
+   "columns": 20,
+   "event": false,
+   "definition": "생산 과정에서 투입된 인력정보를 의미한다. 생산실적투입인력 명사는 표 65와같은 정보 속성을 포함하고 있다."
+  },
+  {
+   "name": "ProductionPerformanceEquipment",
+   "iri": "ksx:ProductionPerformanceEquipment",
+   "label": "설비활용실적",
+   "group": "생산관리",
+   "table": "production_performance_equipment",
+   "clause": "7.4.6.23",
+   "pk": "EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence + EquipmentID",
+   "columns": 27,
+   "event": false,
+   "definition": "생산 과정에서 사용된 설비의 활용실적 정보를 의미한다."
+  },
+  {
+   "name": "ProductionPerformanceQuality",
+   "iri": "ksx:ProductionPerformanceQuality",
+   "label": "생산품질실적",
+   "group": "생산관리",
+   "table": "production_performance_quality",
+   "clause": "7.4.6.24",
+   "pk": "EnterpriseID + ProductionPerformanceID + ProductionPerformanceSequence + DefectTypeCode + DefectTypeDetailCode",
+   "columns": 24,
+   "event": false,
+   "definition": "생산 과정에서 발생한 품질정보를 의미한다."
+  },
+  {
+   "name": "Inventory",
+   "iri": "ksx:Inventory",
+   "label": "재고",
+   "group": "재고관리",
+   "table": "inventory",
+   "clause": "7.4.7.1",
+   "pk": "EnterpriseID + WarehouseID + ItemID",
+   "columns": 12,
+   "event": false,
+   "definition": "저장위치에 있는 품목의 실제 보유(On-hand) 수량을 의미한다."
+  },
+  {
+   "name": "AvailableInventory",
+   "iri": "ksx:AvailableInventory",
+   "label": "가용재고",
+   "group": "재고관리",
+   "table": "available_inventory",
+   "clause": "7.4.7.2",
+   "pk": "EnterpriseID + AvailableInventoryID",
+   "columns": 16,
+   "event": false,
+   "definition": "현 재고와 특정 시점까지의 예상 입출고를 감안하여 사용 가능한 재고를 의미한다."
+  },
+  {
+   "name": "StockTransfer",
+   "iri": "ksx:StockTransfer",
+   "label": "재고이동",
+   "group": "재고관리",
+   "table": "stock_transfer",
+   "clause": "7.4.7.3",
+   "pk": "EnterpriseID + StockTransferID",
+   "columns": 15,
+   "event": false,
+   "definition": "재고가 다른 창고로 이동하기 위해 필요한 정보를 의미한다."
+  },
+  {
+   "name": "InventoryCount",
+   "iri": "ksx:InventoryCount",
+   "label": "재고실사",
+   "group": "재고관리",
+   "table": "inventory_count",
+   "clause": "7.4.7.4",
+   "pk": "EnterpriseID + InventoryCountDocumentNumber + WarehouseID + ItemID",
+   "columns": 15,
+   "event": false,
+   "definition": "보관된 재고에 대해 실수량을 파악하기 위한 정보를 의미한다."
+  },
+  {
+   "name": "ProductIncoming",
+   "iri": "ksx:ProductIncoming",
+   "label": "제품입고",
+   "group": "창고관리",
+   "table": "product_incoming",
+   "clause": "7.4.8.1",
+   "pk": "EnterpriseID + ProductIncomingID + ProductIncomingSequence",
+   "columns": 27,
+   "event": false,
+   "definition": "생산된 제품을 창고에 저장하는 것을 의미한다."
+  },
+  {
+   "name": "ProductReleaseRequest",
+   "iri": "ksx:ProductReleaseRequest",
+   "label": "출하의뢰",
+   "group": "창고관리",
+   "table": "product_release_request",
+   "clause": "7.4.8.2",
+   "pk": "EnterpriseID + ProductReleaseRequestID + ProductReleaseRequestSequence",
+   "columns": 31,
+   "event": false,
+   "definition": "수주된 품목에 대한 출하를 의뢰하는 것을 의미한다."
+  },
+  {
+   "name": "ProductReleaseRequestHeader",
+   "iri": "arcon:ProductReleaseRequestHeader",
+   "label": "출하의뢰헤더",
+   "group": "창고관리",
+   "table": "product_release_request_header",
+   "clause": "—",
+   "pk": "EnterpriseID + ProductReleaseRequestID",
+   "columns": 9,
+   "event": false,
+   "definition": "물리 보조 테이블(표준 외): 출하의뢰의 출하요청식별자 단위 헤더. 출하의뢰 전체를 참조하는 FK를 위해 둠"
+  },
+  {
+   "name": "ProductRelease",
+   "iri": "ksx:ProductRelease",
+   "label": "제품출고",
+   "group": "창고관리",
+   "table": "product_release",
+   "clause": "7.4.8.3",
+   "pk": "EnterpriseID + ProductReleaseID + ProductReleaseSequence",
+   "columns": 30,
+   "event": false,
+   "definition": "수주된 품목을 고객에게 보내는 것을 의미한다."
+  },
+  {
+   "name": "Return",
+   "iri": "ksx:Return",
+   "label": "반품",
+   "group": "서비스관리",
+   "table": "return",
+   "clause": "7.4.9.1",
+   "pk": "EnterpriseID + ReturnID + ReturnSequence",
+   "columns": 21,
+   "event": false,
+   "definition": "반품(구매반품, 제품반품)에 대한 정보를 의미한다."
+  },
+  {
+   "name": "ProductTraceParameterOnCustomer",
+   "iri": "ksx:ProductTraceParameterOnCustomer",
+   "label": "고객제품데이터",
+   "group": "서비스관리",
+   "table": "product_trace_parameter_on_customer",
+   "clause": "7.4.9.2",
+   "pk": "EnterpriseID + ItemID + SerialNumber + ParameterName + CollectionDateTime",
+   "columns": 15,
+   "event": true,
+   "definition": "고객에게 판매 완료 후 부가적인 서비스 제공 및 가치창출을 위해 고객 제품에서 수집되는 데이터를 의미한다."
+  },
+  {
+   "name": "AfterSalesServiceRequest",
+   "iri": "ksx:AfterSalesServiceRequest",
+   "label": "사후서비스신청",
+   "group": "서비스관리",
+   "table": "after_sales_service_request",
+   "clause": "7.4.9.3",
+   "pk": "EnterpriseID + RequestNumber",
+   "columns": 16,
+   "event": false,
+   "definition": "고객에게 판매된 제품의 고장으로 제조자 혹은 대리점 등에 고장 접수 시 필요한 데이터를 의미한다."
+  },
+  {
+   "name": "AfterSalesServiceRequestResult",
+   "iri": "ksx:AfterSalesServiceRequestResult",
+   "label": "사후서비스결과",
+   "group": "서비스관리",
+   "table": "after_sales_service_request_result",
+   "clause": "7.4.9.4",
+   "pk": "EnterpriseID + RequestNumber + TransferSequence + RegisterSequence + RepairSequence",
+   "columns": 26,
+   "event": false,
+   "definition": "고객의 사후서비스 접수 이후 제조사 혹은 대리점의 처리결과를 교환하기 위해 필요한 데이터를 의미한다."
+  }
+ ],
+ "links": [
+  {
+   "s": "Department",
+   "p": "refParentDepartment",
+   "o": "Department",
+   "kind": "자기 참조",
+   "fk": [
+    "EnterpriseID",
+    "ParentDepartmentID"
+   ]
+  },
+  {
+   "s": "Personnel",
+   "p": "refDepartment",
+   "o": "Department",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "DepartmentID"
+   ]
+  },
+  {
+   "s": "CommonCodeMaster",
+   "p": "refParentCommonCode",
+   "o": "CommonCodeMaster",
+   "kind": "자기 참조",
+   "fk": [
+    "EnterpriseID",
+    "ParentCommonCodeGroup",
+    "ParentCommonCodeID"
+   ]
+  },
+  {
+   "s": "ItemMaster",
+   "p": "refMainCustomer",
+   "o": "CustomerPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "MainCustomerID"
+   ]
+  },
+  {
+   "s": "ItemMaster",
+   "p": "refMainVendor",
+   "o": "VendorPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "MainVendorID"
+   ]
+  },
+  {
+   "s": "ItemMaster",
+   "p": "refReceiptWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ReceiptWarehouseID"
+   ]
+  },
+  {
+   "s": "ItemMaster",
+   "p": "refIssueWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "IssueWarehouseID"
+   ]
+  },
+  {
+   "s": "ItemMaster",
+   "p": "refReplacementItem",
+   "o": "ItemMaster",
+   "kind": "자기 참조",
+   "fk": [
+    "EnterpriseID",
+    "ReplacementItemID"
+   ]
+  },
+  {
+   "s": "BOM",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "BOM",
+   "p": "refChildItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ChildItemID"
+   ]
+  },
+  {
+   "s": "BOM",
+   "p": "refRoutingLine",
+   "o": "Routing",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "RoutingID",
+    "OperationSequence"
+   ]
+  },
+  {
+   "s": "Lot",
+   "p": "refParentLot",
+   "o": "Lot",
+   "kind": "자기 참조",
+   "fk": [
+    "EnterpriseID",
+    "ParentLotID"
+   ]
+  },
+  {
+   "s": "Lot",
+   "p": "refChildLot",
+   "o": "Lot",
+   "kind": "자기 참조",
+   "fk": [
+    "EnterpriseID",
+    "ChildLotID"
+   ]
+  },
+  {
+   "s": "Lot",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "Lot",
+   "p": "refCarrier",
+   "o": "Carrier",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CarrierID"
+   ]
+  },
+  {
+   "s": "Lot",
+   "p": "refProductionOrder",
+   "o": "ProductionOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProductionOrderID",
+    "ProductionOrderSequence"
+   ]
+  },
+  {
+   "s": "Lot",
+   "p": "refCurrentOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CurrentOperationID"
+   ]
+  },
+  {
+   "s": "Lot",
+   "p": "refNextOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "NextOperationID"
+   ]
+  },
+  {
+   "s": "Lot",
+   "p": "refPersonnel",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonnelID"
+   ]
+  },
+  {
+   "s": "Routing",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "Routing",
+   "p": "refOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "OperationID"
+   ]
+  },
+  {
+   "s": "Equipment",
+   "p": "refParentEquipment",
+   "o": "Equipment",
+   "kind": "자기 참조",
+   "fk": [
+    "EnterpriseID",
+    "ParentEquipmentID"
+   ]
+  },
+  {
+   "s": "Equipment",
+   "p": "refDepartmentInCharge",
+   "o": "Department",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "DepartmentInChargeID"
+   ]
+  },
+  {
+   "s": "Equipment",
+   "p": "refPersonInCharge",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonInChargeID"
+   ]
+  },
+  {
+   "s": "Equipment",
+   "p": "refOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "OperationID"
+   ]
+  },
+  {
+   "s": "OperationEquipment",
+   "p": "refOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "OperationID"
+   ]
+  },
+  {
+   "s": "OperationEquipment",
+   "p": "refEquipment",
+   "o": "Equipment",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "EquipmentID"
+   ]
+  },
+  {
+   "s": "StockerInventory",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "StockerInventory",
+   "p": "refCarrier",
+   "o": "Carrier",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CarrierID"
+   ]
+  },
+  {
+   "s": "StockerInventory",
+   "p": "refAlternateStocker",
+   "o": "StockerInventory",
+   "kind": "자기 참조",
+   "fk": [
+    "EnterpriseID",
+    "AlternateStockerID"
+   ]
+  },
+  {
+   "s": "Batch",
+   "p": "refParentBatch",
+   "o": "Batch",
+   "kind": "자기 참조",
+   "fk": [
+    "EnterpriseID",
+    "ParentBatchID"
+   ]
+  },
+  {
+   "s": "Batch",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "Batch",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "Batch",
+   "p": "refProductionOrder",
+   "o": "ProductionOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProductionOrderID",
+    "ProductionOrderSequence"
+   ]
+  },
+  {
+   "s": "Batch",
+   "p": "refBOM",
+   "o": "BOMHeader",
+   "kind": "헤더 참조",
+   "fk": [
+    "EnterpriseID",
+    "BOMID",
+    "BOMRevisionNumber"
+   ]
+  },
+  {
+   "s": "Batch",
+   "p": "refOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "OperationID"
+   ]
+  },
+  {
+   "s": "Batch",
+   "p": "refEquipment",
+   "o": "Equipment",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "EquipmentID"
+   ]
+  },
+  {
+   "s": "Batch",
+   "p": "refPersonnel",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonnelID"
+   ]
+  },
+  {
+   "s": "Line",
+   "p": "refParentLine",
+   "o": "Line",
+   "kind": "자기 참조",
+   "fk": [
+    "EnterpriseID",
+    "ParentLineID"
+   ]
+  },
+  {
+   "s": "Line",
+   "p": "refDepartmentInCharge",
+   "o": "Department",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "DepartmentInChargeID"
+   ]
+  },
+  {
+   "s": "Line",
+   "p": "refPersonInCharge",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonInChargeID"
+   ]
+  },
+  {
+   "s": "Line",
+   "p": "refCalendar",
+   "o": "WorkCalendar",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CalendarID"
+   ]
+  },
+  {
+   "s": "Line",
+   "p": "refIssueWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "IssueWarehouseID"
+   ]
+  },
+  {
+   "s": "Line",
+   "p": "refReceiptWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ReceiptWarehouseID"
+   ]
+  },
+  {
+   "s": "Enterprise",
+   "p": "refParentEnterprise",
+   "o": "Enterprise",
+   "kind": "자기 참조",
+   "fk": [
+    "ParentEnterpriseID"
+   ]
+  },
+  {
+   "s": "ProjectMaster",
+   "p": "refResponsibleDepartment",
+   "o": "Department",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ResponsibleDepartmentID"
+   ]
+  },
+  {
+   "s": "ProjectMaster",
+   "p": "refPersonInCharge",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonInChargeID"
+   ]
+  },
+  {
+   "s": "ProjectMaster",
+   "p": "refSalesOrder",
+   "o": "SalesOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "SalesDocumentNumber",
+    "SalesDocumentSequence"
+   ]
+  },
+  {
+   "s": "ProjectMaster",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "ProjectMaster",
+   "p": "refDivision",
+   "o": "Department",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "DivisionID"
+   ]
+  },
+  {
+   "s": "EngineeringChangeOrder",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "EngineeringChangeOrder",
+   "p": "refBOMLine",
+   "o": "BOM",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "BOMID",
+    "BOMRevisionNumber",
+    "ChildItemID"
+   ]
+  },
+  {
+   "s": "EngineeringChangeOrder",
+   "p": "refChildItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ChildItemID"
+   ]
+  },
+  {
+   "s": "SalesOrder",
+   "p": "refCustomer",
+   "o": "CustomerPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CustomerID"
+   ]
+  },
+  {
+   "s": "SalesOrder",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "SalesPlan",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "BasePrice",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "PurchaseRequisition",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "PurchaseRequisition",
+   "p": "refVendor",
+   "o": "VendorPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "VendorID"
+   ]
+  },
+  {
+   "s": "PurchaseRequisition",
+   "p": "refRequesterDepartment",
+   "o": "Department",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "RequesterDepartmentID"
+   ]
+  },
+  {
+   "s": "PurchaseRequisition",
+   "p": "refRequesterPersonnel",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "RequesterPersonnelID"
+   ]
+  },
+  {
+   "s": "PurchaseOrder",
+   "p": "refVendor",
+   "o": "VendorPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "VendorID"
+   ]
+  },
+  {
+   "s": "PurchaseOrder",
+   "p": "refPersonnel",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonnelID"
+   ]
+  },
+  {
+   "s": "PurchaseOrder",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "MaterialArrival",
+   "p": "refPurchaseOrder",
+   "o": "PurchaseOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PurchaseDocumentNumber",
+    "PurchaseDocumentSequence"
+   ]
+  },
+  {
+   "s": "MaterialArrival",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "MaterialArrival",
+   "p": "refReceiptWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ReceiptWarehouseID"
+   ]
+  },
+  {
+   "s": "MaterialArrival",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "MaterialArrival",
+   "p": "refVendor",
+   "o": "VendorPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "VendorID"
+   ]
+  },
+  {
+   "s": "GoodsReceipt",
+   "p": "refWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID"
+   ]
+  },
+  {
+   "s": "GoodsReceipt",
+   "p": "refPersonnel",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonnelID"
+   ]
+  },
+  {
+   "s": "GoodsReceipt",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "GoodsReceipt",
+   "p": "refVendor",
+   "o": "VendorPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "VendorID"
+   ]
+  },
+  {
+   "s": "GoodsIssue",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "GoodsIssue",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "GoodsIssue",
+   "p": "refVendor",
+   "o": "VendorPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "VendorID"
+   ]
+  },
+  {
+   "s": "GoodsIssue",
+   "p": "refWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID"
+   ]
+  },
+  {
+   "s": "ProductionPlanning",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "ProductionOrder",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "ProductionOrder",
+   "p": "refLine",
+   "o": "Line",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LineID"
+   ]
+  },
+  {
+   "s": "ProductionOrder",
+   "p": "refRouting",
+   "o": "RoutingHeader",
+   "kind": "헤더 참조",
+   "fk": [
+    "EnterpriseID",
+    "RoutingID"
+   ]
+  },
+  {
+   "s": "ProductionOrder",
+   "p": "refBOM",
+   "o": "BOMHeader",
+   "kind": "헤더 참조",
+   "fk": [
+    "EnterpriseID",
+    "BOMID",
+    "BOMRevisionNumber"
+   ]
+  },
+  {
+   "s": "ProductionOrder",
+   "p": "refSalesOrder",
+   "o": "SalesOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "SalesDocumentNumber",
+    "SalesDocumentSequence"
+   ]
+  },
+  {
+   "s": "OperationStart",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "OperationStart",
+   "p": "refOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "OperationID"
+   ]
+  },
+  {
+   "s": "OperationStart",
+   "p": "refEquipment",
+   "o": "Equipment",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "EquipmentID"
+   ]
+  },
+  {
+   "s": "OperationStart",
+   "p": "refPersonnel",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonnelID"
+   ]
+  },
+  {
+   "s": "OperationEnd",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "OperationEnd",
+   "p": "refOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "OperationID"
+   ]
+  },
+  {
+   "s": "OperationEnd",
+   "p": "refEquipment",
+   "o": "Equipment",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "EquipmentID"
+   ]
+  },
+  {
+   "s": "OperationEnd",
+   "p": "refPersonnel",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonnelID"
+   ]
+  },
+  {
+   "s": "TransferCommand",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "TransferCommand",
+   "p": "refCarrier",
+   "o": "Carrier",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CarrierID"
+   ]
+  },
+  {
+   "s": "TransferCommand",
+   "p": "refSource",
+   "o": "Location",
+   "kind": "다형 참조",
+   "fk": [
+    "SourceID"
+   ]
+  },
+  {
+   "s": "TransferCommand",
+   "p": "refDestination",
+   "o": "Location",
+   "kind": "다형 참조",
+   "fk": [
+    "DestinationID"
+   ]
+  },
+  {
+   "s": "TransferStart",
+   "p": "refTransferCommand",
+   "o": "TransferCommand",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "TransferCommandID"
+   ]
+  },
+  {
+   "s": "TransferStart",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "TransferStart",
+   "p": "refCarrier",
+   "o": "Carrier",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CarrierID"
+   ]
+  },
+  {
+   "s": "TransferStart",
+   "p": "refDestination",
+   "o": "Location",
+   "kind": "다형 참조",
+   "fk": [
+    "DestinationID"
+   ]
+  },
+  {
+   "s": "TransferEnd",
+   "p": "refTransferCommand",
+   "o": "TransferCommand",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "TransferCommandID"
+   ]
+  },
+  {
+   "s": "TransferEnd",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "TransferEnd",
+   "p": "refCarrier",
+   "o": "Carrier",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CarrierID"
+   ]
+  },
+  {
+   "s": "TransferEnd",
+   "p": "refDestination",
+   "o": "Location",
+   "kind": "다형 참조",
+   "fk": [
+    "DestinationID"
+   ]
+  },
+  {
+   "s": "InTransitLocation",
+   "p": "refTransferCommand",
+   "o": "TransferCommand",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "TransferCommandID"
+   ]
+  },
+  {
+   "s": "InTransitLocation",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "InTransitLocation",
+   "p": "refCarrier",
+   "o": "Carrier",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CarrierID"
+   ]
+  },
+  {
+   "s": "EquipmentState",
+   "p": "refEquipment",
+   "o": "Equipment",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "EquipmentID"
+   ]
+  },
+  {
+   "s": "EquipmentState",
+   "p": "refLastProcessedLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LastProcessedLotID"
+   ]
+  },
+  {
+   "s": "EquipmentState",
+   "p": "refLastProcessedOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LastProcessedOperationID"
+   ]
+  },
+  {
+   "s": "Alarm",
+   "p": "refEquipment",
+   "o": "Equipment",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "EquipmentID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionPlan",
+   "p": "refVendor",
+   "o": "VendorPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "VendorID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionPlan",
+   "p": "refProject",
+   "o": "ProjectMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProjectID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionPlan",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionPlan",
+   "p": "refPurchaseOrder",
+   "o": "PurchaseOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PurchaseOrderID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionPlan",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionPlan",
+   "p": "refBatch",
+   "o": "Batch",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "BatchID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionApplication",
+   "p": "refVendor",
+   "o": "VendorPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "VendorID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionApplication",
+   "p": "refProject",
+   "o": "ProjectMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProjectID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionApplication",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionApplication",
+   "p": "refPurchaseOrder",
+   "o": "PurchaseOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PurchaseOrderID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionApplication",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionApplication",
+   "p": "refBatch",
+   "o": "Batch",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "BatchID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionApplication",
+   "p": "refInspectionPlan",
+   "o": "SupplierInspectionPlan",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "InspectionPlanID",
+    "InspectionID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionApplication",
+   "p": "refApplicationPersonnel",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ApplicationPersonnelID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionResult",
+   "p": "refVendor",
+   "o": "VendorPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "VendorID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionResult",
+   "p": "refProject",
+   "o": "ProjectMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProjectID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionResult",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionResult",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionResult",
+   "p": "refBatch",
+   "o": "Batch",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "BatchID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionResult",
+   "p": "refInspectionPlan",
+   "o": "SupplierInspectionPlan",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "InspectionPlanID",
+    "InspectionID"
+   ]
+  },
+  {
+   "s": "SupplierInspectionResult",
+   "p": "refInspectionApplication",
+   "o": "SupplierInspectionApplication",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "InspectionApplicationID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionRequest",
+   "p": "refVendor",
+   "o": "VendorPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "VendorID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionRequest",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionRequest",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionRequest",
+   "p": "refBatch",
+   "o": "Batch",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "BatchID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionRequest",
+   "p": "refInspectionApplication",
+   "o": "SupplierInspectionApplication",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "InspectionApplicationID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionRequest",
+   "p": "refCorrectiveActionRequestIssuer",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CorrectiveActionRequestIssuerID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionPlan",
+   "p": "refVendor",
+   "o": "VendorPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "VendorID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionPlan",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionPlan",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionPlan",
+   "p": "refBatch",
+   "o": "Batch",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "BatchID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionPlan",
+   "p": "refCorrectiveActionRequest",
+   "o": "CorrectiveActionRequest",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CorrectiveActionRequestID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionPlan",
+   "p": "refPersonInCharge",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonInChargeID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionResult",
+   "p": "refVendor",
+   "o": "VendorPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "VendorID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionResult",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionResult",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionResult",
+   "p": "refBatch",
+   "o": "Batch",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "BatchID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionResult",
+   "p": "refCorrectiveActionRequest",
+   "o": "CorrectiveActionRequest",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CorrectiveActionRequestID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionResult",
+   "p": "refCorrectiveActionPlan",
+   "o": "CorrectiveActionPlan",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CorrectiveActionPlanID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionResult",
+   "p": "refPersonInCharge",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonInChargeID"
+   ]
+  },
+  {
+   "s": "CorrectiveActionResult",
+   "p": "refCorrectiveActionConfirmor",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CorrectiveActionConfirmorID"
+   ]
+  },
+  {
+   "s": "ProductPacking",
+   "p": "refWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID"
+   ]
+  },
+  {
+   "s": "ProductPacking",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "ProductPacking",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "EquipmentParameter",
+   "p": "refEquipment",
+   "o": "Equipment",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "EquipmentID"
+   ]
+  },
+  {
+   "s": "TraceParameter",
+   "p": "refEquipment",
+   "o": "Equipment",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "EquipmentID"
+   ]
+  },
+  {
+   "s": "TraceParameter",
+   "p": "refParameter",
+   "o": "EquipmentParameter",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ParameterID"
+   ]
+  },
+  {
+   "s": "ProductionPerformance",
+   "p": "refProductionOrder",
+   "o": "ProductionOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProductionOrderID",
+    "ProductionOrderSequence"
+   ]
+  },
+  {
+   "s": "ProductionPerformance",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "ProductionPerformance",
+   "p": "refOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "OperationID"
+   ]
+  },
+  {
+   "s": "ProductionPerformance",
+   "p": "refRoutingLine",
+   "o": "Routing",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "RoutingID",
+    "OperationSequence"
+   ]
+  },
+  {
+   "s": "ProductionPerformance",
+   "p": "refPersonnel",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonnelID"
+   ]
+  },
+  {
+   "s": "ProductionPerformance",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "ProductionPerformance",
+   "p": "refBatch",
+   "o": "Batch",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "BatchID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceItem",
+   "p": "refProductionPerformance",
+   "o": "ProductionPerformance",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProductionPerformanceID",
+    "ProductionPerformanceSequence"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceItem",
+   "p": "refProductionOrder",
+   "o": "ProductionOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProductionOrderID",
+    "ProductionOrderSequence"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceItem",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceItem",
+   "p": "refLine",
+   "o": "Line",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LineID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceItem",
+   "p": "refOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "OperationID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceItem",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceItem",
+   "p": "refReplacementChildItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ReplacementChildItemID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceItem",
+   "p": "refWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceItem",
+   "p": "refWarehouseSection",
+   "o": "WarehouseLocation",
+   "kind": "하위 목록 참조",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID",
+    "WarehouseSection"
+   ]
+  },
+  {
+   "s": "ProductionPerformancePersonnel",
+   "p": "refProductionPerformance",
+   "o": "ProductionPerformance",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProductionPerformanceID",
+    "ProductionPerformanceSequence"
+   ]
+  },
+  {
+   "s": "ProductionPerformancePersonnel",
+   "p": "refProductionOrder",
+   "o": "ProductionOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProductionOrderID",
+    "ProductionOrderSequence"
+   ]
+  },
+  {
+   "s": "ProductionPerformancePersonnel",
+   "p": "refOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "OperationID"
+   ]
+  },
+  {
+   "s": "ProductionPerformancePersonnel",
+   "p": "refPersonnel",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonnelID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceEquipment",
+   "p": "refProductionPerformance",
+   "o": "ProductionPerformance",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProductionPerformanceID",
+    "ProductionPerformanceSequence"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceEquipment",
+   "p": "refProductionOrder",
+   "o": "ProductionOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProductionOrderID",
+    "ProductionOrderSequence"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceEquipment",
+   "p": "refOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "OperationID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceEquipment",
+   "p": "refRoutingLine",
+   "o": "Routing",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "RoutingID",
+    "OperationSequence"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceEquipment",
+   "p": "refPersonnel",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonnelID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceEquipment",
+   "p": "refEquipment",
+   "o": "Equipment",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "EquipmentID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceQuality",
+   "p": "refProductionPerformance",
+   "o": "ProductionPerformance",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProductionPerformanceID",
+    "ProductionPerformanceSequence"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceQuality",
+   "p": "refProductionOrder",
+   "o": "ProductionOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProductionOrderID",
+    "ProductionOrderSequence"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceQuality",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceQuality",
+   "p": "refOperation",
+   "o": "Operation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "OperationID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceQuality",
+   "p": "refRoutingLine",
+   "o": "Routing",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "RoutingID",
+    "OperationSequence"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceQuality",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "ProductionPerformanceQuality",
+   "p": "refBatch",
+   "o": "Batch",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "BatchID"
+   ]
+  },
+  {
+   "s": "Inventory",
+   "p": "refWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID"
+   ]
+  },
+  {
+   "s": "Inventory",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "AvailableInventory",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "StockTransfer",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "StockTransfer",
+   "p": "refWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID"
+   ]
+  },
+  {
+   "s": "StockTransfer",
+   "p": "refReceiptWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ReceiptWarehouseID"
+   ]
+  },
+  {
+   "s": "InventoryCount",
+   "p": "refWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID"
+   ]
+  },
+  {
+   "s": "InventoryCount",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "ProductIncoming",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "ProductIncoming",
+   "p": "refCustomer",
+   "o": "CustomerPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CustomerID"
+   ]
+  },
+  {
+   "s": "ProductIncoming",
+   "p": "refWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID"
+   ]
+  },
+  {
+   "s": "ProductIncoming",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "ProductReleaseRequest",
+   "p": "refLine",
+   "o": "Line",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LineID"
+   ]
+  },
+  {
+   "s": "ProductReleaseRequest",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "ProductReleaseRequest",
+   "p": "refWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID"
+   ]
+  },
+  {
+   "s": "ProductReleaseRequest",
+   "p": "refSalesOrder",
+   "o": "SalesOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "SalesDocumentNumber",
+    "SalesDocumentSequence"
+   ]
+  },
+  {
+   "s": "ProductReleaseRequest",
+   "p": "refCustomer",
+   "o": "CustomerPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CustomerID"
+   ]
+  },
+  {
+   "s": "ProductRelease",
+   "p": "refProductReleaseRequest",
+   "o": "ProductReleaseRequestHeader",
+   "kind": "헤더 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProductReleaseRequestID"
+   ]
+  },
+  {
+   "s": "ProductRelease",
+   "p": "refSalesOrder",
+   "o": "SalesOrder",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "SalesDocumentNumber",
+    "SalesDocumentSequence"
+   ]
+  },
+  {
+   "s": "ProductRelease",
+   "p": "refLine",
+   "o": "Line",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LineID"
+   ]
+  },
+  {
+   "s": "ProductRelease",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "ProductRelease",
+   "p": "refCustomer",
+   "o": "CustomerPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CustomerID"
+   ]
+  },
+  {
+   "s": "ProductRelease",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "ProductRelease",
+   "p": "refWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID"
+   ]
+  },
+  {
+   "s": "Return",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "Return",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
+   ]
+  },
+  {
+   "s": "Return",
+   "p": "refBatch",
+   "o": "Batch",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "BatchID"
+   ]
+  },
+  {
+   "s": "Return",
+   "p": "refWarehouse",
+   "o": "WarehouseLocation",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID"
+   ]
+  },
+  {
+   "s": "Return",
+   "p": "refCustomer",
+   "o": "CustomerPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CustomerID"
+   ]
+  },
+  {
+   "s": "Return",
+   "p": "refVendor",
+   "o": "VendorPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "VendorID"
+   ]
+  },
+  {
+   "s": "ProductTraceParameterOnCustomer",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "ProductTraceParameterOnCustomer",
+   "p": "refCustomerInstalledProduct",
+   "o": "CustomerInstalledProduct",
+   "kind": "표준 외 대상",
+   "fk": [
+    "SerialNumber"
+   ]
+  },
+  {
+   "s": "AfterSalesServiceRequest",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "AfterSalesServiceRequest",
+   "p": "refCustomerInstalledProduct",
+   "o": "CustomerInstalledProduct",
+   "kind": "표준 외 대상",
+   "fk": [
+    "SerialNumber"
+   ]
+  },
+  {
+   "s": "AfterSalesServiceRequestResult",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "AfterSalesServiceRequestResult",
+   "p": "refAfterSalesServiceRequest",
+   "o": "AfterSalesServiceRequest",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "RequestNumber"
+   ]
+  },
+  {
+   "s": "AfterSalesServiceRequestResult",
+   "p": "refCustomerInstalledProduct",
+   "o": "CustomerInstalledProduct",
+   "kind": "표준 외 대상",
+   "fk": [
+    "SerialNumber"
+   ]
+  },
+  {
+   "s": "AfterSalesServiceRequestResult",
+   "p": "refChildItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ChildItemID"
+   ]
+  },
+  {
+   "s": "Routing",
+   "p": "arcon:hasHeader_RoutingHeader",
+   "o": "RoutingHeader",
+   "kind": "헤더-라인",
+   "fk": [
+    "EnterpriseID",
+    "RoutingID"
+   ]
+  },
+  {
+   "s": "BOM",
+   "p": "arcon:hasHeader_BOMHeader",
+   "o": "BOMHeader",
+   "kind": "헤더-라인",
+   "fk": [
+    "EnterpriseID",
+    "BOMID",
+    "BOMRevisionNumber"
+   ]
+  },
+  {
+   "s": "ProductReleaseRequest",
+   "p": "arcon:hasHeader_ProductReleaseRequestHeader",
+   "o": "ProductReleaseRequestHeader",
+   "kind": "헤더-라인",
+   "fk": [
+    "EnterpriseID",
+    "ProductReleaseRequestID"
+   ]
+  }
+ ],
+ "counts": {
+  "classes": 70,
+  "objectProperties": 68,
+  "codeProperties": 90,
+  "datatypeProperties": 321,
+  "links": 231,
+  "codeSchemes": 79,
+  "concepts": 608
+ }
+}
