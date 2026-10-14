@@ -1,3 +1,5 @@
+import os
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -14,7 +16,8 @@ class Settings(BaseSettings):
     dev_auth: bool = True
     dev_default_user: str = "u-jung"
     cors_origins: list[str] = ["http://localhost:5173"]
-    pool_max: int = 10
+    # 서버리스(Vercel)는 인스턴스가 여러 개 뜨므로 인스턴스마다 접속을 적게 연다
+    pool_max: int = 2 if os.environ.get("VERCEL") else 10
     agent_row_limit: int = 200
 
 
