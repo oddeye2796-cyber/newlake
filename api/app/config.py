@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     cors_origins: list[str] = ["http://localhost:5173"]
     # 서버리스(Vercel)는 인스턴스가 여러 개 뜨므로 인스턴스마다 접속을 적게 연다
     pool_max: int = 2 if os.environ.get("VERCEL") else 10
+    # 풀에서 이만큼(초) 논 접속은 버린다. 관리형 DB(Neon)는 몇 분 쉬면 서버 쪽에서 끊으므로 짧게 둔다
+    pool_max_idle: float = 60.0 if os.environ.get("VERCEL") else 600.0
     agent_row_limit: int = 200
     # 데이터 넣기: 올리는 파일 크기·행 수 상한 (Vercel 요청 본문은 4.5MB 까지)
     ingest_max_bytes: int = 4 * 1024 * 1024

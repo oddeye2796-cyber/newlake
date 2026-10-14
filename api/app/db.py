@@ -42,12 +42,17 @@ def _configure(conn: Connection) -> None:
 
 def open_pools() -> None:
     global _app_pool, _agent_pool
+    # 서버리스(Vercel)·관리형 DB(Neon)에서는 함수가 잠든 사이 DB 쪽이 유휴 접속을 끊는다.
+    # 풀이 끊긴 접속을 그대로 내주면 첫 요청이 500 으로 깨지므로, 내주기 전에 살아 있는지 확인하고(check)
+    # 오래 논 접속은 미리 버린다(max_idle). 온프레미스에서는 왕복 한 번이 더 드는 정도다.
+    common = dict(configure=_configure, open=True, check=ConnectionPool.check_connection,
+                  max_idle=settings.pool_max_idle, reconnect_timeout=30.0,
+                  kwargs={"connect_timeout": 10, "keepalives": 1, "keepalives_idle": 30,
+                          "keepalives_interval": 10, "keepalives_count": 3})
     if _app_pool is None:
-        _app_pool = ConnectionPool(settings.database_url, min_size=1, max_size=settings.pool_max,
-                                   configure=_configure, open=True)
+        _app_pool = ConnectionPool(settings.database_url, min_size=1, max_size=settings.pool_max, **common)
     if _agent_pool is None:
-        _agent_pool = ConnectionPool(settings.agent_database_url, min_size=0, max_size=max(2, settings.pool_max // 4),
-                                     configure=_configure, open=True)
+        _agent_pool = ConnectionPool(settings.agent_database_url, min_size=0, max_size=max(2, settings.pool_max // 4), **common)
 
 
 def close_pools() -> None:
