@@ -38,7 +38,9 @@ def test_lineage_and_quality(client):
 def test_access_lists_assignments_for_admin_only(client):
     d = client.get("/api/admin/access", headers=ADMIN).json()
     assert {"u-kim", "u-choi"} <= {a["user_id"] for a in d["assignments"]}
-    assert client.get("/api/admin/audit", headers=ADMIN).json()
+    # 빈 DB 에서도 감사 기록이 하나는 있도록 로트를 먼저 조회한다
+    assert client.get("/api/lots/LOT-2026-0731", headers=ADMIN).status_code == 200
+    assert any(a["object_ref"] == "ksx.lot:LOT-2026-0731" for a in client.get("/api/admin/audit", headers=ADMIN).json())
 
 
 def test_access_request_decision(client):
