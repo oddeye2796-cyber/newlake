@@ -137,30 +137,47 @@ class RunIn(BaseModel):
     dataset_id: str | None = Field(default=None, max_length=150)
 
 
-@router.post("/quality/rules/{rule_id}/run")
-def run_rule(rule_id: str, body: RunIn | None = None, s: Scoped = Depends(admin_scoped)):
-    """검사식을 지금 바로 돌린다. 검사식은 위반 행을 돌려주는 SELECT 한 문장 (열: focus_node, result_path, message — 없으면 첫 열을 focus_node 로).
+def _check_rows(s: Scoped, sql_check: str, table: str | None, inline: bool) -> tuple[list[dict], int | None]:
+    """검사식을 돌려 위반 행과 대상 표 행 수를 돌려준다.
 
-    실행은 lake_agent(읽기 전용·RLS)로 하고, 결과·적합률 기록은 gov.record_quality_run 이 한다.
+    inline=False: lake_agent(읽기 전용·RLS) 연결로 돈다 — 바로 실행 버튼.
+    inline=True: 지금 요청의 트랜잭션 안에서 돈다 — 적재 직후 자동 검증은 아직 커밋 전인 새 행을 봐야 한다.
+      읽기 전용 세이브포인트(SET LOCAL transaction_read_only) 안에서 돌리고 끝나면 되돌려, 검사식이 무엇이든 쓰기는 못 한다.
     """
-    rule = s.conn.execute("SELECT rule_id, label_ko, sql_check, target_dataset_id FROM catalog.quality_rule WHERE rule_id = %s", (rule_id,)).fetchone()
-    if rule is None:
-        raise HTTPException(404, f"규칙 {rule_id} 가 없습니다")
-    if not rule["sql_check"]:
-        raise HTTPException(409, "이 규칙에는 검사식(SQL)이 없어 바로 실행할 수 없습니다. SHACL 셰이프 규칙은 배치 파이프라인이 돌립니다")
-    dataset_id = (body.dataset_id if body and body.dataset_id else None) or rule["target_dataset_id"]
+    if not inline:
+        with agent_transaction(s.user) as ac:
+            rows = ac.execute("SELECT gov.run_agent_query(%s, %s) AS rows", (sql_check, 5000)).fetchone()["rows"]
+            focus = ac.execute(f"SELECT count(*) AS n FROM {table}").fetchone()["n"] if table else None
+        return rows, focus
+    out: dict = {}
+    try:
+        with s.conn.transaction():
+            s.conn.execute("SET LOCAL transaction_read_only = on")
+            s.conn.execute("SET LOCAL statement_timeout = 5000")
+            cur = s.conn.execute(sql_check)
+            out["rows"] = [dict(r) for r in cur.fetchmany(5000)] if cur.description else []
+            out["focus"] = s.conn.execute(f"SELECT count(*) AS n FROM {table}").fetchone()["n"] if table else None
+            raise psycopg.Rollback()
+    except psycopg.Rollback:
+        pass
+    return out["rows"], out["focus"]
+
+
+def run_rule_now(s: Scoped, rule: dict, dataset_id: str | None, inline: bool = False) -> dict:
+    """검사식(SQL)을 지금 돌리고 gov.record_quality_run 으로 기록한다. 바로 실행 버튼과 적재 후 자동 검증이 함께 쓴다.
+
+    rule: {rule_id, label_ko, sql_check, target_dataset_id}. 검사식은 위반 행을 돌려주는 SELECT 한 문장
+    (열: focus_node, result_path, message — 없으면 첫 열을 focus_node 로).
+    """
+    dataset_id = dataset_id or rule["target_dataset_id"]
     ds = None
     if dataset_id:
         ds = s.conn.execute("SELECT dataset_id, location_uri, record_count FROM catalog.dataset WHERE dataset_id = %s", (dataset_id,)).fetchone()
         if ds is None:
             raise HTTPException(404, f"데이터셋 {dataset_id} 가 없습니다")
+    m = _TABLE.match(ds["location_uri"] or "") if ds else None
     try:
-        with agent_transaction(s.user) as ac:
-            rows = ac.execute("SELECT gov.run_agent_query(%s, %s) AS rows", (rule["sql_check"], 5000)).fetchone()["rows"]
-            focus = None
-            m = _TABLE.match(ds["location_uri"] or "") if ds else None
-            if m:
-                focus = ac.execute(f"SELECT count(*) AS n FROM {m.group(1)}").fetchone()["n"]
+        rows, focus = _check_rows(s, rule["sql_check"], m.group(1) if m else None, inline)
     except psycopg.Error as e:
         raise HTTPException(400, f"검사식 실행 실패: {e.diag.message_primary or e}")
     if focus is None:
@@ -171,9 +188,22 @@ def run_rule(rule_id: str, body: RunIn | None = None, s: Scoped = Depends(admin_
         viol.append({"focus_node": str(r.get("focus_node") or first or "?"), "result_path": r.get("result_path"),
                      "message": r.get("message") or rule["label_ko"]})
     out = s.conn.execute("SELECT gov.record_quality_run(%s, %s, %s, %s::jsonb) AS r",
-                         (rule_id, dataset_id, focus, json.dumps(viol, ensure_ascii=False, default=str))).fetchone()["r"]
+                         (rule["rule_id"], dataset_id, focus, json.dumps(viol, ensure_ascii=False, default=str))).fetchone()["r"]
     out["dataset_id"] = dataset_id
+    out["rule_id"] = rule["rule_id"]
+    out["label_ko"] = rule["label_ko"]
     return out
+
+
+@router.post("/quality/rules/{rule_id}/run")
+def run_rule(rule_id: str, body: RunIn | None = None, s: Scoped = Depends(admin_scoped)):
+    """검사식을 지금 바로 돌린다."""
+    rule = s.conn.execute("SELECT rule_id, label_ko, sql_check, target_dataset_id FROM catalog.quality_rule WHERE rule_id = %s", (rule_id,)).fetchone()
+    if rule is None:
+        raise HTTPException(404, f"규칙 {rule_id} 가 없습니다")
+    if not rule["sql_check"]:
+        raise HTTPException(409, "이 규칙에는 검사식(SQL)이 없어 바로 실행할 수 없습니다. SHACL 셰이프 규칙은 배치 파이프라인이 돌립니다")
+    return run_rule_now(s, rule, body.dataset_id if body and body.dataset_id else None)
 
 
 class ViolationIn(BaseModel):

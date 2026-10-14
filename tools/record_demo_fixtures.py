@@ -36,7 +36,9 @@ GETS = ["/api/me", "/api/home", "/api/inbox", "/api/inbox?status=ALL", "/api/acc
 ADMIN_GETS = ["/api/admin/overview", "/api/admin/datasets", "/api/admin/ontology/classes", "/api/admin/lineage",
               "/api/admin/quality", "/api/admin/access", "/api/admin/audit", "/api/admin/audit?limit=100",
               "/api/admin/sources", "/api/admin/users", "/api/admin/scopes", "/api/admin/access-policies", "/api/admin/action-policies",
-              "/api/admin/ontology/actions", "/api/admin/people", "/api/admin/ontology/properties"]
+              "/api/admin/ontology/actions", "/api/admin/people", "/api/admin/ontology/properties",
+              "/api/admin/ontology/extensions", "/api/admin/ontology/proposals?status=PROPOSED", "/api/admin/ontology/proposals?status=ALL",
+              "/api/admin/extension-attributes?table=purchase_order&limit=20"]
 
 out = {"get": {}, "query": {}}
 for u in USERS:
