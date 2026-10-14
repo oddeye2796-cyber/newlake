@@ -31,7 +31,7 @@ function Detail({ id, index }: { id: string; index: Map<string, AdminDatasetRow>
       <header><div><h2>{d.title_ko}</h2><div className="mono muted">{d.dataset_id}</div></div><ZoneChip z={d.zone_id} /></header>
       <dl className="kv" style={{ marginBottom: 12 }}>
         <dt>{t('표현 클래스')}</dt><dd>{cls ? <><Link to={`/admin/ontology/${cls}`}>ksx:{cls}</Link> · {d.class_label}</> : '—'}</dd>
-        <dt>{t('원천')}</dt><dd>{d.source_label ?? d.source_system_id ?? '—'}{d.ingest_mode ? ` · ${d.ingest_mode}` : ''}{d.schedule_cron ? ` · ${d.schedule_cron}` : ''}</dd>
+        <dt>{t('원천 시스템')}</dt><dd>{d.source_label ?? d.source_system_id ?? '—'}{d.ingest_mode ? ` · ${d.ingest_mode}` : ''}{d.schedule_cron ? ` · ${d.schedule_cron}` : ''}</dd>
         <dt>{t('형식')}</dt><dd>{d.format ?? '—'} · {t('레코드')} <span className="num">{num(d.record_count)}</span></dd>
         <dt>{t('위치')}</dt><dd className="mono small">{d.location_uri ?? '—'}</dd>
         <dt>{t('최근 적재')}</dt><dd>{fmtTs(d.last_ingested_at)}</dd>

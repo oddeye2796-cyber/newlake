@@ -5,7 +5,7 @@ import type { AdminOverview } from '../../api';
 import { Pill, State, Tier } from '../../components/ui';
 import { daysLeft, fmtTs, n0, riskPill } from '../../format';
 import { useApi } from '../../useApi';
-import { t } from '../../i18n';
+import { t, getLang } from '../../i18n';
 import { Head, lastName, num, runStatus, zoneColor, zoneName } from './common';
 
 export default function Overview() {
@@ -27,7 +27,7 @@ export default function Overview() {
         <div className="zones">
           {data.zones.map((z) => (
             <div key={z.zone_id} className="zone" style={{ ['--zc' as string]: zoneColor(z.zone_id) }}>
-              <div className="zn">{z.label_ko}</div><div className="zv num">{t('데이터셋 {n}', { n: num(z.datasets) })}</div>
+              <div className="zn">{getLang() === 'ko' ? z.label_ko : zoneName(z.zone_id) ?? z.label_ko}</div><div className="zv num">{t('데이터셋 {n}', { n: num(z.datasets) })}</div>
               <div className="zs">{t('레코드 {n}', { n: z.records == null ? t('집계 없음') : n0(z.records) })}</div><span className="arrow" aria-hidden="true">›</span>
             </div>))}
         </div>

@@ -5,11 +5,11 @@ import { DataTable } from '../../components/ui';
 import { locale, t } from '../../i18n';
 import { Head } from './common';
 
-const SAMPLES = PRESETS.filter((p) => p.sql).map((p) => ({ id: p.id, title: p.question, sql: p.sql as string }));
+const samples = () => PRESETS.filter((p) => p.sql).map((p) => ({ id: p.id, title: p.question, sql: p.sql as string }));
 const extra = () => [{ id: 'kpi-wip', title: t('진행 중 로트 현황 (mart 뷰)'), sql: 'SELECT * FROM mart.v_kpi_wip' }];
 
 export default function Workbench() {
-  const all = [...SAMPLES, ...extra()];
+  const all = [...samples(), ...extra()];
   const [cur, setCur] = useState(all[0].id);
   const [sql, setSql] = useState(all[0].sql);
   const [res, setRes] = useState<QueryResult | null>(null);

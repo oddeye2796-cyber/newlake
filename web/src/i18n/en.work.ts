@@ -2,6 +2,8 @@ import type { Dict } from '.';
 
 // 원문(한국어) → 번역
 const d: Dict = {
+  // DB 의 동작 이름(gov.action) 중 알려진 것
+  '로트 보류': 'Hold lot',
   '주문 {id} 납기가 위험해요 (위험도 {lv})': 'Order {id} is at risk of missing its delivery date (risk {lv})',
   '납기 {date}{left}인 주문에 들어갈 로트 {lot}에서 불량률 {rate}%가 나왔어요.': 'Delivery {date}{left}: Lot {lot}, which goes into this order, came out with a {rate}% defect rate.',
   '{n}일 남음': '{n} days left',
@@ -9,11 +11,11 @@ const d: Dict = {
   '로트 보기': 'View lot',
   '주문 보기': 'View order',
   '원인 보기': 'View cause',
-  '승인을 기다리는 요청이 {n}건 있어요': '{n} requests are waiting for approval',
+  '승인을 기다리는 요청이 {n}건 있어요': 'Requests waiting for approval: {n}',
   '요청함에서 근거를 확인하고 승인하거나 반려할 수 있어요.': 'Check the evidence in Requests, then approve or reject.',
   '요청함 열기': 'Open Requests',
   '설비 {id}에서 기준 이탈이 있었어요 ({param})': 'Equipment {id} went out of spec ({param})',
-  '{ts}부터 {n}회 기준({lsl}~{usl})을 벗어났고, 최대 {max}였어요.': 'Out of range {n} time(s) since {ts} (spec {lsl}~{usl}), peaking at {max}.',
+  '{ts}부터 {n}회 기준({lsl}~{usl})을 벗어났고, 최대 {max}였어요.': 'Out of spec since {ts} (spec {lsl}~{usl}; readings out of range: {n}), peaking at {max}.',
   '그때 진행한 로트: {lots}': 'Lots in progress at the time: {lots}',
   '설비 보기': 'View equipment',
   '홈 · 뉴레이크': 'Home · Newlake',
@@ -29,8 +31,8 @@ const d: Dict = {
   '오늘 요약': 'Today\'s summary',
   '전사': 'All sites',
   '오늘의 공장': 'Today\'s factory',
-  '{name} 님, 오늘 확인할 일이 {n}건 있어요': '{name}, you have {n} things to check today',
-  '오늘 확인할 일이 {n}건 있어요': 'You have {n} things to check today',
+  '{name} 님, 오늘 확인할 일이 {n}건 있어요': '{name}, here’s what to check today ({n})',
+  '오늘 확인할 일이 {n}건 있어요': 'What to check today ({n})',
   '규칙이 잡아낸 위험, 승인을 기다리는 요청, 기준을 벗어난 설비 값을 한곳에 모았어요. 항목을 열면 근거가 된 기록까지 따라가 볼 수 있어요.': 'Risks caught by rules, requests waiting for approval, and out-of-spec equipment values, all in one place. Open an item to follow it back to the records behind it.',
   '위험': 'Risk',
   '승인 대기': 'Pending approval',

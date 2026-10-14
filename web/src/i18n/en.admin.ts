@@ -2,6 +2,7 @@ import type { Dict } from '.';
 
 // 원문(한국어) → 번역
 const d: Dict = {
+  '원천 시스템': 'Source system',
   '질의': 'Query',
   '조회': 'View',
   '승인': 'Approve',

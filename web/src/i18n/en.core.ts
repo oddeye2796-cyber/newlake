@@ -21,7 +21,7 @@ const d: Dict = {
   '기준 정보': 'Master data',
   '낮음': 'Low',
   '높음': 'High',
-  '뉴레이크': 'newlake',
+  '뉴레이크': 'NewLake',
   '다크 모드로': 'Switch to dark mode',
   '데이터 관리': 'Data management',
   '데이터 관리자 (전사)': 'Data admin (company-wide)',
