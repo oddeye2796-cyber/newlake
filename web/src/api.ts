@@ -18,7 +18,7 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   if (import.meta.env.VITE_DEMO === '1') return (await import('./demo/demoApi')).demoCall<T>(currentUser, path, init);
   let res: Response;
   try {
-    res = await fetch(path, { ...init, headers: { 'X-User-Id': currentUser, ...(init?.body ? { 'Content-Type': 'application/json' } : {}) } });
+    res = await fetch(path, { cache: 'no-store', ...init, headers: { 'X-User-Id': currentUser, ...(init?.body ? { 'Content-Type': 'application/json' } : {}) } });
   } catch {
     throw new ApiError(0, t('API 서버에 연결할 수 없어요'));
   }
@@ -101,8 +101,10 @@ export interface BatchRow {
 }
 export interface TargetCol { name: string; label_ko: string | null; type: string; required: boolean; pk: boolean }
 export interface Target { table: string; label_ko: string | null; class_name: string | null; columns: TargetCol[] }
-export interface BatchDetail { batch: BatchRow; columns: string[]; rows: Record<string, unknown>[]; suggested_table: string | null; suggested_map: Record<string, string> }
-export interface StdResult { run_id: string; mapping_id: string | null; target: string; std_dataset_id: string | null; rows_in: number; rows_out: number; rows_rejected: number; errors: { record_seq: number; error: string }[] }
+export interface BatchDetail { batch: BatchRow; columns: string[]; rows: Record<string, unknown>[]; suggested_table: string | null; suggested_map: Record<string, string>;
+  confidence: Record<string, number>; profiles: Record<string, string>; sample_rows: number; dup_keys: number;
+  candidates: { table: string; label_ko: string | null; score: number; pk_ok: boolean; mapped: number }[] }
+export interface StdResult { run_id: string; mapping_id: string | null; target: string; std_dataset_id: string | null; rows_in: number; rows_out: number; rows_rejected: number; errors: { record_seq: number; error: string }[]; refs_created?: Record<string, number> }
 export interface Loaded { batch_id: string; rows: number; columns: string[]; entity?: string }
 
 export const runQuery = (sql: string, question?: string) => post<QueryResult>('/api/agent/query', { sql, question });

@@ -1,4 +1,5 @@
 import io
+from datetime import date
 import uuid
 
 from openpyxl import Workbook
@@ -111,3 +112,47 @@ def test_db_connect_and_import(client):
     assert r.json()["rows"] == 5
     src = {s["source_system_id"]: s for s in client.get("/api/admin/sources", headers=ADMIN).json()}[sid]
     assert src["status"] == "OK" and src["datasets"] == 1
+
+
+def test_scm_source_type(client):
+    sid = "T-" + uuid.uuid4().hex[:8].upper()
+    r = client.post("/api/admin/sources", headers=ADMIN,
+                    json={"source_system_id": sid, "label": "SCM 원천", "system_type": "SCM", "db_kind": "FILE"})
+    assert r.status_code == 200, r.text
+
+
+def test_auto_map_purchase_order_file(client):
+    """현장 발주·입고 엑셀처럼 열 이름이 표준과 다른 파일도 표와 열을 한 번에 제안한다."""
+    sid = _source(client)
+    tag = uuid.uuid4().hex[:6].upper()
+    wb = Workbook()
+    ws = wb.active
+    ws.append(["진행상태", "납품요청일", "발주번호", "구분", "업체명", "품번", "품명", "두께", "폭", "발주수량", "가입고수량", "미입고수량"])
+    ws.append(["입고", date(2026, 10, 1), f"SC{tag}01", "코일류", "(주)두원에스티에스", f"S{tag}1", "STS304", 0.4, 285.0, 1000, 1078, -78])
+    ws.append(["발주", date(2026, 10, 2), f"SC{tag}02", "코일류", "(주)대한", f"S{tag}2", "STS430", 0.5, 300.0, 500, 0, 500])
+    buf = io.BytesIO()
+    wb.save(buf)
+    r = client.post("/api/admin/upload", headers=ADMIN, data={"source_system_id": sid},
+                    files={"file": ("owp_204010_01.xlsx", buf.getvalue(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")})
+    assert r.status_code == 200, r.text
+    bid = r.json()["batch_id"]
+
+    d = client.get(f"/api/admin/batches/{bid}", headers=ADMIN).json()
+    assert d["suggested_table"] == "purchase_order"
+    m, conf = d["suggested_map"], d["confidence"]
+    assert m["발주번호"] == "purchase_order_id" and conf["발주번호"] >= 0.9
+    assert m["품번"] == "item_id" and m["품명"] == "item_name" and m["발주수량"] == "purchase_order_quantity"
+    assert m["납품요청일"] == "expected_delivery_date"
+    assert "업체명" not in m  # 이름을 식별자 열에 넣지 않는다
+    assert d["candidates"][0]["table"] == "purchase_order" and d["candidates"][0]["pk_ok"]
+    assert d["profiles"]["납품요청일"] == "date" and d["profiles"]["발주수량"] == "num"
+
+    # 품번이 품목 마스터에 없으면 거부된다
+    body = {"table": "purchase_order", "column_map": m, "site_id": "HQ", "plant_id": "P1"}
+    res = client.post(f"/api/admin/batches/{bid}/standardize", headers=ADMIN, json=body).json()
+    assert res["rows_out"] == 0 and res["rows_rejected"] == 2
+
+    # 마스터 자동 등록을 켜면 품목을 먼저 만들고 넣는다
+    res = client.post(f"/api/admin/batches/{bid}/standardize", headers=ADMIN, json=body | {"create_refs": True}).json()
+    assert (res["rows_out"], res["rows_rejected"]) == (2, 0), res
+    assert res["refs_created"] == {"ksx.item_master": 2}

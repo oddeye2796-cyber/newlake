@@ -8,7 +8,6 @@ import hashlib
 import io
 import ipaddress
 import json
-import re
 import socket
 from datetime import date, datetime, time
 from decimal import Decimal
@@ -21,13 +20,14 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from psycopg import sql
 from pydantic import BaseModel, Field
 
+from .. import automap
 from ..config import settings
 from ..deps import Scoped
 from .admin import admin_scoped
 
 router = APIRouter(prefix="/api/admin", tags=["admin-ingest"])
 
-SYSTEM_TYPES = ("ERP", "MES", "QMS", "WMS", "PLM", "SCADA", "SECS_GEM", "EDMS", "SENSOR", "FILE")
+SYSTEM_TYPES = ("ERP", "MES", "SCM", "QMS", "WMS", "PLM", "SCADA", "SECS_GEM", "EDMS", "SENSOR", "FILE")
 DB_KINDS = ("POSTGRESQL", "MYSQL", "MSSQL", "ORACLE", "REST", "SFTP", "FILE")
 HIDDEN_TARGET_COLS = {"enterprise_id"}
 
@@ -248,10 +248,6 @@ def batches(s: Scoped = Depends(admin_scoped)):
     return s.conn.execute("SELECT * FROM gov.ingest_batches(100)").fetchall()
 
 
-def _norm(x: str | None) -> str:
-    return re.sub(r"[^0-9a-z가-힣]", "", (x or "").lower())
-
-
 def _targets(s: Scoped) -> dict[str, dict]:
     rows = s.conn.execute(
         "SELECT c.relname AS tbl, a.attname AS col, col_description(c.oid, a.attnum) AS label, a.attnotnull AS required,"
@@ -282,45 +278,44 @@ def targets(s: Scoped = Depends(admin_scoped)):
     return sorted(_targets(s).values(), key=lambda t: (t["label_ko"] is None, t["table"]))
 
 
-def suggest(source_cols: list[str], entity: str | None, targets_: dict[str, dict]) -> tuple[str | None, dict[str, str]]:
-    """열 이름·한글 설명이 같은 것끼리 짝짓고, 가장 많이 맞는 표를 고른다."""
-    best, best_score, best_map = None, 0.0, {}
-    ent = _norm(entity)
-    for name, t in targets_.items():
-        index: dict[str, str] = {}
-        for c in t["columns"]:
-            for key in (_norm(c["name"]), _norm(c["label_ko"])):
-                if key:
-                    index.setdefault(key, c["name"])
-        m: dict[str, str] = {}
-        for sc in source_cols:
-            tc = index.get(_norm(sc))
-            if tc and tc not in m.values():
-                m[sc] = tc
-        score = len(m) + (1.5 if ent and (_norm(name) in ent or (t["label_ko"] and _norm(t["label_ko"]) in ent)) else 0)
-        if score > best_score:
-            best, best_score, best_map = name, score, m
-    return best, best_map
+def _dup_keys(rows: list[dict], m: dict[str, str], table: dict) -> int:
+    """표본에서 기본키 값이 겹치는 행 수 (겹치면 뒤 행이 앞 행을 덮어쓴다)."""
+    pk = [c["name"] for c in table["columns"] if c["pk"] and c["name"] not in ("site_id", "plant_id")]
+    inv = {v: k for k, v in m.items()}
+    if not pk or not all(p in inv for p in pk):
+        return 0
+    keys = [tuple(str(r.get(inv[p])) for p in pk) for r in rows]
+    return len(keys) - len(set(keys))
 
 
 @router.get("/batches/{batch_id}")
 def batch(batch_id: UUID, table: str | None = None, s: Scoped = Depends(admin_scoped)):
+    """배치 미리보기와 자동 대응 제안. 표를 안 정하면 모든 표준 표를 견줘 가장 맞는 표를 고른다."""
     info = s.conn.execute("SELECT * FROM gov.ingest_batches(500) WHERE batch_id = %s", (batch_id,)).fetchone()
     if info is None:
         raise HTTPException(404, "배치가 없거나 볼 수 있는 범위 밖입니다")
-    preview = s.conn.execute("SELECT * FROM gov.ingest_batch_preview(%s, 20)", (batch_id,)).fetchall()
+    sample = [p["payload"] for p in s.conn.execute("SELECT * FROM gov.ingest_batch_preview(%s, 200)", (batch_id,)).fetchall()]
     cols: list[str] = list(info["columns"] or [])
-    for p in preview:
-        for k in p["payload"]:
+    for p in sample:
+        for k in p:
             if k not in cols:
                 cols.append(k)
+    profs = {c: automap.profile([r.get(c) for r in sample]) for c in cols}
     tg = _targets(s)
-    suggested, mapping = suggest(cols, info["source_entity"], tg)
+    ranked = automap.pick(cols, profs, info["source_entity"], tg)
     if table and table in tg:
-        _, mapping = suggest(cols, None, {table: tg[table]})
-        suggested = table
-    return {"batch": info, "columns": cols, "rows": [p["payload"] for p in preview],
-            "suggested_table": suggested, "suggested_map": mapping}
+        m, conf = automap.map_table(cols, profs, tg[table])
+        chosen = table
+    elif ranked:
+        chosen, m, conf = ranked[0]["table"], ranked[0]["map"], ranked[0]["confidence"]
+    else:
+        chosen, m, conf = None, {}, {}
+    return {"batch": info, "columns": cols, "rows": sample[:20],
+            "suggested_table": chosen, "suggested_map": m, "confidence": conf,
+            "profiles": {c: p["kind"] for c, p in profs.items()},
+            "candidates": [{k: x[k] for k in ("table", "label_ko", "score", "pk_ok")} | {"mapped": len(x["map"])}
+                           for x in ranked[:3]],
+            "sample_rows": len(sample), "dup_keys": _dup_keys(sample, m, tg[chosen]) if chosen else 0}
 
 
 class StandardizeIn(BaseModel):
@@ -328,11 +323,12 @@ class StandardizeIn(BaseModel):
     column_map: dict[str, str]
     site_id: str | None = Field(default=None, max_length=50)
     plant_id: str | None = Field(default=None, max_length=50)
+    create_refs: bool = False
 
 
 @router.post("/batches/{batch_id}/standardize")
 def standardize(batch_id: UUID, body: StandardizeIn, s: Scoped = Depends(admin_scoped)):
     return s.conn.execute(
-        "SELECT gov.standardize_batch(%s, %s, %s::jsonb, %s, %s) AS r",
+        "SELECT gov.standardize_batch(%s, %s, %s::jsonb, %s, %s, %s) AS r",
         (batch_id, body.table, json.dumps({k: v for k, v in body.column_map.items() if v}),
-         body.site_id or None, body.plant_id or None)).fetchone()["r"]
+         body.site_id or None, body.plant_id or None, body.create_refs)).fetchone()["r"]

@@ -67,7 +67,7 @@ https://newlake.vercel.app 은 화면과 API 를 Vercel 에 올리고 Neon(무�
 1. **원천 관리**: 원천 시스템을 등록한다(`catalog.source_system` + `catalog.source_connection`). 비밀번호는 저장하지 않는다. 운영에서는 `secret_ref` 에 비밀 저장소 이름을 둔다.
 2. **파일 올리기**: CSV·TSV·엑셀(.xlsx)을 올리면 `raw.ingest_batch`·`raw.landing_record`·`raw.landing_file` 에 원본 그대로 남고, 데이터셋 `raw.<원천>.<엔터티>` 와 필드 목록이 카탈로그에 생긴다. 4MB·2만 행까지.
    **DB에서 가져오기**: PostgreSQL 원천에 읽기 전용으로 붙어 표를 고르고 최대 5,000행을 원천 존으로 가져온다. 다른 DB 는 등록만 되고, 파일로 내보내 올린다.
-3. **열 맞추기**: 열 이름과 KS X 표준 열의 한글 설명을 비교해 넣을 표와 열 대응을 먼저 제안한다. 확인 후 **표준 존에 넣기**를 누르면 `gov.standardize_batch()` 가 행마다 upsert 하고, 타입 오류·참조 무결성 위반·범위 밖 행은 그 행만 거부한다. 매핑(`catalog.mapping`), 작업 기록(`catalog.job_run`), 계보(`catalog.lineage_edge`), 감사 기록이 함께 남는다.
+3. **열 맞추기**: `api/app/automap.py` 가 열 이름(영문 약어·현장 용어 동의어 포함), KS X 표준 열의 한글 설명, 앞 200행 값의 모양(날짜·숫자·코드)을 함께 보고 모든 표준 표를 견줘 넣을 표와 열 대응을 자동으로 고르고, 열마다 신뢰도를 보여 준다. 품목·공급사처럼 참조 마스터에 없는 코드는 선택하면 키만으로 먼저 등록한다. 확인 후 **표준 존에 넣기**를 누르면 `gov.standardize_batch()` 가 행마다 upsert 하고, 타입 오류·참조 무결성 위반·범위 밖 행은 그 행만 거부한다. 매핑(`catalog.mapping`), 작업 기록(`catalog.job_run`), 계보(`catalog.lineage_edge`), 감사 기록이 함께 남는다.
 
 쓰기는 모두 `gov.register_source`·`gov.ingest_records`·`gov.standardize_batch`(SECURITY DEFINER)로만 하고, 함수가 역할과 회사·사업장·공장 범위를 다시 확인한다. 공개 시연(Vercel)에서는 사내망·로컬 주소로 DB 연결을 못 하게 막는다(`LAKE_INGEST_ALLOW_PRIVATE_HOSTS`).
 
