@@ -168,7 +168,7 @@ function FileTab({ sources, onLoaded }: { sources: SourceRow[]; onLoaded: (l: Lo
   };
   return (
     <form className="panel" onSubmit={submit}>
-      <header><h2>{t('파일 올리기')}</h2><span className="small muted">{t('CSV·TSV·엑셀(.xlsx), 4MB·2만 행까지')}</span></header>
+      <header><h2>{t('파일 올리기')}</h2><span className="small muted">{t('CSV·TSV·엑셀(.xlsx·.xls), 4MB·2만 행까지')}</span></header>
       <Steps at={file && src ? 1 : 0} />
       <div className="formrow">
         <SourcePick sources={sources} value={src} onChange={setSrc} />
@@ -177,7 +177,7 @@ function FileTab({ sources, onLoaded }: { sources: SourceRow[]; onLoaded: (l: Lo
       <label className={`drop${file ? ' has' : ''}`}>
         <FileUp aria-hidden="true" />
         <span>{file ? `${file.name} · ${n0(Math.ceil(file.size / 1024))} KB` : t('여기를 눌러 파일을 고르세요')}</span>
-        <input type="file" accept=".csv,.tsv,.txt,.xlsx,.xlsm" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+        <input type="file" accept=".csv,.tsv,.txt,.xlsx,.xlsm,.xls" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
       </label>
       <p className="note">{t('첫 줄은 열 이름이어야 해요. 원본은 원천 존에 그대로 남고, 다음 단계에서 표준 표로 옮겨요.')}</p>
       {err && <div className="banner" role="alert">{err}</div>}

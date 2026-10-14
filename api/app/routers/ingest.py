@@ -202,14 +202,7 @@ def _headers(raw: list[Any]) -> list[str]:
 
 
 def _parse_csv(data: bytes) -> list[dict]:
-    for enc in ("utf-8-sig", "cp949"):
-        try:
-            text = data.decode(enc)
-            break
-        except UnicodeDecodeError:
-            continue
-    else:
-        raise HTTPException(400, "파일 인코딩을 읽지 못했습니다 (UTF-8 또는 CP949 로 저장해 주세요)")
+    text = _decode(data)
     sample = text[:4096]
     try:
         dialect = csv.Sniffer().sniff(sample, delimiters=",\t;|")
@@ -223,23 +216,152 @@ def _parse_csv(data: bytes) -> list[dict]:
     return [{h: (r[i] if i < len(r) else None) for i, h in enumerate(head)} for r in rows[1:]]
 
 
+def _rows_to_records(rows: list[list[Any]]) -> list[dict]:
+    rows = [r for r in rows if any(c not in (None, "") for c in r)]
+    if not rows:
+        raise HTTPException(400, "시트가 비어 있습니다")
+    head = _headers(list(rows[0]))
+    out = [{h: _jsonable(r[i]) if i < len(r) else None for i, h in enumerate(head)} for r in rows[1:]]
+    if not out:
+        raise HTTPException(400, "머리글 아래에 데이터가 없습니다")
+    return out
+
+
 def _parse_xlsx(data: bytes, sheet: str | None) -> list[dict]:
     from openpyxl import load_workbook
 
     try:
         wb = load_workbook(io.BytesIO(data), read_only=True, data_only=True)
-    except Exception:
-        raise HTTPException(400, "엑셀 파일을 열지 못했습니다 (.xlsx 만 됩니다)")
+    except Exception as e:  # noqa: BLE001 - 어떤 이유든 사용자에게 짧게 알린다
+        raise HTTPException(400, f"엑셀(.xlsx) 파일을 열지 못했습니다: {type(e).__name__}: {str(e)[:120]}")
     ws = wb[sheet] if sheet and sheet in wb.sheetnames else wb.worksheets[0]
-    it = (r for r in ws.iter_rows(values_only=True) if any(c not in (None, "") for c in r))
-    first = next(it, None)
-    if first is None:
-        raise HTTPException(400, "시트가 비어 있습니다")
-    head = _headers(list(first))
-    out = [{h: _jsonable(r[i]) if i < len(r) else None for i, h in enumerate(head)} for r in it]
-    if not out:
-        raise HTTPException(400, "머리글 아래에 데이터가 없습니다")
-    return out
+    return _rows_to_records([list(r) for r in ws.iter_rows(values_only=True)])
+
+
+def _parse_xls(data: bytes, sheet: str | None) -> list[dict]:
+    """옛 엑셀(.xls, BIFF). MES·ERP 가 .xlsx 라는 이름으로 내보내는 경우가 많다."""
+    try:
+        import xlrd
+    except ImportError:
+        raise HTTPException(400, "옛 엑셀(.xls) 형식입니다. 엑셀에서 .xlsx 로 다시 저장해 올려 주세요")
+    try:
+        wb = xlrd.open_workbook(file_contents=data)
+    except Exception as e:  # noqa: BLE001
+        raise HTTPException(400, f"엑셀(.xls) 파일을 열지 못했습니다: {type(e).__name__}: {str(e)[:120]}")
+    ws = wb.sheet_by_name(sheet) if sheet and sheet in wb.sheet_names() else wb.sheet_by_index(0)
+    rows: list[list[Any]] = []
+    for i in range(ws.nrows):
+        row = []
+        for c in ws.row(i):
+            if c.ctype == xlrd.XL_CELL_DATE:
+                row.append(datetime(*xlrd.xldate_as_tuple(c.value, wb.datemode)).isoformat())
+            elif c.ctype == xlrd.XL_CELL_NUMBER and float(c.value).is_integer():
+                row.append(int(c.value))
+            elif c.ctype in (xlrd.XL_CELL_EMPTY, xlrd.XL_CELL_BLANK):
+                row.append(None)
+            else:
+                row.append(c.value)
+        rows.append(row)
+    return _rows_to_records(rows)
+
+
+def _parse_html_table(text: str) -> list[dict]:
+    """웹 MES 의 '엑셀로 저장' 은 실제로는 HTML 표인 경우가 많다. 첫 번째 <table> 을 읽는다."""
+    from html.parser import HTMLParser
+
+    class P(HTMLParser):
+        def __init__(self) -> None:
+            super().__init__()
+            self.rows: list[list[Any]] = []
+            self.row: list[Any] | None = None
+            self.cell: list[str] | None = None
+            self.done = False
+
+        def handle_starttag(self, tag, attrs):
+            if self.done:
+                return
+            if tag == "tr":
+                self.row = []
+            elif tag in ("td", "th") and self.row is not None:
+                self.cell = []
+
+        def handle_endtag(self, tag):
+            if self.done:
+                return
+            if tag in ("td", "th") and self.cell is not None and self.row is not None:
+                self.row.append("".join(self.cell).strip() or None)
+                self.cell = None
+            elif tag == "tr" and self.row is not None:
+                self.rows.append(self.row)
+                self.row = None
+            elif tag == "table" and self.rows:
+                self.done = True
+
+        def handle_data(self, d):
+            if self.cell is not None:
+                self.cell.append(d)
+
+    p = P()
+    p.feed(text)
+    if not p.rows:
+        raise HTTPException(400, "HTML 안에 표(<table>)가 없습니다")
+    return _rows_to_records(p.rows)
+
+
+def _parse_spreadsheetml(text: str, sheet: str | None) -> list[dict]:
+    """엑셀 2003 XML 스프레드시트 (<?xml …><Workbook xmlns=urn:schemas-microsoft-com:office:spreadsheet>)."""
+    import xml.etree.ElementTree as ET
+
+    ns = {"ss": "urn:schemas-microsoft-com:office:spreadsheet"}
+    try:
+        root = ET.fromstring(text)
+    except ET.ParseError as e:
+        raise HTTPException(400, f"XML 스프레드시트를 읽지 못했습니다: {str(e)[:120]}")
+    sheets = root.findall("ss:Worksheet", ns)
+    if not sheets:
+        raise HTTPException(400, "XML 안에 Worksheet 가 없습니다")
+    ws = next((w for w in sheets if sheet and w.get(f"{{{ns['ss']}}}Name") == sheet), sheets[0])
+    rows: list[list[Any]] = []
+    for r in ws.iter(f"{{{ns['ss']}}}Row"):
+        row: list[Any] = []
+        for c in r.findall("ss:Cell", ns):
+            idx = c.get(f"{{{ns['ss']}}}Index")
+            if idx:
+                row.extend([None] * (int(idx) - 1 - len(row)))
+            d = c.find("ss:Data", ns)
+            row.append(None if d is None else (d.text or "").strip() or None)
+        rows.append(row)
+    return _rows_to_records(rows)
+
+
+def _decode(data: bytes) -> str:
+    for enc in ("utf-8-sig", "cp949", "utf-16"):
+        try:
+            return data.decode(enc)
+        except UnicodeDecodeError:
+            continue
+    raise HTTPException(400, "파일 인코딩을 읽지 못했습니다 (UTF-8 또는 CP949 로 저장해 주세요)")
+
+
+def _parse_table(data: bytes, name: str, sheet: str | None) -> tuple[list[dict], str]:
+    """확장자가 아니라 내용으로 형식을 가린다. MES·ERP 가 .xlsx 라고 내보내도 실제로는 .xls·HTML·XML 인 경우가 흔하다."""
+    head = data[:8]
+    if head.startswith(b"PK\x03\x04"):
+        return _parse_xlsx(data, sheet), "xlsx"
+    if head.startswith(b"\xd0\xcf\x11\xe0"):
+        return _parse_xls(data, sheet), "xls"
+    probe = data[:2048].lstrip(b"\xef\xbb\xbf \t\r\n")
+    if probe[:1] == b"<" or probe[:2] in (b"\xff\xfe", b"\xfe\xff"):
+        text = _decode(data)
+        lead = text.lstrip()[:400].lower()
+        if "urn:schemas-microsoft-com:office:spreadsheet" in text[:4000]:
+            return _parse_spreadsheetml(text, sheet), "xml"
+        if lead.startswith("<") and ("<table" in text.lower() or lead.startswith("<html") or lead.startswith("<!doctype")):
+            return _parse_html_table(text), "html"
+    ext = PurePath(name).suffix.lower()
+    if ext in (".xlsx", ".xlsm", ".xls"):
+        raise HTTPException(400, "엑셀 파일이 아닌 내용입니다 (압축된 .xlsx 도, 옛 .xls 도, HTML 표도 아니에요). 엑셀에서 다른 이름으로 저장 → .xlsx 로 올려 주세요")
+    return _parse_csv(data), "csv"
 
 
 @router.post("/upload")
@@ -249,13 +371,9 @@ async def upload(file: UploadFile = File(...), source_system_id: str = Form(...)
     if len(data) > settings.ingest_max_bytes:
         raise HTTPException(413, f"파일이 너무 큽니다 (최대 {settings.ingest_max_bytes // (1024 * 1024)}MB)")
     name = PurePath(file.filename or "upload.csv").name[:200]
-    ext = PurePath(name).suffix.lower()
-    if ext in (".xlsx", ".xlsm"):
-        rows, fmt = _parse_xlsx(data, sheet), "xlsx"
-    elif ext in (".csv", ".tsv", ".txt"):
-        rows, fmt = _parse_csv(data), "csv"
-    else:
-        raise HTTPException(400, "CSV·TSV·엑셀(.xlsx) 파일만 올릴 수 있습니다")
+    if PurePath(name).suffix.lower() not in (".xlsx", ".xlsm", ".xls", ".csv", ".tsv", ".txt", ".xml", ".html", ".htm"):
+        raise HTTPException(400, "CSV·TSV·엑셀(.xlsx/.xls) 파일만 올릴 수 있습니다")
+    rows, fmt = _parse_table(data, name, sheet)
     if len(rows) > settings.ingest_max_rows:
         raise HTTPException(413, f"행이 너무 많습니다 (최대 {settings.ingest_max_rows:,}행)")
     ent = (entity or "").strip() or PurePath(name).stem

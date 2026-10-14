@@ -223,7 +223,7 @@ const d: Dict = {
   '데이터 관리': 'データ管理',
   '이 화면을 볼 권한이 없어요': 'この画面を表示する権限がありません',
   // 데이터 넣기
-  "CSV·TSV·엑셀(.xlsx), 4MB·2만 행까지": "CSV・TSV・Excel(.xlsx)、4MB・2万行まで",
+  "CSV·TSV·엑셀(.xlsx·.xls), 4MB·2만 행까지": "CSV・TSV・Excel(.xlsx・.xls)、4MB・2万行まで",
   "DB에서 가져오기": "DBから取り込む",
   "PostgreSQL 직접 연결 · 읽기 전용": "PostgreSQL 直接接続・読み取り専用",
   "{col} 의 표준 열": "{col} の標準列",
