@@ -66,7 +66,7 @@ export function DatasetDeleteButton({ id, zone, onDone }: { id: string; zone: st
   const { toast } = useAuth();
   const { busy, err, run } = useBusy();
   if (zone !== 'RAW') return null;
-  const go = () => { if (!window.confirm(t('데이터셋 {id} 를 카탈로그에서 지울까요? 적재 배치가 남아 있으면 거절돼요.', { id }))) return; run(del(`/api/admin/datasets/${encodeURIComponent(id)}`), () => { toast(t('데이터셋 {id} 를 지웠어요.', { id })); onDone(); }); };
+  const go = () => { if (!window.confirm(t('데이터셋 {id} 를 카탈로그에서 지울까요? 이 데이터셋의 계보·매핑 기록도 함께 지워져요. 적재 배치가 남아 있으면 거절돼요.', { id }))) return; run(del(`/api/admin/datasets/${encodeURIComponent(id)}`), () => { toast(t('데이터셋 {id} 를 지웠어요.', { id })); onDone(); }); };
   return <><button className="btn danger" type="button" disabled={busy || DEMO} onClick={go}><Trash2 aria-hidden="true" /> {t('삭제')}</button>{err && <div className="banner" role="alert">{err}</div>}</>;
 }
 

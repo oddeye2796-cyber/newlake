@@ -456,7 +456,7 @@ const d: Dict = {
   "태그 (쉼표로 구분)": "Tags (comma-separated)",
   "가명처리된 데이터": "Pseudonymized data",
   "제목·설명·민감도·담당은 카탈로그 메타예요. 데이터 자체는 데이터 넣기로 다시 올려 바꿔요.": "Title, description, sensitivity and owners are catalog metadata. The data itself changes by re-uploading in Data ingestion.",
-  "데이터셋 {id} 를 카탈로그에서 지울까요? 적재 배치가 남아 있으면 거절돼요.": "Remove dataset {id} from the catalog? Refused while ingest batches remain.",
+  "데이터셋 {id} 를 카탈로그에서 지울까요? 이 데이터셋의 계보·매핑 기록도 함께 지워져요. 적재 배치가 남아 있으면 거절돼요.": "Remove dataset {id} from the catalog? Its lineage and mapping records are removed too. Refused while ingest batches remain.",
   "데이터셋 {id} 를 지웠어요.": "Deleted dataset {id}.",
   "{f} 매핑을 승인했어요.": "Approved the mapping of {f}.",
   "{f} 매핑을 반려했어요.": "Rejected the mapping of {f}.",
@@ -505,7 +505,7 @@ const d: Dict = {
   "(표준 arcon 속성)": "(standard arcon property)",
   "KS X 9101-1을 OWL로 옮긴 표준 코어예요. 클래스를 고르면 1단계 이웃과 관계를 보여 줍니다. 표준에 없는 개념은 회사 확장(arcon)으로 더해요.": "The standard core: KS X 9101-1 as OWL. Pick a class to see its neighbours and relations. Concepts missing from the standard go in the company extension (arcon).",
   "{id} 표준 존에서 되돌리기": "Roll {id} back from the standard zone",
-  "{name} 배치가 표준 존({tbl})에 넣은 행과 확장 값을 빼고 원천 존 상태로 되돌릴까요? 뒤 배치가 덮어쓴 행은 남아요.": "Remove the rows and extension values batch {name} put into the standard zone ({tbl}) and return it to the raw zone? Rows a later batch overwrote stay.",
+  "{name} 배치가 표준 존({tbl})에 넣은 행과 확장 값을 빼고 원천 존 상태로 되돌릴까요? 이 배치가 덮어쓴 행은 이전 값으로 돌아가고, 뒤 배치가 덮어쓴 행은 남아요.": "Remove the rows and extension values batch {name} put into the standard zone ({tbl}) and return it to the raw zone? Rows this batch overwrote go back to their earlier values; rows a later batch overwrote stay.",
   "{name} 삭제": "Delete {name}",
   "{name} 수정": "Edit {name}",
   "{name} 에 속성 추가": "Add a property to {name}",
@@ -624,5 +624,8 @@ const d: Dict = {
   "빈 버전 삭제": "Delete empty version",
   "빈 버전": "empty version",
   "클래스·속성이 하나도 안 담긴 버전만 지울 수 있어요. 현재 발행본을 지우면 직전 발행본이 다시 현재 버전이 돼요.": "Only a version with no classes or properties can be deleted. Deleting the current release makes the previous release current again.",
+  "표준 존에서 {n}행을 빼고 {m}행을 이전 값으로 되돌렸어요.": "Removed {n} rows from the standard zone and restored {m} rows to their earlier values.",
+  "데이터를 올리고 지우는 일과 적재 기록은 관리자·데이터 엔지니어·스튜어드만 볼 수 있어요. 지금은 등록된 원천만 볼 수 있어요.": "Only admins, data engineers and data stewards can load or delete data and see ingest history. You can view the registered sources.",
+  "원문: {raw}": "Original: {raw}",
 };
 export default d;

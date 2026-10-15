@@ -5,7 +5,8 @@ export const setApiUser = (id: string) => { currentUser = id; };
 
 export class ApiError extends Error {
   status: number;
-  constructor(status: number, message: string) { super(message); this.status = status; }
+  raw?: string;   // 서버가 사람 말로 바꾼 오류의 원문 (질의 작업대·표준 변환)
+  constructor(status: number, message: string, raw?: string) { super(message); this.status = status; this.raw = raw; }
 }
 
 function detailText(d: unknown, status: number): string {
@@ -27,7 +28,8 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   try { body = text ? JSON.parse(text) : null; } catch { /* 본문이 JSON 이 아님 */ }
   if (!res.ok) {
     const d = body && typeof body === 'object' && 'detail' in body ? (body as { detail: unknown }).detail : null;
-    throw new ApiError(res.status, detailText(d, res.status));
+    const raw = body && typeof body === 'object' && 'raw' in body ? String((body as { raw: unknown }).raw) : undefined;
+    throw new ApiError(res.status, detailText(d, res.status), raw);
   }
   return body as T;
 }
@@ -111,7 +113,7 @@ export interface BatchDetail { batch: BatchRow; columns: string[]; rows: Record<
 export interface StdQuality { rule_id: string; label_ko: string; status: 'OK' | 'VIOLATED' | 'ERROR'; conformance_rate?: number | null; violation_count?: number; focus_count?: number; quality_run_id?: string; error?: string }
 export interface StdResult { run_id: string; mapping_id: string | null; target: string; std_dataset_id: string | null; rows_in: number; rows_out: number; rows_rejected: number; errors: { record_seq: number; error: string; raw?: string | null }[]; refs_created?: Record<string, number>;
   extensions?: { rows: number; columns: number; matched?: number } | null; proposals?: number; quality?: StdQuality[] }
-export interface RollbackResult { batch_id: string; table: string; std_dataset_id: string | null; rows: number; extension_rows: number }
+export interface RollbackResult { batch_id: string; table: string; std_dataset_id: string | null; rows: number; extension_rows: number; restored_rows?: number }
 export interface Loaded { batch_id: string; rows: number; columns: string[]; entity?: string }
 
 export const runQuery = (sql: string, question?: string) => post<QueryResult>('/api/agent/query', { sql, question });
