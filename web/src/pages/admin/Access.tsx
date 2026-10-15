@@ -53,7 +53,7 @@ export default function Access() {
   const [action, setAction] = useState('');
   const [seen, setSeen] = useState<string[]>([]);
   const audit = useApi<AuditRow[]>(tab === 'audit' ? `/api/admin/audit?limit=100${action ? `&action=${encodeURIComponent(action)}` : ''}` : null);
-  useEffect(() => { document.title = `${t('권한·감사')} · ${t('뉴레이크')}`; }, []);
+  useEffect(() => { document.title = `${t('권한·감사')} · ${'ARCON'}`; }, []);
   useEffect(() => { if (audit.data) setSeen((s) => [...new Set([...s, ...audit.data!.map((a) => a.action)])].sort()); }, [audit.data]);
   const d = acc.data;
   const pending = d?.requests.filter((r) => r.status === 'REQUESTED').length ?? 0;

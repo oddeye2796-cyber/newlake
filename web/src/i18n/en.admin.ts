@@ -23,7 +23,6 @@ const d: Dict = {
   '메모 (선택)': 'Note (optional)',
   '결정 메모': 'Decision note',
   '권한·감사': 'Access & audit',
-  '뉴레이크': 'NewLake',
   '권한은 회사·사업장·공장 범위와 역할로 정해요. 모든 조회와 조치는 감사 기록으로 남아요.': 'Access is set by company, site, and plant scope plus role. Every view and action is kept in the audit log.',
   '접근 요청': 'Access requests',
   '승인 대기 {n}건': '{n} pending approval',

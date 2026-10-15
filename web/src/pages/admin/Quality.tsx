@@ -21,7 +21,7 @@ export default function Quality() {
   const classes = useApi<AdminClassRow[]>(form ? '/api/admin/ontology/classes' : null);
   const people = useApi<Person[]>(canWrite ? '/api/admin/people' : null);
   const done = (msg: string) => { toast(msg); setForm(null); reload(); };
-  useEffect(() => { document.title = `${t('품질 검증')} · ${t('뉴레이크')}`; }, []);
+  useEffect(() => { document.title = `${t('품질 검증')} · ${'ARCON'}`; }, []);
   const rules = data?.rules ?? [];
   const dims = useMemo(() => {
     const m = new Map<string, { f: number; v: number }>();

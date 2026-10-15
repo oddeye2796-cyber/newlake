@@ -17,7 +17,7 @@ export default function Workbench() {
   const [busy, setBusy] = useState(false);
   const [ms, setMs] = useState<number | null>(null);
   const seq = useRef(0);
-  useEffect(() => { document.title = `${t('질의 작업대')} · ${t('뉴레이크')}`; }, []);
+  useEffect(() => { document.title = `${t('질의 작업대')} · ${'ARCON'}`; }, []);
 
   const run = (e?: FormEvent) => {
     e?.preventDefault();

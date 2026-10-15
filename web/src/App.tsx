@@ -90,7 +90,7 @@ export default function App() {
       <aside className="rail">
         <div className="brand">
           <span className="logo" aria-hidden="true"><Layers /></span>
-          <span className="bt"><b>{t('뉴레이크')}</b><span>{t('온톨로지 데이터레이크')}</span></span>
+          <span className="bt"><b>ARCON</b><span>{t('온톨로지 데이터레이크')}</span></span>
         </div>
         <div className="tenant">
           <span className="tl1"><span>{t('연결된 범위')}</span><span className="ok"><CircleCheck aria-hidden="true" />{t('정상')}</span></span>

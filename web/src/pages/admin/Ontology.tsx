@@ -84,7 +84,7 @@ export default function Ontology() {
   const list = useApi<AdminClassRow[]>('/api/admin/ontology/classes');
   const det = useApi<AdminClassDetail>(name.startsWith('_') ? null : `/api/admin/ontology/classes/${encodeURIComponent(name)}`);
   const [q, setQ] = useState('');
-  useEffect(() => { document.title = `${t('온톨로지')} · ${t('뉴레이크')}`; }, []);
+  useEffect(() => { document.title = `${t('온톨로지')} · ${'ARCON'}`; }, []);
   const labels = useMemo(() => new Map((list.data ?? []).map((c) => [c.local_name, c])), [list.data]);
   const groups = useMemo(() => {
     const needle = q.trim().toLowerCase(), m = new Map<string, AdminClassRow[]>();

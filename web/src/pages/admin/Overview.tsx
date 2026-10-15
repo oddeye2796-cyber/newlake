@@ -15,7 +15,7 @@ export default function Overview() {
   const { data, error, loading, reload } = useApi<AdminOverview>('/api/admin/overview');
   const canRisk = hasRole(me, 'production_manager', 'quality_engineer', 'data_steward'), canPipe = hasRole(me, 'data_engineer');
   const people = useApi<Person[]>(canPipe ? '/api/admin/people' : null);
-  useEffect(() => { document.title = `${t('오늘의 레이크')} · ${t('뉴레이크')}`; }, []);
+  useEffect(() => { document.title = `${t('오늘의 레이크')} · ${'ARCON'}`; }, []);
   const c = data?.counts;
   const tiles: [string, number | undefined, string, string, LucideIcon, string][] = [
     [t('데이터셋'), c?.datasets, '/admin/catalog', t('카탈로그 보기'), Database, 'var(--accent)'],
