@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
-import { runQuery, type QueryResult } from '../../api';
+import { ApiError, runQuery, type QueryResult } from '../../api';
 import { PRESETS } from '../../askPresets';
 import { DataTable } from '../../components/ui';
 import { locale, t } from '../../i18n';
@@ -13,7 +13,7 @@ export default function Workbench() {
   const [cur, setCur] = useState(all[0].id);
   const [sql, setSql] = useState(all[0].sql);
   const [res, setRes] = useState<QueryResult | null>(null);
-  const [err, setErr] = useState<string | null>(null);
+  const [err, setErr] = useState<{ msg: string; raw?: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [ms, setMs] = useState<number | null>(null);
   const seq = useRef(0);
@@ -26,7 +26,7 @@ export default function Workbench() {
     setBusy(true); setErr(null);
     runQuery(sql)
       .then((r) => { if (my === seq.current) { setRes(r); setMs(Math.round(performance.now() - t0)); } })
-      .catch((x: Error) => { if (my === seq.current) { setRes(null); setErr(x.message); setMs(null); } })
+      .catch((x: Error) => { if (my === seq.current) { setRes(null); setErr({ msg: x.message, raw: x instanceof ApiError && x.raw !== x.message ? x.raw : undefined }); setMs(null); } })
       .finally(() => { if (my === seq.current) setBusy(false); });
   };
   const key = (e: KeyboardEvent) => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') run(); };
@@ -49,7 +49,7 @@ export default function Workbench() {
               {res && <span className="small">{t('{n}행', { n: res.row_count.toLocaleString(locale()) })}{res.truncated ? ` ${t('(일부만 표시)')}` : ''}{ms != null ? ` · ${ms}ms` : ''}</span>}
             </div>
           </form>
-          {err && <div className="banner" role="alert">{err}</div>}
+          {err && <div className="banner" role="alert">{err.msg}{err.raw && <div className="small mono" style={{ marginTop: 4, opacity: 0.75 }}>{t('원문: {raw}', { raw: err.raw })}</div>}</div>}
           {res && <div className="wb-res"><DataTable cols={res.rows[0] ? Object.keys(res.rows[0]) : []} rows={res.rows} /></div>}
           <p className="note">{t('SPARQL과 자연어 질의는 아직 연결되지 않았어요. 자연어는 질문하기 화면의 추천 질문을 써 주세요.')}</p>
         </section>

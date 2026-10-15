@@ -145,8 +145,7 @@ def quality(s: Scoped = Depends(admin_scoped)):
         "       r.shape_iri, r.sql_check, r.severity, r.threshold, r.enabled,"
         "       q.dataset_id AS last_dataset_id, q.executed_at AS last_run_at, q.focus_count, q.violation_count, q.conformance_rate"
         "  FROM catalog.quality_rule r LEFT JOIN onto.class cl ON cl.class_iri = r.target_class_iri"
-        "  LEFT JOIN LATERAL (SELECT qr.* FROM catalog.quality_run qr"
-        "                      JOIN catalog.quality_violation v ON v.quality_run_id = qr.quality_run_id AND v.rule_id = r.rule_id"
+        "  LEFT JOIN LATERAL (SELECT qr.* FROM catalog.quality_run qr WHERE qr.rule_id = r.rule_id"   # 위반 0건 실행도 최근 결과로 (V0013)
         "                     ORDER BY qr.executed_at DESC LIMIT 1) q ON TRUE"
         " ORDER BY r.rule_id").fetchall()
     violations = c.execute(

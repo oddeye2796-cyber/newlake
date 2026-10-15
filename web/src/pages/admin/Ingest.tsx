@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { del, get, post, postForm, put, type BatchDetail, type BatchRow, type Loaded, type RollbackResult, type SourceRow, type StdResult, type Target } from '../../api';
 import { useAuth } from '../../auth';
+import { hasRole } from './Steward';
 import { Pill, State } from '../../components/ui';
 import { fmtTs, n0 } from '../../format';
 import { useApi } from '../../useApi';
@@ -259,7 +260,7 @@ function DbTab({ sources, onLoaded, goSources }: { sources: SourceRow[]; onLoade
   );
 }
 
-function SourcesTab({ sources, reload }: { sources: SourceRow[]; reload: () => void }) {
+function SourcesTab({ sources, reload, canWrite }: { sources: SourceRow[]; reload: () => void; canWrite: boolean }) {
   const { toast } = useAuth();
   const blank = { source_system_id: '', label: '', system_type: 'MES', db_kind: 'POSTGRESQL', host: '', port: '5432', database: '', username: '', owner_dept: '' };
   const [f, setF] = useState(blank);
@@ -307,15 +308,15 @@ function SourcesTab({ sources, reload }: { sources: SourceRow[]; reload: () => v
               <td><Pill cls={stc}>{st}</Pill>{s.host && <div className="mono small muted" style={{ overflowWrap: 'anywhere' }}>{s.db_kind?.toLowerCase()}://{s.host}{s.port ? `:${s.port}` : ''}/{s.database_name}</div>}
                 {s.last_error && <div className="small" style={{ color: 'var(--crit)' }}>{s.last_error}</div>}</td>
               <td className="r num">{s.datasets}{s.last_ingested_at && <div className="small muted">{fmtTs(s.last_ingested_at)}</div>}</td>
-              <td className="r" style={{ whiteSpace: 'nowrap' }}>
+              <td className="r" style={{ whiteSpace: 'nowrap' }}>{canWrite && <>
                 <button className="btn icon" type="button" title={t('수정')} aria-label={t('{id} 수정', { id: s.source_system_id })} disabled={DEMO} onClick={() => edit(s)}><Pencil aria-hidden="true" /></button>
                 <button className="btn icon" type="button" title={t('삭제')} aria-label={t('{id} 삭제', { id: s.source_system_id })} disabled={DEMO} onClick={() => remove(s)}><Trash2 aria-hidden="true" /></button>
-              </td></tr>;
+              </>}</td></tr>;
           })}
           {sources.length === 0 && <tr><td colSpan={4} className="muted">{t('등록된 원천이 없어요.')}</td></tr>}
         </tbody></table></div>
       </section>
-      <form className="panel" onSubmit={submit}><header><h2>{editing ? t('원천 수정') : t('새 원천 등록')}</h2>{editing && <span className="small muted mono">{editing}</span>}</header>
+      {canWrite && <form className="panel" onSubmit={submit}><header><h2>{editing ? t('원천 수정') : t('새 원천 등록')}</h2>{editing && <span className="small muted mono">{editing}</span>}</header>
         <div className="formgrid">
           <label className="fld"><span>{t('원천 ID')}</span><input className="input mono" required readOnly={!!editing} pattern="[A-Za-z0-9][A-Za-z0-9_\-]{1,49}" placeholder="MES-B" value={f.source_system_id} onChange={set('source_system_id')} /></label>
           <label className="fld"><span>{t('이름')}</span><input className="input" required placeholder={t('예: 2공장 MES')} value={f.label} onChange={set('label')} /></label>
@@ -333,7 +334,7 @@ function SourcesTab({ sources, reload }: { sources: SourceRow[]; reload: () => v
         {err && <div className="banner" role="alert">{err}</div>}
         <div className="acts" style={{ marginTop: 12 }}><button className="btn primary" type="submit" disabled={busy || DEMO}>{editing ? t('저장') : t('등록')}</button>
           {editing && <button className="btn" type="button" onClick={cancel}>{t('취소')}</button>}</div>
-      </form>
+      </form>}
     </div>
   );
 }
@@ -350,9 +351,9 @@ function HistoryTab({ rows, open, reload }: { rows: BatchRow[]; open: (id: strin
     del<{ records: number }>(`/api/admin/batches/${b.batch_id}`).then((r) => { toast(t('{n}행을 지웠어요.', { n: n0(r.records) })); reload(); }).catch((x: Error) => setErr(x.message));
   };
   const rollback = (b: BatchRow) => {
-    if (!window.confirm(t('{name} 배치가 표준 존({tbl})에 넣은 행과 확장 값을 빼고 원천 존 상태로 되돌릴까요? 뒤 배치가 덮어쓴 행은 남아요.', { name: b.file_name ?? b.source_entity ?? b.batch_id, tbl: b.std_table ?? '' }))) return;
+    if (!window.confirm(t('{name} 배치가 표준 존({tbl})에 넣은 행과 확장 값을 빼고 원천 존 상태로 되돌릴까요? 이 배치가 덮어쓴 행은 이전 값으로 돌아가고, 뒤 배치가 덮어쓴 행은 남아요.', { name: b.file_name ?? b.source_entity ?? b.batch_id, tbl: b.std_table ?? '' }))) return;
     setErr(null);
-    post<RollbackResult>(`/api/admin/batches/${b.batch_id}/rollback`, {}).then((r) => { toast(t('표준 존에서 {n}행을 뺐어요.', { n: n0(r.rows) })); reload(); }).catch((x: Error) => setErr(x.message));
+    post<RollbackResult>(`/api/admin/batches/${b.batch_id}/rollback`, {}).then((r) => { toast(r.restored_rows ? t('표준 존에서 {n}행을 빼고 {m}행을 이전 값으로 되돌렸어요.', { n: n0(r.rows), m: n0(r.restored_rows) }) : t('표준 존에서 {n}행을 뺐어요.', { n: n0(r.rows) })); reload(); }).catch((x: Error) => setErr(x.message));
   };
   return (
     <section className="panel"><header><h2>{t('적재 기록')}</h2><span className="small muted">raw.ingest_batch</span></header>
@@ -377,13 +378,16 @@ function HistoryTab({ rows, open, reload }: { rows: BatchRow[]; open: (id: strin
 }
 
 export default function Ingest() {
+  const { toast, me } = useAuth();
+  const canWrite = !me || hasRole(me, 'data_engineer', 'data_steward');   // 서버 gov.require_ingest_role 과 같은 역할 (내 정보를 읽기 전에는 숨기지 않는다)
+  const tabs = canWrite ? TABS : TABS.filter(([k]) => k === 'sources');   // 적재 기록도 적재 역할만 읽을 수 있다
   const [tab, setTab] = useState<Tab>('file');
   const [batch, setBatch] = useState<string | null>(null);
   const [fresh, setFresh] = useState(false);
   const [rev, setRev] = useState(0);
-  const { toast } = useAuth();
+  useEffect(() => { if (me && !canWrite && tab !== 'sources') { setTab('sources'); setBatch(null); } }, [me, canWrite, tab]);
   const sources = useApi<SourceRow[]>('/api/admin/sources');
-  const batches = useApi<BatchRow[]>(DEMO ? null : '/api/admin/batches');
+  const batches = useApi<BatchRow[]>(DEMO || !canWrite ? null : '/api/admin/batches');
   useEffect(() => { document.title = `${t('데이터 넣기')} · ${t('뉴레이크')}`; }, []);
   const loaded = (l: Loaded) => { setBatch(l.batch_id); setFresh(true); batches.reload(); };
   const open = (id: string) => { setBatch(id); setFresh(false); };
@@ -397,17 +401,18 @@ export default function Ingest() {
       <Head title={t('데이터 넣기')} lede={t('원천을 등록하고 파일이나 DB 표를 원천 존에 올린 뒤, 열을 맞춰 표준(KS X 9101) 표로 옮겨요.')}
         right={<button className="btn" type="button" disabled={refreshing} onClick={refresh}><RefreshCw aria-hidden="true" className={refreshing ? 'spin' : undefined} /> {t('새로 고침')}</button>} />
       {DEMO && <div className="note" role="note">{t('미리보기에서는 데이터를 넣을 수 없어요. 실제 서버(newlake.vercel.app)에서 해 보세요.')}</div>}
+      {me && !canWrite && <div className="note" role="note">{t('데이터를 올리고 지우는 일과 적재 기록은 관리자·데이터 엔지니어·스튜어드만 볼 수 있어요. 지금은 등록된 원천만 볼 수 있어요.')}</div>}
       <div className="tabs" role="tablist">
-        {TABS.map(([k, l]) => <button key={k} role="tab" type="button" aria-selected={tab === k} onClick={() => { setTab(k); if (k !== 'history') setBatch(null); }}>{t(l)}</button>)}
+        {tabs.map(([k, l]) => <button key={k} role="tab" type="button" aria-selected={tab === k} onClick={() => { setTab(k); if (k !== 'history') setBatch(null); }}>{t(l)}</button>)}
       </div>
       <State loading={sources.loading && !sources.data} error={sources.error} />
       {sources.data && <>
         {tab === 'file' && <FileTab sources={sources.data} onLoaded={loaded} />}
         {tab === 'db' && <DbTab sources={sources.data} onLoaded={loaded} goSources={() => setTab('sources')} />}
-        {tab === 'sources' && <SourcesTab sources={sources.data} reload={sources.reload} />}
+        {tab === 'sources' && <SourcesTab sources={sources.data} reload={sources.reload} canWrite={canWrite} />}
         {tab === 'history' && <HistoryTab rows={batches.data ?? []} open={open} reload={() => { batches.reload(); sources.reload(); if (batch) setBatch(null); }} />}
       </>}
-      {batch && <>
+      {batch && canWrite && <>
         {fresh && <p className="small" style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 6 }}><CheckCircle2 aria-hidden="true" style={{ width: 16, color: 'var(--ok)' }} />{t('원천 존에 올렸어요. 이제 표준 표의 열과 맞춰 주세요.')}</p>}
         <MapPanel key={batch} batchId={batch} rev={rev} onDone={() => { batches.reload(); sources.reload(); }} />
       </>}
