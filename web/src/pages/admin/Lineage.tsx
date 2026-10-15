@@ -33,7 +33,7 @@ export default function Lineage() {
   const [sp, setSp] = useSearchParams();
   const { data, error, loading } = useApi<{ edges: LineageEdge[] }>('/api/admin/lineage');
   const ov = useApi<AdminOverview>('/api/admin/overview');
-  useEffect(() => { document.title = `${t('계보')} · ${t('뉴레이크')}`; }, []);
+  useEffect(() => { document.title = `${t('계보')} · ${'ARCON'}`; }, []);
   const edges = useMemo(() => data?.edges ?? [], [data]);
   const nodes = useMemo(() => {
     const m = new Map<string, Node>();

@@ -388,7 +388,7 @@ export default function Ingest() {
   useEffect(() => { if (me && !canWrite && tab !== 'sources') { setTab('sources'); setBatch(null); } }, [me, canWrite, tab]);
   const sources = useApi<SourceRow[]>('/api/admin/sources');
   const batches = useApi<BatchRow[]>(DEMO || !canWrite ? null : '/api/admin/batches');
-  useEffect(() => { document.title = `${t('데이터 넣기')} · ${t('뉴레이크')}`; }, []);
+  useEffect(() => { document.title = `${t('데이터 넣기')} · ${'ARCON'}`; }, []);
   const loaded = (l: Loaded) => { setBatch(l.batch_id); setFresh(true); batches.reload(); };
   const open = (id: string) => { setBatch(id); setFresh(false); };
   const refreshing = sources.loading || batches.loading;

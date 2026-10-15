@@ -66,7 +66,7 @@ export default function Home() {
     return rows.filter((r) => r.perf_date === last).reduce((a, b) => (b.ppm > a.ppm ? b : a));
   }, [ppm.data]);
 
-  useEffect(() => { document.title = t('홈 · 뉴레이크'); }, []);
+  useEffect(() => { document.title = t('홈 · ARCON'); }, []);
   const submit = (e: FormEvent) => { e.preventDefault(); if (q.trim()) nav(`/ask?q=${encodeURIComponent(q.trim())}`); };
   const k = home.data?.kpi;
   const tiles: [string, string, string, LucideIcon, string][] = [

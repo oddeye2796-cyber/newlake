@@ -18,7 +18,7 @@ const d: Dict = {
   '{ts}부터 {n}회 기준({lsl}~{usl})을 벗어났고, 최대 {max}였어요.': 'Out of spec since {ts} (spec {lsl}~{usl}; readings out of range: {n}), peaking at {max}.',
   '그때 진행한 로트: {lots}': 'Lots in progress at the time: {lots}',
   '설비 보기': 'View equipment',
-  '홈 · 뉴레이크': 'Home · Newlake',
+  '홈 · ARCON': 'Home · ARCON',
   '양품률': 'Yield',
   '최근 7일': 'Last 7 days',
   '불량 PPM': 'Defect PPM',

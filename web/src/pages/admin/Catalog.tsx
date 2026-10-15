@@ -112,7 +112,7 @@ export default function Catalog() {
   const [q, setQ] = useState('');
   const [zone, setZone] = useState('ALL');
   const [grp, setGrp] = useState('ALL');
-  useEffect(() => { document.title = `${t('데이터 카탈로그')} · ${t('뉴레이크')}`; }, []);
+  useEffect(() => { document.title = `${t('데이터 카탈로그')} · ${'ARCON'}`; }, []);
   const index = useMemo(() => new Map((list.data ?? []).map((d) => [d.dataset_id, d])), [list.data]);
   const groupOf = useMemo(() => new Map((classes.data ?? []).map((c) => [c.class_iri, c.business_group ?? ''])), [classes.data]);
   const groups = useMemo(() => [...new Set([...groupOf.values()].filter(Boolean))].sort(), [groupOf]);
