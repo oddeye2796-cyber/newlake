@@ -88,6 +88,7 @@ const d: Dict = {
   '생산': 'Produced',
   '불량': 'Defect',
   '집계된 실적이 없어요.': 'No results recorded.',
+  '공정 미기록': 'No operation recorded',
   '진행 중인 로트': 'Lots in progress',
   '상태': 'Status',
   '수량': 'Qty',

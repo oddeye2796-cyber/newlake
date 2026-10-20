@@ -29,8 +29,9 @@ export default function Kpi() {
   const utilSeries = useMemo(() => byDate(util.data || []).map(([d, rs]) => ({ d, v: sum(rs.map((r) => r.time_util_pct)) / rs.length })), [util.data]);
   const opRows = useMemo(() => {
     const m = new Map<string, { produced: number; defect: number }>();
-    (ppm.data || []).forEach((r) => { const c = m.get(r.operation_id) || { produced: 0, defect: 0 }; c.produced += r.produced_qty; c.defect += r.defect_qty; m.set(r.operation_id, c); });
-    return [...m.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([op, c]) => ({ op, ...c, ppm: (c.defect / (c.produced || 1)) * 1e6 }));
+    // 공정이 비어 있는 실적(원천 파일에 공정 열이 없던 행)은 '공정 미기록' 한 줄로 모아 맨 뒤에 둔다
+    (ppm.data || []).forEach((r) => { const op = r.operation_id ?? ''; const c = m.get(op) || { produced: 0, defect: 0 }; c.produced += r.produced_qty; c.defect += r.defect_qty; m.set(op, c); });
+    return [...m.entries()].sort((a, b) => (a[0] === '') !== (b[0] === '') ? (a[0] === '' ? 1 : -1) : a[0].localeCompare(b[0])).map(([op, c]) => ({ op, ...c, ppm: (c.defect / (c.produced || 1)) * 1e6 }));
   }, [ppm.data]);
 
   const last = <T extends { v: number }>(s: T[]) => (s.length ? s[s.length - 1].v : null);
@@ -42,7 +43,7 @@ export default function Kpi() {
     { l: t('납기 준수'), v: pct(otd.data?.otd_pct), d: t('출고 완료 주문 기준'), s: [], c: 'var(--ok)', ref: undefined },
     { l: t('설비 가동률'), v: pct(last(utilSeries)), d: utilSeries.length ? delta(utilSeries, 1, '%p') : t('최근 30일 데이터 없음'), s: utilSeries.map((x) => x.v), c: trend(utilSeries, true), ref: utilSeries.at(-1)?.d },
   ];
-  const orders = [...(otd.data?.orders || [])].sort((a, b) => a.requested_delivery_date.localeCompare(b.requested_delivery_date));
+  const orders = [...(otd.data?.orders || [])].sort((a, b) => (a.requested_delivery_date ?? '9999').localeCompare(b.requested_delivery_date ?? '9999'));
   const riskOrders = new Set((risks.data || []).map((r) => r.sales_order_id));
   const err = yld.error || ppm.error || otd.error || wip.error;
 
@@ -63,7 +64,7 @@ export default function Kpi() {
       <div className="grid g2" style={{ marginTop: 14 }}>
         <section className="panel"><header><h2>{t('공정별')}</h2></header>
           <div className="tablewrap"><table><thead><tr><th>{t('공정')}</th><th className="r">{t('생산')}</th><th className="r">{t('불량')}</th><th className="r">{t('불량 PPM')}</th></tr></thead><tbody>
-            {opRows.map((r) => <tr key={r.op}><td><b>{opName[r.op] ?? r.op}</b><div className="small muted mono">{r.op}</div></td><td className="r num">{n0(r.produced)}</td><td className="r num">{n0(r.defect)}</td><td className="r num">{n0(r.ppm)}</td></tr>)}
+            {opRows.map((r) => <tr key={r.op}><td><b>{r.op ? opName[r.op] ?? r.op : t('공정 미기록')}</b><div className="small muted mono">{r.op || '—'}</div></td><td className="r num">{n0(r.produced)}</td><td className="r num">{n0(r.defect)}</td><td className="r num">{n0(r.ppm)}</td></tr>)}
             {opRows.length === 0 && <tr><td colSpan={4} className="muted">{t('집계된 실적이 없어요.')}</td></tr>}
           </tbody></table></div></section>
         <section className="panel"><header><h2>{t('진행 중인 로트')}</h2></header>
