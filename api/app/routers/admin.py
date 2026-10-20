@@ -85,8 +85,15 @@ def dataset(dataset_id: str, s: Scoped = Depends(admin_scoped)):
     quality = c.execute(
         "SELECT quality_run_id, executed_at, focus_count, violation_count, conformance_rate FROM catalog.quality_run"
         " WHERE dataset_id = %s ORDER BY executed_at DESC LIMIT 10", (dataset_id,)).fetchall()
+    # 이 데이터셋에 돈 규칙마다 최신 실행 하나 — 데이터셋 품질 점수·상태는 이것들을 종합한 값이다 (V0015)
+    quality_rules = c.execute(
+        "SELECT DISTINCT ON (q.rule_id) q.rule_id, r.label_ko, r.dimension, r.severity, r.threshold, r.enabled,"
+        "       q.executed_at, q.focus_count, q.violation_count, q.conformance_rate"
+        "  FROM catalog.quality_run q JOIN catalog.quality_rule r ON r.rule_id = q.rule_id"
+        " WHERE q.dataset_id = %s ORDER BY q.rule_id, q.executed_at DESC", (dataset_id,)).fetchall()
+    quality_rules.sort(key=lambda x: (not x["enabled"], x["conformance_rate"] if x["conformance_rate"] is not None else 101))
     return {"dataset": d, "fields": fields, "upstream": upstream, "downstream": downstream,
-            "mappings": mappings, "quality_runs": quality}
+            "mappings": mappings, "quality_runs": quality, "quality_rules": quality_rules}
 
 
 @router.get("/ontology/classes")
@@ -153,7 +160,9 @@ def quality(s: Scoped = Depends(admin_scoped)):
         "       v.assignee_user_id, q.dataset_id, q.executed_at"
         "  FROM catalog.quality_violation v JOIN catalog.quality_run q ON q.quality_run_id = v.quality_run_id"
         " ORDER BY q.executed_at DESC, v.violation_id LIMIT 200").fetchall()
-    return {"rules": rules, "violations": violations}
+    # 품질 부적합이라 시맨틱 존 반영이 막힌 원천 (gov.semantic_gate 가 파이프라인 시작을 거절한다)
+    blocked = c.execute("SELECT * FROM gov.semantic_blockers()").fetchall()
+    return {"rules": rules, "violations": violations, "semantic_blocked": blocked}
 
 
 @router.get("/access")

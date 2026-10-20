@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus } from 'lucide-react';
-import type { AdminClassRow, AdminDatasetRow, Person, QualityRule, QualityViolation } from '../../api';
+import type { AdminClassRow, AdminDatasetRow, Person, QualityRule, QualityViolation, SemanticBlocker } from '../../api';
 import { useAuth } from '../../auth';
 import { Pill, State } from '../../components/ui';
 import { fmtTs } from '../../format';
@@ -12,7 +12,7 @@ import { DEMO, RuleForm, RuleRowButtons, ViolationActions, dimName, hasRole } fr
 
 export default function Quality() {
   const { me, toast } = useAuth();
-  const { data, error, loading, reload } = useApi<{ rules: QualityRule[]; violations: QualityViolation[] }>('/api/admin/quality');
+  const { data, error, loading, reload } = useApi<{ rules: QualityRule[]; violations: QualityViolation[]; semantic_blocked?: SemanticBlocker[] }>('/api/admin/quality');
   const [rule, setRule] = useState('ALL');
   const [st, setSt] = useState('ALL');
   const canWrite = hasRole(me, 'quality_engineer', 'data_steward');
@@ -33,11 +33,17 @@ export default function Quality() {
   const open = (data?.violations ?? []).filter((v) => v.status === 'OPEN').length;
   return (
     <>
-      <Head title={t('품질 검증')} lede={t('품질 규칙은 SHACL 셰이프로 정의하고, 레이크에 들어오는 배치마다 돌려요. 위반이 있는 배치는 시맨틱 존으로 올라가지 않아요.')}
+      <Head title={t('품질 검증')} lede={t('품질 규칙은 표준 존 표를 검사해요. 데이터를 넣을 때 자동으로 돌고, 바로 실행할 수도 있어요. 기준 적합률에 못 미친(부적합) 데이터셋은 시맨틱 존으로 올리는 파이프라인이 시작되지 않아요.')}
         right={canWrite && <button className="btn primary" type="button" disabled={DEMO} onClick={() => setForm('new')}><Plus aria-hidden="true" /> {t('새 규칙')}</button>} />
       <State loading={loading} error={error} />
       {data && form && <div style={{ marginBottom: 14 }}><RuleForm rule={form === 'new' ? null : form} datasets={datasets.data ?? []} classes={classes.data ?? []} onDone={() => done(t('규칙을 저장했어요.'))} onCancel={() => setForm(null)} /></div>}
       {data && <>
+        {(data.semantic_blocked ?? []).length > 0 && <div className="banner" role="status" style={{ marginBottom: 14 }}>
+          <b>{t('시맨틱 존 반영 보류')}</b> · {t('아래 데이터셋이 품질 부적합이라 시맨틱 존 파이프라인이 시작되지 않아요. 원천 데이터를 고쳐 다시 넣고 규칙을 다시 돌리면 풀려요.')}
+          <ul className="evlist" style={{ marginTop: 6 }}>{(data.semantic_blocked ?? []).map((b) => (
+            <li key={`${b.pipeline_id}/${b.dataset_id}`}><Link to={`/admin/catalog/${encodeURIComponent(b.dataset_id)}`}>{b.dataset_title}</Link> <span className="mono small muted">{b.dataset_id}</span>
+              {b.quality_score != null && <> · {Math.round(b.quality_score * 10) / 10}%</>} → {b.pipeline_label}</li>))}</ul>
+        </div>}
         <div className="grid g4">
           {dims.map(([n, v]) => (
             <div key={n} className="panel kpi"><span className="kl">{t('KS X 9101 {name} 차원', { name: n })}</span><span className="kv num">{v == null ? '—' : `${v}%`}</span>

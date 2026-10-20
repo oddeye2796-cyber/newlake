@@ -163,7 +163,8 @@ export function RuleForm({ rule, datasets, classes, onDone, onCancel }: { rule: 
 export function RuleRowButtons({ r, onEdit, onDone }: { r: QualityRule; onEdit: () => void; onDone: (msg: string) => void }) {
   const { busy, err, run } = useBusy();
   const runNow = () => run(post<QualityRunResult>(`/api/admin/quality/rules/${encodeURIComponent(r.rule_id)}/run`, {}), (x) =>
-    onDone(t('{id} 실행: 대상 {f}건, 위반 {v}건, 적합률 {rate}%', { id: r.rule_id, f: x.focus_count, v: x.violation_count, rate: x.conformance_rate ?? '—' })));
+    onDone(t('{id} 실행: 대상 {f}건, 위반 {v}건, 적합률 {rate}%', { id: r.rule_id, f: x.focus_count, v: x.violation_count, rate: x.conformance_rate == null ? '—' : Math.round(x.conformance_rate * 10) / 10 })
+      + (x.new_violations == null ? '' : ` · ${t('새 위반 {n} · 이어짐 {k} · 자동 해결 {a}', { n: x.new_violations, k: x.carried_violations ?? 0, a: x.auto_resolved ?? 0 })}`)));
   const remove = () => { if (!window.confirm(t('규칙 {id} 를 지울까요? 위반 기록이 있으면 거절돼요.', { id: r.rule_id }))) return; run(del(`/api/admin/quality/rules/${encodeURIComponent(r.rule_id)}`), () => onDone(t('규칙 {id} 를 지웠어요.', { id: r.rule_id }))); };
   return <td className="r" style={{ whiteSpace: 'nowrap' }} onClick={(e) => e.stopPropagation()}>
     {r.sql_check && <button className="btn icon" type="button" title={t('바로 실행')} aria-label={t('{id} 바로 실행', { id: r.rule_id })} disabled={busy || DEMO} onClick={runNow}><Play aria-hidden="true" /></button>}
