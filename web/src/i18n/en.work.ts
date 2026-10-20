@@ -63,7 +63,6 @@ const d: Dict = {
   'SQL 직접 입력': 'Enter SQL directly',
   '실행': 'Run',
   'ksx.* / mart.* 에 대한 SELECT 한 문장만 실행돼요. 권한 밖 데이터는 보이지 않아요.': 'Only a single SELECT statement on ksx.* / mart.* is run. Data outside your permissions is not shown.',
-  '지금 보이는 결과에는 AI 추정이 없어요. 모두 미리 만든 SQL이 데이터를 조회한 값이에요. LLM이 연결되면 질문을 이해하고 문장을 쓰는 데만 쓰고, 숫자는 계속 기록과 규칙으로 계산해요.': 'The results shown here contain no AI estimates. Every value comes from prepared SQL querying the data. Once an LLM is connected, it will only be used to understand questions and write text; numbers will still be computed from records and rules.',
   '전체': 'All',
   '로트': 'Lot',
   '설비': 'Equipment',

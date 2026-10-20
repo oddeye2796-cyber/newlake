@@ -116,7 +116,6 @@ export default function Ask() {
         </section>
         <div style={{ display: 'grid', gap: 14 }}>
           <TierLegend />
-          <p className="note" style={{ margin: 0 }}>{t('지금 보이는 결과에는 AI 추정이 없어요. 모두 미리 만든 SQL이 데이터를 조회한 값이에요. LLM이 연결되면 질문을 이해하고 문장을 쓰는 데만 쓰고, 숫자는 계속 기록과 규칙으로 계산해요.')}</p>
         </div>
       </div>
     </>
