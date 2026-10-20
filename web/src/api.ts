@@ -79,9 +79,9 @@ export interface EquipmentResp {
   trace: { parameter_id: string; event_date_time: string; parameter_value: number; validation_result_code: string }[];
 }
 export interface YieldRow { perf_date: string; item_id: string; produced_qty: number; defect_qty: number; yield_pct: number }
-export interface PpmRow { perf_date: string; operation_id: string; defect_type_code: string | null; defect_qty: number; produced_qty: number; ppm: number }
+export interface PpmRow { perf_date: string; operation_id: string | null; defect_type_code: string | null; defect_qty: number; produced_qty: number; ppm: number }
 export interface UtilRow { equipment_id: string; perf_date: string; run_time: number; setup_time: number; time_util_pct: number; produced_qty: number; defect_qty: number }
-export interface OtdOrder { sales_order_id: string; customer_id: string; item_id: string; requested_delivery_date: string; first_release_date: string | null; fulfilled_date: string | null; released_qty: number; ordered_qty: number; on_time: boolean | null }
+export interface OtdOrder { sales_order_id: string; customer_id: string; item_id: string; requested_delivery_date: string | null; first_release_date: string | null; fulfilled_date: string | null; released_qty: number; ordered_qty: number; on_time: boolean | null }
 export interface Otd { otd_pct: number | null; orders: OtdOrder[] }
 export interface WipRow { current_operation_id: string; lot_state: string; lot_count: number; wip_qty: number; hold_lots: number }
 export interface RiskRow { lot_id: string; production_order_id: string; defect_qty: number; defect_rate_pct: number; sales_order_id: string; customer_id: string; requested_delivery_date: string; risk_level: string }
