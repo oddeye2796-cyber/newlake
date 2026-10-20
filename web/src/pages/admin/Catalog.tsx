@@ -88,7 +88,18 @@ function Detail({ id, index, onDeleted }: { id: string; index: Map<string, Admin
         })()}
       </>)}
       {tab === 'quality' && (!run && d.quality_status === 'UNKNOWN' ? <p className="muted">{t('이 데이터셋에서 아직 품질 검증을 실행하지 않았어요.')}</p> : <>
-        {run ? <>
+        {(data.quality_rules ?? []).length > 0 ? <>
+          <p className="small muted" style={{ marginTop: 0 }}>{t('데이터셋 품질은 아래 규칙들의 최신 실행을 종합한 값이에요. 점수는 가장 낮은 규칙의 적합률, 하나라도 기준에 못 미치면 부적합이에요.')}</p>
+          <div className="tablewrap"><table><thead><tr><th>{t('규칙')}</th><th className="r">{t('적합률')}</th><th className="r">{t('위반')}</th><th>{t('최근 실행')}</th></tr></thead><tbody>
+            {(data.quality_rules ?? []).map((q) => {
+              const below = q.threshold != null && q.conformance_rate != null && q.conformance_rate < q.threshold;
+              return <tr key={q.rule_id} style={q.enabled ? undefined : { opacity: 0.55 }}><td>{q.label_ko}<div className="mono muted small">{q.rule_id}{q.enabled ? '' : ` · ${t('꺼짐')}`}</div></td>
+                <td className="r num">{q.conformance_rate == null ? '—' : `${Math.round(q.conformance_rate * 10) / 10}%`}<div className="small muted">{t('기준 {v}%', { v: q.threshold ?? '—' })}</div></td>
+                <td className="r"><Pill cls={q.violation_count === 0 ? 'p-ok' : below ? 'p-crit' : 'p-warn'}>{num(q.violation_count)}</Pill></td>
+                <td className="small">{fmtTs(q.executed_at)}</td></tr>;
+            })}
+          </tbody></table></div>
+          <div style={{ marginTop: 10 }}><Link className="btn" to="/admin/quality">{t('품질 검증에서 보기')}</Link></div></> : run ? <>
           <dl className="kv"><dt>{t('최근 실행')}</dt><dd>{fmtTs(run.executed_at)}</dd><dt>{t('검사 대상')}</dt><dd className="num">{t('{n}건', { n: num(run.focus_count) })}</dd><dt>{t('위반')}</dt><dd className="num">{t('{n}건', { n: num(run.violation_count) })}</dd>
             <dt>{t('적합률')}</dt><dd className="num">{run.conformance_rate ?? '—'}%</dd></dl>
           {run.conformance_rate != null && <div className="bar" style={{ margin: '10px 0', ['--bc' as string]: run.conformance_rate < 99 ? 'var(--warn)' : 'var(--ok)' }}><i style={{ width: `${run.conformance_rate}%` }} /></div>}

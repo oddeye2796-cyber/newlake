@@ -986,14 +986,9 @@ class Seeder:
                                       "resolved_at": (t + dt.timedelta(days=1)).replace(tzinfo=KST)})
         self.copy("catalog.quality_run", qruns)
         self.copy("catalog.quality_violation", viols)
-        for rid, (found, focus) in today.items():
-            ds = next(r[4] for r in rules if r[0] == rid)
-            if ds is None:
-                continue
-            score = round(100 * (1 - len(found) / focus), 2) if focus else None
-            thr = float(next(r[6] for r in rules if r[0] == rid) or 0)
-            c.execute("UPDATE catalog.dataset SET quality_score = %s, quality_status = %s WHERE dataset_id = %s",
-                      (score, "PASS" if score is None or score >= thr else ("WARN" if score >= thr - 5 else "FAIL"), ds))
+        # 데이터셋 품질은 걸린 규칙들의 최신 실행을 종합한다 (V0015 gov.refresh_dataset_quality: 점수 = 가장 낮은 규칙 적합률)
+        for ds in sorted({r[4] for r in rules if r[0] in today}):
+            c.execute("SELECT gov.refresh_dataset_quality(%s)", (ds,))
 
     # ── 리스크·조치 ──────────────────────────────────────────────────────────
     def risks(self):

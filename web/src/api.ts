@@ -145,6 +145,7 @@ export interface AdminQualityRun { quality_run_id: string; executed_at: string; 
 export interface AdminDatasetDetail {
   dataset: AdminDatasetRow & { description: string | null; schema_version: string | null; schedule_cron: string | null; size_bytes: number | null; pseudonymized: boolean; retention: string | null; owner_user_id: string | null; steward_user_id: string | null; source_label: string | null; system_type: string | null; updated_at: string };
   fields: AdminField[]; upstream: AdminLineageRef[]; downstream: AdminLineageRef[]; mappings: AdminMapping[]; quality_runs: AdminQualityRun[];
+  quality_rules?: AdminDatasetRuleResult[];
 }
 export interface AdminClassRow {
   class_iri: string; local_name: string; label_ko: string; label_en: string | null; business_group: string | null; parent_class_iri: string | null; standard_clause: string | null;
@@ -198,7 +199,13 @@ export interface CatalogDataset { dataset_id: string; title_ko: string; zone_id:
 /* ---------- 스튜어드십 CRUD ---------- */
 export interface Person { user_id: string; display_name: string }
 export interface OntoProperty { property_iri: string; local_name: string; kind: string; label_ko: string | null; range_iri: string | null }
-export interface QualityRunResult { quality_run_id: string; focus_count: number; violation_count: number; conformance_rate: number | null; dataset_id: string | null }
+export interface QualityRunResult { quality_run_id: string; focus_count: number; violation_count: number; conformance_rate: number | null; dataset_id: string | null;
+  new_violations?: number; carried_violations?: number; auto_resolved?: number; waived_skipped?: number }
+/** 데이터셋에 돈 규칙 하나의 최신 실행 (데이터셋 상세 품질 탭) */
+export interface AdminDatasetRuleResult { rule_id: string; label_ko: string; dimension: string | null; severity: string; threshold: number | null; enabled: boolean;
+  executed_at: string; focus_count: number; violation_count: number; conformance_rate: number | null }
+/** 품질 부적합이라 시맨틱 존 반영이 막힌 원천 */
+export interface SemanticBlocker { pipeline_id: string; pipeline_label: string; dataset_id: string; dataset_title: string; quality_score: number | null; quality_status: string }
 
 // 온톨로지 확장 (CRUD 3차)
 export interface ExtClass { class_iri: string; local_name: string; label_ko: string; label_en: string | null; business_group: string | null; parent_class_iri: string | null; parent_label: string | null; is_event: boolean; definition_ko: string | null; version_id: string | null; properties: number; datasets: number }

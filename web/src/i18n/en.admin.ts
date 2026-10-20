@@ -179,7 +179,6 @@ const d: Dict = {
   '입력 {a} · 출력 {b}': 'In {a} · Out {b}',
   '거부 {n}': 'Rejected {n}',
   '품질 검증': 'Quality checks',
-  '품질 규칙은 SHACL 셰이프로 정의하고, 레이크에 들어오는 배치마다 돌려요. 위반이 있는 배치는 시맨틱 존으로 올라가지 않아요.': 'Quality rules are defined as SHACL shapes and run on every batch entering the lake. Batches with violations do not move up to the Semantic zone.',
   'KS X 9101 {name} 차원': 'KS X 9101 {name} dimension',
   '실행된 규칙이 없어요.': 'No rules have run.',
   '규칙': 'Rule',
@@ -626,5 +625,10 @@ const d: Dict = {
   "표준 존에서 {n}행을 빼고 {m}행을 이전 값으로 되돌렸어요.": "Removed {n} rows from the standard zone and restored {m} rows to their earlier values.",
   "데이터를 올리고 지우는 일과 적재 기록은 관리자·데이터 엔지니어·스튜어드만 볼 수 있어요. 지금은 등록된 원천만 볼 수 있어요.": "Only admins, data engineers and data stewards can load or delete data and see ingest history. You can view the registered sources.",
   "원문: {raw}": "Original: {raw}",
+  "데이터셋 품질은 아래 규칙들의 최신 실행을 종합한 값이에요. 점수는 가장 낮은 규칙의 적합률, 하나라도 기준에 못 미치면 부적합이에요.": "Dataset quality combines the latest run of each rule below. The score is the lowest rule pass rate; if any rule is below its threshold, the dataset fails.",
+  "품질 규칙은 표준 존 표를 검사해요. 데이터를 넣을 때 자동으로 돌고, 바로 실행할 수도 있어요. 기준 적합률에 못 미친(부적합) 데이터셋은 시맨틱 존으로 올리는 파이프라인이 시작되지 않아요.": "Quality rules check Standard-zone tables. They run automatically on load, or on demand. Pipelines into the Semantic zone will not start while a source dataset is below its threshold (failed).",
+  "시맨틱 존 반영 보류": "Semantic zone on hold",
+  "아래 데이터셋이 품질 부적합이라 시맨틱 존 파이프라인이 시작되지 않아요. 원천 데이터를 고쳐 다시 넣고 규칙을 다시 돌리면 풀려요.": "These datasets failed quality checks, so the Semantic zone pipeline will not start. Fix the source data, reload it, and re-run the rules to release it.",
+  "새 위반 {n} · 이어짐 {k} · 자동 해결 {a}": "new {n} · carried over {k} · auto-resolved {a}",
 };
 export default d;
