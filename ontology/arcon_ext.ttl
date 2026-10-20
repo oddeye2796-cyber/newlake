@@ -74,7 +74,7 @@ arcon:riskSource a owl:ObjectProperty ; rdfs:domain arcon:RiskEvent .
 arcon:affects a owl:ObjectProperty , owl:TransitiveProperty ; rdfs:label "영향"@ko .
 arcon:riskLevel a owl:DatatypeProperty ; rdfs:range xsd:string .
 arcon:affectedSalesOrder a owl:ObjectProperty ; rdfs:label "영향 받는 수주"@ko ;
-    owl:propertyChainAxiom ( ksx:refLot ksx:refProductionOrder ksx:refSalesOrder ) .
+    owl:propertyChainAxiom ( ksx:refLot ksx:refProductionOrder ksx:refSalesOrderLine ksx:refSalesOrder ) .
 arcon:recommendedAction a owl:ObjectProperty ; rdfs:range arcon:BusinessAction .
 
 arcon:KPI a owl:Class ; rdfs:label "KPI 정의"@ko .
@@ -84,7 +84,7 @@ arcon:OEE a arcon:KPI ; rdfs:label "설비종합효율"@ko ;
     arcon:derivedFromClass ksx:ProductionPerformanceEquipment , ksx:EquipmentState , ksx:ProductionPerformance .
 arcon:ProcessPPM a arcon:KPI ; rdfs:label "공정 불량 PPM"@ko ;
     arcon:derivedFromClass ksx:ProductionPerformanceQuality , ksx:ProductionPerformance .
-arcon:OTD a arcon:KPI ; rdfs:label "납기준수율"@ko ; arcon:derivedFromClass ksx:SalesOrder , ksx:ProductRelease .
+arcon:OTD a arcon:KPI ; rdfs:label "납기준수율"@ko ; arcon:derivedFromClass ksx:SalesOrderLine , ksx:ProductRelease .
 arcon:Yield a arcon:KPI ; rdfs:label "양품율"@ko ; arcon:derivedFromClass ksx:ProductionPerformance .
 arcon:WIP a arcon:KPI ; rdfs:label "재공재고"@ko ; arcon:derivedFromClass ksx:Lot , ksx:StockerInventory .
 

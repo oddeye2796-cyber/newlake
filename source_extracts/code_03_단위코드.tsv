@@ -1,49 +1,49 @@
-No	단위그룹식별자 / (UOMGroupID)	단위그룹명 / (UOMGroupName)	단위코드 / (UOMCode)	단위코드명 / (UOMCodeName)	영문명	UN/CEFACT / Rec 20	그룹 기준단위	기준단위 환산계수	사용여부 / (UseIndicator)	비고	회사 적용 / (Y/N)	회사 코드값	비고(회사)
-1	QTY	수량	EA	낱개	each	EA	Y	1	Y	3.2 약어 EA			
-2	QTY	수량	DZ	타	dozen	DZN		12	Y	3.2 약어 DZ, 1 DZ = 12 EA			
-3	QTY	수량	HD	백	hundred	CEN		100	Y	3.2 약어 HD, 1 HD = 100 EA			
-4	QTY	수량	PR	쌍	pair	PR		2	Y				
-5	QTY	수량	SET	세트	set	SET			Y	구성 수량은 품목별 환산			
-6	QTY	수량	BOX	박스	box	BX			Y	입수량은 품목별 환산			
-7	QTY	수량	ROL	롤	roll	RO			Y	품목별 환산			
-8	QTY	수량	SHT	매	sheet	ST			Y	품목별 환산			
-9	WGT	중량	mg	밀리그램	milligram	MGM		9.9999999999999995E-7	Y				
-10	WGT	중량	g	그램	gram	GRM		1E-3	Y				
-11	WGT	중량	kg	킬로그램	kilogram	KGM	Y	1	Y				
-12	WGT	중량	t	톤	tonne	TNE		1000	Y				
-13	VOL	부피	mL	밀리리터	millilitre	MLT		1E-3	Y				
-14	VOL	부피	L	리터	litre	LTR	Y	1	Y				
-15	VOL	부피	cm3	세제곱센티미터	cubic centimetre	CMQ		1E-3	Y	표준 예시 표기 cm³, 코드값 cm3(UCUM)			
-16	VOL	부피	m3	세제곱미터	cubic metre	MTQ		1000	Y	표준 예시 표기 m³, 코드값 m3(UCUM)			
-17	LEN	길이	mm	밀리미터	millimetre	MMT		1E-3	Y				
-18	LEN	길이	cm	센티미터	centimetre	CMT		0.01	Y				
-19	LEN	길이	m	미터	metre	MTR	Y	1	Y				
-20	LEN	길이	km	킬로미터	kilometre	KMT		1000	Y				
-21	AREA	면적	mm2	제곱밀리미터	square millimetre	MMK		9.9999999999999995E-7	Y				
-22	AREA	면적	cm2	제곱센티미터	square centimetre	CMK		1E-4	Y				
-23	AREA	면적	m2	제곱미터	square metre	MTK	Y	1	Y				
-24	TIME	시간	s	초	second	SEC		2.7777777777777799E-4	Y	투입시간단위코드 등			
-25	TIME	시간	min	분	minute	MIN		1.6666666666666701E-2	Y				
-26	TIME	시간	h	시간	hour	HUR	Y	1	Y				
-27	TIME	시간	d	일	day	DAY		24	Y				
-28	RATE	생산능력	EA/h	시간당 개수	each per hour				Y	라인 생산능력단위코드			
-29	RATE	생산능력	kg/h	시간당 킬로그램	kilogram per hour				Y				
-30	RATE	생산능력	EA/min	분당 개수	each per minute				Y				
-31	RATE	생산능력	EA/d	일당 개수	each per day				Y				
-32	RATE	생산능력	m/min	분당 미터	metre per minute				Y	연속 라인			
-33	TEMP	온도	Cel	섭씨온도	degree Celsius	CEL	Y		Y	°C의 UCUM 표기			
-34	ELEC	전기	mV	밀리볼트	millivolt	2Z			Y				
-35	ELEC	전기	V	볼트	volt	VLT			Y				
-36	ELEC	전기	A	암페어	ampere	AMP			Y	전류			
-37	ELEC	전기	kW	킬로와트	kilowatt	KWT			Y	전력			
-38	ELEC	전기	kWh	킬로와트시	kilowatt hour	KWH			Y	전력량			
-39	PRES	압력	kPa	킬로파스칼	kilopascal	KPA	Y	1	Y				
-40	PRES	압력	MPa	메가파스칼	megapascal	MPA		1000	Y				
-41	PRES	압력	bar	바	bar	BAR		100	Y				
-42	RATIO	비율	PCT	퍼센트	percent	P1			Y				
-43	RATIO	비율	RH	상대습도(%)	relative humidity				Y	표준 예시 표기			
-44	RATIO	비율	PPM	백만분율	parts per million	59			Y				
-45	FREQ	주파수·회전	Hz	헤르츠	hertz	HTZ			Y	진동 주파수			
-46	FREQ	주파수·회전	r/min	분당 회전수	revolutions per minute				Y	스핀들 회전수(rpm)			
-47	VIBV	진동속도	mm/s	초당 밀리미터	millimetre per second				Y	진동 속도(RMS)			
+No	단위그룹식별자 / (UOMGroupID)	단위그룹명 / (UOMGroupName)	단위코드 / (UOMCode)	단위코드명 / (UOMCodeName)	영문명	UN/CEFACT / Rec 20	그룹 기준단위	기준단위 환산계수	사용여부 / (UseIndicator)	출처구분	비고	회사 적용 / (Y/N)	회사 코드값	비고(회사)
+1	QTY	수량	EA	낱개	each	EA	Y	1	Y	표준 예시	3.2 약어 EA
+2	QTY	수량	DZ	타	dozen	DZN		12	Y	표준 예시	3.2 약어 DZ, 1 DZ = 12 EA
+3	QTY	수량	HD	백	hundred	CEN		100	Y	표준 예시	3.2 약어 HD, 1 HD = 100 EA
+4	QTY	수량	PR	쌍	pair	PR		2	Y	보완 제안
+5	QTY	수량	SET	세트	set	SET			Y	표준 예시	구성 수량은 품목별 환산
+6	QTY	수량	BOX	박스	box	BX			Y	표준 예시	입수량은 품목별 환산
+7	QTY	수량	ROL	롤	roll	RO			Y	표준 예시	품목별 환산
+8	QTY	수량	SHT	매	sheet	ST			Y	보완 제안	품목별 환산
+9	WGT	중량	mg	밀리그램	milligram	MGM		1e-06	Y	표준 예시
+10	WGT	중량	g	그램	gram	GRM		0.001	Y	표준 예시
+11	WGT	중량	kg	킬로그램	kilogram	KGM	Y	1	Y	표준 예시
+12	WGT	중량	t	톤	tonne	TNE		1000	Y	표준 예시
+13	VOL	부피	mL	밀리리터	millilitre	MLT		0.001	Y	표준 예시
+14	VOL	부피	L	리터	litre	LTR	Y	1	Y	표준 예시
+15	VOL	부피	cm3	세제곱센티미터	cubic centimetre	CMQ		0.001	Y	표준 예시	표준 예시 표기 cm³, 코드값 cm3(UCUM)
+16	VOL	부피	m3	세제곱미터	cubic metre	MTQ		1000	Y	표준 예시	표준 예시 표기 m³, 코드값 m3(UCUM)
+17	LEN	길이	mm	밀리미터	millimetre	MMT		0.001	Y	표준 예시
+18	LEN	길이	cm	센티미터	centimetre	CMT		0.01	Y	표준 예시
+19	LEN	길이	m	미터	metre	MTR	Y	1	Y	표준 예시
+20	LEN	길이	km	킬로미터	kilometre	KMT		1000	Y	표준 예시
+21	AREA	면적	mm2	제곱밀리미터	square millimetre	MMK		1e-06	Y	보완 제안
+22	AREA	면적	cm2	제곱센티미터	square centimetre	CMK		0.0001	Y	보완 제안
+23	AREA	면적	m2	제곱미터	square metre	MTK	Y	1	Y	보완 제안
+24	TIME	시간	s	초	second	SEC		0.000277777777777778	Y	보완 제안	투입시간단위코드 등
+25	TIME	시간	min	분	minute	MIN		0.0166666666666667	Y	표준 예시
+26	TIME	시간	h	시간	hour	HUR	Y	1	Y	표준 예시
+27	TIME	시간	d	일	day	DAY		24	Y	보완 제안
+28	RATE	생산능력	EA/h	시간당 개수	each per hour				Y	표준 예시	라인 생산능력단위코드
+29	RATE	생산능력	kg/h	시간당 킬로그램	kilogram per hour				Y	표준 예시
+30	RATE	생산능력	EA/min	분당 개수	each per minute				Y	보완 제안
+31	RATE	생산능력	EA/d	일당 개수	each per day				Y	보완 제안
+32	RATE	생산능력	m/min	분당 미터	metre per minute				Y	보완 제안	연속 라인
+33	TEMP	온도	Cel	섭씨온도	degree Celsius	CEL	Y		Y	표준 예시	°C의 UCUM 표기
+34	ELEC	전기	mV	밀리볼트	millivolt	2Z			Y	표준 예시
+35	ELEC	전기	V	볼트	volt	VLT			Y	보완 제안
+36	ELEC	전기	A	암페어	ampere	AMP			Y	보완 제안	전류
+37	ELEC	전기	kW	킬로와트	kilowatt	KWT			Y	보완 제안	전력
+38	ELEC	전기	kWh	킬로와트시	kilowatt hour	KWH			Y	보완 제안	전력량
+39	PRES	압력	kPa	킬로파스칼	kilopascal	KPA	Y	1	Y	표준 예시
+40	PRES	압력	MPa	메가파스칼	megapascal	MPA		1000	Y	보완 제안
+41	PRES	압력	bar	바	bar	BAR		100	Y	보완 제안
+42	RATIO	비율	PCT	퍼센트	percent	P1			Y	표준 예시
+43	RATIO	비율	RH	상대습도(%)	relative humidity				Y	표준 예시	표준 예시 표기
+44	RATIO	비율	PPM	백만분율	parts per million	59			Y	표준 예시
+45	FREQ	주파수·회전	Hz	헤르츠	hertz	HTZ			Y	보완 제안	진동 주파수
+46	FREQ	주파수·회전	r/min	분당 회전수	revolutions per minute				Y	보완 제안	스핀들 회전수(rpm)
+47	VIBV	진동속도	mm/s	초당 밀리미터	millimetre per second				Y	보완 제안	진동 속도(RMS)
 	환산계수: 같은 단위그룹의 기준단위(그룹 기준단위 = Y) 1에 대한 값. 공란은 품목별 환산(품목 단위환산 정보로 관리) 또는 환산 불요. 온도·전기 등 측정 단위는 환산 대상 아님.

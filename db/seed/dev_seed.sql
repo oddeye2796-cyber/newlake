@@ -25,9 +25,9 @@ ON CONFLICT DO NOTHING;
 INSERT INTO sem.risk_event (event_id, event_class_iri, enterprise_id, site_id, plant_id, source_iri, affected_iris, risk_level, detail, derived_by)
 VALUES ('00000000-0000-4000-8000-000000000731', 'https://ontology.impix.co.kr/arcon/OTDRiskEvent', 'ACME', 'HQ', 'P1',
         'https://data.impix.co.kr/ACME/lot/LOT-2026-0731',
-        ARRAY['https://data.impix.co.kr/ACME/salesOrder/SO-5001', 'https://data.impix.co.kr/ACME/customer/C-77'],
+        ARRAY['https://data.impix.co.kr/ACME/salesOrder/SD-5001', 'https://data.impix.co.kr/ACME/customer/C-77'],
         'CRITICAL',
-        jsonb_build_object('lot_id', 'LOT-2026-0731', 'defect_rate_pct', 3.4, 'sales_order_id', 'SO-5001',
+        jsonb_build_object('lot_id', 'LOT-2026-0731', 'defect_rate_pct', 3.4, 'sales_order_id', 'SD-5001',
                            'customer_id', 'C-77', 'requested_delivery_date', current_date + 5,
                            'cause', 'EQ-07 존3 온도 규격 이탈 (262.4℃ > USL 255℃)'),
         'https://ontology.impix.co.kr/arcon/rules/otd-risk')
@@ -40,7 +40,7 @@ VALUES ('00000000-0000-4000-8000-0000000007a1', 'otd-risk', '00000000-0000-4000-
         'https://ontology.impix.co.kr/arcon/HoldLot', 'https://data.impix.co.kr/ACME/lot/LOT-2026-0731',
         'Change', 'Lot', 'MES-A', 'agent:otd-risk',
         jsonb_build_object('rule', 'otd-risk', 'facts', jsonb_build_array(
-            jsonb_build_object('tier', 'ASSERTED', 'text', 'LOT-2026-0731 → SO-5001 (한빛전자) 납기 D+5'),
+            jsonb_build_object('tier', 'ASSERTED', 'text', 'LOT-2026-0731 → SD-5001 (한빛전자) 납기 D+5'),
             jsonb_build_object('tier', 'OBSERVED', 'text', 'EQ-07 존3 온도 262.4℃ (USL 255℃), 10:15·10:20 연속 이탈'),
             jsonb_build_object('tier', 'INFERRED', 'text', '불량률 3.4% > 기준 3% → 납기 리스크 CRITICAL'))))
 ON CONFLICT (execution_id) DO NOTHING;

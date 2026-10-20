@@ -77,7 +77,7 @@ bid = up["batch_id"]
 st, pv = call("GET", f"/api/admin/batches/{bid}")
 must(st, pv, "미리보기")
 cmap = pv["suggested_map"]
-table = pv.get("suggested_table") or "purchase_order"
+table = pv.get("suggested_table") or "purchase_order_line"
 st, res = call("POST", f"/api/admin/batches/{bid}/standardize",
                {"table": table, "column_map": cmap, "site_id": "HQ", "plant_id": "P1",
                 "create_refs": True, "keep_extras": True, "auto_quality": True})
@@ -86,7 +86,7 @@ must(st, res, "표준 존 변환")
 # 4) 확장 제안: 두께 승인, 메모 반려, 나머지는 대기열에 남겨 둔다
 st, props = call("GET", "/api/admin/ontology/proposals?status=PROPOSED")
 must(st, props, "제안 목록")
-mine = {p["column_name"]: p for p in props if p.get("batch_id") == bid or p.get("std_table") == "purchase_order"}
+mine = {p["column_name"]: p for p in props if p.get("batch_id") == bid or p.get("std_table") == table}
 decided = {}
 if "두께" in mine:
     st, d = call("POST", f"/api/admin/ontology/proposals/{mine['두께']['proposal_id']}/decide",
@@ -98,7 +98,7 @@ if "메모" in mine:
     decided["메모"] = (st, "rejected" if st == 200 else d)
 
 # 5) 확인
-st, ea = call("GET", "/api/admin/extension-attributes?table=purchase_order&limit=5")
+st, ea = call("GET", f"/api/admin/extension-attributes?table={table}&limit=5")
 must(st, ea, "확장 속성")
 st, left = call("GET", "/api/admin/ontology/proposals?status=PROPOSED")
 
@@ -106,7 +106,7 @@ st, left = call("GET", "/api/admin/ontology/proposals?status=PROPOSED")
 FIX = pathlib.Path(__file__).resolve().parent.parent / "api" / "tests" / "fixtures"
 samples = {}
 for src_id, label, typ, fname, want in (("MES-DEMO", "MES 시연 파일", "MES", "mes_treegrid_export.xlsx", "production_performance"),
-                                        (sid, None, None, "scm_po_export.xlsx", "purchase_order")):
+                                        (sid, None, None, "scm_po_export.xlsx", "purchase_order_line")):
     if label:
         st, d = call("POST", "/api/admin/sources", {"source_system_id": src_id, "label": label, "system_type": typ, "db_kind": "FILE"})
         if st not in (200, 409):

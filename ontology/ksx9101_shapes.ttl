@@ -166,8 +166,8 @@ ksx:WorkCalendarShape a sh:NodeShape ;
         [ sh:path ksx:dayOfYear ; sh:datatype xsd:integer ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:scheduleType ; sh:class skos:Concept ; sh:maxCount 1 ; ] .
 
-ksx:UOMGroupShape a sh:NodeShape ;
-    sh:targetClass ksx:UOMGroup ;
+ksx:UOMGroupHeaderShape a sh:NodeShape ;
+    sh:targetClass ksx:UOMGroupHeader ;
     sh:property
         [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
         [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
@@ -178,10 +178,23 @@ ksx:UOMGroupShape a sh:NodeShape ;
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:uomGroupId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] UOMGroupID NOT NULL" ; ] ,
-        [ sh:path ksx:uomGroupName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:uomGroupName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] .
+
+ksx:UOMGroupLineShape a sh:NodeShape ;
+    sh:targetClass ksx:UOMGroupLine ;
+    sh:property
+        [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refPlant ; sh:class ksx:Plant ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] PlantID 는 필수(7.3)" ] ,
+        [ sh:path ksx:createdBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:modifiedBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:uomCode ; sh:class skos:Concept ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] UOMCode NOT NULL" ; ] ,
         [ sh:path ksx:uomCodeName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:useIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] .
+        [ sh:path ksx:useIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:refUOMGroup ; sh:class ksx:UOMGroupHeader ; sh:message "[KSX9101/관계] EnterpriseID,UOMGroupID → ksx:UOMGroupHeader" ] .
 
 ksx:ItemMasterShape a sh:NodeShape ;
     sh:targetClass ksx:ItemMaster ;
@@ -231,12 +244,12 @@ ksx:ItemMasterShape a sh:NodeShape ;
         [ sh:path ksx:outgoingInspectionIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:refMainCustomer ; sh:class ksx:CustomerPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,MainCustomerID → ksx:CustomerPartyMaster" ] ,
         [ sh:path ksx:refMainVendor ; sh:class ksx:VendorPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,MainVendorID → ksx:VendorPartyMaster" ] ,
-        [ sh:path ksx:refReceiptWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,ReceiptWarehouseID → ksx:WarehouseLocation" ] ,
-        [ sh:path ksx:refIssueWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,IssueWarehouseID → ksx:WarehouseLocation" ] ,
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,ReceiptWarehouseID → ksx:WarehouseLocationHeader" ] ,
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,IssueWarehouseID → ksx:WarehouseLocationHeader" ] ,
         [ sh:path ksx:refReplacementItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ReplacementItemID → ksx:ItemMaster" ] .
 
-ksx:BOMShape a sh:NodeShape ;
-    sh:targetClass ksx:BOM ;
+ksx:BOMHeaderShape a sh:NodeShape ;
+    sh:targetClass ksx:BOMHeader ;
     sh:property
         [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
         [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
@@ -247,23 +260,15 @@ ksx:BOMShape a sh:NodeShape ;
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:bomid ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] BOMID NOT NULL" ; ] ,
+        [ sh:path ksx:bomRevisionNumber ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] BOMRevisionNumber NOT NULL" ; ] ,
         [ sh:path ksx:bomType ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:bomQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:childItemUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:actualRequirementQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:bomRevisionNumber ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] BOMRevisionNumber NOT NULL" ; ] ,
-        [ sh:path ksx:validStartDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:validEndDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:operationSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:backFlushedIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
-        [ sh:path ksx:refChildItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ChildItemID → ksx:ItemMaster" ] ,
-        [ sh:path ksx:refRoutingLine ; sh:class ksx:Routing ; sh:message "[KSX9101/관계] EnterpriseID,RoutingID,OperationSequence → ksx:Routing" ] ,
-        [ sh:path arcon:hasHeader_BOMHeader ; sh:class arcon:BOMHeader ; sh:message "[KSX9101/관계] EnterpriseID,BOMID,BOMRevisionNumber → arcon:BOMHeader" ] .
+        [ sh:path ksx:refRouting ; sh:class ksx:RoutingHeader ; sh:message "[KSX9101/관계] EnterpriseID,RoutingID → ksx:RoutingHeader" ] .
 
-arcon:BOMHeaderShape a sh:NodeShape ;
-    sh:targetClass arcon:BOMHeader ;
+ksx:BOMLineShape a sh:NodeShape ;
+    sh:targetClass ksx:BOMLine ;
     sh:property
         [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
         [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
@@ -273,8 +278,15 @@ arcon:BOMHeaderShape a sh:NodeShape ;
         [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:bomid ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] BOMID NOT NULL" ; ] ,
-        [ sh:path ksx:bomRevisionNumber ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] BOMRevisionNumber NOT NULL" ; ] .
+        [ sh:path ksx:bomRevisionNumber ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] BOMRevisionNumber NOT NULL" ; ] ,
+        [ sh:path ksx:bomLineSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] BOMLineSequence NOT NULL" ; ] ,
+        [ sh:path ksx:childItemUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:actualRequirementQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:backFlushedIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:validStartDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:validEndDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:refBOM ; sh:class ksx:BOMHeader ; sh:message "[KSX9101/관계] EnterpriseID,BOMID,BOMRevisionNumber → ksx:BOMHeader" ] ,
+        [ sh:path ksx:refChildItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ChildItemID → ksx:ItemMaster" ] .
 
 ksx:LotShape a sh:NodeShape ;
     sh:targetClass ksx:Lot ;
@@ -314,8 +326,8 @@ ksx:LotShape a sh:NodeShape ;
         [ sh:path ksx:refNextOperation ; sh:class ksx:Operation ; sh:message "[KSX9101/관계] EnterpriseID,NextOperationID → ksx:Operation" ] ,
         [ sh:path ksx:refPersonnel ; sh:class ksx:Personnel ; sh:message "[KSX9101/관계] EnterpriseID,PersonnelID → ksx:Personnel" ] .
 
-ksx:RoutingShape a sh:NodeShape ;
-    sh:targetClass ksx:Routing ;
+ksx:RoutingHeaderShape a sh:NodeShape ;
+    sh:targetClass ksx:RoutingHeader ;
     sh:property
         [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
         [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
@@ -327,18 +339,11 @@ ksx:RoutingShape a sh:NodeShape ;
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:routingId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] RoutingID NOT NULL" ; ] ,
         [ sh:path ksx:routingName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:operationSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] OperationSequence NOT NULL" ; ] ,
-        [ sh:path ksx:lastOperationIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:useIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:setupTime ; sh:datatype xsd:duration ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:runTime ; sh:datatype xsd:duration ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:moveTime ; sh:datatype xsd:duration ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
-        [ sh:path ksx:refOperation ; sh:class ksx:Operation ; sh:message "[KSX9101/관계] EnterpriseID,OperationID → ksx:Operation" ] ,
-        [ sh:path arcon:hasHeader_RoutingHeader ; sh:class arcon:RoutingHeader ; sh:message "[KSX9101/관계] EnterpriseID,RoutingID → arcon:RoutingHeader" ] .
+        [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] .
 
-arcon:RoutingHeaderShape a sh:NodeShape ;
-    sh:targetClass arcon:RoutingHeader ;
+ksx:RoutingLineShape a sh:NodeShape ;
+    sh:targetClass ksx:RoutingLine ;
     sh:property
         [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
         [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
@@ -348,7 +353,13 @@ arcon:RoutingHeaderShape a sh:NodeShape ;
         [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:routingId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] RoutingID NOT NULL" ; ] .
+        [ sh:path ksx:operationSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] OperationSequence NOT NULL" ; ] ,
+        [ sh:path ksx:lastOperationIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:setupTime ; sh:datatype xsd:duration ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:runTime ; sh:datatype xsd:duration ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:moveTime ; sh:datatype xsd:duration ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:refRouting ; sh:class ksx:RoutingHeader ; sh:message "[KSX9101/관계] EnterpriseID,RoutingID → ksx:RoutingHeader" ] ,
+        [ sh:path ksx:refOperation ; sh:class ksx:Operation ; sh:message "[KSX9101/관계] EnterpriseID,OperationID → ksx:Operation" ] .
 
 ksx:OperationShape a sh:NodeShape ;
     sh:targetClass ksx:Operation ;
@@ -456,8 +467,8 @@ ksx:StockerInventoryShape a sh:NodeShape ;
         [ sh:path ksx:refCarrier ; sh:class ksx:Carrier ; sh:message "[KSX9101/관계] EnterpriseID,CarrierID → ksx:Carrier" ] ,
         [ sh:path ksx:refAlternateStocker ; sh:class ksx:StockerInventory ; sh:message "[KSX9101/관계] EnterpriseID,AlternateStockerID → ksx:StockerInventory" ] .
 
-ksx:WarehouseLocationShape a sh:NodeShape ;
-    sh:targetClass ksx:WarehouseLocation ;
+ksx:WarehouseLocationHeaderShape a sh:NodeShape ;
+    sh:targetClass ksx:WarehouseLocationHeader ;
     sh:property
         [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
         [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
@@ -471,8 +482,22 @@ ksx:WarehouseLocationShape a sh:NodeShape ;
         [ sh:path ksx:warehouseName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:warehouseType ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:useIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:negativeInventoryIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:warehouseSectionList ; sh:datatype xsd:string ; sh:maxCount 1 ; ] .
+        [ sh:path ksx:negativeInventoryIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] .
+
+ksx:WarehouseLocationLineShape a sh:NodeShape ;
+    sh:targetClass ksx:WarehouseLocationLine ;
+    sh:property
+        [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refPlant ; sh:class ksx:Plant ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] PlantID 는 필수(7.3)" ] ,
+        [ sh:path ksx:createdBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:modifiedBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:warehouseSection ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] WarehouseSection NOT NULL" ; ] ,
+        [ sh:path ksx:warehouseSectionName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocationHeader" ] .
 
 ksx:BatchShape a sh:NodeShape ;
     sh:targetClass ksx:Batch ;
@@ -511,7 +536,7 @@ ksx:BatchShape a sh:NodeShape ;
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] ,
         [ sh:path ksx:refProductionOrder ; sh:class ksx:ProductionOrder ; sh:message "[KSX9101/관계] EnterpriseID,ProductionOrderID,ProductionOrderSequence → ksx:ProductionOrder" ] ,
-        [ sh:path ksx:refBOM ; sh:class arcon:BOMHeader ; sh:message "[KSX9101/관계] EnterpriseID,BOMID,BOMRevisionNumber → arcon:BOMHeader" ] ,
+        [ sh:path ksx:refBOM ; sh:class ksx:BOMHeader ; sh:message "[KSX9101/관계] EnterpriseID,BOMID,BOMRevisionNumber → ksx:BOMHeader" ] ,
         [ sh:path ksx:refOperation ; sh:class ksx:Operation ; sh:message "[KSX9101/관계] EnterpriseID,OperationID → ksx:Operation" ] ,
         [ sh:path ksx:refEquipment ; sh:class ksx:Equipment ; sh:message "[KSX9101/관계] EnterpriseID,EquipmentID → ksx:Equipment" ] ,
         [ sh:path ksx:refPersonnel ; sh:class ksx:Personnel ; sh:message "[KSX9101/관계] EnterpriseID,PersonnelID → ksx:Personnel" ] .
@@ -545,8 +570,8 @@ ksx:LineShape a sh:NodeShape ;
         [ sh:path ksx:refDepartmentInCharge ; sh:class ksx:Department ; sh:message "[KSX9101/관계] EnterpriseID,DepartmentInChargeID → ksx:Department" ] ,
         [ sh:path ksx:refPersonInCharge ; sh:class ksx:Personnel ; sh:message "[KSX9101/관계] EnterpriseID,PersonInChargeID → ksx:Personnel" ] ,
         [ sh:path ksx:refCalendar ; sh:class ksx:WorkCalendar ; sh:message "[KSX9101/관계] EnterpriseID,CalendarID → ksx:WorkCalendar" ] ,
-        [ sh:path ksx:refIssueWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,IssueWarehouseID → ksx:WarehouseLocation" ] ,
-        [ sh:path ksx:refReceiptWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,ReceiptWarehouseID → ksx:WarehouseLocation" ] .
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,IssueWarehouseID → ksx:WarehouseLocationHeader" ] ,
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,ReceiptWarehouseID → ksx:WarehouseLocationHeader" ] .
 
 ksx:EnterpriseShape a sh:NodeShape ;
     sh:targetClass ksx:Enterprise ;
@@ -594,7 +619,7 @@ ksx:ProjectMasterShape a sh:NodeShape ;
         [ sh:path ksx:useIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:refResponsibleDepartment ; sh:class ksx:Department ; sh:message "[KSX9101/관계] EnterpriseID,ResponsibleDepartmentID → ksx:Department" ] ,
         [ sh:path ksx:refPersonInCharge ; sh:class ksx:Personnel ; sh:message "[KSX9101/관계] EnterpriseID,PersonInChargeID → ksx:Personnel" ] ,
-        [ sh:path ksx:refSalesOrder ; sh:class ksx:SalesOrder ; sh:message "[KSX9101/관계] EnterpriseID,SalesDocumentNumber,SalesDocumentSequence → ksx:SalesOrder" ] ,
+        [ sh:path ksx:refSalesOrderLine ; sh:class ksx:SalesOrderLine ; sh:message "[KSX9101/관계] EnterpriseID,SalesDocumentNumber,SalesDocumentSequence → ksx:SalesOrderLine" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
         [ sh:path ksx:refDivision ; sh:class ksx:Department ; sh:message "[KSX9101/관계] EnterpriseID,DivisionID → ksx:Department" ] .
 
@@ -619,11 +644,11 @@ ksx:EngineeringChangeOrderShape a sh:NodeShape ;
         [ sh:path ksx:itemUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:actualRequirementQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
-        [ sh:path ksx:refBOMLine ; sh:class ksx:BOM ; sh:message "[KSX9101/관계] EnterpriseID,BOMID,BOMRevisionNumber,ChildItemID → ksx:BOM" ] ,
+        [ sh:path ksx:refBOM ; sh:class ksx:BOMHeader ; sh:message "[KSX9101/관계] EnterpriseID,BOMID,BOMRevisionNumber → ksx:BOMHeader" ] ,
         [ sh:path ksx:refChildItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ChildItemID → ksx:ItemMaster" ] .
 
-ksx:SalesOrderShape a sh:NodeShape ;
-    sh:targetClass ksx:SalesOrder ;
+ksx:SalesOrderHeaderShape a sh:NodeShape ;
+    sh:targetClass ksx:SalesOrderHeader ;
     sh:property
         [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
         [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
@@ -633,25 +658,37 @@ ksx:SalesOrderShape a sh:NodeShape ;
         [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:salesOrderId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SalesOrderID NOT NULL" ; ] ,
-        [ sh:path ksx:salesDocumentNumber ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:salesDocumentSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:salesDocumentNumber ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SalesDocumentNumber NOT NULL" ; ] ,
         [ sh:path ksx:salesOrderType ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:salesDate ; sh:datatype xsd:date ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:requestedDeliveryDate ; sh:datatype xsd:date ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:salesStatus ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:shipmentTermsCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:salesTransactionType ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:returnIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:exportIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:salesAutomaticApprovalIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:refCustomer ; sh:class ksx:CustomerPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,CustomerID → ksx:CustomerPartyMaster" ] .
+
+ksx:SalesOrderLineShape a sh:NodeShape ;
+    sh:targetClass ksx:SalesOrderLine ;
+    sh:property
+        [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refPlant ; sh:class ksx:Plant ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] PlantID 는 필수(7.3)" ] ,
+        [ sh:path ksx:createdBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:modifiedBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:salesDocumentSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SalesDocumentSequence NOT NULL" ; ] ,
         [ sh:path ksx:itemName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:sellingUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:conversionUnitQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemUnitQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:refCustomer ; sh:class ksx:CustomerPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,CustomerID → ksx:CustomerPartyMaster" ] ,
+        [ sh:path ksx:requestedDeliveryDate ; sh:datatype xsd:date ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:refSalesOrder ; sh:class ksx:SalesOrderHeader ; sh:message "[KSX9101/관계] EnterpriseID,SalesDocumentNumber → ksx:SalesOrderHeader" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] .
 
 ksx:SalesPlanShape a sh:NodeShape ;
@@ -714,8 +751,8 @@ ksx:PurchaseRequisitionShape a sh:NodeShape ;
         [ sh:path ksx:refRequesterDepartment ; sh:class ksx:Department ; sh:message "[KSX9101/관계] EnterpriseID,RequesterDepartmentID → ksx:Department" ] ,
         [ sh:path ksx:refRequesterPersonnel ; sh:class ksx:Personnel ; sh:message "[KSX9101/관계] EnterpriseID,RequesterPersonnelID → ksx:Personnel" ] .
 
-ksx:PurchaseOrderShape a sh:NodeShape ;
-    sh:targetClass ksx:PurchaseOrder ;
+ksx:PurchaseOrderHeaderShape a sh:NodeShape ;
+    sh:targetClass ksx:PurchaseOrderHeader ;
     sh:property
         [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
         [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
@@ -725,8 +762,7 @@ ksx:PurchaseOrderShape a sh:NodeShape ;
         [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:purchaseOrderId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] PurchaseOrderID NOT NULL" ; ] ,
-        [ sh:path ksx:purchaseDocumentNumber ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:purchaseDocumentNumber ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] PurchaseDocumentNumber NOT NULL" ; ] ,
         [ sh:path ksx:paymentTermsCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:purchaseGroupCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:currencyCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
@@ -739,7 +775,21 @@ ksx:PurchaseOrderShape a sh:NodeShape ;
         [ sh:path ksx:purchaseOrderValidDate ; sh:datatype xsd:date ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:purchaseOrderClosingIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:purchaseOrderClosingDate ; sh:datatype xsd:date ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:purchaseDocumentSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:refVendor ; sh:class ksx:VendorPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,VendorID → ksx:VendorPartyMaster" ] ,
+        [ sh:path ksx:refPersonnel ; sh:class ksx:Personnel ; sh:message "[KSX9101/관계] EnterpriseID,PersonnelID → ksx:Personnel" ] .
+
+ksx:PurchaseOrderLineShape a sh:NodeShape ;
+    sh:targetClass ksx:PurchaseOrderLine ;
+    sh:property
+        [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refPlant ; sh:class ksx:Plant ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] PlantID 는 필수(7.3)" ] ,
+        [ sh:path ksx:createdBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:modifiedBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:purchaseDocumentSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] PurchaseDocumentSequence NOT NULL" ; ] ,
         [ sh:path ksx:itemPurchaseType ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:purchaseOrderLineStatusCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
@@ -761,8 +811,7 @@ ksx:PurchaseOrderShape a sh:NodeShape ;
         [ sh:path ksx:vatTransactionUnitPrice ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:vatTransactionPrice ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:vatCarryingAmount ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:refVendor ; sh:class ksx:VendorPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,VendorID → ksx:VendorPartyMaster" ] ,
-        [ sh:path ksx:refPersonnel ; sh:class ksx:Personnel ; sh:message "[KSX9101/관계] EnterpriseID,PersonnelID → ksx:Personnel" ] ,
+        [ sh:path ksx:refPurchaseOrder ; sh:class ksx:PurchaseOrderHeader ; sh:message "[KSX9101/관계] EnterpriseID,PurchaseDocumentNumber → ksx:PurchaseOrderHeader" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] .
 
 ksx:MaterialArrivalShape a sh:NodeShape ;
@@ -780,9 +829,9 @@ ksx:MaterialArrivalShape a sh:NodeShape ;
         [ sh:path ksx:purchaseGoodsReceiptQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:goodsReceiptDate ; sh:datatype xsd:date ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:refPurchaseOrder ; sh:class ksx:PurchaseOrder ; sh:message "[KSX9101/관계] EnterpriseID,PurchaseDocumentNumber,PurchaseDocumentSequence → ksx:PurchaseOrder" ] ,
+        [ sh:path ksx:refPurchaseOrderLine ; sh:class ksx:PurchaseOrderLine ; sh:message "[KSX9101/관계] EnterpriseID,PurchaseDocumentNumber,PurchaseDocumentSequence → ksx:PurchaseOrderLine" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
-        [ sh:path ksx:refReceiptWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,ReceiptWarehouseID → ksx:WarehouseLocation" ] ,
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,ReceiptWarehouseID → ksx:WarehouseLocationHeader" ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] ,
         [ sh:path ksx:refVendor ; sh:class ksx:VendorPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,VendorID → ksx:VendorPartyMaster" ] .
 
@@ -817,7 +866,7 @@ ksx:GoodsReceiptShape a sh:NodeShape ;
         [ sh:path ksx:incomingInspectionRejectedQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:purchaseGroupCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:refWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocation" ] ,
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocationHeader" ] ,
         [ sh:path ksx:refPersonnel ; sh:class ksx:Personnel ; sh:message "[KSX9101/관계] EnterpriseID,PersonnelID → ksx:Personnel" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
         [ sh:path ksx:refVendor ; sh:class ksx:VendorPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,VendorID → ksx:VendorPartyMaster" ] .
@@ -848,7 +897,7 @@ ksx:GoodsIssueShape a sh:NodeShape ;
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] ,
         [ sh:path ksx:refVendor ; sh:class ksx:VendorPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,VendorID → ksx:VendorPartyMaster" ] ,
-        [ sh:path ksx:refWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocation" ] .
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocationHeader" ] .
 
 ksx:ProductionPlanningShape a sh:NodeShape ;
     sh:targetClass ksx:ProductionPlanning ;
@@ -889,9 +938,9 @@ ksx:ProductionOrderShape a sh:NodeShape ;
         [ sh:path ksx:salesDocumentSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
         [ sh:path ksx:refLine ; sh:class ksx:Line ; sh:message "[KSX9101/관계] EnterpriseID,LineID → ksx:Line" ] ,
-        [ sh:path ksx:refRouting ; sh:class arcon:RoutingHeader ; sh:message "[KSX9101/관계] EnterpriseID,RoutingID → arcon:RoutingHeader" ] ,
-        [ sh:path ksx:refBOM ; sh:class arcon:BOMHeader ; sh:message "[KSX9101/관계] EnterpriseID,BOMID,BOMRevisionNumber → arcon:BOMHeader" ] ,
-        [ sh:path ksx:refSalesOrder ; sh:class ksx:SalesOrder ; sh:message "[KSX9101/관계] EnterpriseID,SalesDocumentNumber,SalesDocumentSequence → ksx:SalesOrder" ] .
+        [ sh:path ksx:refRouting ; sh:class ksx:RoutingHeader ; sh:message "[KSX9101/관계] EnterpriseID,RoutingID → ksx:RoutingHeader" ] ,
+        [ sh:path ksx:refBOM ; sh:class ksx:BOMHeader ; sh:message "[KSX9101/관계] EnterpriseID,BOMID,BOMRevisionNumber → ksx:BOMHeader" ] ,
+        [ sh:path ksx:refSalesOrderLine ; sh:class ksx:SalesOrderLine ; sh:message "[KSX9101/관계] EnterpriseID,SalesDocumentNumber,SalesDocumentSequence → ksx:SalesOrderLine" ] .
 
 ksx:OperationStartShape a sh:NodeShape ;
     sh:targetClass ksx:OperationStart ;
@@ -904,10 +953,11 @@ ksx:OperationStartShape a sh:NodeShape ;
         [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:operationStartId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] OperationStartID NOT NULL" ; ] ,
         [ sh:path ksx:lotName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:lotDescription ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:lotCreatedQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:operationStartTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] OperationStartTime NOT NULL" ; ] ,
+        [ sh:path ksx:operationStartTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] ,
         [ sh:path ksx:refOperation ; sh:class ksx:Operation ; sh:message "[KSX9101/관계] EnterpriseID,OperationID → ksx:Operation" ] ,
         [ sh:path ksx:refEquipment ; sh:class ksx:Equipment ; sh:message "[KSX9101/관계] EnterpriseID,EquipmentID → ksx:Equipment" ] ,
@@ -924,10 +974,11 @@ ksx:OperationEndShape a sh:NodeShape ;
         [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:operationEndId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] OperationEndID NOT NULL" ; ] ,
         [ sh:path ksx:lotName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:lotDescription ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:lotCreatedQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:operationEndTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] OperationEndTime NOT NULL" ; ] ,
+        [ sh:path ksx:operationEndTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:producedQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:defectQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:reworkCount ; sh:datatype xsd:integer ; sh:maxCount 1 ; ] ,
@@ -968,6 +1019,7 @@ ksx:TransferStartShape a sh:NodeShape ;
         [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:transferStartId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] TransferStartID NOT NULL" ; ] ,
         [ sh:path ksx:lotName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:lotDescription ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:transferStartDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
@@ -991,6 +1043,7 @@ ksx:TransferEndShape a sh:NodeShape ;
         [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:transferEndId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] TransferEndID NOT NULL" ; ] ,
         [ sh:path ksx:lotName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:lotDescription ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:transferEndDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
@@ -1011,9 +1064,10 @@ ksx:InTransitLocationShape a sh:NodeShape ;
         [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:inTransitLocationId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] InTransitLocationID NOT NULL" ; ] ,
         [ sh:path ksx:lotName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:lotDescription ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:currentLocation ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] CurrentLocation NOT NULL" ; ] ,
+        [ sh:path ksx:currentLocation ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:refTransferCommand ; sh:class ksx:TransferCommand ; sh:message "[KSX9101/관계] EnterpriseID,TransferCommandID → ksx:TransferCommand" ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] ,
         [ sh:path ksx:refCarrier ; sh:class ksx:Carrier ; sh:message "[KSX9101/관계] EnterpriseID,CarrierID → ksx:Carrier" ] .
@@ -1029,6 +1083,7 @@ ksx:EquipmentStateShape a sh:NodeShape ;
         [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:equipmentStateId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EquipmentStateID NOT NULL" ; ] ,
         [ sh:path ksx:equipmentState ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:equipmentControlMode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:equipmentOperationMode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
@@ -1050,10 +1105,11 @@ ksx:AlarmShape a sh:NodeShape ;
         [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:alarmId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] AlarmID NOT NULL" ; ] ,
         [ sh:path ksx:alarmState ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:errorCode ; sh:class skos:Concept ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] ErrorCode NOT NULL" ; ] ,
+        [ sh:path ksx:errorCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:errorMessage ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:eventDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EventDateTime NOT NULL" ; ] ,
+        [ sh:path ksx:eventDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:currentLocation ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:refEquipment ; sh:class ksx:Equipment ; sh:message "[KSX9101/관계] EnterpriseID,EquipmentID → ksx:Equipment" ] .
 
@@ -1070,6 +1126,7 @@ ksx:SupplierInspectionPlanShape a sh:NodeShape ;
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:purchaseDocumentSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:purchaseOrderQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:expectedDeliveryDate ; sh:datatype xsd:date ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:inspectionPlanId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] InspectionPlanID NOT NULL" ; ] ,
@@ -1085,7 +1142,7 @@ ksx:SupplierInspectionPlanShape a sh:NodeShape ;
         [ sh:path ksx:refVendor ; sh:class ksx:VendorPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,VendorID → ksx:VendorPartyMaster" ] ,
         [ sh:path ksx:refProject ; sh:class ksx:ProjectMaster ; sh:message "[KSX9101/관계] EnterpriseID,ProjectID → ksx:ProjectMaster" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
-        [ sh:path ksx:refPurchaseOrder ; sh:class ksx:PurchaseOrder ; sh:message "[KSX9101/관계] EnterpriseID,PurchaseOrderID → ksx:PurchaseOrder" ] ,
+        [ sh:path ksx:refPurchaseOrderLine ; sh:class ksx:PurchaseOrderLine ; sh:message "[KSX9101/관계] EnterpriseID,PurchaseDocumentNumber,PurchaseDocumentSequence → ksx:PurchaseOrderLine" ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] ,
         [ sh:path ksx:refBatch ; sh:class ksx:Batch ; sh:message "[KSX9101/관계] EnterpriseID,BatchID → ksx:Batch" ] .
 
@@ -1102,6 +1159,7 @@ ksx:SupplierInspectionApplicationShape a sh:NodeShape ;
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:purchaseDocumentSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:inspectionId ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:inspectionApplicationId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] InspectionApplicationID NOT NULL" ; ] ,
         [ sh:path ksx:inspectionName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
@@ -1118,7 +1176,7 @@ ksx:SupplierInspectionApplicationShape a sh:NodeShape ;
         [ sh:path ksx:refVendor ; sh:class ksx:VendorPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,VendorID → ksx:VendorPartyMaster" ] ,
         [ sh:path ksx:refProject ; sh:class ksx:ProjectMaster ; sh:message "[KSX9101/관계] EnterpriseID,ProjectID → ksx:ProjectMaster" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
-        [ sh:path ksx:refPurchaseOrder ; sh:class ksx:PurchaseOrder ; sh:message "[KSX9101/관계] EnterpriseID,PurchaseOrderID → ksx:PurchaseOrder" ] ,
+        [ sh:path ksx:refPurchaseOrderLine ; sh:class ksx:PurchaseOrderLine ; sh:message "[KSX9101/관계] EnterpriseID,PurchaseDocumentNumber,PurchaseDocumentSequence → ksx:PurchaseOrderLine" ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] ,
         [ sh:path ksx:refBatch ; sh:class ksx:Batch ; sh:message "[KSX9101/관계] EnterpriseID,BatchID → ksx:Batch" ] ,
         [ sh:path ksx:refInspectionPlan ; sh:class ksx:SupplierInspectionPlan ; sh:message "[KSX9101/관계] EnterpriseID,InspectionPlanID,InspectionID → ksx:SupplierInspectionPlan" ] ,
@@ -1250,7 +1308,7 @@ ksx:ProductPackingShape a sh:NodeShape ;
         [ sh:path ksx:boxNumber ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] BoxNumber NOT NULL" ; ] ,
         [ sh:path ksx:palletNumber ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:packingSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] PackingSequence NOT NULL" ; ] ,
-        [ sh:path ksx:refWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocation" ] ,
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocationHeader" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] .
 
@@ -1287,7 +1345,8 @@ ksx:TraceParameterShape a sh:NodeShape ;
         [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:eventDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EventDateTime NOT NULL" ; ] ,
+        [ sh:path ksx:traceParameterId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] TraceParameterID NOT NULL" ; ] ,
+        [ sh:path ksx:eventDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:parameterUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:parameterValue ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:validationResultCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
@@ -1321,7 +1380,7 @@ ksx:ProductionPerformanceShape a sh:NodeShape ;
         [ sh:path ksx:refProductionOrder ; sh:class ksx:ProductionOrder ; sh:message "[KSX9101/관계] EnterpriseID,ProductionOrderID,ProductionOrderSequence → ksx:ProductionOrder" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
         [ sh:path ksx:refOperation ; sh:class ksx:Operation ; sh:message "[KSX9101/관계] EnterpriseID,OperationID → ksx:Operation" ] ,
-        [ sh:path ksx:refRoutingLine ; sh:class ksx:Routing ; sh:message "[KSX9101/관계] EnterpriseID,RoutingID,OperationSequence → ksx:Routing" ] ,
+        [ sh:path ksx:refRoutingLine ; sh:class ksx:RoutingLine ; sh:message "[KSX9101/관계] EnterpriseID,RoutingID,OperationSequence → ksx:RoutingLine" ] ,
         [ sh:path ksx:refPersonnel ; sh:class ksx:Personnel ; sh:message "[KSX9101/관계] EnterpriseID,PersonnelID → ksx:Personnel" ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] ,
         [ sh:path ksx:refBatch ; sh:class ksx:Batch ; sh:message "[KSX9101/관계] EnterpriseID,BatchID → ksx:Batch" ] .
@@ -1351,7 +1410,7 @@ ksx:ProductionPerformanceItemShape a sh:NodeShape ;
         [ sh:path ksx:refOperation ; sh:class ksx:Operation ; sh:message "[KSX9101/관계] EnterpriseID,OperationID → ksx:Operation" ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] ,
         [ sh:path ksx:refReplacementChildItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ReplacementChildItemID → ksx:ItemMaster" ] ,
-        [ sh:path ksx:refWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocation" ] .
+        [ sh:path ksx:refWarehouseLocationLine ; sh:class ksx:WarehouseLocationLine ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID,WarehouseSection → ksx:WarehouseLocationLine" ] .
 
 ksx:ProductionPerformancePersonnelShape a sh:NodeShape ;
     sh:targetClass ksx:ProductionPerformancePersonnel ;
@@ -1370,7 +1429,7 @@ ksx:ProductionPerformancePersonnelShape a sh:NodeShape ;
         [ sh:path ksx:executionEndDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:taskGroupCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:actualLaborDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:actualLaborTime ; sh:datatype xsd:duration ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:actualLaborTime ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:actualLaborTimeUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:refProductionPerformance ; sh:class ksx:ProductionPerformance ; sh:message "[KSX9101/관계] EnterpriseID,ProductionPerformanceID,ProductionPerformanceSequence → ksx:ProductionPerformance" ] ,
         [ sh:path ksx:refProductionOrder ; sh:class ksx:ProductionOrder ; sh:message "[KSX9101/관계] EnterpriseID,ProductionOrderID,ProductionOrderSequence → ksx:ProductionOrder" ] ,
@@ -1404,7 +1463,7 @@ ksx:ProductionPerformanceEquipmentShape a sh:NodeShape ;
         [ sh:path ksx:refProductionPerformance ; sh:class ksx:ProductionPerformance ; sh:message "[KSX9101/관계] EnterpriseID,ProductionPerformanceID,ProductionPerformanceSequence → ksx:ProductionPerformance" ] ,
         [ sh:path ksx:refProductionOrder ; sh:class ksx:ProductionOrder ; sh:message "[KSX9101/관계] EnterpriseID,ProductionOrderID,ProductionOrderSequence → ksx:ProductionOrder" ] ,
         [ sh:path ksx:refOperation ; sh:class ksx:Operation ; sh:message "[KSX9101/관계] EnterpriseID,OperationID → ksx:Operation" ] ,
-        [ sh:path ksx:refRoutingLine ; sh:class ksx:Routing ; sh:message "[KSX9101/관계] EnterpriseID,RoutingID,OperationSequence → ksx:Routing" ] ,
+        [ sh:path ksx:refRoutingLine ; sh:class ksx:RoutingLine ; sh:message "[KSX9101/관계] EnterpriseID,RoutingID,OperationSequence → ksx:RoutingLine" ] ,
         [ sh:path ksx:refPersonnel ; sh:class ksx:Personnel ; sh:message "[KSX9101/관계] EnterpriseID,PersonnelID → ksx:Personnel" ] ,
         [ sh:path ksx:refEquipment ; sh:class ksx:Equipment ; sh:message "[KSX9101/관계] EnterpriseID,EquipmentID → ksx:Equipment" ] .
 
@@ -1432,7 +1491,7 @@ ksx:ProductionPerformanceQualityShape a sh:NodeShape ;
         [ sh:path ksx:refProductionOrder ; sh:class ksx:ProductionOrder ; sh:message "[KSX9101/관계] EnterpriseID,ProductionOrderID,ProductionOrderSequence → ksx:ProductionOrder" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
         [ sh:path ksx:refOperation ; sh:class ksx:Operation ; sh:message "[KSX9101/관계] EnterpriseID,OperationID → ksx:Operation" ] ,
-        [ sh:path ksx:refRoutingLine ; sh:class ksx:Routing ; sh:message "[KSX9101/관계] EnterpriseID,RoutingID,OperationSequence → ksx:Routing" ] ,
+        [ sh:path ksx:refRoutingLine ; sh:class ksx:RoutingLine ; sh:message "[KSX9101/관계] EnterpriseID,RoutingID,OperationSequence → ksx:RoutingLine" ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] ,
         [ sh:path ksx:refBatch ; sh:class ksx:Batch ; sh:message "[KSX9101/관계] EnterpriseID,BatchID → ksx:Batch" ] .
 
@@ -1449,7 +1508,7 @@ ksx:InventoryShape a sh:NodeShape ;
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:inventoryQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:refWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocation" ] ,
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocationHeader" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] .
 
 ksx:AvailableInventoryShape a sh:NodeShape ;
@@ -1488,8 +1547,8 @@ ksx:StockTransferShape a sh:NodeShape ;
         [ sh:path ksx:stockTransferQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:transferDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
-        [ sh:path ksx:refWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocation" ] ,
-        [ sh:path ksx:refReceiptWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,ReceiptWarehouseID → ksx:WarehouseLocation" ] .
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocationHeader" ] ,
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,ReceiptWarehouseID → ksx:WarehouseLocationHeader" ] .
 
 ksx:InventoryCountShape a sh:NodeShape ;
     sh:targetClass ksx:InventoryCount ;
@@ -1507,7 +1566,7 @@ ksx:InventoryCountShape a sh:NodeShape ;
         [ sh:path ksx:inventoryQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:inventoryCountQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:refWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocation" ] ,
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocationHeader" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] .
 
 ksx:ProductIncomingShape a sh:NodeShape ;
@@ -1538,11 +1597,11 @@ ksx:ProductIncomingShape a sh:NodeShape ;
         [ sh:path ksx:orderQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
         [ sh:path ksx:refCustomer ; sh:class ksx:CustomerPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,CustomerID → ksx:CustomerPartyMaster" ] ,
-        [ sh:path ksx:refWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocation" ] ,
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocationHeader" ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] .
 
-ksx:ProductReleaseRequestShape a sh:NodeShape ;
-    sh:targetClass ksx:ProductReleaseRequest ;
+ksx:ProductReleaseRequestHeaderShape a sh:NodeShape ;
+    sh:targetClass ksx:ProductReleaseRequestHeader ;
     sh:property
         [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
         [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
@@ -1556,6 +1615,19 @@ ksx:ProductReleaseRequestShape a sh:NodeShape ;
         [ sh:path ksx:productReleaseRequestDocumentNumber ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:productReleaseRequestType ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:productReleaseRequestDate ; sh:datatype xsd:date ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:refCustomer ; sh:class ksx:CustomerPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,CustomerID → ksx:CustomerPartyMaster" ] .
+
+ksx:ProductReleaseRequestLineShape a sh:NodeShape ;
+    sh:targetClass ksx:ProductReleaseRequestLine ;
+    sh:property
+        [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refPlant ; sh:class ksx:Plant ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] PlantID 는 필수(7.3)" ] ,
+        [ sh:path ksx:createdBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:modifiedBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:productReleaseRequestSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] ProductReleaseRequestSequence NOT NULL" ; ] ,
         [ sh:path ksx:itemName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:productReleaseRequestQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
@@ -1570,25 +1642,11 @@ ksx:ProductReleaseRequestShape a sh:NodeShape ;
         [ sh:path ksx:salesDocumentSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:productReleaseDate ; sh:datatype xsd:date ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:deliveryDate ; sh:datatype xsd:date ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:refProductReleaseRequest ; sh:class ksx:ProductReleaseRequestHeader ; sh:message "[KSX9101/관계] EnterpriseID,ProductReleaseRequestID → ksx:ProductReleaseRequestHeader" ] ,
         [ sh:path ksx:refLine ; sh:class ksx:Line ; sh:message "[KSX9101/관계] EnterpriseID,LineID → ksx:Line" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
-        [ sh:path ksx:refWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocation" ] ,
-        [ sh:path ksx:refSalesOrder ; sh:class ksx:SalesOrder ; sh:message "[KSX9101/관계] EnterpriseID,SalesDocumentNumber,SalesDocumentSequence → ksx:SalesOrder" ] ,
-        [ sh:path ksx:refCustomer ; sh:class ksx:CustomerPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,CustomerID → ksx:CustomerPartyMaster" ] ,
-        [ sh:path arcon:hasHeader_ProductReleaseRequestHeader ; sh:class arcon:ProductReleaseRequestHeader ; sh:message "[KSX9101/관계] EnterpriseID,ProductReleaseRequestID → arcon:ProductReleaseRequestHeader" ] .
-
-arcon:ProductReleaseRequestHeaderShape a sh:NodeShape ;
-    sh:targetClass arcon:ProductReleaseRequestHeader ;
-    sh:property
-        [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
-        [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
-        [ sh:path ksx:refPlant ; sh:class ksx:Plant ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] PlantID 는 필수(7.3)" ] ,
-        [ sh:path ksx:createdBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
-        [ sh:path ksx:modifiedBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
-        [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:productReleaseRequestId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] ProductReleaseRequestID NOT NULL" ; ] .
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocationHeader" ] ,
+        [ sh:path ksx:refSalesOrderLine ; sh:class ksx:SalesOrderLine ; sh:message "[KSX9101/관계] EnterpriseID,SalesDocumentNumber,SalesDocumentSequence → ksx:SalesOrderLine" ] .
 
 ksx:ProductReleaseShape a sh:NodeShape ;
     sh:targetClass ksx:ProductRelease ;
@@ -1616,13 +1674,76 @@ ksx:ProductReleaseShape a sh:NodeShape ;
         [ sh:path ksx:salesUnitQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:returnUnitQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:serialUseIndicator ; sh:datatype xsd:boolean ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:refProductReleaseRequest ; sh:class arcon:ProductReleaseRequestHeader ; sh:message "[KSX9101/관계] EnterpriseID,ProductReleaseRequestID → arcon:ProductReleaseRequestHeader" ] ,
-        [ sh:path ksx:refSalesOrder ; sh:class ksx:SalesOrder ; sh:message "[KSX9101/관계] EnterpriseID,SalesDocumentNumber,SalesDocumentSequence → ksx:SalesOrder" ] ,
+        [ sh:path ksx:refProductReleaseRequest ; sh:class ksx:ProductReleaseRequestHeader ; sh:message "[KSX9101/관계] EnterpriseID,ProductReleaseRequestID → ksx:ProductReleaseRequestHeader" ] ,
+        [ sh:path ksx:refSalesOrderLine ; sh:class ksx:SalesOrderLine ; sh:message "[KSX9101/관계] EnterpriseID,SalesDocumentNumber,SalesDocumentSequence → ksx:SalesOrderLine" ] ,
         [ sh:path ksx:refLine ; sh:class ksx:Line ; sh:message "[KSX9101/관계] EnterpriseID,LineID → ksx:Line" ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
         [ sh:path ksx:refCustomer ; sh:class ksx:CustomerPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,CustomerID → ksx:CustomerPartyMaster" ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] ,
-        [ sh:path ksx:refWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocation" ] .
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocationHeader" ] .
+
+ksx:DeliveryHeaderShape a sh:NodeShape ;
+    sh:targetClass ksx:DeliveryHeader ;
+    sh:property
+        [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refPlant ; sh:class ksx:Plant ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] PlantID 는 필수(7.3)" ] ,
+        [ sh:path ksx:createdBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:modifiedBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:deliveryId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] DeliveryID NOT NULL" ; ] ,
+        [ sh:path ksx:deliveryDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:packingList ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:packingType ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:transportationMethodCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:departmentInChargeName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:personInChargeName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:personInChargeDialNumber ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:transportationCompany ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:personInChargeNameOfTransportation ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:personInChargeDialNumberOfTransportation ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:recipient ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:recipientDialNumber ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:recipientEmail ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:shippingPoint ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:shipToAddress ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:preferredReceiptDate ; sh:datatype xsd:date ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:deliveryNote ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:deliveryConfirmationDocument ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:refCustomer ; sh:class ksx:CustomerPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,CustomerID → ksx:CustomerPartyMaster" ] ,
+        [ sh:path ksx:refDepartmentInCharge ; sh:class ksx:Department ; sh:message "[KSX9101/관계] EnterpriseID,DepartmentInChargeID → ksx:Department" ] ,
+        [ sh:path ksx:refPersonInCharge ; sh:class ksx:Personnel ; sh:message "[KSX9101/관계] EnterpriseID,PersonInChargeID → ksx:Personnel" ] .
+
+ksx:DeliveryLineShape a sh:NodeShape ;
+    sh:targetClass ksx:DeliveryLine ;
+    sh:property
+        [ sh:path ksx:refEnterprise ; sh:class ksx:Enterprise ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] EnterpriseID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refSite ; sh:class ksx:Site ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SiteID 는 필수(7.3)" ] ,
+        [ sh:path ksx:refPlant ; sh:class ksx:Plant ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] PlantID 는 필수(7.3)" ] ,
+        [ sh:path ksx:createdBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:modifiedBy ; sh:class ksx:Personnel ; sh:maxCount 1 ;] ,
+        [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:deliveryLineSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] DeliveryLineSequence NOT NULL" ; ] ,
+        [ sh:path ksx:productReleaseSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:salesDocumentSequence ; sh:datatype xsd:integer ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:itemName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:invoiceNumber ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:itemUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:itemUnitQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:orderUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:orderQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:productDeliveryUOMCode ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:productDeliveryQuantity ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:requestedDeliveryDate ; sh:datatype xsd:date ; sh:maxCount 1 ; ] ,
+        [ sh:path ksx:refDelivery ; sh:class ksx:DeliveryHeader ; sh:message "[KSX9101/관계] EnterpriseID,DeliveryID → ksx:DeliveryHeader" ] ,
+        [ sh:path ksx:refProductRelease ; sh:class ksx:ProductRelease ; sh:message "[KSX9101/관계] EnterpriseID,ProductReleaseID,ProductReleaseSequence → ksx:ProductRelease" ] ,
+        [ sh:path ksx:refSalesOrderLine ; sh:class ksx:SalesOrderLine ; sh:message "[KSX9101/관계] EnterpriseID,SalesDocumentNumber,SalesDocumentSequence → ksx:SalesOrderLine" ] ,
+        [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
+        [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] .
 
 ksx:ReturnShape a sh:NodeShape ;
     sh:targetClass ksx:Return ;
@@ -1645,7 +1766,7 @@ ksx:ReturnShape a sh:NodeShape ;
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] ,
         [ sh:path ksx:refLot ; sh:class ksx:Lot ; sh:message "[KSX9101/관계] EnterpriseID,LotID → ksx:Lot" ] ,
         [ sh:path ksx:refBatch ; sh:class ksx:Batch ; sh:message "[KSX9101/관계] EnterpriseID,BatchID → ksx:Batch" ] ,
-        [ sh:path ksx:refWarehouse ; sh:class ksx:WarehouseLocation ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocation" ] ,
+        [ sh:path ksx:refWarehouseLocation ; sh:class ksx:WarehouseLocationHeader ; sh:message "[KSX9101/관계] EnterpriseID,WarehouseID → ksx:WarehouseLocationHeader" ] ,
         [ sh:path ksx:refCustomer ; sh:class ksx:CustomerPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,CustomerID → ksx:CustomerPartyMaster" ] ,
         [ sh:path ksx:refVendor ; sh:class ksx:VendorPartyMaster ; sh:message "[KSX9101/관계] EnterpriseID,VendorID → ksx:VendorPartyMaster" ] .
 
@@ -1660,12 +1781,13 @@ ksx:ProductTraceParameterOnCustomerShape a sh:NodeShape ;
         [ sh:path ksx:creationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:modificationDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:note ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:serialNumber ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] SerialNumber NOT NULL" ; ] ,
+        [ sh:path ksx:productTraceParameterOnCustomerId ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] ProductTraceParameterOnCustomerID NOT NULL" ; ] ,
+        [ sh:path ksx:serialNumber ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:location ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:itemType ; sh:class skos:Concept ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:parameterName ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] ParameterName NOT NULL" ; ] ,
+        [ sh:path ksx:parameterName ; sh:datatype xsd:string ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:parameterValue ; sh:datatype xsd:decimal ; sh:maxCount 1 ; ] ,
-        [ sh:path ksx:collectionDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; sh:minCount 1 ; sh:message "[KSX9101/구조] CollectionDateTime NOT NULL" ; ] ,
+        [ sh:path ksx:collectionDateTime ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; ] ,
         [ sh:path ksx:refItem ; sh:class ksx:ItemMaster ; sh:message "[KSX9101/관계] EnterpriseID,ItemID → ksx:ItemMaster" ] .
 
 ksx:AfterSalesServiceRequestShape a sh:NodeShape ;
