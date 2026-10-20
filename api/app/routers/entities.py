@@ -31,11 +31,13 @@ def lot(lot_id: str, s: Scoped = Depends(scoped)):
         "SELECT operation_id, defect_type_code, defect_type_detail_code, sum(defect_type_quantity) AS qty"
         "  FROM ksx.production_performance_quality WHERE lot_id = %s GROUP BY 1, 2, 3 ORDER BY qty DESC", (lot_id,)).fetchall()
     orders = c.execute(
-        "SELECT so.sales_order_id, so.customer_id, cu.customer_name, so.requested_delivery_date, so.item_quantity"
+        "SELECT so.sales_document_number AS sales_order_id, so.sales_document_sequence, sh.customer_id, cu.customer_name,"
+        "       so.requested_delivery_date, so.item_quantity"
         "  FROM ksx.production_order po"
-        "  JOIN ksx.sales_order so ON so.enterprise_id = po.enterprise_id AND so.sales_document_number = po.sales_document_number"
+        "  JOIN ksx.sales_order_line so ON so.enterprise_id = po.enterprise_id AND so.sales_document_number = po.sales_document_number"
         "   AND so.sales_document_sequence = po.sales_document_sequence"
-        "  LEFT JOIN ksx.customer_party_master cu ON cu.enterprise_id = so.enterprise_id AND cu.customer_id = so.customer_id"
+        "  LEFT JOIN ksx.sales_order_header sh ON sh.enterprise_id = so.enterprise_id AND sh.sales_document_number = so.sales_document_number"
+        "  LEFT JOIN ksx.customer_party_master cu ON cu.enterprise_id = sh.enterprise_id AND cu.customer_id = sh.customer_id"
         " WHERE po.enterprise_id = %s AND po.production_order_id = %s AND po.production_order_sequence = %s",
         (row["enterprise_id"], row["production_order_id"], row["production_order_sequence"])).fetchall()
     risks = c.execute(

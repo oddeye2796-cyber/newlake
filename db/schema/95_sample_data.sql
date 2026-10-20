@@ -26,22 +26,25 @@ INSERT INTO ksx.equipment (enterprise_id, site_id, plant_id, equipment_id, equip
  ('ACME','HQ','P1','EQ-07','리플로우 오븐 7호기','OP-40'), ('ACME','HQ','P1','EQ-03','와이어 본더 3호기','OP-30');
 INSERT INTO ksx.equipment_parameter (enterprise_id, site_id, plant_id, parameter_id, parameter_name, parameter_uom_code, equipment_id, lsl, usl) VALUES
  ('ACME','HQ','P1','TEMP01','존3 온도','℃','EQ-07', 235, 255);
-INSERT INTO ksx.sales_order (enterprise_id, site_id, plant_id, sales_order_id, sales_document_number, sales_document_sequence, customer_id,
-                             sales_date, requested_delivery_date, item_id, item_quantity) VALUES
- ('ACME','HQ','P1','SO-5001','SD-5001',1,'C-77', current_date - 20, current_date + 5,  'ITM-A100', 2900),
- ('ACME','HQ','P1','SO-4990','SD-4990',1,'C-77', current_date - 40, current_date - 10, 'ITM-A100', 1000);
+INSERT INTO ksx.sales_order_header (enterprise_id, site_id, plant_id, sales_document_number, customer_id, sales_date) VALUES
+ ('ACME','HQ','P1','SD-5001','C-77', current_date - 20),
+ ('ACME','HQ','P1','SD-4990','C-77', current_date - 40);
+INSERT INTO ksx.sales_order_line (enterprise_id, site_id, plant_id, sales_document_number, sales_document_sequence,
+                                  requested_delivery_date, item_id, item_quantity) VALUES
+ ('ACME','HQ','P1','SD-5001',1, current_date + 5,  'ITM-A100', 2900),
+ ('ACME','HQ','P1','SD-4990',1, current_date - 10, 'ITM-A100', 1000);
 INSERT INTO ksx.production_order (enterprise_id, site_id, plant_id, production_order_id, production_order_sequence, item_id,
                                   production_order_quantity, sales_document_number, sales_document_sequence) VALUES
  ('ACME','HQ','P1','PO-1001',1,'ITM-A100', 1000, 'SD-5001', 1),
  ('ACME','HQ','P1','PO-1002',1,'ITM-B200',  500, NULL, NULL);
-INSERT INTO ksx.operation_start (enterprise_id, site_id, plant_id, lot_id, operation_id, equipment_id, operation_start_time, personnel_id) VALUES
- ('ACME','HQ','P1','LOT-2026-0731','OP-40','EQ-07', current_date - 2 + time '10:00', 'E2001');
-INSERT INTO ksx.operation_end (enterprise_id, site_id, plant_id, lot_id, operation_id, equipment_id, operation_end_time, produced_quantity, defect_quantity) VALUES
- ('ACME','HQ','P1','LOT-2026-0731','OP-40','EQ-07', current_date - 2 + time '11:30', 980, 34);
-INSERT INTO ksx.trace_parameter (enterprise_id, site_id, plant_id, equipment_id, parameter_id, event_date_time, parameter_uom_code, parameter_value, validation_result_code) VALUES
- ('ACME','HQ','P1','EQ-07','TEMP01', current_date - 2 + time '10:15', '℃', 262.4, 'OUT_OF_SPEC'),
- ('ACME','HQ','P1','EQ-07','TEMP01', current_date - 2 + time '10:20', '℃', 259.8, 'OUT_OF_SPEC'),
- ('ACME','HQ','P1','EQ-07','TEMP01', current_date - 2 + time '10:40', '℃', 247.1, 'NORMAL');
+INSERT INTO ksx.operation_start (enterprise_id, site_id, plant_id, operation_start_id, lot_id, operation_id, equipment_id, operation_start_time, personnel_id) VALUES
+ ('ACME','HQ','P1','OS-0731-40','LOT-2026-0731','OP-40','EQ-07', current_date - 2 + time '10:00', 'E2001');
+INSERT INTO ksx.operation_end (enterprise_id, site_id, plant_id, operation_end_id, lot_id, operation_id, equipment_id, operation_end_time, produced_quantity, defect_quantity) VALUES
+ ('ACME','HQ','P1','OE-0731-40','LOT-2026-0731','OP-40','EQ-07', current_date - 2 + time '11:30', 980, 34);
+INSERT INTO ksx.trace_parameter (enterprise_id, site_id, plant_id, trace_parameter_id, equipment_id, parameter_id, event_date_time, parameter_uom_code, parameter_value, validation_result_code) VALUES
+ ('ACME','HQ','P1','TP-07-001','EQ-07','TEMP01', current_date - 2 + time '10:15', '℃', 262.4, 'OUT_OF_SPEC'),
+ ('ACME','HQ','P1','TP-07-002','EQ-07','TEMP01', current_date - 2 + time '10:20', '℃', 259.8, 'OUT_OF_SPEC'),
+ ('ACME','HQ','P1','TP-07-003','EQ-07','TEMP01', current_date - 2 + time '10:40', '℃', 247.1, 'NORMAL');
 INSERT INTO ksx.production_performance (enterprise_id, site_id, plant_id, production_performance_id, production_performance_sequence,
        production_order_id, production_order_sequence, item_id, produced_quantity, defect_quantity, operation_id, production_performance_date, lot_id) VALUES
  ('ACME','HQ','P1','PP-9001',1,'PO-1001',1,'ITM-A100', 980, 34,'OP-40', current_date - 2,'LOT-2026-0731'),
