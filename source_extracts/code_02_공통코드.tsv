@@ -1,562 +1,569 @@
-No	업무영역	공통코드그룹 / (CommonCodeGroup)	그룹명	공통코드식별자 / (CommonCodeID)	공통코드명 / (CommonCodeName)	영문명	표시순번 / (CommonCodeSequence)	사용여부 / (UseIndicator)	상위공통코드그룹 / (ParentCommonCodeGroup)	상위공통코드식별자 / (ParentCommonCodeID)	설명	회사 적용 / (Y/N)	회사 코드값	회사 코드명	비고(회사)
-1	기준정보	CountryID	국가	KR	대한민국	Republic of Korea	1	Y							
-2	기준정보	CountryID	국가	US	미국	United States of America	2	Y							
-3	기준정보	CountryID	국가	CN	중국	China	3	Y							
-4	기준정보	CountryID	국가	JP	일본	Japan	4	Y							
-5	기준정보	CountryID	국가	VN	베트남	Viet Nam	5	Y							
-6	기준정보	CountryID	국가	TW	대만	Taiwan	6	Y							
-7	기준정보	CountryID	국가	HK	홍콩	Hong Kong	7	Y							
-8	기준정보	CountryID	국가	SG	싱가포르	Singapore	8	Y							
-9	기준정보	CountryID	국가	IN	인도	India	9	Y							
-10	기준정보	CountryID	국가	ID	인도네시아	Indonesia	10	Y							
-11	기준정보	CountryID	국가	TH	태국	Thailand	11	Y							
-12	기준정보	CountryID	국가	MY	말레이시아	Malaysia	12	Y							
-13	기준정보	CountryID	국가	PH	필리핀	Philippines	13	Y							
-14	기준정보	CountryID	국가	MX	멕시코	Mexico	14	Y							
-15	기준정보	CountryID	국가	CA	캐나다	Canada	15	Y							
-16	기준정보	CountryID	국가	BR	브라질	Brazil	16	Y							
-17	기준정보	CountryID	국가	DE	독일	Germany	17	Y							
-18	기준정보	CountryID	국가	FR	프랑스	France	18	Y							
-19	기준정보	CountryID	국가	GB	영국	United Kingdom	19	Y							
-20	기준정보	CountryID	국가	IT	이탈리아	Italy	20	Y							
-21	기준정보	CountryID	국가	NL	네덜란드	Netherlands	21	Y							
-22	기준정보	CountryID	국가	PL	폴란드	Poland	22	Y							
-23	기준정보	CountryID	국가	HU	헝가리	Hungary	23	Y							
-24	기준정보	CountryID	국가	CZ	체코	Czechia	24	Y							
-25	기준정보	CountryID	국가	TR	튀르키예	Türkiye	25	Y							
-26	기준정보	CountryID	국가	SA	사우디아라비아	Saudi Arabia	26	Y							
-27	기준정보	CountryID	국가	AE	아랍에미리트	United Arab Emirates	27	Y							
-28	기준정보	CountryID	국가	AU	호주	Australia	28	Y							
-29	기준정보	CurrencyCode	통화(환종)	KRW	원	Korean won	1	Y			회사 기준통화 기본값(국내 법인)				
-30	기준정보	CurrencyCode	통화(환종)	USD	미국 달러	US dollar	2	Y							
-31	기준정보	CurrencyCode	통화(환종)	JPY	엔	Japanese yen	3	Y							
-32	기준정보	CurrencyCode	통화(환종)	EUR	유로	Euro	4	Y							
-33	기준정보	CurrencyCode	통화(환종)	CNY	위안	Chinese yuan renminbi	5	Y							
-34	기준정보	CurrencyCode	통화(환종)	VND	동	Vietnamese dong	6	Y							
-35	기준정보	CurrencyCode	통화(환종)	GBP	파운드	Pound sterling	7	Y							
-36	기준정보	CurrencyCode	통화(환종)	HKD	홍콩 달러	Hong Kong dollar	8	Y							
-37	기준정보	CurrencyCode	통화(환종)	TWD	대만 달러	New Taiwan dollar	9	Y							
-38	기준정보	CurrencyCode	통화(환종)	SGD	싱가포르 달러	Singapore dollar	10	Y							
-39	기준정보	CurrencyCode	통화(환종)	INR	루피	Indian rupee	11	Y							
-40	기준정보	CurrencyCode	통화(환종)	IDR	루피아	Indonesian rupiah	12	Y							
-41	기준정보	CurrencyCode	통화(환종)	THB	바트	Thai baht	13	Y							
-42	기준정보	CurrencyCode	통화(환종)	MXN	멕시코 페소	Mexican peso	14	Y							
-43	기준정보	CurrencyCode	통화(환종)	CAD	캐나다 달러	Canadian dollar	15	Y							
-44	기준정보	CurrencyCode	통화(환종)	AUD	호주 달러	Australian dollar	16	Y							
-45	기준정보	CurrencyCode	통화(환종)	CHF	스위스 프랑	Swiss franc	17	Y							
-46	기준정보	EmploymentStatusType	재직유형	ACTIVE	재직	Active	1	Y			정상 근무 중				
-47	기준정보	EmploymentStatusType	재직유형	PROBATION	수습	Probation	2	Y			수습 기간 중				
-48	기준정보	EmploymentStatusType	재직유형	LEAVE	휴직	Leave of absence	3	Y			육아·병가 등 휴직				
-49	기준정보	EmploymentStatusType	재직유형	DISPATCHED	파견	Dispatched	4	Y			외부 파견 근무				
-50	기준정보	EmploymentStatusType	재직유형	RETIRED	퇴직	Retired	5	Y			퇴직 처리 완료(실적 이력 조회용으로 유지)				
-51	기준정보	CalendarType	달력유형	PLANT	공장 달력	Plant calendar	1	Y			공장 단위 가동일				
-52	기준정보	CalendarType	달력유형	LINE	라인 달력	Line calendar	2	Y			라인별 가동일(라인 명사와 연계)				
-53	기준정보	CalendarType	달력유형	SHIFT	교대 달력	Shift calendar	3	Y			근무조·교대 편성				
-54	기준정보	CalendarType	달력유형	EQUIPMENT	설비 달력	Equipment calendar	4	Y			설비별 가동/보전 계획일				
-55	기준정보	CalendarType	달력유형	ENTERPRISE	회사 달력	Enterprise calendar	5	Y			회사 공통 휴일(인사 달력과 구분)				
-56	기준정보	DayOfWeek	요일	1	월요일	Monday	1	Y							
-57	기준정보	DayOfWeek	요일	2	화요일	Tuesday	2	Y							
-58	기준정보	DayOfWeek	요일	3	수요일	Wednesday	3	Y							
-59	기준정보	DayOfWeek	요일	4	목요일	Thursday	4	Y							
-60	기준정보	DayOfWeek	요일	5	금요일	Friday	5	Y							
-61	기준정보	DayOfWeek	요일	6	토요일	Saturday	6	Y							
-62	기준정보	DayOfWeek	요일	7	일요일	Sunday	7	Y							
-63	기준정보	ScheduleType	근무일유형	NORMAL	정상근무	Normal workday	1	Y							
-64	기준정보	ScheduleType	근무일유형	HOLIDAY	휴일	Holiday	2	Y			법정·약정 휴일				
-65	기준정보	ScheduleType	근무일유형	OVERTIME	특근	Special work	3	Y			휴일 특근				
-66	기준정보	ScheduleType	근무일유형	OFF	휴무	Day off	4	Y			회사 지정 휴무				
-67	기준정보	ScheduleType	근무일유형	HALF	반일근무	Half day	5	Y							
-68	기준정보	ScheduleType	근무일유형	PM	정기보수	Planned maintenance	6	Y			설비 정기보수로 생산 미계획				
-69	기준정보	ScheduleType	근무일유형	SHUTDOWN	계획정지	Planned shutdown	7	Y			하계·동계 휴가 등 공장 정지				
-70	기준정보	ItemType	품목유형	FG	제품	Finished good	1	Y			자체 생산 판매 품목				
-71	기준정보	ItemType	품목유형	SFG	반제품	Semi-finished good	2	Y			공정 중간 품목(재고 관리 대상)				
-72	기준정보	ItemType	품목유형	MER	상품	Merchandise	3	Y			외부 구매 후 가공 없이 판매				
-73	기준정보	ItemType	품목유형	RM	원자재	Raw material	4	Y							
-74	기준정보	ItemType	품목유형	SM	부자재	Sub material	5	Y							
-75	기준정보	ItemType	품목유형	SUP	저장품	Supplies	6	Y			수선용 부품 등				
-76	기준정보	ItemType	품목유형	CON	소모품	Consumables	7	Y							
-77	기준정보	ItemType	품목유형	PKG	포장재	Packaging material	8	Y							
-78	기준정보	ItemType	품목유형	BYP	부산물	By-product	9	Y			스크랩 등 부수 발생품				
-79	기준정보	ItemLargeClass	품목대분류	MTL	금속소재	Metal material	1	Y							
-80	기준정보	ItemLargeClass	품목대분류	RES	수지소재	Resin material	2	Y							
-81	기준정보	ItemLargeClass	품목대분류	ELC	전자부품	Electronic part	3	Y							
-82	기준정보	ItemLargeClass	품목대분류	MEC	기계부품	Mechanical part	4	Y							
-83	기준정보	ItemLargeClass	품목대분류	PKG	포장자재	Packaging	5	Y							
-84	기준정보	ItemLargeClass	품목대분류	PRD	완제품	Product	6	Y							
-85	기준정보	ItemMediumClass	품목중분류	MTL-STL	철강	Steel	1	Y	ItemLargeClass	MTL					
-86	기준정보	ItemMediumClass	품목중분류	MTL-ALU	알루미늄	Aluminium	2	Y	ItemLargeClass	MTL					
-87	기준정보	ItemMediumClass	품목중분류	MTL-CU	동	Copper	3	Y	ItemLargeClass	MTL					
-88	기준정보	ItemMediumClass	품목중분류	RES-PP	PP	Polypropylene	4	Y	ItemLargeClass	RES					
-89	기준정보	ItemMediumClass	품목중분류	RES-ABS	ABS	ABS	5	Y	ItemLargeClass	RES					
-90	기준정보	ItemMediumClass	품목중분류	RES-PC	PC	Polycarbonate	6	Y	ItemLargeClass	RES					
-91	기준정보	ItemMediumClass	품목중분류	ELC-SEM	반도체	Semiconductor	7	Y	ItemLargeClass	ELC					
-92	기준정보	ItemMediumClass	품목중분류	ELC-PAS	수동소자	Passive component	8	Y	ItemLargeClass	ELC					
-93	기준정보	ItemMediumClass	품목중분류	ELC-PCB	PCB	Printed circuit board	9	Y	ItemLargeClass	ELC					
-94	기준정보	ItemMediumClass	품목중분류	MEC-FST	체결부품	Fastener	10	Y	ItemLargeClass	MEC					
-95	기준정보	ItemMediumClass	품목중분류	MEC-BRG	베어링	Bearing	11	Y	ItemLargeClass	MEC					
-96	기준정보	ItemMediumClass	품목중분류	MEC-SPR	스프링	Spring	12	Y	ItemLargeClass	MEC					
-97	기준정보	ItemMediumClass	품목중분류	PKG-BOX	박스	Box	13	Y	ItemLargeClass	PKG					
-98	기준정보	ItemMediumClass	품목중분류	PKG-CUS	완충재	Cushion	14	Y	ItemLargeClass	PKG					
-99	기준정보	ItemMediumClass	품목중분류	PRD-MOD	모듈	Module	15	Y	ItemLargeClass	PRD					
-100	기준정보	ItemMediumClass	품목중분류	PRD-ASY	조립완제품	Assembly	16	Y	ItemLargeClass	PRD					
-101	기준정보	ItemSmallClass	품목소분류	MTL-STL-PL	강판	Steel plate	1	Y	ItemMediumClass	MTL-STL					
-102	기준정보	ItemSmallClass	품목소분류	MTL-STL-BAR	봉강	Steel bar	2	Y	ItemMediumClass	MTL-STL					
-103	기준정보	ItemSmallClass	품목소분류	MTL-STL-PIPE	강관	Steel pipe	3	Y	ItemMediumClass	MTL-STL					
-104	기준정보	ItemSmallClass	품목소분류	MTL-ALU-EXT	알루미늄 압출재	Aluminium extrusion	4	Y	ItemMediumClass	MTL-ALU					
-105	기준정보	ItemSmallClass	품목소분류	MTL-ALU-SHT	알루미늄 판재	Aluminium sheet	5	Y	ItemMediumClass	MTL-ALU					
-106	기준정보	ItemSmallClass	품목소분류	ELC-PAS-RES	저항	Resistor	6	Y	ItemMediumClass	ELC-PAS					
-107	기준정보	ItemSmallClass	품목소분류	ELC-PAS-CAP	커패시터	Capacitor	7	Y	ItemMediumClass	ELC-PAS					
-108	기준정보	ItemSmallClass	품목소분류	MEC-FST-BLT	볼트	Bolt	8	Y	ItemMediumClass	MEC-FST					
-109	기준정보	ItemSmallClass	품목소분류	MEC-FST-NUT	너트	Nut	9	Y	ItemMediumClass	MEC-FST					
-110	기준정보	ItemSmallClass	품목소분류	MEC-FST-SCR	스크루	Screw	10	Y	ItemMediumClass	MEC-FST					
-111	기준정보	ABCClass	에이비씨분류	A	A등급	Class A	1	Y			연간 사용금액 누계 상위 약 70~80%(품목 수 약 10~20%) — 정밀 관리				
-112	기준정보	ABCClass	에이비씨분류	B	B등급	Class B	2	Y			누계 약 15~25% — 정기 관리				
-113	기준정보	ABCClass	에이비씨분류	C	C등급	Class C	3	Y			누계 약 5~10%(품목 수 다수) — 간이 관리				
-114	기준정보	BOMType	자재명세서유형	MBOM	제조BOM	Manufacturing BOM	1	Y			생산·자재소요 기준				
-115	기준정보	BOMType	자재명세서유형	CBOM	원가BOM	Costing BOM	2	Y			원가 계산 기준				
-116	기준정보	BOMType	자재명세서유형	EBOM	설계BOM	Engineering BOM	3	Y			PLM 설계 기준				
-117	기준정보	BOMType	자재명세서유형	SBOM	서비스BOM	Service BOM	4	Y			사후서비스 부품 기준				
-118	기준정보	LotType	로트유형	PRODUCTION	양산	Production	1	Y							
-119	기준정보	LotType	로트유형	DEVELOPMENT	개발	Development	2	Y							
-120	기준정보	LotType	로트유형	ENGINEERING	엔지니어링	Engineering	3	Y			공정·조건 검증용				
-121	기준정보	LotType	로트유형	REWORK	재작업	Rework	4	Y							
-122	기준정보	LotType	로트유형	SAMPLE	샘플	Sample	5	Y			고객 샘플·초도품				
-123	기준정보	LotState	로트상태	OPEN	등록	Open	1	Y							
-124	기준정보	LotState	로트상태	RELEASE	발행	Release	2	Y							
-125	기준정보	LotState	로트상태	START	시작	Start	3	Y							
-126	기준정보	LotState	로트상태	CLOSING	마감	Closing	4	Y			마감 또는 종료				
-127	기준정보	LotState	로트상태	HOLD	보류	Hold	5	Y			품질 이상 등으로 진행 중지				
-128	기준정보	LotState	로트상태	SCRAP	폐기	Scrap	6	Y							
-129	기준정보	OperationType	공정유형	PROD	생산공정	Production	1	Y							
-130	기준정보	OperationType	공정유형	OUTSRC	외주공정	Outsourcing	2	Y			외주 가공 공정				
-131	기준정보	OperationType	공정유형	MEAS	계측공정	Measurement	3	Y							
-132	기준정보	OperationType	공정유형	INSP	검사공정	Inspection	4	Y							
-133	기준정보	OperationType	공정유형	PACK	포장공정	Packing	5	Y							
-134	기준정보	OperationType	공정유형	REWORK	재작업공정	Rework	6	Y							
-135	기준정보	OperationType	공정유형	MOVE	이송공정	Transfer	7	Y							
-136	기준정보	OperationLargeClass	공정대분류	MFG	가공	Manufacturing	1	Y							
-137	기준정보	OperationLargeClass	공정대분류	ASSY	조립	Assembly	2	Y							
-138	기준정보	OperationLargeClass	공정대분류	SURF	표면처리	Surface treatment	3	Y							
-139	기준정보	OperationLargeClass	공정대분류	HEAT	열처리	Heat treatment	4	Y							
-140	기준정보	OperationLargeClass	공정대분류	INSP	검사	Inspection	5	Y							
-141	기준정보	OperationLargeClass	공정대분류	PACK	포장	Packing	6	Y							
-142	기준정보	OperationMediumClass	공정중분류	MFG-CUT	절삭	Cutting	1	Y	OperationLargeClass	MFG					
-143	기준정보	OperationMediumClass	공정중분류	MFG-PRS	프레스	Pressing	2	Y	OperationLargeClass	MFG					
-144	기준정보	OperationMediumClass	공정중분류	MFG-WLD	용접	Welding	3	Y	OperationLargeClass	MFG					
-145	기준정보	OperationMediumClass	공정중분류	MFG-INJ	사출	Injection molding	4	Y	OperationLargeClass	MFG					
-146	기준정보	OperationMediumClass	공정중분류	ASSY-SUB	서브조립	Sub assembly	5	Y	OperationLargeClass	ASSY					
-147	기준정보	OperationMediumClass	공정중분류	ASSY-FIN	최종조립	Final assembly	6	Y	OperationLargeClass	ASSY					
-148	기준정보	OperationMediumClass	공정중분류	SURF-PNT	도장	Painting	7	Y	OperationLargeClass	SURF					
-149	기준정보	OperationMediumClass	공정중분류	SURF-PLT	도금	Plating	8	Y	OperationLargeClass	SURF					
-150	기준정보	OperationMediumClass	공정중분류	INSP-INC	수입검사	Incoming inspection	9	Y	OperationLargeClass	INSP					
-151	기준정보	OperationMediumClass	공정중분류	INSP-PRC	공정검사	In-process inspection	10	Y	OperationLargeClass	INSP					
-152	기준정보	OperationMediumClass	공정중분류	INSP-FIN	출하검사	Final inspection	11	Y	OperationLargeClass	INSP					
-153	기준정보	OperationSmallClass	공정소분류	MFG-CUT-TRN	선삭	Turning	1	Y	OperationMediumClass	MFG-CUT					
-154	기준정보	OperationSmallClass	공정소분류	MFG-CUT-MIL	밀링	Milling	2	Y	OperationMediumClass	MFG-CUT					
-155	기준정보	OperationSmallClass	공정소분류	MFG-CUT-DRL	드릴링	Drilling	3	Y	OperationMediumClass	MFG-CUT					
-156	기준정보	OperationSmallClass	공정소분류	MFG-PRS-BLK	블랭킹	Blanking	4	Y	OperationMediumClass	MFG-PRS					
-157	기준정보	OperationSmallClass	공정소분류	MFG-PRS-BND	벤딩	Bending	5	Y	OperationMediumClass	MFG-PRS					
-158	기준정보	OperationSmallClass	공정소분류	MFG-WLD-SPT	스폿용접	Spot welding	6	Y	OperationMediumClass	MFG-WLD					
-159	기준정보	OperationSmallClass	공정소분류	MFG-WLD-ARC	아크용접	Arc welding	7	Y	OperationMediumClass	MFG-WLD					
-160	기준정보	OperationSmallClass	공정소분류	ASSY-FIN-SCR	체결	Screwing	8	Y	OperationMediumClass	ASSY-FIN					
-161	기준정보	OperationSmallClass	공정소분류	ASSY-FIN-TST	기능시험	Function test	9	Y	OperationMediumClass	ASSY-FIN					
-162	기준정보	EquipmentType	설비유형	PROD	생산설비	Production equipment	1	Y							
-163	기준정보	EquipmentType	설비유형	INSP	검사설비	Inspection equipment	2	Y							
-164	기준정보	EquipmentType	설비유형	MEAS	계측기	Measuring instrument	3	Y			교정 대상				
-165	기준정보	EquipmentType	설비유형	LOGI	물류·반송설비	Material handling	4	Y			AGV, 컨베이어, 스토커 등				
-166	기준정보	EquipmentType	설비유형	UTIL	유틸리티설비	Utility	5	Y			공기압축기, 냉각기, 집진기 등				
-167	기준정보	EquipmentType	설비유형	TOOL	금형·치공구	Tooling	6	Y							
-168	기준정보	EquipmentLargeClass	설비대분류	MCH	공작기계	Machine tool	1	Y							
-169	기준정보	EquipmentLargeClass	설비대분류	PRS	프레스	Press	2	Y							
-170	기준정보	EquipmentLargeClass	설비대분류	INJ	사출성형기	Injection molding machine	3	Y							
-171	기준정보	EquipmentLargeClass	설비대분류	WLD	용접기	Welder	4	Y							
-172	기준정보	EquipmentLargeClass	설비대분류	ROB	로봇	Robot	5	Y							
-173	기준정보	EquipmentLargeClass	설비대분류	TST	시험·검사기	Tester	6	Y							
-174	기준정보	EquipmentLargeClass	설비대분류	MHS	물류설비	Material handling system	7	Y							
-175	기준정보	EquipmentMediumClass	설비중분류	MCH-LTH	CNC 선반	CNC lathe	1	Y	EquipmentLargeClass	MCH					
-176	기준정보	EquipmentMediumClass	설비중분류	MCH-MCT	머시닝센터	Machining center	2	Y	EquipmentLargeClass	MCH					
-177	기준정보	EquipmentMediumClass	설비중분류	PRS-MEC	기계식 프레스	Mechanical press	3	Y	EquipmentLargeClass	PRS					
-178	기준정보	EquipmentMediumClass	설비중분류	PRS-HYD	유압 프레스	Hydraulic press	4	Y	EquipmentLargeClass	PRS					
-179	기준정보	EquipmentMediumClass	설비중분류	INJ-HYD	유압식 사출기	Hydraulic injection	5	Y	EquipmentLargeClass	INJ					
-180	기준정보	EquipmentMediumClass	설비중분류	INJ-ELE	전동식 사출기	Electric injection	6	Y	EquipmentLargeClass	INJ					
-181	기준정보	EquipmentMediumClass	설비중분류	ROB-ART	다관절 로봇	Articulated robot	7	Y	EquipmentLargeClass	ROB					
-182	기준정보	EquipmentMediumClass	설비중분류	ROB-SCA	스카라 로봇	SCARA robot	8	Y	EquipmentLargeClass	ROB					
-183	기준정보	EquipmentMediumClass	설비중분류	TST-VIS	비전검사기	Vision inspection	9	Y	EquipmentLargeClass	TST					
-184	기준정보	EquipmentMediumClass	설비중분류	TST-CMM	3차원 측정기	CMM	10	Y	EquipmentLargeClass	TST					
-185	기준정보	EquipmentMediumClass	설비중분류	MHS-AGV	AGV/AMR	AGV/AMR	11	Y	EquipmentLargeClass	MHS					
-186	기준정보	EquipmentMediumClass	설비중분류	MHS-CNV	컨베이어	Conveyor	12	Y	EquipmentLargeClass	MHS					
-187	기준정보	EquipmentSmallClass	설비소분류	MCH-MCT-V	수직형 머시닝센터	Vertical MC	1	Y	EquipmentMediumClass	MCH-MCT					
-188	기준정보	EquipmentSmallClass	설비소분류	MCH-MCT-H	수평형 머시닝센터	Horizontal MC	2	Y	EquipmentMediumClass	MCH-MCT					
-189	기준정보	EquipmentSmallClass	설비소분류	PRS-MEC-200	기계식 프레스 200톤급	200t press	3	Y	EquipmentMediumClass	PRS-MEC					
-190	기준정보	EquipmentSmallClass	설비소분류	PRS-MEC-400	기계식 프레스 400톤급	400t press	4	Y	EquipmentMediumClass	PRS-MEC					
-191	기준정보	EquipmentSmallClass	설비소분류	INJ-ELE-150	전동식 사출기 150톤급	150t injection	5	Y	EquipmentMediumClass	INJ-ELE					
-192	기준정보	EquipmentSmallClass	설비소분류	TST-VIS-2D	2D 비전검사기	2D vision	6	Y	EquipmentMediumClass	TST-VIS					
-193	기준정보	EquipmentSmallClass	설비소분류	TST-VIS-3D	3D 비전검사기	3D vision	7	Y	EquipmentMediumClass	TST-VIS					
-194	기준정보	CarrierType	캐리어유형	FOUP	FOUP	Front opening unified pod	1	Y			반도체 웨이퍼 캐리어				
-195	기준정보	CarrierType	캐리어유형	CASSETTE	카세트	Cassette	2	Y							
-196	기준정보	CarrierType	캐리어유형	MAGAZINE	매거진	Magazine	3	Y							
-197	기준정보	CarrierType	캐리어유형	TRAY	트레이	Tray	4	Y							
-198	기준정보	CarrierType	캐리어유형	PALLET	팔레트	Pallet	5	Y							
-199	기준정보	CarrierType	캐리어유형	TOTE	토트박스	Tote box	6	Y							
-200	기준정보	CarrierType	캐리어유형	REEL	릴	Reel	7	Y			SMD 부품 릴				
-201	기준정보	LoadState	적재상태	EMPTY	공	Empty	1	Y							
-202	기준정보	LoadState	적재상태	FULL	만재	Full	2	Y							
-203	기준정보	LoadState	적재상태	PARTIAL	부분적재	Partial	3	Y							
-204	기준정보	CarrierState	캐리어상태	AVAILABLE	사용가능	Available	1	Y							
-205	기준정보	CarrierState	캐리어상태	NOT_AVAILABLE	사용불가	Not available	2	Y							
-206	기준정보	CarrierState	캐리어상태	IN_USE	사용중	In use	3	Y							
-207	기준정보	CarrierState	캐리어상태	CLEANING	세정중	Cleaning	4	Y							
-208	기준정보	CarrierState	캐리어상태	DAMAGED	파손	Damaged	5	Y			폐기 또는 수리 대상				
-209	기준정보	WarehouseType	창고유형	RM	자재창고	Raw material warehouse	1	Y							
-210	기준정보	WarehouseType	창고유형	WIP	공정창고	WIP warehouse	2	Y			라인 사이드 포함				
-211	기준정보	WarehouseType	창고유형	FG	제품창고	Finished goods warehouse	3	Y							
-212	기준정보	WarehouseType	창고유형	QC	검사대기창고	Quality inspection warehouse	4	Y			수입검사 대기				
-213	기준정보	WarehouseType	창고유형	RTN	반품창고	Return warehouse	5	Y							
-214	기준정보	WarehouseType	창고유형	DEF	불량창고	Defect warehouse	6	Y							
-215	기준정보	WarehouseType	창고유형	OSP	외주창고	Subcontractor warehouse	7	Y			외주처 보관 재고				
-216	기준정보	WarehouseType	창고유형	BONDED	보세창고	Bonded warehouse	8	Y							
-217	기준정보	BatchType	배치유형	PRODUCTION	사내 생산	Production	1	Y							
-218	기준정보	BatchType	배치유형	REWORK	재작업	Rework	2	Y							
-219	기준정보	BatchType	배치유형	TRIAL	시험 생산	Trial	3	Y							
-220	기준정보	BatchType	배치유형	PURCHASE	공급사 생산	Purchase	4	Y			공급사 배치 추적용				
-221	기준정보	BatchState	배치상태	IDLE	대기	Idle	1	Y							
-222	기준정보	BatchState	배치상태	RUNNING	진행	Running	2	Y							
-223	기준정보	BatchState	배치상태	HOLD	보류	Hold	3	Y							
-224	기준정보	BatchState	배치상태	COMPLETE	완료	Complete	4	Y							
-225	기준정보	BatchState	배치상태	ABORT	중단	Abort	5	Y							
-226	기준정보	QualityDispositionCode	품질판정코드	PENDING	판정대기	Pending	1	Y							
-227	기준정보	QualityDispositionCode	품질판정코드	ACCEPTED	합격	Accepted	2	Y							
-228	기준정보	QualityDispositionCode	품질판정코드	REJECTED	불합격	Rejected	3	Y							
-229	기준정보	QualityDispositionCode	품질판정코드	CONDITIONAL	조건부 합격	Conditional	4	Y			특채 포함				
-230	기준정보	QualityDispositionCode	품질판정코드	REWORK	재작업 판정	Rework	5	Y							
-231	기준정보	LineType	라인유형	ASSEMBLY	조립	Assembly	1	Y							
-232	기준정보	LineType	라인유형	MACHINING	가공	Machining	2	Y							
-233	기준정보	LineType	라인유형	PROCESS	장치	Process	3	Y			화학·식품 등 장치 라인				
-234	기준정보	LineType	라인유형	PACKING	포장	Packing	4	Y							
-235	기준정보	LineType	라인유형	INSPECTION	검사	Inspection	5	Y							
-236	기준정보	ProductionMethodType	생산방식유형	DISCRETE	개별 생산	Discrete	1	Y							
-237	기준정보	ProductionMethodType	생산방식유형	BATCH	배치 생산	Batch	2	Y							
-238	기준정보	ProductionMethodType	생산방식유형	CONTINUOUS	연속 생산	Continuous	3	Y							
-239	기준정보	ProductionMethodType	생산방식유형	REPETITIVE	반복 생산	Repetitive	4	Y			동일 품목 흐름 생산				
-240	프로젝트관리	ProjectStatusCode	프로젝트상태코드	PLANNED	계획	Planned	1	Y							
-241	프로젝트관리	ProjectStatusCode	프로젝트상태코드	REGISTERED	등록	Registered	2	Y							
-242	프로젝트관리	ProjectStatusCode	프로젝트상태코드	IN_PROGRESS	진행	In progress	3	Y							
-243	프로젝트관리	ProjectStatusCode	프로젝트상태코드	HOLD	보류	On hold	4	Y							
-244	프로젝트관리	ProjectStatusCode	프로젝트상태코드	CLOSED	종료	Closed	5	Y							
-245	프로젝트관리	ProjectStatusCode	프로젝트상태코드	CANCELLED	취소	Cancelled	6	Y							
-246	판매관리	SalesOrderType	수주유형	DOMESTIC	내수	Domestic	1	Y							
-247	판매관리	SalesOrderType	수주유형	EXPORT	수출	Export	2	Y			직수출				
-248	판매관리	SalesOrderType	수주유형	LOCAL	로컬수출	Local export	3	Y			내국신용장·구매확인서 기반				
-249	판매관리	SalesOrderType	수주유형	SAMPLE	견본	Sample	4	Y							
-250	판매관리	SalesOrderType	수주유형	FREE	무상	Free of charge	5	Y							
-251	판매관리	SalesOrderType	수주유형	CONSIGN	위탁판매	Consignment	6	Y							
-252	판매관리	SalesStatus	수주상태	REGISTERED	수주등록	Registered	1	Y							
-253	판매관리	SalesStatus	수주상태	CONFIRMED	수주확정	Confirmed	2	Y							
-254	판매관리	SalesStatus	수주상태	PART_SHIPPED	부분출하	Partially shipped	3	Y							
-255	판매관리	SalesStatus	수주상태	SHIPPED	출하완료	Shipped	4	Y							
-256	판매관리	SalesStatus	수주상태	INVOICED	매출확정	Invoiced	5	Y							
-257	판매관리	SalesStatus	수주상태	CLOSED	종결	Closed	6	Y							
-258	판매관리	SalesStatus	수주상태	HOLD	보류	Hold	7	Y			여신 초과 등				
-259	판매관리	SalesStatus	수주상태	CANCELLED	취소	Cancelled	8	Y							
-260	판매관리	ShipmentTermsCode	출하조건코드	EXW	공장인도	Ex Works	1	Y			국내 거래의 공장인도에도 사용				
-261	판매관리	ShipmentTermsCode	출하조건코드	FCA	운송인인도	Free Carrier	2	Y							
-262	판매관리	ShipmentTermsCode	출하조건코드	CPT	운송비지급인도	Carriage Paid To	3	Y							
-263	판매관리	ShipmentTermsCode	출하조건코드	CIP	운송비·보험료지급인도	Carriage and Insurance Paid To	4	Y							
-264	판매관리	ShipmentTermsCode	출하조건코드	DAP	도착지인도	Delivered at Place	5	Y			국내 거래의 도착지인도(납품)에도 사용				
-265	판매관리	ShipmentTermsCode	출하조건코드	DPU	도착지양하인도	Delivered at Place Unloaded	6	Y							
-266	판매관리	ShipmentTermsCode	출하조건코드	DDP	관세지급인도	Delivered Duty Paid	7	Y							
-267	판매관리	ShipmentTermsCode	출하조건코드	FAS	선측인도	Free Alongside Ship	8	Y							
-268	판매관리	ShipmentTermsCode	출하조건코드	FOB	본선인도	Free On Board	9	Y							
-269	판매관리	ShipmentTermsCode	출하조건코드	CFR	운임포함인도	Cost and Freight	10	Y							
-270	판매관리	ShipmentTermsCode	출하조건코드	CIF	운임·보험료포함인도	Cost, Insurance and Freight	11	Y							
-271	판매관리	SalesTransactionType	거래유형(매출)	TAX	과세	Taxable	1	Y			부가세 10%				
-272	판매관리	SalesTransactionType	거래유형(매출)	ZERO	영세율	Zero-rated	2	Y			로컬수출 등				
-273	판매관리	SalesTransactionType	거래유형(매출)	EXEMPT	면세	Tax exempt	3	Y							
-274	판매관리	SalesTransactionType	거래유형(매출)	EXPORT	수출	Export	4	Y			직수출(영세율)				
-275	판매관리·구매관리	PaymentTermsCode	결제조건코드	CASH	현금	Cash	1	Y							
-276	판매관리·구매관리	PaymentTermsCode	결제조건코드	NOTE	어음	Promissory note	2	Y							
-277	판매관리·구매관리	PaymentTermsCode	결제조건코드	EOM30	월말 마감 후 30일	EOM + 30 days	3	Y							
-278	판매관리·구매관리	PaymentTermsCode	결제조건코드	EOM60	월말 마감 후 60일	EOM + 60 days	4	Y							
-279	판매관리·구매관리	PaymentTermsCode	결제조건코드	NET30	송장일 후 30일	Net 30	5	Y							
-280	판매관리·구매관리	PaymentTermsCode	결제조건코드	ADV	선급	Advance payment	6	Y							
-281	판매관리·구매관리	PaymentTermsCode	결제조건코드	ENOTE	전자어음	Electronic note	7	Y							
-282	판매관리·구매관리	PaymentTermsCode	결제조건코드	ARLOAN	외상매출채권 담보대출	Accounts receivable loan	8	Y							
-283	판매관리·구매관리	PaymentTermsCode	결제조건코드	WINWIN	상생결제	Win-win payment	9	Y							
-284	판매관리·구매관리	PaymentTermsCode	결제조건코드	TT	전신환 송금	Telegraphic transfer	10	Y			수출입				
-285	판매관리·구매관리	PaymentTermsCode	결제조건코드	LC	신용장	Letter of credit	11	Y			수출입				
-286	구매관리	PurchaseGroupCode	구매그룹코드	PG00	단일 구매그룹	Default	1	Y			구매조직 미세분 시 단일 코드				
-287	구매관리	PurchaseGroupCode	구매그룹코드	PG01	원자재 구매	Raw material	2	Y							
-288	구매관리	PurchaseGroupCode	구매그룹코드	PG02	부자재 구매	Sub material	3	Y							
-289	구매관리	PurchaseGroupCode	구매그룹코드	PG03	외주 구매	Subcontracting	4	Y							
-290	구매관리	PurchaseGroupCode	구매그룹코드	PG04	설비·자산 구매	Capital	5	Y							
-291	구매관리	PurchaseGroupCode	구매그룹코드	PG05	MRO 구매	MRO	6	Y							
-292	구매관리	PurchaseGroupCode	구매그룹코드	PG06	수입 구매	Import	7	Y							
-293	구매관리	PurchaseOrderTypeCode	발주유형코드	STANDARD	일반 발주	Standard	1	Y							
-294	구매관리	PurchaseOrderTypeCode	발주유형코드	SUBCON	외주 가공 발주	Subcontracting	2	Y			사급자재 출고와 연계				
-295	구매관리	PurchaseOrderTypeCode	발주유형코드	CONSIGN	위탁 발주	Consignment	3	Y							
-296	구매관리	PurchaseOrderTypeCode	발주유형코드	STO	사내 이관 발주	Stock transport	4	Y			사업장·공장 간 이관				
-297	구매관리	PurchaseOrderTypeCode	발주유형코드	SERVICE	서비스/공사 발주	Service	5	Y							
-298	구매관리	PurchaseOrderTypeCode	발주유형코드	BLANKET	단가계약 발주	Blanket	6	Y			기간 단가계약 기반 분할 납품				
-299	구매관리	PurchaseTransactionType	거래유형(매입)	TAX	과세	Taxable	1	Y							
-300	구매관리	PurchaseTransactionType	거래유형(매입)	ZERO	영세율	Zero-rated	2	Y			내국신용장·구매확인서 매입				
-301	구매관리	PurchaseTransactionType	거래유형(매입)	EXEMPT	면세	Tax exempt	3	Y							
-302	구매관리	PurchaseTransactionType	거래유형(매입)	NONDED	불공제	Non-deductible	4	Y							
-303	구매관리	PurchaseTransactionType	거래유형(매입)	IMPORT	수입	Import	5	Y							
-304	구매관리	PurchaseTransactionType	거래유형(매입)	CARD	카드과세	Card taxable	6	Y							
-305	구매관리	PurchaseTransactionType	거래유형(매입)	CASHRCPT	현금영수증	Cash receipt	7	Y							
-306	구매관리	ItemPurchaseType	구매라인유형	ITEM	품목	Item	1	Y			재고 품목				
-307	구매관리	ItemPurchaseType	구매라인유형	SERVICE	서비스	Service	2	Y							
-308	구매관리	ItemPurchaseType	구매라인유형	ASSET	고정자산	Fixed asset	3	Y							
-309	구매관리	ItemPurchaseType	구매라인유형	FIXTURE	비품	Fixture	4	Y							
-310	구매관리	ItemPurchaseType	구매라인유형	EXPENSE	비용	Expense	5	Y			비재고 소모성				
-311	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	OPEN	발주 진행 중	Open	1	Y							
-312	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	PART_RECEIVED	부분입고	Partially received	2	Y							
-313	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	RECEIVED	입고완료	Received	3	Y							
-314	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	INVOICED	송장 처리 완료	Invoiced	4	Y							
-315	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	CLOSED	최종 종결	Closed	5	Y							
-316	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	CANCELLED	취소	Cancelled	6	Y							
-317	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	HOLD	보류	Hold	7	Y							
-318	구매관리	TaxCode	세무코드	P_TAX10	과세 매입(10%)	Taxable purchase	1	Y			부가세 10%				
-319	구매관리	TaxCode	세무코드	P_ZERO	영세율 매입	Zero-rated purchase	2	Y							
-320	구매관리	TaxCode	세무코드	P_EXEMPT	면세 매입	Exempt purchase	3	Y			계산서				
-321	구매관리	TaxCode	세무코드	P_NONDED	불공제 매입	Non-deductible	4	Y							
-322	구매관리	TaxCode	세무코드	P_IMPORT	수입 매입	Import	5	Y			수입세금계산서				
-323	구매관리	TaxCode	세무코드	P_CARD	카드과세 매입	Card	6	Y							
-324	구매관리	TaxCode	세무코드	P_CASHRCPT	현금영수증과세 매입	Cash receipt	7	Y							
-325	구매관리	AccountCode	계정코드	ACC_RM	원재료	Raw materials	1	Y							
-326	구매관리	AccountCode	계정코드	ACC_SM	부재료	Sub materials	2	Y							
-327	구매관리	AccountCode	계정코드	ACC_MER	상품	Merchandise	3	Y							
-328	구매관리	AccountCode	계정코드	ACC_SUPPLY	소모품비	Supplies expense	4	Y							
-329	구매관리	AccountCode	계정코드	ACC_STORE	저장품	Stored supplies	5	Y							
-330	구매관리	AccountCode	계정코드	ACC_SUBCON	외주가공비	Subcontract cost	6	Y							
-331	구매관리	AccountCode	계정코드	ACC_REPAIR	수선비	Repair expense	7	Y							
-332	구매관리	AccountCode	계정코드	ACC_FREIGHT	운반비	Freight	8	Y							
-333	구매관리	AccountCode	계정코드	ACC_FEE	지급수수료	Commission	9	Y							
-334	구매관리	AccountCode	계정코드	ACC_MACHINE	기계장치	Machinery	10	Y			고정자산				
-335	구매관리	AccountCode	계정코드	ACC_TOOL	공구와기구	Tools	11	Y			고정자산				
-336	구매관리	AccountCode	계정코드	ACC_CIP	건설중인자산	Construction in progress	12	Y							
-337	자재관리	GoodsReceiptType	입고처리유형	PO	발주입고	PO receipt	1	Y							
-338	자재관리	GoodsReceiptType	입고처리유형	INSP	검사입고	Receipt after inspection	2	Y			수입검사 합격 후 입고				
-339	자재관리	GoodsReceiptType	입고처리유형	EXCEPT	예외입고	Exceptional receipt	3	Y			무발주·긴급 입고				
-340	자재관리	GoodsReceiptType	입고처리유형	SUBCON	외주가공입고	Subcontract receipt	4	Y							
-341	자재관리	GoodsReceiptReturnType	입고반품유형	VENDOR_RTN	공급업체 반품	Return to vendor	1	Y							
-342	자재관리	GoodsReceiptReturnType	입고반품유형	GR_CANCEL	입고 취소	Receipt cancel	2	Y							
-343	자재관리	GoodsReceiptReturnType	입고반품유형	RTN_PO	반품 PO 기반 입고	Return PO	3	Y							
-344	자재·재고관리	InventoryTransactionType	수불유형	RCV	입고	Receipt	1	Y							
-345	자재·재고관리	InventoryTransactionType	수불유형	ISS	출고	Issue	2	Y							
-346	자재·재고관리	InventoryTransactionType	수불유형	TRF	이동	Transfer	3	Y			창고·위치 간 이동				
-347	자재·재고관리	InventoryTransactionType	수불유형	ADJ	조정	Adjustment	4	Y			실사·평가 조정				
-348	자재·재고관리	InventoryVariationType	재고증감유형	INC	증가	Increase	1	Y							
-349	자재·재고관리	InventoryVariationType	재고증감유형	DEC	감소	Decrease	2	Y							
-350	자재·재고관리	InventoryTransferType	입출고유형	RCV_PUR	구매입고	Purchase receipt	1	Y	InventoryTransactionType	RCV					
-351	자재·재고관리	InventoryTransferType	입출고유형	RCV_PRD	생산입고	Production receipt	2	Y	InventoryTransactionType	RCV					
-352	자재·재고관리	InventoryTransferType	입출고유형	RCV_SUB	외주입고	Subcontract receipt	3	Y	InventoryTransactionType	RCV					
-353	자재·재고관리	InventoryTransferType	입출고유형	RCV_SRTN	매출반품입고	Sales return receipt	4	Y	InventoryTransactionType	RCV					
-354	자재·재고관리	InventoryTransferType	입출고유형	RCV_OTH	타계정입고	Other account receipt	5	Y	InventoryTransactionType	RCV					
-355	자재·재고관리	InventoryTransferType	입출고유형	ISS_SAL	판매출고	Sales issue	6	Y	InventoryTransactionType	ISS					
-356	자재·재고관리	InventoryTransferType	입출고유형	ISS_PRD	생산출고	Production issue	7	Y	InventoryTransactionType	ISS	자재 불출				
-357	자재·재고관리	InventoryTransferType	입출고유형	ISS_SUB	외주출고	Subcontract issue	8	Y	InventoryTransactionType	ISS	사급자재				
-358	자재·재고관리	InventoryTransferType	입출고유형	ISS_PRTN	매입반품출고	Purchase return issue	9	Y	InventoryTransactionType	ISS					
-359	자재·재고관리	InventoryTransferType	입출고유형	ISS_OTH	타계정출고	Other account issue	10	Y	InventoryTransactionType	ISS	견본·연구 등				
-360	자재·재고관리	InventoryTransferType	입출고유형	ISS_SCR	폐기출고	Scrap issue	11	Y	InventoryTransactionType	ISS					
-361	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	R100	구매입고	Purchase receipt	1	Y	InventoryTransferType	RCV_PUR	재고증감: 증가				
-362	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	R101	구매입고 취소	Purchase receipt cancel	2	Y	InventoryTransferType	RCV_PUR	재고증감: 감소 (원거래 역처리)				
-363	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	R200	생산입고	Production receipt	3	Y	InventoryTransferType	RCV_PRD	재고증감: 증가				
-364	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	R300	외주입고	Subcontract receipt	4	Y	InventoryTransferType	RCV_SUB	재고증감: 증가				
-365	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	R400	매출반품입고	Sales return	5	Y	InventoryTransferType	RCV_SRTN	재고증감: 증가				
-366	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	R900	타계정입고	Other receipt	6	Y	InventoryTransferType	RCV_OTH	재고증감: 증가				
-367	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I100	판매출고	Sales issue	7	Y	InventoryTransferType	ISS_SAL	재고증감: 감소				
-368	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I200	생산출고(자재불출)	Production issue	8	Y	InventoryTransferType	ISS_PRD	재고증감: 감소				
-369	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I201	생산출고 반납	Production return	9	Y	InventoryTransferType	ISS_PRD	재고증감: 증가 (원거래 역처리)				
-370	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I300	외주출고	Subcontract issue	10	Y	InventoryTransferType	ISS_SUB	재고증감: 감소				
-371	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I400	매입반품출고	Purchase return	11	Y	InventoryTransferType	ISS_PRTN	재고증감: 감소				
-372	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I800	폐기출고	Scrap	12	Y	InventoryTransferType	ISS_SCR	재고증감: 감소				
-373	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I900	타계정출고	Other issue	13	Y	InventoryTransferType	ISS_OTH	재고증감: 감소				
-374	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	T100	창고간 이동	Warehouse transfer	14	Y	InventoryTransactionType	TRF	재고증감: 출발 위치 감소·도착 위치 증가(거래 행별)				
-375	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	T200	사업장간 이동	Site transfer	15	Y	InventoryTransactionType	TRF	재고증감: 출발 위치 감소·도착 위치 증가(거래 행별)				
-376	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	A100	실사 조정(증가)	Count adjustment +	16	Y	InventoryTransactionType	ADJ	재고실사 차이 / 재고증감: 증가				
-377	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	A101	실사 조정(감소)	Count adjustment -	17	Y	InventoryTransactionType	ADJ	재고실사 차이 / 재고증감: 감소				
-378	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	A200	품목 대체	Item conversion	18	Y	InventoryTransactionType	ADJ	품번 변경·등급 전환				
-379	생산관리	LocationType	위치유형(출발지·목적지)	EQP_PORT	설비 포트	Equipment port	1	Y							
-380	생산관리	LocationType	위치유형(출발지·목적지)	STOCKER	저장소	Stocker	2	Y			공정 저장소(WarehouseLocation)				
-381	생산관리	LocationType	위치유형(출발지·목적지)	CARRIER	캐리어	Carrier	3	Y							
-382	생산관리	LocationType	위치유형(출발지·목적지)	BUFFER	버퍼	Buffer	4	Y			라인 사이드 버퍼				
-383	생산관리	LocationType	위치유형(출발지·목적지)	VEHICLE	반송장치	Vehicle	5	Y			AGV, OHT 등				
-384	생산관리	LocationType	위치유형(출발지·목적지)	MANUAL_PORT	수동 포트	Manual port	6	Y			작업자 투입·배출				
-385	생산관리	TransferErrorCode	반송오류코드	TR-001	목적지 포트 점유	Destination occupied	1	Y							
-386	생산관리	TransferErrorCode	반송오류코드	TR-002	반송 경로 차단	Route blocked	2	Y							
-387	생산관리	TransferErrorCode	반송오류코드	TR-003	캐리어 식별자 불일치	Carrier ID mismatch	3	Y							
-388	생산관리	TransferErrorCode	반송오류코드	TR-004	반송 시간 초과	Transfer timeout	4	Y							
-389	생산관리	TransferErrorCode	반송오류코드	TR-005	반송장치 이상	Vehicle fault	5	Y							
-390	생산관리	EquipmentErrorCode	설비오류코드	EQ-001	비상정지	Emergency stop	1	Y							
-391	생산관리	EquipmentErrorCode	설비오류코드	EQ-002	과부하	Overload	2	Y							
-392	생산관리	EquipmentErrorCode	설비오류코드	EQ-003	온도 이상	Temperature abnormal	3	Y							
-393	생산관리	EquipmentErrorCode	설비오류코드	EQ-004	압력 이상	Pressure abnormal	4	Y							
-394	생산관리	EquipmentErrorCode	설비오류코드	EQ-005	통신 이상	Communication error	5	Y							
-395	생산관리	EquipmentErrorCode	설비오류코드	EQ-006	자재 공급 부족	Material shortage	6	Y							
-396	생산관리	EquipmentErrorCode	설비오류코드	EQ-007	공구 마모·파손	Tool wear/broken	7	Y							
-397	서비스관리	ServiceErrorCode	서비스오류코드	AS-001	전원 불량	Power failure	1	Y							
-398	서비스관리	ServiceErrorCode	서비스오류코드	AS-002	동작 불량	Malfunction	2	Y							
-399	서비스관리	ServiceErrorCode	서비스오류코드	AS-003	소음·진동	Noise/vibration	3	Y							
-400	서비스관리	ServiceErrorCode	서비스오류코드	AS-004	누수·누유	Leakage	4	Y							
-401	서비스관리	ServiceErrorCode	서비스오류코드	AS-005	표시부 오류	Display error	5	Y							
-402	서비스관리	ServiceErrorCode	서비스오류코드	AS-006	통신·소프트웨어 오류	Software error	6	Y							
-403	생산관리	EquipmentState	설비상태	RUN	가동	Run	1	Y							
-404	생산관리	EquipmentState	설비상태	IDLE	대기	Idle	2	Y							
-405	생산관리	EquipmentState	설비상태	DOWN	정지(고장)	Down	3	Y							
-406	생산관리	EquipmentState	설비상태	SETUP	셋업	Setup	4	Y			품종 교체·준비				
-407	생산관리	EquipmentState	설비상태	PM	계획보전	Planned maintenance	5	Y							
-408	생산관리	EquipmentState	설비상태	ENG	엔지니어링	Engineering	6	Y			조건 검증·시험				
-409	생산관리	EquipmentState	설비상태	NONSCHED	비가동 계획	Non-scheduled	7	Y							
-410	생산관리	EquipmentControlMode	설비제어모드	ONLINE	온라인(원격)	Online	1	Y			상위 시스템 원격 제어				
-411	생산관리	EquipmentControlMode	설비제어모드	LOCAL	로컬	Local	2	Y			온라인 연결, 설비 측 조작				
-412	생산관리	EquipmentControlMode	설비제어모드	OFFLINE	오프라인	Offline	3	Y							
-413	생산관리	EquipmentOperationMode	설비운영모드	FULL_AUTO	완전자동	Full-Auto	1	Y							
-414	생산관리	EquipmentOperationMode	설비운영모드	SEMI_AUTO	반자동	Semi-Auto	2	Y							
-415	생산관리	EquipmentOperationMode	설비운영모드	MANUAL	수동	Manual	3	Y							
-416	생산관리	AlarmState	알람상태	ALARM	알람 발생	Alarm	1	Y							
-417	생산관리	AlarmState	알람상태	NO_ALARM	알람 해제	No Alarm	2	Y							
-418	생산관리	AlarmState	알람상태	MAINTENANCE	보전 중	Maintenance	3	Y							
-419	생산관리	AlarmState	알람상태	NORMAL	정상	Normal	4	Y							
-420	생산관리	AlarmState	알람상태	WARNING	경고	Warning	5	Y			정지 전 단계 경보				
-421	생산관리(품질)	InspectionMethod	검사방법	VISUAL	육안검사	Visual	1	Y							
-422	생산관리(품질)	InspectionMethod	검사방법	NDT	비파괴검사	Non-destructive	2	Y							
-423	생산관리(품질)	InspectionMethod	검사방법	DIMENSION	치수검사	Dimensional	3	Y							
-424	생산관리(품질)	InspectionMethod	검사방법	FUNCTION	기능·성능검사	Functional	4	Y							
-425	생산관리(품질)	InspectionMethod	검사방법	MATERIAL	재질·성분분석	Material analysis	5	Y							
-426	생산관리(품질)	InspectionMethod	검사방법	RELIABILITY	신뢰성시험	Reliability test	6	Y							
-427	생산관리(품질)	InspectionMethod	검사방법	DOCUMENT	서류검사	Document review	7	Y			성적서·인증서 확인				
-428	생산관리(품질)	InspectionStatusCode	검사상태코드	WAIT	신청대기	Waiting	1	Y							
-429	생산관리(품질)	InspectionStatusCode	검사상태코드	APPLIED	신청	Applied	2	Y							
-430	생산관리(품질)	InspectionStatusCode	검사상태코드	ACCEPTED	접수	Accepted	3	Y							
-431	생산관리(품질)	InspectionStatusCode	검사상태코드	IN_PROGRESS	검사중	In progress	4	Y							
-432	생산관리(품질)	InspectionStatusCode	검사상태코드	COMPLETED	완료	Completed	5	Y			판정 결과는 InspectionResult				
-433	생산관리(품질)	InspectionStatusCode	검사상태코드	CANCELLED	취소	Cancelled	6	Y							
-434	생산관리(품질)	InspectionResult	검사결과	PASS	합격	Pass	1	Y							
-435	생산관리(품질)	InspectionResult	검사결과	FAIL	불합격	Fail	2	Y							
-436	생산관리(품질)	InspectionResult	검사결과	CONDITIONAL	조건부 합격	Conditional	3	Y			특채				
-437	생산관리(품질)	InspectionResult	검사결과	HOLD	판정보류	Hold	4	Y							
-438	생산관리(품질)	CorrectiveActionStatusCode	시정조치상태코드	ISSUED	발행	Issued	1	Y							
-439	생산관리(품질)	CorrectiveActionStatusCode	시정조치상태코드	RECEIVED	접수	Received	2	Y							
-440	생산관리(품질)	CorrectiveActionStatusCode	시정조치상태코드	IN_PROGRESS	진행	In progress	3	Y							
-441	생산관리(품질)	CorrectiveActionStatusCode	시정조치상태코드	REJECTED	반려	Rejected	4	Y							
-442	생산관리(품질)	CorrectiveActionStatusCode	시정조치상태코드	COMPLETED	완료	Completed	5	Y							
-443	생산관리(품질)	CorrectiveActionStatusCode	시정조치상태코드	CLOSED	종결	Closed	6	Y			유효성 확인 후 종결				
-444	생산관리	PackingType	포장유형	BOX	박스	Box	1	Y							
-445	생산관리	PackingType	포장유형	PALLET	파렛트	Pallet	2	Y							
-446	생산관리	PackingType	포장유형	BULK	벌크	Bulk	3	Y							
-447	생산관리	PackingType	포장유형	BAG	포대	Bag	4	Y							
-448	생산관리	PackingType	포장유형	DRUM	드럼	Drum	5	Y							
-449	생산관리	PackingType	포장유형	REEL	릴	Reel	6	Y							
-450	생산관리	PackingType	포장유형	CRATE	목상자	Crate	7	Y			수출 포장				
-451	생산관리	ParameterType	파라미터유형	TEMP	온도	Temperature	1	Y							
-452	생산관리	ParameterType	파라미터유형	PRESS	압력	Pressure	2	Y							
-453	생산관리	ParameterType	파라미터유형	CURRENT	전류	Current	3	Y							
-454	생산관리	ParameterType	파라미터유형	VIB	진동	Vibration	4	Y							
-455	생산관리	ParameterType	파라미터유형	VOLT	전압	Voltage	5	Y							
-456	생산관리	ParameterType	파라미터유형	POWER	전력	Power	6	Y							
-457	생산관리	ParameterType	파라미터유형	SPEED	속도·회전수	Speed	7	Y							
-458	생산관리	ParameterType	파라미터유형	FLOW	유량	Flow	8	Y							
-459	생산관리	ParameterType	파라미터유형	HUMID	습도	Humidity	9	Y							
-460	생산관리	ParameterType	파라미터유형	TORQUE	토크	Torque	10	Y							
-461	생산관리	ParameterType	파라미터유형	POSITION	위치	Position	11	Y							
-462	생산관리	ParameterType	파라미터유형	CYCLE	사이클타임	Cycle time	12	Y							
-463	생산관리	ParameterType	파라미터유형	COUNT	카운트	Count	13	Y			타발수·생산수				
-464	생산관리	ParameterGrade	파라미터등급	CRITICAL	핵심	Critical	1	Y			품질·안전 직결, 실시간 감시				
-465	생산관리	ParameterGrade	파라미터등급	MAJOR	주요	Major	2	Y							
-466	생산관리	ParameterGrade	파라미터등급	MINOR	일반	Minor	3	Y							
-467	생산관리	ValidationResultCode	검증결과코드	NORMAL	정상	Normal	1	Y							
-468	생산관리	ValidationResultCode	검증결과코드	OVER_USL	상한 초과	OverUSL	2	Y							
-469	생산관리	ValidationResultCode	검증결과코드	UNDER_LSL	하한 미달	UnderLSL	3	Y							
-470	생산관리	ValidationResultCode	검증결과코드	OVER_UCL	관리상한 초과	OverUCL	4	Y			규격 내, 관리한계 이탈(SPC)				
-471	생산관리	ValidationResultCode	검증결과코드	UNDER_LCL	관리하한 미달	UnderLCL	5	Y							
-472	생산관리	ValidationResultCode	검증결과코드	NO_DATA	데이터 누락	No data	6	Y							
-473	생산관리	TaskGroupCode	근무조코드	DAY	주간조	Day shift	1	Y			2교대				
-474	생산관리	TaskGroupCode	근무조코드	NIGHT	야간조	Night shift	2	Y			2교대				
-475	생산관리	TaskGroupCode	근무조코드	A	A조	Shift A	3	Y			3교대·4조3교대				
-476	생산관리	TaskGroupCode	근무조코드	B	B조	Shift B	4	Y							
-477	생산관리	TaskGroupCode	근무조코드	C	C조	Shift C	5	Y							
-478	생산관리	TaskGroupCode	근무조코드	D	D조	Shift D	6	Y			4조3교대				
-479	생산관리(품질)	DefectTypeCode	불량유형코드	APP	외관불량	Appearance	1	Y							
-480	생산관리(품질)	DefectTypeCode	불량유형코드	DIM	치수불량	Dimension	2	Y							
-481	생산관리(품질)	DefectTypeCode	불량유형코드	FUNC	기능불량	Function	3	Y							
-482	생산관리(품질)	DefectTypeCode	불량유형코드	MAT	재질불량	Material	4	Y							
-483	생산관리(품질)	DefectTypeCode	불량유형코드	ASSY	조립불량	Assembly	5	Y							
-484	생산관리(품질)	DefectTypeCode	불량유형코드	PKG	포장불량	Packing	6	Y							
-485	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	APP-SCR	스크래치	Scratch	1	Y	DefectTypeCode	APP					
-486	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	APP-DNT	찍힘	Dent	2	Y	DefectTypeCode	APP					
-487	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	APP-STN	얼룩·오염	Stain	3	Y	DefectTypeCode	APP					
-488	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	APP-BUR	버	Burr	4	Y	DefectTypeCode	APP					
-489	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	APP-CRK	크랙	Crack	5	Y	DefectTypeCode	APP					
-490	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	DIM-OVR	치수 초과	Oversize	6	Y	DefectTypeCode	DIM					
-491	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	DIM-UND	치수 미달	Undersize	7	Y	DefectTypeCode	DIM					
-492	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	DIM-FLT	평탄도 불량	Flatness	8	Y	DefectTypeCode	DIM					
-493	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	FUNC-NOP	작동 불량	No operation	9	Y	DefectTypeCode	FUNC					
-494	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	FUNC-NOI	이음	Noise	10	Y	DefectTypeCode	FUNC					
-495	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	FUNC-LEK	누설	Leak	11	Y	DefectTypeCode	FUNC					
-496	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	MAT-HRD	경도 불량	Hardness	12	Y	DefectTypeCode	MAT					
-497	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	MAT-CMP	성분 불량	Composition	13	Y	DefectTypeCode	MAT					
-498	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	ASSY-MIS	오조립	Misassembly	14	Y	DefectTypeCode	ASSY					
-499	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	ASSY-MSG	부품 누락	Missing part	15	Y	DefectTypeCode	ASSY					
-500	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	ASSY-TRQ	체결 토크 불량	Torque	16	Y	DefectTypeCode	ASSY					
-501	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	PKG-DMG	포장 파손	Damaged packing	17	Y	DefectTypeCode	PKG					
-502	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	PKG-LBL	라벨 오류	Label error	18	Y	DefectTypeCode	PKG					
-503	창고관리	ProductReleaseRequestType	납품구분유형	NORMAL	일반 납품	Normal	1	Y							
-504	창고관리	ProductReleaseRequestType	납품구분유형	URGENT	긴급 납품	Urgent	2	Y							
-505	창고관리	ProductReleaseRequestType	납품구분유형	FREE	무상 납품	Free of charge	3	Y							
-506	창고관리	ProductReleaseRequestType	납품구분유형	TRIAL	시방/시운전 납품	Trial	4	Y							
-507	창고관리	ProductReleaseRequestType	납품구분유형	OTHER	타계정 출하	Other account	5	Y							
-508	창고관리	ReturnType	반품유형	PUR	구매반품	Purchase return	1	Y							
-509	창고관리	ReturnType	반품유형	SAL	제품반품	Sales return	2	Y							
-510	창고관리	ReturnType	반품유형	PUR-DEF	구매반품-불량	Purchase return - defect	3	Y	ReturnType	PUR					
-511	창고관리	ReturnType	반품유형	PUR-QTY	구매반품-수량오류	Purchase return - quantity	4	Y	ReturnType	PUR					
-512	창고관리	ReturnType	반품유형	PUR-WRG	구매반품-오배송	Purchase return - wrong item	5	Y	ReturnType	PUR					
-513	창고관리	ReturnType	반품유형	PUR-CTR	구매반품-계약위반	Purchase return - contract	6	Y	ReturnType	PUR					
-514	창고관리	ReturnType	반품유형	SAL-DEF	제품반품-불량	Sales return - defect	7	Y	ReturnType	SAL					
-515	창고관리	ReturnType	반품유형	SAL-QTY	제품반품-수량오류	Sales return - quantity	8	Y	ReturnType	SAL					
-516	창고관리	ReturnType	반품유형	SAL-WRG	제품반품-오배송	Sales return - wrong item	9	Y	ReturnType	SAL					
-517	창고관리	ReturnType	반품유형	SAL-CTR	제품반품-계약위반	Sales return - contract	10	Y	ReturnType	SAL					
-518	창고관리	ReturnType	반품유형	SAL-CHG	제품반품-단순변심	Sales return - change of mind	11	Y	ReturnType	SAL					
-519	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	GUIDE	사용법 안내	Usage guide	1	Y							
-520	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	SETTING	설정 변경 안내	Setting guide	2	Y							
-521	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	REMOTE	원격 조치	Remote fix	3	Y							
-522	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	NO_FAULT	이상 없음 확인	No fault found	4	Y							
-523	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	DUPLICATE	중복 접수	Duplicate	5	Y							
-524	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	CUST_CANCEL	고객 취소	Customer cancel	6	Y							
-525	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	OUT_OF_SCOPE	서비스 대상 아님	Out of scope	7	Y							
-526	서비스관리	TransferRegistrationCode	이관등록코드	ENGINEER	기사	Service engineer	1	Y							
-527	서비스관리	TransferRegistrationCode	이관등록코드	HQ	본사	Headquarters	2	Y							
-528	서비스관리	TransferRegistrationCode	이관등록코드	AGENCY	대리점	Agency	3	Y							
-529	서비스관리	TransferRegistrationCode	이관등록코드	CENTER	서비스센터	Service center	4	Y							
-530	서비스관리	TransferRegistrationCode	이관등록코드	PARTNER	협력 서비스업체	Partner	5	Y							
-531	서비스관리	FaultLargeClass	하자현상대분류	PWR	전원	Power	1	Y							
-532	서비스관리	FaultLargeClass	하자현상대분류	OPR	동작	Operation	2	Y							
-533	서비스관리	FaultLargeClass	하자현상대분류	NVH	소음·진동	Noise/vibration	3	Y							
-534	서비스관리	FaultLargeClass	하자현상대분류	LEAK	누수·누유	Leak	4	Y							
-535	서비스관리	FaultLargeClass	하자현상대분류	DISP	표시·제어	Display/control	5	Y							
-536	서비스관리	FaultLargeClass	하자현상대분류	APPR	외관	Appearance	6	Y							
-537	서비스관리	FaultSmallClass	하자현상소분류	PWR-NOON	전원 안 켜짐	No power on	1	Y	FaultLargeClass	PWR					
-538	서비스관리	FaultSmallClass	하자현상소분류	PWR-TRIP	전원 차단 반복	Power trip	2	Y	FaultLargeClass	PWR					
-539	서비스관리	FaultSmallClass	하자현상소분류	OPR-STOP	동작 멈춤	Stop	3	Y	FaultLargeClass	OPR					
-540	서비스관리	FaultSmallClass	하자현상소분류	OPR-WEAK	성능 저하	Low performance	4	Y	FaultLargeClass	OPR					
-541	서비스관리	FaultSmallClass	하자현상소분류	NVH-NOISE	이상음	Abnormal noise	5	Y	FaultLargeClass	NVH					
-542	서비스관리	FaultSmallClass	하자현상소분류	NVH-VIB	이상 진동	Abnormal vibration	6	Y	FaultLargeClass	NVH					
-543	서비스관리	FaultSmallClass	하자현상소분류	LEAK-WTR	누수	Water leak	7	Y	FaultLargeClass	LEAK					
-544	서비스관리	FaultSmallClass	하자현상소분류	LEAK-OIL	누유	Oil leak	8	Y	FaultLargeClass	LEAK					
-545	서비스관리	FaultSmallClass	하자현상소분류	DISP-ERR	에러 표시	Error display	9	Y	FaultLargeClass	DISP					
-546	서비스관리	FaultSmallClass	하자현상소분류	DISP-KEY	버튼 불량	Key failure	10	Y	FaultLargeClass	DISP					
-547	서비스관리	FaultSmallClass	하자현상소분류	APPR-DMG	파손	Damage	11	Y	FaultLargeClass	APPR					
-548	서비스관리	FaultSmallClass	하자현상소분류	APPR-DISC	변색	Discoloration	12	Y	FaultLargeClass	APPR					
-549	서비스관리	WorkType	작업유형	EXCHANGE	교환	Exchange	1	Y							
-550	서비스관리	WorkType	작업유형	REPAIR	수리	Repair	2	Y							
-551	서비스관리	WorkType	작업유형	INSPECT	점검	Inspection	3	Y							
-552	서비스관리	WorkType	작업유형	INSTALL	설치	Installation	4	Y							
-553	서비스관리	WorkType	작업유형	RELOCATE	이전설치	Relocation	5	Y							
-554	서비스관리	WorkType	작업유형	REFUND	환불	Refund	6	Y							
-555	서비스관리	RepairType	수리유형	WEAR	마모	Wear	1	Y							
-556	서비스관리	RepairType	수리유형	BREAK	파손	Breakage	2	Y							
-557	서비스관리	RepairType	수리유형	BURN	소손	Burnout	3	Y							
-558	서비스관리	RepairType	수리유형	CORROSION	부식	Corrosion	4	Y							
-559	서비스관리	RepairType	수리유형	CONTAM	오염	Contamination	5	Y							
-560	서비스관리	RepairType	수리유형	MALFUNC	기능 불량	Malfunction	6	Y							
-561	서비스관리	RepairType	수리유형	PREVENT	예방 교체	Preventive	7	Y							
+No	업무영역	공통코드그룹 / (CommonCodeGroup)	그룹명	공통코드식별자 / (CommonCodeID)	공통코드명 / (CommonCodeName)	영문명	표시순번 / (CommonCodeSequence)	사용여부 / (UseIndicator)	상위공통코드그룹 / (ParentCommonCodeGroup)	상위공통코드식별자 / (ParentCommonCodeID)	설명	출처구분	회사 적용 / (Y/N)	회사 코드값	회사 코드명	비고(회사)
+1	기준정보	CountryID	국가	KR	대한민국	Republic of Korea	1	Y				국제표준
+2	기준정보	CountryID	국가	US	미국	United States of America	2	Y				국제표준
+3	기준정보	CountryID	국가	CN	중국	China	3	Y				국제표준
+4	기준정보	CountryID	국가	JP	일본	Japan	4	Y				국제표준
+5	기준정보	CountryID	국가	VN	베트남	Viet Nam	5	Y				국제표준
+6	기준정보	CountryID	국가	TW	대만	Taiwan	6	Y				국제표준
+7	기준정보	CountryID	국가	HK	홍콩	Hong Kong	7	Y				국제표준
+8	기준정보	CountryID	국가	SG	싱가포르	Singapore	8	Y				국제표준
+9	기준정보	CountryID	국가	IN	인도	India	9	Y				국제표준
+10	기준정보	CountryID	국가	ID	인도네시아	Indonesia	10	Y				국제표준
+11	기준정보	CountryID	국가	TH	태국	Thailand	11	Y				국제표준
+12	기준정보	CountryID	국가	MY	말레이시아	Malaysia	12	Y				국제표준
+13	기준정보	CountryID	국가	PH	필리핀	Philippines	13	Y				국제표준
+14	기준정보	CountryID	국가	MX	멕시코	Mexico	14	Y				국제표준
+15	기준정보	CountryID	국가	CA	캐나다	Canada	15	Y				국제표준
+16	기준정보	CountryID	국가	BR	브라질	Brazil	16	Y				국제표준
+17	기준정보	CountryID	국가	DE	독일	Germany	17	Y				국제표준
+18	기준정보	CountryID	국가	FR	프랑스	France	18	Y				국제표준
+19	기준정보	CountryID	국가	GB	영국	United Kingdom	19	Y				국제표준
+20	기준정보	CountryID	국가	IT	이탈리아	Italy	20	Y				국제표준
+21	기준정보	CountryID	국가	NL	네덜란드	Netherlands	21	Y				국제표준
+22	기준정보	CountryID	국가	PL	폴란드	Poland	22	Y				국제표준
+23	기준정보	CountryID	국가	HU	헝가리	Hungary	23	Y				국제표준
+24	기준정보	CountryID	국가	CZ	체코	Czechia	24	Y				국제표준
+25	기준정보	CountryID	국가	TR	튀르키예	Türkiye	25	Y				국제표준
+26	기준정보	CountryID	국가	SA	사우디아라비아	Saudi Arabia	26	Y				국제표준
+27	기준정보	CountryID	국가	AE	아랍에미리트	United Arab Emirates	27	Y				국제표준
+28	기준정보	CountryID	국가	AU	호주	Australia	28	Y				국제표준
+29	기준정보	CurrencyCode	통화(환종)	KRW	원	Korean won	1	Y			회사 기준통화 기본값(국내 법인)	표준 예시
+30	기준정보	CurrencyCode	통화(환종)	USD	미국 달러	US dollar	2	Y				표준 예시
+31	기준정보	CurrencyCode	통화(환종)	JPY	엔	Japanese yen	3	Y				표준 예시
+32	기준정보	CurrencyCode	통화(환종)	EUR	유로	Euro	4	Y				국제표준
+33	기준정보	CurrencyCode	통화(환종)	CNY	위안	Chinese yuan renminbi	5	Y				국제표준
+34	기준정보	CurrencyCode	통화(환종)	VND	동	Vietnamese dong	6	Y				국제표준
+35	기준정보	CurrencyCode	통화(환종)	GBP	파운드	Pound sterling	7	Y				국제표준
+36	기준정보	CurrencyCode	통화(환종)	HKD	홍콩 달러	Hong Kong dollar	8	Y				국제표준
+37	기준정보	CurrencyCode	통화(환종)	TWD	대만 달러	New Taiwan dollar	9	Y				국제표준
+38	기준정보	CurrencyCode	통화(환종)	SGD	싱가포르 달러	Singapore dollar	10	Y				국제표준
+39	기준정보	CurrencyCode	통화(환종)	INR	루피	Indian rupee	11	Y				국제표준
+40	기준정보	CurrencyCode	통화(환종)	IDR	루피아	Indonesian rupiah	12	Y				국제표준
+41	기준정보	CurrencyCode	통화(환종)	THB	바트	Thai baht	13	Y				국제표준
+42	기준정보	CurrencyCode	통화(환종)	MXN	멕시코 페소	Mexican peso	14	Y				국제표준
+43	기준정보	CurrencyCode	통화(환종)	CAD	캐나다 달러	Canadian dollar	15	Y				국제표준
+44	기준정보	CurrencyCode	통화(환종)	AUD	호주 달러	Australian dollar	16	Y				국제표준
+45	기준정보	CurrencyCode	통화(환종)	CHF	스위스 프랑	Swiss franc	17	Y				국제표준
+46	기준정보	EmploymentStatusType	재직유형	ACTIVE	재직	Active	1	Y			정상 근무 중	표준 예시
+47	기준정보	EmploymentStatusType	재직유형	PROBATION	수습	Probation	2	Y			수습 기간 중	표준 예시
+48	기준정보	EmploymentStatusType	재직유형	LEAVE	휴직	Leave of absence	3	Y			육아·병가 등 휴직	표준 예시
+49	기준정보	EmploymentStatusType	재직유형	DISPATCHED	파견	Dispatched	4	Y			외부 파견 근무	표준 예시
+50	기준정보	EmploymentStatusType	재직유형	RETIRED	퇴직	Retired	5	Y			퇴직 처리 완료(실적 이력 조회용으로 유지)	표준 예시
+51	기준정보	CalendarType	달력유형	PLANT	공장 달력	Plant calendar	1	Y			공장 단위 가동일	표준 예시
+52	기준정보	CalendarType	달력유형	LINE	라인 달력	Line calendar	2	Y			라인별 가동일(라인 명사와 연계)	표준 예시
+53	기준정보	CalendarType	달력유형	SHIFT	교대 달력	Shift calendar	3	Y			근무조·교대 편성	표준 예시
+54	기준정보	CalendarType	달력유형	EQUIPMENT	설비 달력	Equipment calendar	4	Y			설비별 가동/보전 계획일	보완 제안
+55	기준정보	CalendarType	달력유형	ENTERPRISE	회사 달력	Enterprise calendar	5	Y			회사 공통 휴일(인사 달력과 구분)	보완 제안
+56	기준정보	DayOfWeek	요일	1	월요일	Monday	1	Y				표준 예시
+57	기준정보	DayOfWeek	요일	2	화요일	Tuesday	2	Y				표준 예시
+58	기준정보	DayOfWeek	요일	3	수요일	Wednesday	3	Y				표준 예시
+59	기준정보	DayOfWeek	요일	4	목요일	Thursday	4	Y				표준 예시
+60	기준정보	DayOfWeek	요일	5	금요일	Friday	5	Y				표준 예시
+61	기준정보	DayOfWeek	요일	6	토요일	Saturday	6	Y				표준 예시
+62	기준정보	DayOfWeek	요일	7	일요일	Sunday	7	Y				표준 예시
+63	기준정보	ScheduleType	근무일유형	NORMAL	정상근무	Normal workday	1	Y				표준 예시
+64	기준정보	ScheduleType	근무일유형	HOLIDAY	휴일	Holiday	2	Y			법정·약정 휴일	표준 예시
+65	기준정보	ScheduleType	근무일유형	OVERTIME	특근	Special work	3	Y			휴일 특근	표준 예시
+66	기준정보	ScheduleType	근무일유형	OFF	휴무	Day off	4	Y			회사 지정 휴무	표준 예시
+67	기준정보	ScheduleType	근무일유형	HALF	반일근무	Half day	5	Y				보완 제안
+68	기준정보	ScheduleType	근무일유형	PM	정기보수	Planned maintenance	6	Y			설비 정기보수로 생산 미계획	보완 제안
+69	기준정보	ScheduleType	근무일유형	SHUTDOWN	계획정지	Planned shutdown	7	Y			하계·동계 휴가 등 공장 정지	보완 제안
+70	기준정보	ItemType	품목유형	FG	제품	Finished good	1	Y			자체 생산 판매 품목	표준 예시
+71	기준정보	ItemType	품목유형	SFG	반제품	Semi-finished good	2	Y			공정 중간 품목(재고 관리 대상)	표준 예시
+72	기준정보	ItemType	품목유형	MER	상품	Merchandise	3	Y			외부 구매 후 가공 없이 판매	표준 예시
+73	기준정보	ItemType	품목유형	RM	원자재	Raw material	4	Y				표준 예시
+74	기준정보	ItemType	품목유형	SM	부자재	Sub material	5	Y				표준 근거 보완
+75	기준정보	ItemType	품목유형	SUP	저장품	Supplies	6	Y			수선용 부품 등	표준 근거 보완
+76	기준정보	ItemType	품목유형	CON	소모품	Consumables	7	Y				표준 근거 보완
+77	기준정보	ItemType	품목유형	PKG	포장재	Packaging material	8	Y				보완 제안
+78	기준정보	ItemType	품목유형	BYP	부산물	By-product	9	Y			스크랩 등 부수 발생품	보완 제안
+79	기준정보	ItemLargeClass	품목대분류	MTL	금속소재	Metal material	1	Y				표준 예시
+80	기준정보	ItemLargeClass	품목대분류	RES	수지소재	Resin material	2	Y				표준 예시
+81	기준정보	ItemLargeClass	품목대분류	ELC	전자부품	Electronic part	3	Y				표준 예시
+82	기준정보	ItemLargeClass	품목대분류	MEC	기계부품	Mechanical part	4	Y				표준 예시
+83	기준정보	ItemLargeClass	품목대분류	PKG	포장자재	Packaging	5	Y				표준 예시
+84	기준정보	ItemLargeClass	품목대분류	PRD	완제품	Product	6	Y				보완 제안
+85	기준정보	ItemMediumClass	품목중분류	MTL-STL	철강	Steel	1	Y	ItemLargeClass	MTL		표준 예시
+86	기준정보	ItemMediumClass	품목중분류	MTL-ALU	알루미늄	Aluminium	2	Y	ItemLargeClass	MTL		표준 예시
+87	기준정보	ItemMediumClass	품목중분류	MTL-CU	동	Copper	3	Y	ItemLargeClass	MTL		표준 예시
+88	기준정보	ItemMediumClass	품목중분류	RES-PP	PP	Polypropylene	4	Y	ItemLargeClass	RES		보완 제안
+89	기준정보	ItemMediumClass	품목중분류	RES-ABS	ABS	ABS	5	Y	ItemLargeClass	RES		보완 제안
+90	기준정보	ItemMediumClass	품목중분류	RES-PC	PC	Polycarbonate	6	Y	ItemLargeClass	RES		보완 제안
+91	기준정보	ItemMediumClass	품목중분류	ELC-SEM	반도체	Semiconductor	7	Y	ItemLargeClass	ELC		보완 제안
+92	기준정보	ItemMediumClass	품목중분류	ELC-PAS	수동소자	Passive component	8	Y	ItemLargeClass	ELC		보완 제안
+93	기준정보	ItemMediumClass	품목중분류	ELC-PCB	PCB	Printed circuit board	9	Y	ItemLargeClass	ELC		보완 제안
+94	기준정보	ItemMediumClass	품목중분류	MEC-FST	체결부품	Fastener	10	Y	ItemLargeClass	MEC		보완 제안
+95	기준정보	ItemMediumClass	품목중분류	MEC-BRG	베어링	Bearing	11	Y	ItemLargeClass	MEC		보완 제안
+96	기준정보	ItemMediumClass	품목중분류	MEC-SPR	스프링	Spring	12	Y	ItemLargeClass	MEC		보완 제안
+97	기준정보	ItemMediumClass	품목중분류	PKG-BOX	박스	Box	13	Y	ItemLargeClass	PKG		보완 제안
+98	기준정보	ItemMediumClass	품목중분류	PKG-CUS	완충재	Cushion	14	Y	ItemLargeClass	PKG		보완 제안
+99	기준정보	ItemMediumClass	품목중분류	PRD-MOD	모듈	Module	15	Y	ItemLargeClass	PRD		보완 제안
+100	기준정보	ItemMediumClass	품목중분류	PRD-ASY	조립완제품	Assembly	16	Y	ItemLargeClass	PRD		보완 제안
+101	기준정보	ItemSmallClass	품목소분류	MTL-STL-PL	강판	Steel plate	1	Y	ItemMediumClass	MTL-STL		표준 예시
+102	기준정보	ItemSmallClass	품목소분류	MTL-STL-BAR	봉강	Steel bar	2	Y	ItemMediumClass	MTL-STL		표준 예시
+103	기준정보	ItemSmallClass	품목소분류	MTL-STL-PIPE	강관	Steel pipe	3	Y	ItemMediumClass	MTL-STL		표준 예시
+104	기준정보	ItemSmallClass	품목소분류	MTL-ALU-EXT	알루미늄 압출재	Aluminium extrusion	4	Y	ItemMediumClass	MTL-ALU		보완 제안
+105	기준정보	ItemSmallClass	품목소분류	MTL-ALU-SHT	알루미늄 판재	Aluminium sheet	5	Y	ItemMediumClass	MTL-ALU		보완 제안
+106	기준정보	ItemSmallClass	품목소분류	ELC-PAS-RES	저항	Resistor	6	Y	ItemMediumClass	ELC-PAS		보완 제안
+107	기준정보	ItemSmallClass	품목소분류	ELC-PAS-CAP	커패시터	Capacitor	7	Y	ItemMediumClass	ELC-PAS		보완 제안
+108	기준정보	ItemSmallClass	품목소분류	MEC-FST-BLT	볼트	Bolt	8	Y	ItemMediumClass	MEC-FST		보완 제안
+109	기준정보	ItemSmallClass	품목소분류	MEC-FST-NUT	너트	Nut	9	Y	ItemMediumClass	MEC-FST		보완 제안
+110	기준정보	ItemSmallClass	품목소분류	MEC-FST-SCR	스크루	Screw	10	Y	ItemMediumClass	MEC-FST		보완 제안
+111	기준정보	ABCClass	에이비씨분류	A	A등급	Class A	1	Y			연간 사용금액 누계 상위 약 70~80%(품목 수 약 10~20%) — 정밀 관리	표준 예시
+112	기준정보	ABCClass	에이비씨분류	B	B등급	Class B	2	Y			누계 약 15~25% — 정기 관리	표준 예시
+113	기준정보	ABCClass	에이비씨분류	C	C등급	Class C	3	Y			누계 약 5~10%(품목 수 다수) — 간이 관리	표준 예시
+114	기준정보	BOMType	자재명세서유형	MBOM	제조BOM	Manufacturing BOM	1	Y			생산·자재소요 기준	표준 예시
+115	기준정보	BOMType	자재명세서유형	CBOM	원가BOM	Costing BOM	2	Y			원가 계산 기준	표준 예시
+116	기준정보	BOMType	자재명세서유형	EBOM	설계BOM	Engineering BOM	3	Y			PLM 설계 기준	표준 근거 보완
+117	기준정보	BOMType	자재명세서유형	SBOM	서비스BOM	Service BOM	4	Y			사후서비스 부품 기준	보완 제안
+118	기준정보	LotType	로트유형	PRODUCTION	양산	Production	1	Y				표준 예시
+119	기준정보	LotType	로트유형	DEVELOPMENT	개발	Development	2	Y				표준 예시
+120	기준정보	LotType	로트유형	ENGINEERING	엔지니어링	Engineering	3	Y			공정·조건 검증용	표준 예시
+121	기준정보	LotType	로트유형	REWORK	재작업	Rework	4	Y				보완 제안
+122	기준정보	LotType	로트유형	SAMPLE	샘플	Sample	5	Y			고객 샘플·초도품	보완 제안
+123	기준정보	LotState	로트상태	OPEN	등록	Open	1	Y				표준 예시
+124	기준정보	LotState	로트상태	RELEASE	발행	Release	2	Y				표준 예시
+125	기준정보	LotState	로트상태	START	시작	Start	3	Y				표준 예시
+126	기준정보	LotState	로트상태	CLOSING	마감	Closing	4	Y			마감 또는 종료	표준 예시
+127	기준정보	LotState	로트상태	HOLD	보류	Hold	5	Y			품질 이상 등으로 진행 중지	보완 제안
+128	기준정보	LotState	로트상태	SCRAP	폐기	Scrap	6	Y				보완 제안
+129	기준정보	OperationType	공정유형	PROD	생산공정	Production	1	Y				표준 예시
+130	기준정보	OperationType	공정유형	OUTSRC	외주공정	Outsourcing	2	Y			외주 가공 공정	표준 예시
+131	기준정보	OperationType	공정유형	MEAS	계측공정	Measurement	3	Y				표준 예시
+132	기준정보	OperationType	공정유형	INSP	검사공정	Inspection	4	Y				표준 예시
+133	기준정보	OperationType	공정유형	PACK	포장공정	Packing	5	Y				보완 제안
+134	기준정보	OperationType	공정유형	REWORK	재작업공정	Rework	6	Y				보완 제안
+135	기준정보	OperationType	공정유형	MOVE	이송공정	Transfer	7	Y				보완 제안
+136	기준정보	OperationLargeClass	공정대분류	MFG	가공	Manufacturing	1	Y				표준 예시
+137	기준정보	OperationLargeClass	공정대분류	ASSY	조립	Assembly	2	Y				표준 예시
+138	기준정보	OperationLargeClass	공정대분류	SURF	표면처리	Surface treatment	3	Y				표준 예시
+139	기준정보	OperationLargeClass	공정대분류	HEAT	열처리	Heat treatment	4	Y				표준 예시
+140	기준정보	OperationLargeClass	공정대분류	INSP	검사	Inspection	5	Y				표준 예시
+141	기준정보	OperationLargeClass	공정대분류	PACK	포장	Packing	6	Y				표준 예시
+142	기준정보	OperationMediumClass	공정중분류	MFG-CUT	절삭	Cutting	1	Y	OperationLargeClass	MFG		표준 예시
+143	기준정보	OperationMediumClass	공정중분류	MFG-PRS	프레스	Pressing	2	Y	OperationLargeClass	MFG		표준 예시
+144	기준정보	OperationMediumClass	공정중분류	MFG-WLD	용접	Welding	3	Y	OperationLargeClass	MFG		표준 예시
+145	기준정보	OperationMediumClass	공정중분류	MFG-INJ	사출	Injection molding	4	Y	OperationLargeClass	MFG		표준 예시
+146	기준정보	OperationMediumClass	공정중분류	ASSY-SUB	서브조립	Sub assembly	5	Y	OperationLargeClass	ASSY		보완 제안
+147	기준정보	OperationMediumClass	공정중분류	ASSY-FIN	최종조립	Final assembly	6	Y	OperationLargeClass	ASSY		보완 제안
+148	기준정보	OperationMediumClass	공정중분류	SURF-PNT	도장	Painting	7	Y	OperationLargeClass	SURF		보완 제안
+149	기준정보	OperationMediumClass	공정중분류	SURF-PLT	도금	Plating	8	Y	OperationLargeClass	SURF		보완 제안
+150	기준정보	OperationMediumClass	공정중분류	INSP-INC	수입검사	Incoming inspection	9	Y	OperationLargeClass	INSP		보완 제안
+151	기준정보	OperationMediumClass	공정중분류	INSP-PRC	공정검사	In-process inspection	10	Y	OperationLargeClass	INSP		보완 제안
+152	기준정보	OperationMediumClass	공정중분류	INSP-FIN	출하검사	Final inspection	11	Y	OperationLargeClass	INSP		보완 제안
+153	기준정보	OperationSmallClass	공정소분류	MFG-CUT-TRN	선삭	Turning	1	Y	OperationMediumClass	MFG-CUT		표준 예시
+154	기준정보	OperationSmallClass	공정소분류	MFG-CUT-MIL	밀링	Milling	2	Y	OperationMediumClass	MFG-CUT		표준 예시
+155	기준정보	OperationSmallClass	공정소분류	MFG-CUT-DRL	드릴링	Drilling	3	Y	OperationMediumClass	MFG-CUT		표준 예시
+156	기준정보	OperationSmallClass	공정소분류	MFG-PRS-BLK	블랭킹	Blanking	4	Y	OperationMediumClass	MFG-PRS		보완 제안
+157	기준정보	OperationSmallClass	공정소분류	MFG-PRS-BND	벤딩	Bending	5	Y	OperationMediumClass	MFG-PRS		보완 제안
+158	기준정보	OperationSmallClass	공정소분류	MFG-WLD-SPT	스폿용접	Spot welding	6	Y	OperationMediumClass	MFG-WLD		보완 제안
+159	기준정보	OperationSmallClass	공정소분류	MFG-WLD-ARC	아크용접	Arc welding	7	Y	OperationMediumClass	MFG-WLD		보완 제안
+160	기준정보	OperationSmallClass	공정소분류	ASSY-FIN-SCR	체결	Screwing	8	Y	OperationMediumClass	ASSY-FIN		보완 제안
+161	기준정보	OperationSmallClass	공정소분류	ASSY-FIN-TST	기능시험	Function test	9	Y	OperationMediumClass	ASSY-FIN		보완 제안
+162	기준정보	EquipmentType	설비유형	PROD	생산설비	Production equipment	1	Y				표준 예시
+163	기준정보	EquipmentType	설비유형	INSP	검사설비	Inspection equipment	2	Y				표준 예시
+164	기준정보	EquipmentType	설비유형	MEAS	계측기	Measuring instrument	3	Y			교정 대상	표준 예시
+165	기준정보	EquipmentType	설비유형	LOGI	물류·반송설비	Material handling	4	Y			AGV, 컨베이어, 스토커 등	표준 예시
+166	기준정보	EquipmentType	설비유형	UTIL	유틸리티설비	Utility	5	Y			공기압축기, 냉각기, 집진기 등	표준 예시
+167	기준정보	EquipmentType	설비유형	TOOL	금형·치공구	Tooling	6	Y				표준 예시
+168	기준정보	EquipmentLargeClass	설비대분류	MCH	공작기계	Machine tool	1	Y				표준 예시
+169	기준정보	EquipmentLargeClass	설비대분류	PRS	프레스	Press	2	Y				표준 예시
+170	기준정보	EquipmentLargeClass	설비대분류	INJ	사출성형기	Injection molding machine	3	Y				표준 예시
+171	기준정보	EquipmentLargeClass	설비대분류	WLD	용접기	Welder	4	Y				표준 예시
+172	기준정보	EquipmentLargeClass	설비대분류	ROB	로봇	Robot	5	Y				표준 예시
+173	기준정보	EquipmentLargeClass	설비대분류	TST	시험·검사기	Tester	6	Y				표준 예시
+174	기준정보	EquipmentLargeClass	설비대분류	MHS	물류설비	Material handling system	7	Y				표준 예시
+175	기준정보	EquipmentMediumClass	설비중분류	MCH-LTH	CNC 선반	CNC lathe	1	Y	EquipmentLargeClass	MCH		표준 예시
+176	기준정보	EquipmentMediumClass	설비중분류	MCH-MCT	머시닝센터	Machining center	2	Y	EquipmentLargeClass	MCH		표준 예시
+177	기준정보	EquipmentMediumClass	설비중분류	PRS-MEC	기계식 프레스	Mechanical press	3	Y	EquipmentLargeClass	PRS		보완 제안
+178	기준정보	EquipmentMediumClass	설비중분류	PRS-HYD	유압 프레스	Hydraulic press	4	Y	EquipmentLargeClass	PRS		보완 제안
+179	기준정보	EquipmentMediumClass	설비중분류	INJ-HYD	유압식 사출기	Hydraulic injection	5	Y	EquipmentLargeClass	INJ		보완 제안
+180	기준정보	EquipmentMediumClass	설비중분류	INJ-ELE	전동식 사출기	Electric injection	6	Y	EquipmentLargeClass	INJ		보완 제안
+181	기준정보	EquipmentMediumClass	설비중분류	ROB-ART	다관절 로봇	Articulated robot	7	Y	EquipmentLargeClass	ROB		보완 제안
+182	기준정보	EquipmentMediumClass	설비중분류	ROB-SCA	스카라 로봇	SCARA robot	8	Y	EquipmentLargeClass	ROB		보완 제안
+183	기준정보	EquipmentMediumClass	설비중분류	TST-VIS	비전검사기	Vision inspection	9	Y	EquipmentLargeClass	TST		보완 제안
+184	기준정보	EquipmentMediumClass	설비중분류	TST-CMM	3차원 측정기	CMM	10	Y	EquipmentLargeClass	TST		보완 제안
+185	기준정보	EquipmentMediumClass	설비중분류	MHS-AGV	AGV/AMR	AGV/AMR	11	Y	EquipmentLargeClass	MHS		보완 제안
+186	기준정보	EquipmentMediumClass	설비중분류	MHS-CNV	컨베이어	Conveyor	12	Y	EquipmentLargeClass	MHS		보완 제안
+187	기준정보	EquipmentSmallClass	설비소분류	MCH-MCT-V	수직형 머시닝센터	Vertical MC	1	Y	EquipmentMediumClass	MCH-MCT		표준 예시
+188	기준정보	EquipmentSmallClass	설비소분류	MCH-MCT-H	수평형 머시닝센터	Horizontal MC	2	Y	EquipmentMediumClass	MCH-MCT		표준 예시
+189	기준정보	EquipmentSmallClass	설비소분류	PRS-MEC-200	기계식 프레스 200톤급	200t press	3	Y	EquipmentMediumClass	PRS-MEC		보완 제안
+190	기준정보	EquipmentSmallClass	설비소분류	PRS-MEC-400	기계식 프레스 400톤급	400t press	4	Y	EquipmentMediumClass	PRS-MEC		보완 제안
+191	기준정보	EquipmentSmallClass	설비소분류	INJ-ELE-150	전동식 사출기 150톤급	150t injection	5	Y	EquipmentMediumClass	INJ-ELE		보완 제안
+192	기준정보	EquipmentSmallClass	설비소분류	TST-VIS-2D	2D 비전검사기	2D vision	6	Y	EquipmentMediumClass	TST-VIS		보완 제안
+193	기준정보	EquipmentSmallClass	설비소분류	TST-VIS-3D	3D 비전검사기	3D vision	7	Y	EquipmentMediumClass	TST-VIS		보완 제안
+194	기준정보	CarrierType	캐리어유형	FOUP	FOUP	Front opening unified pod	1	Y			반도체 웨이퍼 캐리어	표준 예시
+195	기준정보	CarrierType	캐리어유형	CASSETTE	카세트	Cassette	2	Y				표준 예시
+196	기준정보	CarrierType	캐리어유형	MAGAZINE	매거진	Magazine	3	Y				표준 예시
+197	기준정보	CarrierType	캐리어유형	TRAY	트레이	Tray	4	Y				표준 예시
+198	기준정보	CarrierType	캐리어유형	PALLET	팔레트	Pallet	5	Y				보완 제안
+199	기준정보	CarrierType	캐리어유형	TOTE	토트박스	Tote box	6	Y				보완 제안
+200	기준정보	CarrierType	캐리어유형	REEL	릴	Reel	7	Y			SMD 부품 릴	보완 제안
+201	기준정보	LoadState	적재상태	EMPTY	공	Empty	1	Y				표준 예시
+202	기준정보	LoadState	적재상태	FULL	만재	Full	2	Y				표준 예시
+203	기준정보	LoadState	적재상태	PARTIAL	부분적재	Partial	3	Y				표준 예시
+204	기준정보	CarrierState	캐리어상태	AVAILABLE	사용가능	Available	1	Y				표준 예시
+205	기준정보	CarrierState	캐리어상태	NOT_AVAILABLE	사용불가	Not available	2	Y				표준 예시
+206	기준정보	CarrierState	캐리어상태	IN_USE	사용중	In use	3	Y				표준 예시
+207	기준정보	CarrierState	캐리어상태	CLEANING	세정중	Cleaning	4	Y				보완 제안
+208	기준정보	CarrierState	캐리어상태	DAMAGED	파손	Damaged	5	Y			폐기 또는 수리 대상	보완 제안
+209	기준정보	WarehouseType	창고유형	RM	자재창고	Raw material warehouse	1	Y				표준 예시
+210	기준정보	WarehouseType	창고유형	WIP	공정창고	WIP warehouse	2	Y			라인 사이드 포함	표준 예시
+211	기준정보	WarehouseType	창고유형	FG	제품창고	Finished goods warehouse	3	Y				표준 예시
+212	기준정보	WarehouseType	창고유형	QC	검사대기창고	Quality inspection warehouse	4	Y			수입검사 대기	표준 예시
+213	기준정보	WarehouseType	창고유형	RTN	반품창고	Return warehouse	5	Y				표준 예시
+214	기준정보	WarehouseType	창고유형	DEF	불량창고	Defect warehouse	6	Y				표준 예시
+215	기준정보	WarehouseType	창고유형	OSP	외주창고	Subcontractor warehouse	7	Y			외주처 보관 재고	표준 예시
+216	기준정보	WarehouseType	창고유형	BONDED	보세창고	Bonded warehouse	8	Y				보완 제안
+217	기준정보	BatchType	배치유형	PRODUCTION	사내 생산	Production	1	Y				표준 예시
+218	기준정보	BatchType	배치유형	REWORK	재작업	Rework	2	Y				표준 예시
+219	기준정보	BatchType	배치유형	TRIAL	시험 생산	Trial	3	Y				표준 예시
+220	기준정보	BatchType	배치유형	PURCHASE	공급사 생산	Purchase	4	Y			공급사 배치 추적용	표준 예시
+221	기준정보	BatchState	배치상태	IDLE	대기	Idle	1	Y				표준 예시
+222	기준정보	BatchState	배치상태	RUNNING	진행	Running	2	Y				표준 예시
+223	기준정보	BatchState	배치상태	HOLD	보류	Hold	3	Y				표준 예시
+224	기준정보	BatchState	배치상태	COMPLETE	완료	Complete	4	Y				표준 예시
+225	기준정보	BatchState	배치상태	ABORT	중단	Abort	5	Y				표준 예시
+226	기준정보	QualityDispositionCode	품질판정코드	PENDING	판정대기	Pending	1	Y				표준 예시
+227	기준정보	QualityDispositionCode	품질판정코드	ACCEPTED	합격	Accepted	2	Y				표준 예시
+228	기준정보	QualityDispositionCode	품질판정코드	REJECTED	불합격	Rejected	3	Y				표준 예시
+229	기준정보	QualityDispositionCode	품질판정코드	CONDITIONAL	조건부 합격	Conditional	4	Y			특채 포함	표준 예시
+230	기준정보	QualityDispositionCode	품질판정코드	REWORK	재작업 판정	Rework	5	Y				보완 제안
+231	기준정보	LineType	라인유형	ASSEMBLY	조립	Assembly	1	Y				표준 예시
+232	기준정보	LineType	라인유형	MACHINING	가공	Machining	2	Y				표준 예시
+233	기준정보	LineType	라인유형	PROCESS	장치	Process	3	Y			화학·식품 등 장치 라인	표준 예시
+234	기준정보	LineType	라인유형	PACKING	포장	Packing	4	Y				표준 예시
+235	기준정보	LineType	라인유형	INSPECTION	검사	Inspection	5	Y				표준 예시
+236	기준정보	ProductionMethodType	생산방식유형	DISCRETE	개별 생산	Discrete	1	Y				표준 예시
+237	기준정보	ProductionMethodType	생산방식유형	BATCH	배치 생산	Batch	2	Y				표준 예시
+238	기준정보	ProductionMethodType	생산방식유형	CONTINUOUS	연속 생산	Continuous	3	Y				표준 예시
+239	기준정보	ProductionMethodType	생산방식유형	REPETITIVE	반복 생산	Repetitive	4	Y			동일 품목 흐름 생산	보완 제안
+240	프로젝트관리	ProjectStatusCode	프로젝트상태코드	PLANNED	계획	Planned	1	Y				보완 제안
+241	프로젝트관리	ProjectStatusCode	프로젝트상태코드	REGISTERED	등록	Registered	2	Y				표준 예시
+242	프로젝트관리	ProjectStatusCode	프로젝트상태코드	IN_PROGRESS	진행	In progress	3	Y				표준 예시
+243	프로젝트관리	ProjectStatusCode	프로젝트상태코드	HOLD	보류	On hold	4	Y				보완 제안
+244	프로젝트관리	ProjectStatusCode	프로젝트상태코드	CLOSED	종료	Closed	5	Y				표준 예시
+245	프로젝트관리	ProjectStatusCode	프로젝트상태코드	CANCELLED	취소	Cancelled	6	Y				보완 제안
+246	판매관리	SalesOrderType	수주유형	DOMESTIC	내수	Domestic	1	Y				표준 예시
+247	판매관리	SalesOrderType	수주유형	EXPORT	수출	Export	2	Y			직수출	표준 예시
+248	판매관리	SalesOrderType	수주유형	LOCAL	로컬수출	Local export	3	Y			내국신용장·구매확인서 기반	보완 제안
+249	판매관리	SalesOrderType	수주유형	SAMPLE	견본	Sample	4	Y				표준 예시
+250	판매관리	SalesOrderType	수주유형	FREE	무상	Free of charge	5	Y				표준 예시
+251	판매관리	SalesOrderType	수주유형	CONSIGN	위탁판매	Consignment	6	Y				보완 제안
+252	판매관리	SalesStatus	수주상태	REGISTERED	수주등록	Registered	1	Y				표준 예시
+253	판매관리	SalesStatus	수주상태	CONFIRMED	수주확정	Confirmed	2	Y				표준 예시
+254	판매관리	SalesStatus	수주상태	PART_SHIPPED	부분출하	Partially shipped	3	Y				표준 예시
+255	판매관리	SalesStatus	수주상태	SHIPPED	출하완료	Shipped	4	Y				표준 예시
+256	판매관리	SalesStatus	수주상태	INVOICED	매출확정	Invoiced	5	Y				표준 예시
+257	판매관리	SalesStatus	수주상태	CLOSED	종결	Closed	6	Y				표준 예시
+258	판매관리	SalesStatus	수주상태	HOLD	보류	Hold	7	Y			여신 초과 등	표준 예시
+259	판매관리	SalesStatus	수주상태	CANCELLED	취소	Cancelled	8	Y				표준 예시
+260	판매관리	ShipmentTermsCode	출하조건코드	EXW	공장인도	Ex Works	1	Y			국내 거래의 공장인도에도 사용	표준 예시
+261	판매관리	ShipmentTermsCode	출하조건코드	FCA	운송인인도	Free Carrier	2	Y				표준 예시
+262	판매관리	ShipmentTermsCode	출하조건코드	CPT	운송비지급인도	Carriage Paid To	3	Y				국제표준
+263	판매관리	ShipmentTermsCode	출하조건코드	CIP	운송비·보험료지급인도	Carriage and Insurance Paid To	4	Y				국제표준
+264	판매관리	ShipmentTermsCode	출하조건코드	DAP	도착지인도	Delivered at Place	5	Y			국내 거래의 도착지인도(납품)에도 사용	표준 예시
+265	판매관리	ShipmentTermsCode	출하조건코드	DPU	도착지양하인도	Delivered at Place Unloaded	6	Y				국제표준
+266	판매관리	ShipmentTermsCode	출하조건코드	DDP	관세지급인도	Delivered Duty Paid	7	Y				국제표준
+267	판매관리	ShipmentTermsCode	출하조건코드	FAS	선측인도	Free Alongside Ship	8	Y				국제표준
+268	판매관리	ShipmentTermsCode	출하조건코드	FOB	본선인도	Free On Board	9	Y				표준 예시
+269	판매관리	ShipmentTermsCode	출하조건코드	CFR	운임포함인도	Cost and Freight	10	Y				국제표준
+270	판매관리	ShipmentTermsCode	출하조건코드	CIF	운임·보험료포함인도	Cost, Insurance and Freight	11	Y				표준 예시
+271	판매관리	SalesTransactionType	거래유형(매출)	TAX	과세	Taxable	1	Y			부가세 10%	표준 예시
+272	판매관리	SalesTransactionType	거래유형(매출)	ZERO	영세율	Zero-rated	2	Y			로컬수출 등	표준 예시
+273	판매관리	SalesTransactionType	거래유형(매출)	EXEMPT	면세	Tax exempt	3	Y				표준 예시
+274	판매관리	SalesTransactionType	거래유형(매출)	EXPORT	수출	Export	4	Y			직수출(영세율)	표준 예시
+275	판매관리·구매관리	PaymentTermsCode	결제조건코드	CASH	현금	Cash	1	Y				표준 예시
+276	판매관리·구매관리	PaymentTermsCode	결제조건코드	NOTE	어음	Promissory note	2	Y				표준 예시
+277	판매관리·구매관리	PaymentTermsCode	결제조건코드	EOM30	월말 마감 후 30일	EOM + 30 days	3	Y				표준 예시
+278	판매관리·구매관리	PaymentTermsCode	결제조건코드	EOM60	월말 마감 후 60일	EOM + 60 days	4	Y				보완 제안
+279	판매관리·구매관리	PaymentTermsCode	결제조건코드	NET30	송장일 후 30일	Net 30	5	Y				보완 제안
+280	판매관리·구매관리	PaymentTermsCode	결제조건코드	ADV	선급	Advance payment	6	Y				보완 제안
+281	판매관리·구매관리	PaymentTermsCode	결제조건코드	ENOTE	전자어음	Electronic note	7	Y				보완 제안
+282	판매관리·구매관리	PaymentTermsCode	결제조건코드	ARLOAN	외상매출채권 담보대출	Accounts receivable loan	8	Y				보완 제안
+283	판매관리·구매관리	PaymentTermsCode	결제조건코드	WINWIN	상생결제	Win-win payment	9	Y				보완 제안
+284	판매관리·구매관리	PaymentTermsCode	결제조건코드	TT	전신환 송금	Telegraphic transfer	10	Y			수출입	보완 제안
+285	판매관리·구매관리	PaymentTermsCode	결제조건코드	LC	신용장	Letter of credit	11	Y			수출입	보완 제안
+286	구매관리	PurchaseGroupCode	구매그룹코드	PG00	단일 구매그룹	Default	1	Y			구매조직 미세분 시 단일 코드	표준 근거 보완
+287	구매관리	PurchaseGroupCode	구매그룹코드	PG01	원자재 구매	Raw material	2	Y				표준 예시
+288	구매관리	PurchaseGroupCode	구매그룹코드	PG02	부자재 구매	Sub material	3	Y				표준 예시
+289	구매관리	PurchaseGroupCode	구매그룹코드	PG03	외주 구매	Subcontracting	4	Y				표준 예시
+290	구매관리	PurchaseGroupCode	구매그룹코드	PG04	설비·자산 구매	Capital	5	Y				표준 예시
+291	구매관리	PurchaseGroupCode	구매그룹코드	PG05	MRO 구매	MRO	6	Y				표준 예시
+292	구매관리	PurchaseGroupCode	구매그룹코드	PG06	수입 구매	Import	7	Y				표준 예시
+293	구매관리	PurchaseOrderTypeCode	발주유형코드	STANDARD	일반 발주	Standard	1	Y				표준 예시
+294	구매관리	PurchaseOrderTypeCode	발주유형코드	SUBCON	외주 가공 발주	Subcontracting	2	Y			사급자재 출고와 연계	표준 예시
+295	구매관리	PurchaseOrderTypeCode	발주유형코드	CONSIGN	위탁 발주	Consignment	3	Y				표준 예시
+296	구매관리	PurchaseOrderTypeCode	발주유형코드	STO	사내 이관 발주	Stock transport	4	Y			사업장·공장 간 이관	표준 예시
+297	구매관리	PurchaseOrderTypeCode	발주유형코드	SERVICE	서비스/공사 발주	Service	5	Y				표준 예시
+298	구매관리	PurchaseOrderTypeCode	발주유형코드	BLANKET	단가계약 발주	Blanket	6	Y			기간 단가계약 기반 분할 납품	보완 제안
+299	구매관리	PurchaseTransactionType	거래유형(매입)	TAX	과세	Taxable	1	Y				표준 예시
+300	구매관리	PurchaseTransactionType	거래유형(매입)	ZERO	영세율	Zero-rated	2	Y			내국신용장·구매확인서 매입	보완 제안
+301	구매관리	PurchaseTransactionType	거래유형(매입)	EXEMPT	면세	Tax exempt	3	Y				표준 예시
+302	구매관리	PurchaseTransactionType	거래유형(매입)	NONDED	불공제	Non-deductible	4	Y				표준 예시
+303	구매관리	PurchaseTransactionType	거래유형(매입)	IMPORT	수입	Import	5	Y				표준 예시
+304	구매관리	PurchaseTransactionType	거래유형(매입)	CARD	카드과세	Card taxable	6	Y				표준 예시
+305	구매관리	PurchaseTransactionType	거래유형(매입)	CASHRCPT	현금영수증	Cash receipt	7	Y				표준 예시
+306	구매관리	ItemPurchaseType	구매라인유형	ITEM	품목	Item	1	Y			재고 품목	표준 예시
+307	구매관리	ItemPurchaseType	구매라인유형	SERVICE	서비스	Service	2	Y				표준 예시
+308	구매관리	ItemPurchaseType	구매라인유형	ASSET	고정자산	Fixed asset	3	Y				표준 예시
+309	구매관리	ItemPurchaseType	구매라인유형	FIXTURE	비품	Fixture	4	Y				표준 예시
+310	구매관리	ItemPurchaseType	구매라인유형	EXPENSE	비용	Expense	5	Y			비재고 소모성	보완 제안
+311	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	OPEN	발주 진행 중	Open	1	Y				표준 예시
+312	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	PART_RECEIVED	부분입고	Partially received	2	Y				보완 제안
+313	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	RECEIVED	입고완료	Received	3	Y				표준 예시
+314	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	INVOICED	송장 처리 완료	Invoiced	4	Y				표준 예시
+315	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	CLOSED	최종 종결	Closed	5	Y				표준 예시
+316	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	CANCELLED	취소	Cancelled	6	Y				표준 예시
+317	구매관리	PurchaseOrderLineStatusCode	발주라인상태코드	HOLD	보류	Hold	7	Y				표준 예시
+318	구매관리	TaxCode	세무코드	P_TAX10	과세 매입(10%)	Taxable purchase	1	Y			부가세 10%	표준 예시
+319	구매관리	TaxCode	세무코드	P_ZERO	영세율 매입	Zero-rated purchase	2	Y				표준 예시
+320	구매관리	TaxCode	세무코드	P_EXEMPT	면세 매입	Exempt purchase	3	Y			계산서	표준 예시
+321	구매관리	TaxCode	세무코드	P_NONDED	불공제 매입	Non-deductible	4	Y				표준 예시
+322	구매관리	TaxCode	세무코드	P_IMPORT	수입 매입	Import	5	Y			수입세금계산서	표준 예시
+323	구매관리	TaxCode	세무코드	P_CARD	카드과세 매입	Card	6	Y				표준 예시
+324	구매관리	TaxCode	세무코드	P_CASHRCPT	현금영수증과세 매입	Cash receipt	7	Y				표준 예시
+325	구매관리	AccountCode	계정코드	ACC_RM	원재료	Raw materials	1	Y				표준 예시
+326	구매관리	AccountCode	계정코드	ACC_SM	부재료	Sub materials	2	Y				표준 예시
+327	구매관리	AccountCode	계정코드	ACC_MER	상품	Merchandise	3	Y				표준 예시
+328	구매관리	AccountCode	계정코드	ACC_SUPPLY	소모품비	Supplies expense	4	Y				표준 예시
+329	구매관리	AccountCode	계정코드	ACC_STORE	저장품	Stored supplies	5	Y				보완 제안
+330	구매관리	AccountCode	계정코드	ACC_SUBCON	외주가공비	Subcontract cost	6	Y				보완 제안
+331	구매관리	AccountCode	계정코드	ACC_REPAIR	수선비	Repair expense	7	Y				보완 제안
+332	구매관리	AccountCode	계정코드	ACC_FREIGHT	운반비	Freight	8	Y				보완 제안
+333	구매관리	AccountCode	계정코드	ACC_FEE	지급수수료	Commission	9	Y				보완 제안
+334	구매관리	AccountCode	계정코드	ACC_MACHINE	기계장치	Machinery	10	Y			고정자산	보완 제안
+335	구매관리	AccountCode	계정코드	ACC_TOOL	공구와기구	Tools	11	Y			고정자산	보완 제안
+336	구매관리	AccountCode	계정코드	ACC_CIP	건설중인자산	Construction in progress	12	Y				보완 제안
+337	자재관리	GoodsReceiptType	입고처리유형	PO	발주입고	PO receipt	1	Y				표준 예시
+338	자재관리	GoodsReceiptType	입고처리유형	INSP	검사입고	Receipt after inspection	2	Y			수입검사 합격 후 입고	표준 예시
+339	자재관리	GoodsReceiptType	입고처리유형	EXCEPT	예외입고	Exceptional receipt	3	Y			무발주·긴급 입고	표준 예시
+340	자재관리	GoodsReceiptType	입고처리유형	SUBCON	외주가공입고	Subcontract receipt	4	Y				보완 제안
+341	자재관리	GoodsReceiptReturnType	입고반품유형	VENDOR_RTN	공급업체 반품	Return to vendor	1	Y				표준 예시
+342	자재관리	GoodsReceiptReturnType	입고반품유형	GR_CANCEL	입고 취소	Receipt cancel	2	Y				표준 예시
+343	자재관리	GoodsReceiptReturnType	입고반품유형	RTN_PO	반품 PO 기반 입고	Return PO	3	Y				표준 예시
+344	자재·재고관리	InventoryTransactionType	수불유형	RCV	입고	Receipt	1	Y				표준 예시
+345	자재·재고관리	InventoryTransactionType	수불유형	ISS	출고	Issue	2	Y				표준 예시
+346	자재·재고관리	InventoryTransactionType	수불유형	TRF	이동	Transfer	3	Y			창고·위치 간 이동	표준 예시
+347	자재·재고관리	InventoryTransactionType	수불유형	ADJ	조정	Adjustment	4	Y			실사·평가 조정	표준 예시
+348	자재·재고관리	InventoryVariationType	재고증감유형	INC	증가	Increase	1	Y				표준 예시
+349	자재·재고관리	InventoryVariationType	재고증감유형	DEC	감소	Decrease	2	Y				표준 예시
+350	자재·재고관리	InventoryTransferType	입출고유형	RCV_PUR	구매입고	Purchase receipt	1	Y	InventoryTransactionType	RCV		표준 예시
+351	자재·재고관리	InventoryTransferType	입출고유형	RCV_PRD	생산입고	Production receipt	2	Y	InventoryTransactionType	RCV		표준 예시
+352	자재·재고관리	InventoryTransferType	입출고유형	RCV_SUB	외주입고	Subcontract receipt	3	Y	InventoryTransactionType	RCV		표준 예시
+353	자재·재고관리	InventoryTransferType	입출고유형	RCV_SRTN	매출반품입고	Sales return receipt	4	Y	InventoryTransactionType	RCV		표준 예시
+354	자재·재고관리	InventoryTransferType	입출고유형	RCV_OTH	타계정입고	Other account receipt	5	Y	InventoryTransactionType	RCV		표준 예시
+355	자재·재고관리	InventoryTransferType	입출고유형	ISS_SAL	판매출고	Sales issue	6	Y	InventoryTransactionType	ISS		표준 예시
+356	자재·재고관리	InventoryTransferType	입출고유형	ISS_PRD	생산출고	Production issue	7	Y	InventoryTransactionType	ISS	자재 불출	표준 예시
+357	자재·재고관리	InventoryTransferType	입출고유형	ISS_SUB	외주출고	Subcontract issue	8	Y	InventoryTransactionType	ISS	사급자재	표준 예시
+358	자재·재고관리	InventoryTransferType	입출고유형	ISS_PRTN	매입반품출고	Purchase return issue	9	Y	InventoryTransactionType	ISS		표준 예시
+359	자재·재고관리	InventoryTransferType	입출고유형	ISS_OTH	타계정출고	Other account issue	10	Y	InventoryTransactionType	ISS	견본·연구 등	표준 예시
+360	자재·재고관리	InventoryTransferType	입출고유형	ISS_SCR	폐기출고	Scrap issue	11	Y	InventoryTransactionType	ISS		표준 예시
+361	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	R100	구매입고	Purchase receipt	1	Y	InventoryTransferType	RCV_PUR	재고증감: 증가	표준 예시
+362	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	R101	구매입고 취소	Purchase receipt cancel	2	Y	InventoryTransferType	RCV_PUR	재고증감: 감소 (원거래 역처리)	표준 예시
+363	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	R200	생산입고	Production receipt	3	Y	InventoryTransferType	RCV_PRD	재고증감: 증가	보완 제안
+364	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	R300	외주입고	Subcontract receipt	4	Y	InventoryTransferType	RCV_SUB	재고증감: 증가	보완 제안
+365	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	R400	매출반품입고	Sales return	5	Y	InventoryTransferType	RCV_SRTN	재고증감: 증가	보완 제안
+366	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	R900	타계정입고	Other receipt	6	Y	InventoryTransferType	RCV_OTH	재고증감: 증가	보완 제안
+367	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I100	판매출고	Sales issue	7	Y	InventoryTransferType	ISS_SAL	재고증감: 감소	보완 제안
+368	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I200	생산출고(자재불출)	Production issue	8	Y	InventoryTransferType	ISS_PRD	재고증감: 감소	보완 제안
+369	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I201	생산출고 반납	Production return	9	Y	InventoryTransferType	ISS_PRD	재고증감: 증가 (원거래 역처리)	표준 예시
+370	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I300	외주출고	Subcontract issue	10	Y	InventoryTransferType	ISS_SUB	재고증감: 감소	보완 제안
+371	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I400	매입반품출고	Purchase return	11	Y	InventoryTransferType	ISS_PRTN	재고증감: 감소	보완 제안
+372	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I800	폐기출고	Scrap	12	Y	InventoryTransferType	ISS_SCR	재고증감: 감소	보완 제안
+373	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	I900	타계정출고	Other issue	13	Y	InventoryTransferType	ISS_OTH	재고증감: 감소	보완 제안
+374	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	T100	창고간 이동	Warehouse transfer	14	Y	InventoryTransactionType	TRF	재고증감: 출발 위치 감소·도착 위치 증가(거래 행별)	표준 예시
+375	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	T200	사업장간 이동	Site transfer	15	Y	InventoryTransactionType	TRF	재고증감: 출발 위치 감소·도착 위치 증가(거래 행별)	보완 제안
+376	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	A100	실사 조정(증가)	Count adjustment +	16	Y	InventoryTransactionType	ADJ	재고실사 차이 / 재고증감: 증가	보완 제안
+377	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	A101	실사 조정(감소)	Count adjustment -	17	Y	InventoryTransactionType	ADJ	재고실사 차이 / 재고증감: 감소	보완 제안
+378	자재·재고관리	InventoryTransactionTypeCode	수불유형코드	A200	품목 대체	Item conversion	18	Y	InventoryTransactionType	ADJ	품번 변경·등급 전환	보완 제안
+379	생산관리	LocationType	위치유형(출발지·목적지)	EQP_PORT	설비 포트	Equipment port	1	Y				표준 예시
+380	생산관리	LocationType	위치유형(출발지·목적지)	STOCKER	저장소	Stocker	2	Y			공정 저장소(WarehouseLocation)	표준 예시
+381	생산관리	LocationType	위치유형(출발지·목적지)	CARRIER	캐리어	Carrier	3	Y				표준 예시
+382	생산관리	LocationType	위치유형(출발지·목적지)	BUFFER	버퍼	Buffer	4	Y			라인 사이드 버퍼	보완 제안
+383	생산관리	LocationType	위치유형(출발지·목적지)	VEHICLE	반송장치	Vehicle	5	Y			AGV, OHT 등	보완 제안
+384	생산관리	LocationType	위치유형(출발지·목적지)	MANUAL_PORT	수동 포트	Manual port	6	Y			작업자 투입·배출	보완 제안
+385	생산관리	TransferErrorCode	반송오류코드	TR-001	목적지 포트 점유	Destination occupied	1	Y				표준 예시
+386	생산관리	TransferErrorCode	반송오류코드	TR-002	반송 경로 차단	Route blocked	2	Y				표준 예시
+387	생산관리	TransferErrorCode	반송오류코드	TR-003	캐리어 식별자 불일치	Carrier ID mismatch	3	Y				표준 예시
+388	생산관리	TransferErrorCode	반송오류코드	TR-004	반송 시간 초과	Transfer timeout	4	Y				보완 제안
+389	생산관리	TransferErrorCode	반송오류코드	TR-005	반송장치 이상	Vehicle fault	5	Y				보완 제안
+390	생산관리	EquipmentErrorCode	설비오류코드	EQ-001	비상정지	Emergency stop	1	Y				표준 예시
+391	생산관리	EquipmentErrorCode	설비오류코드	EQ-002	과부하	Overload	2	Y				표준 예시
+392	생산관리	EquipmentErrorCode	설비오류코드	EQ-003	온도 이상	Temperature abnormal	3	Y				표준 예시
+393	생산관리	EquipmentErrorCode	설비오류코드	EQ-004	압력 이상	Pressure abnormal	4	Y				표준 예시
+394	생산관리	EquipmentErrorCode	설비오류코드	EQ-005	통신 이상	Communication error	5	Y				표준 예시
+395	생산관리	EquipmentErrorCode	설비오류코드	EQ-006	자재 공급 부족	Material shortage	6	Y				보완 제안
+396	생산관리	EquipmentErrorCode	설비오류코드	EQ-007	공구 마모·파손	Tool wear/broken	7	Y				표준 예시
+397	서비스관리	ServiceErrorCode	서비스오류코드	AS-001	전원 불량	Power failure	1	Y				표준 예시
+398	서비스관리	ServiceErrorCode	서비스오류코드	AS-002	동작 불량	Malfunction	2	Y				표준 예시
+399	서비스관리	ServiceErrorCode	서비스오류코드	AS-003	소음·진동	Noise/vibration	3	Y				표준 예시
+400	서비스관리	ServiceErrorCode	서비스오류코드	AS-004	누수·누유	Leakage	4	Y				표준 예시
+401	서비스관리	ServiceErrorCode	서비스오류코드	AS-005	표시부 오류	Display error	5	Y				보완 제안
+402	서비스관리	ServiceErrorCode	서비스오류코드	AS-006	통신·소프트웨어 오류	Software error	6	Y				보완 제안
+403	생산관리	EquipmentState	설비상태	RUN	가동	Run	1	Y				표준 예시
+404	생산관리	EquipmentState	설비상태	IDLE	대기	Idle	2	Y				표준 예시
+405	생산관리	EquipmentState	설비상태	DOWN	정지(고장)	Down	3	Y				표준 예시
+406	생산관리	EquipmentState	설비상태	SETUP	셋업	Setup	4	Y			품종 교체·준비	보완 제안
+407	생산관리	EquipmentState	설비상태	PM	계획보전	Planned maintenance	5	Y				보완 제안
+408	생산관리	EquipmentState	설비상태	ENG	엔지니어링	Engineering	6	Y			조건 검증·시험	보완 제안
+409	생산관리	EquipmentState	설비상태	NONSCHED	비가동 계획	Non-scheduled	7	Y				보완 제안
+410	생산관리	EquipmentControlMode	설비제어모드	ONLINE	온라인(원격)	Online	1	Y			상위 시스템 원격 제어	표준 예시
+411	생산관리	EquipmentControlMode	설비제어모드	LOCAL	로컬	Local	2	Y			온라인 연결, 설비 측 조작	표준 예시
+412	생산관리	EquipmentControlMode	설비제어모드	OFFLINE	오프라인	Offline	3	Y				표준 예시
+413	생산관리	EquipmentOperationMode	설비운영모드	FULL_AUTO	완전자동	Full-Auto	1	Y				표준 예시
+414	생산관리	EquipmentOperationMode	설비운영모드	SEMI_AUTO	반자동	Semi-Auto	2	Y				표준 예시
+415	생산관리	EquipmentOperationMode	설비운영모드	MANUAL	수동	Manual	3	Y				표준 예시
+416	생산관리	AlarmState	알람상태	ALARM	알람 발생	Alarm	1	Y				표준 예시
+417	생산관리	AlarmState	알람상태	NO_ALARM	알람 해제	No Alarm	2	Y				표준 예시
+418	생산관리	AlarmState	알람상태	MAINTENANCE	보전 중	Maintenance	3	Y				표준 예시
+419	생산관리	AlarmState	알람상태	NORMAL	정상	Normal	4	Y				표준 예시
+420	생산관리	AlarmState	알람상태	WARNING	경고	Warning	5	Y			정지 전 단계 경보	보완 제안
+421	생산관리(품질)	InspectionMethod	검사방법	VISUAL	육안검사	Visual	1	Y				표준 예시
+422	생산관리(품질)	InspectionMethod	검사방법	NDT	비파괴검사	Non-destructive	2	Y				표준 예시
+423	생산관리(품질)	InspectionMethod	검사방법	DIMENSION	치수검사	Dimensional	3	Y				표준 예시
+424	생산관리(품질)	InspectionMethod	검사방법	FUNCTION	기능·성능검사	Functional	4	Y				보완 제안
+425	생산관리(품질)	InspectionMethod	검사방법	MATERIAL	재질·성분분석	Material analysis	5	Y				보완 제안
+426	생산관리(품질)	InspectionMethod	검사방법	RELIABILITY	신뢰성시험	Reliability test	6	Y				보완 제안
+427	생산관리(품질)	InspectionMethod	검사방법	DOCUMENT	서류검사	Document review	7	Y			성적서·인증서 확인	보완 제안
+428	생산관리(품질)	InspectionStatusCode	검사상태코드	WAIT	신청대기	Waiting	1	Y				표준 예시
+429	생산관리(품질)	InspectionStatusCode	검사상태코드	APPLIED	신청	Applied	2	Y				표준 예시
+430	생산관리(품질)	InspectionStatusCode	검사상태코드	ACCEPTED	접수	Accepted	3	Y				표준 예시
+431	생산관리(품질)	InspectionStatusCode	검사상태코드	IN_PROGRESS	검사중	In progress	4	Y				표준 예시
+432	생산관리(품질)	InspectionStatusCode	검사상태코드	COMPLETED	완료	Completed	5	Y			판정 결과는 InspectionResult	표준 예시
+433	생산관리(품질)	InspectionStatusCode	검사상태코드	CANCELLED	취소	Cancelled	6	Y				표준 예시
+434	생산관리(품질)	InspectionResult	검사결과	PASS	합격	Pass	1	Y				표준 예시
+435	생산관리(품질)	InspectionResult	검사결과	FAIL	불합격	Fail	2	Y				표준 예시
+436	생산관리(품질)	InspectionResult	검사결과	CONDITIONAL	조건부 합격	Conditional	3	Y			특채	표준 예시
+437	생산관리(품질)	InspectionResult	검사결과	HOLD	판정보류	Hold	4	Y				보완 제안
+438	생산관리(품질)	CorrectiveActionStatusCode	시정조치상태코드	ISSUED	발행	Issued	1	Y				표준 예시
+439	생산관리(품질)	CorrectiveActionStatusCode	시정조치상태코드	RECEIVED	접수	Received	2	Y				표준 예시
+440	생산관리(품질)	CorrectiveActionStatusCode	시정조치상태코드	IN_PROGRESS	진행	In progress	3	Y				표준 예시
+441	생산관리(품질)	CorrectiveActionStatusCode	시정조치상태코드	REJECTED	반려	Rejected	4	Y				표준 예시
+442	생산관리(품질)	CorrectiveActionStatusCode	시정조치상태코드	COMPLETED	완료	Completed	5	Y				표준 예시
+443	생산관리(품질)	CorrectiveActionStatusCode	시정조치상태코드	CLOSED	종결	Closed	6	Y			유효성 확인 후 종결	표준 예시
+444	생산관리	PackingType	포장유형	BOX	박스	Box	1	Y				표준 예시
+445	생산관리	PackingType	포장유형	PALLET	파렛트	Pallet	2	Y				표준 예시
+446	생산관리	PackingType	포장유형	BULK	벌크	Bulk	3	Y				표준 예시
+447	생산관리	PackingType	포장유형	BAG	포대	Bag	4	Y				보완 제안
+448	생산관리	PackingType	포장유형	DRUM	드럼	Drum	5	Y				보완 제안
+449	생산관리	PackingType	포장유형	REEL	릴	Reel	6	Y				보완 제안
+450	생산관리	PackingType	포장유형	CRATE	목상자	Crate	7	Y			수출 포장	보완 제안
+451	생산관리	ParameterType	파라미터유형	TEMP	온도	Temperature	1	Y				표준 예시
+452	생산관리	ParameterType	파라미터유형	PRESS	압력	Pressure	2	Y				표준 예시
+453	생산관리	ParameterType	파라미터유형	CURRENT	전류	Current	3	Y				표준 예시
+454	생산관리	ParameterType	파라미터유형	VIB	진동	Vibration	4	Y				표준 예시
+455	생산관리	ParameterType	파라미터유형	VOLT	전압	Voltage	5	Y				보완 제안
+456	생산관리	ParameterType	파라미터유형	POWER	전력	Power	6	Y				보완 제안
+457	생산관리	ParameterType	파라미터유형	SPEED	속도·회전수	Speed	7	Y				보완 제안
+458	생산관리	ParameterType	파라미터유형	FLOW	유량	Flow	8	Y				보완 제안
+459	생산관리	ParameterType	파라미터유형	HUMID	습도	Humidity	9	Y				보완 제안
+460	생산관리	ParameterType	파라미터유형	TORQUE	토크	Torque	10	Y				보완 제안
+461	생산관리	ParameterType	파라미터유형	POSITION	위치	Position	11	Y				보완 제안
+462	생산관리	ParameterType	파라미터유형	CYCLE	사이클타임	Cycle time	12	Y				보완 제안
+463	생산관리	ParameterType	파라미터유형	COUNT	카운트	Count	13	Y			타발수·생산수	보완 제안
+464	생산관리	ParameterGrade	파라미터등급	CRITICAL	핵심	Critical	1	Y			품질·안전 직결, 실시간 감시	표준 예시
+465	생산관리	ParameterGrade	파라미터등급	MAJOR	주요	Major	2	Y				표준 예시
+466	생산관리	ParameterGrade	파라미터등급	MINOR	일반	Minor	3	Y				표준 예시
+467	생산관리	ValidationResultCode	검증결과코드	NORMAL	정상	Normal	1	Y				표준 예시
+468	생산관리	ValidationResultCode	검증결과코드	OVER_USL	상한 초과	OverUSL	2	Y				표준 예시
+469	생산관리	ValidationResultCode	검증결과코드	UNDER_LSL	하한 미달	UnderLSL	3	Y				표준 예시
+470	생산관리	ValidationResultCode	검증결과코드	OVER_UCL	관리상한 초과	OverUCL	4	Y			규격 내, 관리한계 이탈(SPC)	보완 제안
+471	생산관리	ValidationResultCode	검증결과코드	UNDER_LCL	관리하한 미달	UnderLCL	5	Y				보완 제안
+472	생산관리	ValidationResultCode	검증결과코드	NO_DATA	데이터 누락	No data	6	Y				보완 제안
+473	생산관리	TaskGroupCode	근무조코드	DAY	주간조	Day shift	1	Y			2교대	표준 예시
+474	생산관리	TaskGroupCode	근무조코드	NIGHT	야간조	Night shift	2	Y			2교대	표준 예시
+475	생산관리	TaskGroupCode	근무조코드	A	A조	Shift A	3	Y			3교대·4조3교대	표준 예시
+476	생산관리	TaskGroupCode	근무조코드	B	B조	Shift B	4	Y				표준 예시
+477	생산관리	TaskGroupCode	근무조코드	C	C조	Shift C	5	Y				표준 예시
+478	생산관리	TaskGroupCode	근무조코드	D	D조	Shift D	6	Y			4조3교대	보완 제안
+479	생산관리(품질)	DefectTypeCode	불량유형코드	APP	외관불량	Appearance	1	Y				표준 예시
+480	생산관리(품질)	DefectTypeCode	불량유형코드	DIM	치수불량	Dimension	2	Y				표준 예시
+481	생산관리(품질)	DefectTypeCode	불량유형코드	FUNC	기능불량	Function	3	Y				표준 예시
+482	생산관리(품질)	DefectTypeCode	불량유형코드	MAT	재질불량	Material	4	Y				표준 예시
+483	생산관리(품질)	DefectTypeCode	불량유형코드	ASSY	조립불량	Assembly	5	Y				표준 예시
+484	생산관리(품질)	DefectTypeCode	불량유형코드	PKG	포장불량	Packing	6	Y				표준 예시
+485	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	APP-SCR	스크래치	Scratch	1	Y	DefectTypeCode	APP		표준 예시
+486	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	APP-DNT	찍힘	Dent	2	Y	DefectTypeCode	APP		표준 예시
+487	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	APP-STN	얼룩·오염	Stain	3	Y	DefectTypeCode	APP		표준 예시
+488	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	APP-BUR	버	Burr	4	Y	DefectTypeCode	APP		표준 예시
+489	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	APP-CRK	크랙	Crack	5	Y	DefectTypeCode	APP		표준 예시
+490	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	DIM-OVR	치수 초과	Oversize	6	Y	DefectTypeCode	DIM		보완 제안
+491	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	DIM-UND	치수 미달	Undersize	7	Y	DefectTypeCode	DIM		보완 제안
+492	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	DIM-FLT	평탄도 불량	Flatness	8	Y	DefectTypeCode	DIM		보완 제안
+493	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	FUNC-NOP	작동 불량	No operation	9	Y	DefectTypeCode	FUNC		보완 제안
+494	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	FUNC-NOI	이음	Noise	10	Y	DefectTypeCode	FUNC		보완 제안
+495	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	FUNC-LEK	누설	Leak	11	Y	DefectTypeCode	FUNC		보완 제안
+496	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	MAT-HRD	경도 불량	Hardness	12	Y	DefectTypeCode	MAT		보완 제안
+497	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	MAT-CMP	성분 불량	Composition	13	Y	DefectTypeCode	MAT		보완 제안
+498	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	ASSY-MIS	오조립	Misassembly	14	Y	DefectTypeCode	ASSY		보완 제안
+499	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	ASSY-MSG	부품 누락	Missing part	15	Y	DefectTypeCode	ASSY		보완 제안
+500	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	ASSY-TRQ	체결 토크 불량	Torque	16	Y	DefectTypeCode	ASSY		보완 제안
+501	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	PKG-DMG	포장 파손	Damaged packing	17	Y	DefectTypeCode	PKG		보완 제안
+502	생산관리(품질)	DefectTypeDetailCode	불량유형상세코드	PKG-LBL	라벨 오류	Label error	18	Y	DefectTypeCode	PKG		보완 제안
+503	창고관리	ProductReleaseRequestType	납품구분유형	NORMAL	일반 납품	Normal	1	Y				표준 예시
+504	창고관리	ProductReleaseRequestType	납품구분유형	URGENT	긴급 납품	Urgent	2	Y				표준 예시
+505	창고관리	ProductReleaseRequestType	납품구분유형	FREE	무상 납품	Free of charge	3	Y				표준 예시
+506	창고관리	ProductReleaseRequestType	납품구분유형	TRIAL	시방/시운전 납품	Trial	4	Y				표준 예시
+507	창고관리	ProductReleaseRequestType	납품구분유형	OTHER	타계정 출하	Other account	5	Y				표준 예시
+508	창고관리	ReturnType	반품유형	PUR	구매반품	Purchase return	1	Y				표준 예시
+509	창고관리	ReturnType	반품유형	SAL	제품반품	Sales return	2	Y				표준 예시
+510	창고관리	ReturnType	반품유형	PUR-DEF	구매반품-불량	Purchase return - defect	3	Y	ReturnType	PUR		표준 예시
+511	창고관리	ReturnType	반품유형	PUR-QTY	구매반품-수량오류	Purchase return - quantity	4	Y	ReturnType	PUR		표준 예시
+512	창고관리	ReturnType	반품유형	PUR-WRG	구매반품-오배송	Purchase return - wrong item	5	Y	ReturnType	PUR		표준 예시
+513	창고관리	ReturnType	반품유형	PUR-CTR	구매반품-계약위반	Purchase return - contract	6	Y	ReturnType	PUR		표준 예시
+514	창고관리	ReturnType	반품유형	SAL-DEF	제품반품-불량	Sales return - defect	7	Y	ReturnType	SAL		표준 예시
+515	창고관리	ReturnType	반품유형	SAL-QTY	제품반품-수량오류	Sales return - quantity	8	Y	ReturnType	SAL		표준 예시
+516	창고관리	ReturnType	반품유형	SAL-WRG	제품반품-오배송	Sales return - wrong item	9	Y	ReturnType	SAL		표준 예시
+517	창고관리	ReturnType	반품유형	SAL-CTR	제품반품-계약위반	Sales return - contract	10	Y	ReturnType	SAL		표준 예시
+518	창고관리	ReturnType	반품유형	SAL-CHG	제품반품-단순변심	Sales return - change of mind	11	Y	ReturnType	SAL		보완 제안
+519	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	GUIDE	사용법 안내	Usage guide	1	Y				표준 예시
+520	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	SETTING	설정 변경 안내	Setting guide	2	Y				표준 예시
+521	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	REMOTE	원격 조치	Remote fix	3	Y				표준 예시
+522	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	NO_FAULT	이상 없음 확인	No fault found	4	Y				표준 예시
+523	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	DUPLICATE	중복 접수	Duplicate	5	Y				표준 예시
+524	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	CUST_CANCEL	고객 취소	Customer cancel	6	Y				표준 예시
+525	서비스관리	BasicAcceptProcessCode	접수내용단순처리코드	OUT_OF_SCOPE	서비스 대상 아님	Out of scope	7	Y				보완 제안
+526	서비스관리	TransferRegistrationCode	이관등록코드	ENGINEER	기사	Service engineer	1	Y				표준 예시
+527	서비스관리	TransferRegistrationCode	이관등록코드	HQ	본사	Headquarters	2	Y				표준 예시
+528	서비스관리	TransferRegistrationCode	이관등록코드	AGENCY	대리점	Agency	3	Y				표준 예시
+529	서비스관리	TransferRegistrationCode	이관등록코드	CENTER	서비스센터	Service center	4	Y				보완 제안
+530	서비스관리	TransferRegistrationCode	이관등록코드	PARTNER	협력 서비스업체	Partner	5	Y				보완 제안
+531	서비스관리	FaultLargeClass	하자현상대분류	PWR	전원	Power	1	Y				표준 예시
+532	서비스관리	FaultLargeClass	하자현상대분류	OPR	동작	Operation	2	Y				표준 예시
+533	서비스관리	FaultLargeClass	하자현상대분류	NVH	소음·진동	Noise/vibration	3	Y				표준 예시
+534	서비스관리	FaultLargeClass	하자현상대분류	LEAK	누수·누유	Leak	4	Y				표준 예시
+535	서비스관리	FaultLargeClass	하자현상대분류	DISP	표시·제어	Display/control	5	Y				표준 예시
+536	서비스관리	FaultLargeClass	하자현상대분류	APPR	외관	Appearance	6	Y				표준 예시
+537	서비스관리	FaultSmallClass	하자현상소분류	PWR-NOON	전원 안 켜짐	No power on	1	Y	FaultLargeClass	PWR		표준 예시
+538	서비스관리	FaultSmallClass	하자현상소분류	PWR-TRIP	전원 차단 반복	Power trip	2	Y	FaultLargeClass	PWR		표준 예시
+539	서비스관리	FaultSmallClass	하자현상소분류	OPR-STOP	동작 멈춤	Stop	3	Y	FaultLargeClass	OPR		보완 제안
+540	서비스관리	FaultSmallClass	하자현상소분류	OPR-WEAK	성능 저하	Low performance	4	Y	FaultLargeClass	OPR		보완 제안
+541	서비스관리	FaultSmallClass	하자현상소분류	NVH-NOISE	이상음	Abnormal noise	5	Y	FaultLargeClass	NVH		보완 제안
+542	서비스관리	FaultSmallClass	하자현상소분류	NVH-VIB	이상 진동	Abnormal vibration	6	Y	FaultLargeClass	NVH		보완 제안
+543	서비스관리	FaultSmallClass	하자현상소분류	LEAK-WTR	누수	Water leak	7	Y	FaultLargeClass	LEAK		보완 제안
+544	서비스관리	FaultSmallClass	하자현상소분류	LEAK-OIL	누유	Oil leak	8	Y	FaultLargeClass	LEAK		보완 제안
+545	서비스관리	FaultSmallClass	하자현상소분류	DISP-ERR	에러 표시	Error display	9	Y	FaultLargeClass	DISP		보완 제안
+546	서비스관리	FaultSmallClass	하자현상소분류	DISP-KEY	버튼 불량	Key failure	10	Y	FaultLargeClass	DISP		보완 제안
+547	서비스관리	FaultSmallClass	하자현상소분류	APPR-DMG	파손	Damage	11	Y	FaultLargeClass	APPR		보완 제안
+548	서비스관리	FaultSmallClass	하자현상소분류	APPR-DISC	변색	Discoloration	12	Y	FaultLargeClass	APPR		보완 제안
+549	서비스관리	WorkType	작업유형	EXCHANGE	교환	Exchange	1	Y				표준 예시
+550	서비스관리	WorkType	작업유형	REPAIR	수리	Repair	2	Y				표준 예시
+551	서비스관리	WorkType	작업유형	INSPECT	점검	Inspection	3	Y				표준 예시
+552	서비스관리	WorkType	작업유형	INSTALL	설치	Installation	4	Y				보완 제안
+553	서비스관리	WorkType	작업유형	RELOCATE	이전설치	Relocation	5	Y				보완 제안
+554	서비스관리	WorkType	작업유형	REFUND	환불	Refund	6	Y				보완 제안
+555	서비스관리	RepairType	수리유형	WEAR	마모	Wear	1	Y				표준 예시
+556	서비스관리	RepairType	수리유형	BREAK	파손	Breakage	2	Y				표준 예시
+557	서비스관리	RepairType	수리유형	BURN	소손	Burnout	3	Y				표준 예시
+558	서비스관리	RepairType	수리유형	CORROSION	부식	Corrosion	4	Y				표준 예시
+559	서비스관리	RepairType	수리유형	CONTAM	오염	Contamination	5	Y				표준 예시
+560	서비스관리	RepairType	수리유형	MALFUNC	기능 불량	Malfunction	6	Y				표준 예시
+561	서비스관리	RepairType	수리유형	PREVENT	예방 교체	Preventive	7	Y				표준 예시
+562	창고관리	TransportationMethodCode	운송방법	ROAD	도로	Road transport	1	Y			화물차 운송(UN/CEFACT Rec 19: 3)	표준 예시
+563	창고관리	TransportationMethodCode	운송방법	SEA	해상	Maritime transport	2	Y			선박 운송(Rec 19: 1)	표준 예시
+564	창고관리	TransportationMethodCode	운송방법	AIR	항공	Air transport	3	Y			항공기 운송(Rec 19: 4)	표준 예시
+565	창고관리	TransportationMethodCode	운송방법	RAIL	철도	Rail transport	4	Y			철도 운송(Rec 19: 2)	표준 예시
+566	창고관리	TransportationMethodCode	운송방법	PARCEL	택배	Parcel service	5	Y			택배·소화물 운송(국내 도로 운송의 하위 방식)	보완 제안
+567	창고관리	TransportationMethodCode	운송방법	MULTI	복합운송	Multimodal transport	6	Y			두 가지 이상 운송 수단 결합(Rec 19: 8)	보완 제안
+568	창고관리	TransportationMethodCode	운송방법	PICKUP	고객인수	Customer pickup	7	Y			고객이 직접 인수(운송사 미사용)	보완 제안

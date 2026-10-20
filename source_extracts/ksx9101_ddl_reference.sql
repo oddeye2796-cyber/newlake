@@ -1,1716 +1,1916 @@
--- KS X 9101-1:2025 v1.0 테이블정의서 DDL 시트 원문 (PostgreSQL 참고). FK는 관계목록 참조
-
-CREATE TABLE site ( -- 사업장 (표 12)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    site_name VARCHAR(200), -- 사업장명
-    business_registration_number VARCHAR(50), -- 사업자등록번호
-    dial_number VARCHAR(30), -- 전화번호
-    postal_code VARCHAR(10), -- 우편번호
-    base_address VARCHAR(1000), -- 기본주소
-    detail_address VARCHAR(1000), -- 상세주소
-    use_indicator BOOLEAN, -- 사용여부
-    CONSTRAINT pk_site PRIMARY KEY (enterprise_id, site_id)
-);
-
-CREATE TABLE plant ( -- 공장 (표 13)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    plant_name VARCHAR(200), -- 공장명
-    dial_number VARCHAR(30), -- 전화번호
-    country_id VARCHAR(30), -- 국가식별자
-    postal_code VARCHAR(10), -- 우편번호
-    base_address VARCHAR(1000), -- 기본주소
-    detail_address VARCHAR(1000), -- 상세주소
-    CONSTRAINT pk_plant PRIMARY KEY (enterprise_id, plant_id)
-);
-
-CREATE TABLE department ( -- 부서 (표 14)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    department_id VARCHAR(50) NOT NULL, -- 부서식별자
-    department_name VARCHAR(200), -- 부서명
-    parent_department_id VARCHAR(50), -- 상위부서식별자
-    CONSTRAINT pk_department PRIMARY KEY (enterprise_id, department_id)
-);
-
-CREATE TABLE personnel ( -- 사원 (표 15)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    personnel_id VARCHAR(50) NOT NULL, -- 사원식별자
-    personnel_name VARCHAR(200), -- 사원명
-    department_id VARCHAR(50), -- 부서식별자
-    employment_status_type VARCHAR(30), -- 재직유형
-    person_in_charge_email VARCHAR(255), -- 담당자이메일명
-    person_in_charge_dial_number VARCHAR(30), -- 담당자전화번호
-    CONSTRAINT pk_personnel PRIMARY KEY (enterprise_id, personnel_id)
-);
-
-CREATE TABLE customer_party_master ( -- 고객사 (표 16)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    customer_id VARCHAR(50) NOT NULL, -- 고객사식별자
-    customer_name VARCHAR(200), -- 고객사명
-    business_registration_number VARCHAR(50), -- 사업자등록번호
-    representative_name VARCHAR(200), -- 대표자명
-    country_id VARCHAR(30), -- 국가식별자
-    postal_code VARCHAR(10), -- 우편번호
-    base_address VARCHAR(1000), -- 기본주소
-    detail_address VARCHAR(1000), -- 상세주소
-    dial_number VARCHAR(30), -- 전화번호
-    fax_number VARCHAR(30), -- 팩스번호
-    use_indicator BOOLEAN, -- 사용여부
-    person_in_charge_name VARCHAR(200), -- 담당자명
-    person_in_charge_email VARCHAR(255), -- 담당자이메일명
-    person_in_charge_dial_number VARCHAR(30), -- 담당자전화번호
-    CONSTRAINT pk_customer_party_master PRIMARY KEY (enterprise_id, customer_id)
-);
-
-CREATE TABLE vendor_party_master ( -- 공급사 (표 17)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    vendor_id VARCHAR(50) NOT NULL, -- 공급사식별자
-    vendor_name VARCHAR(200), -- 공급사명
-    business_registration_number VARCHAR(50), -- 사업자등록번호
-    representative_name VARCHAR(200), -- 대표자명
-    country_id VARCHAR(30), -- 국가식별자
-    postal_code VARCHAR(10), -- 우편번호
-    base_address VARCHAR(1000), -- 기본주소
-    detail_address VARCHAR(1000), -- 상세주소
-    dial_number VARCHAR(30), -- 전화번호
-    fax_number VARCHAR(30), -- 팩스번호
-    use_indicator BOOLEAN, -- 사용여부
-    person_in_charge_name VARCHAR(200), -- 담당자명
-    person_in_charge_email VARCHAR(255), -- 담당자이메일명
-    person_in_charge_dial_number VARCHAR(30), -- 담당자전화번호
-    CONSTRAINT pk_vendor_party_master PRIMARY KEY (enterprise_id, vendor_id)
-);
-
-CREATE TABLE common_code_master ( -- 공통코드정보 (표 18)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    common_code_id VARCHAR(50) NOT NULL, -- 공통코드식별자
-    common_code_name VARCHAR(200), -- 공통코드명
-    common_code_group VARCHAR(30) NOT NULL, -- 공통코드그룹
-    parent_common_code_group VARCHAR(50), -- 상위공통코드그룹
-    parent_common_code_id VARCHAR(50), -- 상위공통코드식별자
-    common_code_sequence INTEGER, -- 표시순번
-    use_indicator BOOLEAN, -- 사용여부
-    CONSTRAINT pk_common_code_master PRIMARY KEY (enterprise_id, common_code_group, common_code_id)
-);
-
-CREATE TABLE work_calendar ( -- 달력 (표 19)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    calendar_id VARCHAR(50) NOT NULL, -- 달력식별자
-    calendar_type VARCHAR(30), -- 달력유형
-    calendar_date DATE, -- 달력일자
-    day_of_week VARCHAR(30), -- 요일
-    week_of_year INTEGER, -- 주수
-    day_of_year INTEGER, -- 총누계일수
-    schedule_type VARCHAR(30), -- 근무일유형
-    CONSTRAINT pk_work_calendar PRIMARY KEY (enterprise_id, calendar_id)
-);
-
-CREATE TABLE uom_group ( -- 단위그룹 (표 20)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    uom_group_id VARCHAR(50) NOT NULL, -- 단위그룹식별자
-    uom_group_name VARCHAR(200), -- 단위그룹명
-    uom_code VARCHAR(20) NOT NULL, -- 단위코드
-    uom_code_name VARCHAR(200), -- 단위코드명
-    use_indicator BOOLEAN, -- 사용여부
-    CONSTRAINT pk_uom_group PRIMARY KEY (enterprise_id, uom_group_id, uom_code)
-);
-
-CREATE TABLE item_master ( -- 품목마스터 (표 21)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    item_id VARCHAR(50) NOT NULL, -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    item_type VARCHAR(30), -- 품목유형
-    phantom_indicator BOOLEAN, -- 가상품목여부
-    item_large_class VARCHAR(30), -- 품목대분류
-    item_medium_class VARCHAR(30), -- 품목중분류
-    item_small_class VARCHAR(30), -- 품목소분류
-    model_name VARCHAR(200), -- 모델명
-    item_specification VARCHAR(1000), -- 품목사양
-    item_detail_specification VARCHAR(1000), -- 품목상세사양
-    use_indicator BOOLEAN, -- 사용여부
-    country_of_origin VARCHAR(255), -- 원산국가
-    place_of_origin VARCHAR(255), -- 원산지역
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    weight NUMERIC(18,6), -- 중량
-    net_weight NUMERIC(18,6), -- 순중량
-    weight_uom_code VARCHAR(20), -- 중량단위코드
-    volume NUMERIC(18,6), -- 부피
-    volume_uom_code VARCHAR(20), -- 부피단위코드
-    length NUMERIC(18,6), -- 길이
-    width NUMERIC(18,6), -- 너비
-    height NUMERIC(18,6), -- 높이
-    dimension_uom_code VARCHAR(20), -- 치수단위코드
-    valid_end_date DATE, -- 유효종료일
-    drawing_number VARCHAR(50), -- 도면번호
-    lot_control_indicator BOOLEAN, -- 로트사용여부
-    purchase_lead_time INTERVAL, -- 구매리드타임
-    production_lead_time INTERVAL, -- 생산리드타임
-    lot_size NUMERIC(18,6), -- 로트사이즈
-    main_customer_id VARCHAR(50), -- 주요 고객사식별자
-    main_vendor_id VARCHAR(50), -- 주요 공급사식별자
-    safety_stock NUMERIC(18,6), -- 안전재고
-    maximum_stock_level NUMERIC(18,6), -- 최대재고수준
-    receipt_warehouse_id VARCHAR(50), -- 입고창고식별자
-    issue_warehouse_id VARCHAR(50), -- 출고창고식별자
-    abc_class VARCHAR(30), -- 에이비씨분류
-    replacement_item_id VARCHAR(50), -- 대체품목식별자
-    incoming_inspection_indicator BOOLEAN, -- 수입검사여부
-    final_inspection_indicator BOOLEAN, -- 생산입고(최종)검사여부
-    outgoing_inspection_indicator BOOLEAN, -- 출하검사여부
-    CONSTRAINT pk_item_master PRIMARY KEY (enterprise_id, item_id)
-);
-
-CREATE TABLE bom ( -- 자재명세서 (표 22)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    bom_id VARCHAR(50) NOT NULL, -- 자재명세서식별자
-    bom_type VARCHAR(30), -- 자재명세서유형
-    item_id VARCHAR(50), -- 품목식별자
-    bom_quantity NUMERIC(18,6), -- 품목기준수량
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    child_item_id VARCHAR(50) NOT NULL, -- 자품목식별자
-    child_item_uom_code VARCHAR(20), -- 자품목기준단위코드
-    actual_requirement_quantity NUMERIC(18,6), -- 실소요수량
-    bom_revision_number INTEGER NOT NULL, -- 자재명세서버전
-    valid_start_date_time TIMESTAMP, -- 유효시작일시
-    valid_end_date_time TIMESTAMP, -- 유효종료일시
-    routing_id VARCHAR(50), -- 공정경로식별자
-    operation_sequence INTEGER, -- 공정순번
-    back_flushed_indicator BOOLEAN, -- 백플러시여부
-    CONSTRAINT pk_bom PRIMARY KEY (enterprise_id, bom_id, bom_revision_number, child_item_id)
-);
-
-CREATE TABLE bom_header ( -- 자재명세서헤더 (표 —)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    bom_id VARCHAR(50) NOT NULL, -- 자재명세서식별자
-    bom_revision_number INTEGER NOT NULL, -- 자재명세서버전
-    CONSTRAINT pk_bom_header PRIMARY KEY (enterprise_id, bom_id, bom_revision_number)
-);
-
-CREATE TABLE lot ( -- 로트 (표 23)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    lot_id VARCHAR(50) NOT NULL, -- 로트식별자
-    lot_name VARCHAR(200), -- 로트명
-    lot_description VARCHAR(1000), -- 로트설명
-    parent_lot_id VARCHAR(50), -- 모로트식별자
-    child_lot_id VARCHAR(50), -- 자로트식별자
-    lot_type VARCHAR(30), -- 로트유형
-    item_id VARCHAR(50), -- 품목식별자
-    carrier_id VARCHAR(50), -- 캐리어식별자
-    production_order_id VARCHAR(50), -- 생산지시식별자
-    production_order_sequence INTEGER, -- 생산지시순번
-    scheduled_due_date DATE, -- 생산마감기한
-    lot_priority INTEGER, -- 로트우선순위
-    current_operation_id VARCHAR(50), -- 현재공정식별자
-    next_operation_id VARCHAR(50), -- 다음공정식별자
-    lot_state VARCHAR(30), -- 로트상태
-    hold_indicator BOOLEAN, -- 보류여부
-    hot_indicator BOOLEAN, -- 긴급여부
-    rework_indicator BOOLEAN, -- 재작업여부
-    lot_created_quantity NUMERIC(18,6), -- 로트수량
-    produced_quantity NUMERIC(18,6), -- 생산수량
-    defect_quantity NUMERIC(18,6), -- 불량수량
-    rework_quantity INTEGER, -- 재작업수량
-    rework_count INTEGER, -- 재작업횟수
-    total_rework_count INTEGER, -- 총재작업횟수
-    lot_started_date_time TIMESTAMP, -- 공정투입일시
-    personnel_id VARCHAR(50), -- 사원식별자
-    CONSTRAINT pk_lot PRIMARY KEY (enterprise_id, lot_id)
-);
-
-CREATE TABLE routing ( -- 공정경로 (표 24)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    routing_id VARCHAR(50) NOT NULL, -- 공정경로식별자
-    routing_name VARCHAR(200), -- 공정경로명
-    item_id VARCHAR(50), -- 품목식별자
-    operation_id VARCHAR(50), -- 공정식별자
-    operation_sequence INTEGER NOT NULL, -- 공정순번
-    last_operation_indicator BOOLEAN, -- 최종공정여부
-    use_indicator BOOLEAN, -- 사용여부
-    setup_time INTERVAL, -- 준비시간
-    run_time INTERVAL, -- 작업시간
-    move_time INTERVAL, -- 이동시간
-    CONSTRAINT pk_routing PRIMARY KEY (enterprise_id, routing_id, operation_sequence)
-);
-
-CREATE TABLE routing_header ( -- 공정경로헤더 (표 —)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    routing_id VARCHAR(50) NOT NULL, -- 공정경로식별자
-    CONSTRAINT pk_routing_header PRIMARY KEY (enterprise_id, routing_id)
-);
-
-CREATE TABLE operation ( -- 공정 (표 25)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    operation_id VARCHAR(50) NOT NULL, -- 공정식별자
-    operation_name VARCHAR(200), -- 공정명
-    operation_type VARCHAR(30), -- 공정유형
-    use_indicator BOOLEAN, -- 사용여부
-    operation_large_class VARCHAR(30), -- 공정대분류
-    operation_medium_class VARCHAR(30), -- 공정중분류
-    operation_small_class VARCHAR(30), -- 공정소분류
-    back_flushed_indicator BOOLEAN, -- 백플러시여부
-    CONSTRAINT pk_operation PRIMARY KEY (enterprise_id, operation_id)
-);
-
-CREATE TABLE equipment ( -- 설비 (표 26)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    equipment_id VARCHAR(50) NOT NULL, -- 설비식별자
-    equipment_name VARCHAR(200), -- 설비명
-    parent_equipment_id VARCHAR(50), -- 상위설비식별자
-    equipment_type VARCHAR(30), -- 설비유형
-    equipment_large_class VARCHAR(30), -- 설비대분류
-    equipment_medium_class VARCHAR(30), -- 설비중분류
-    equipment_small_class VARCHAR(30), -- 설비소분류
-    department_in_charge_id VARCHAR(50), -- 관리부서식별자
-    person_in_charge_id VARCHAR(50), -- 관리자식별자
-    operation_id VARCHAR(50), -- 공정식별자
-    use_indicator BOOLEAN, -- 사용여부
-    daq_device VARCHAR(255), -- 데이터수집장치
-    fixed_asset_id VARCHAR(50), -- 고정자산식별자
-    model_number VARCHAR(50), -- 모델번호
-    serial_number VARCHAR(50), -- 일련번호
-    country_of_origin VARCHAR(255), -- 제조국가
-    manufacturer VARCHAR(255), -- 제조업체
-    acquisition_date DATE, -- 취득일
-    location VARCHAR(1000), -- 위치
-    CONSTRAINT pk_equipment PRIMARY KEY (enterprise_id, equipment_id)
-);
-
-CREATE TABLE operation_equipment ( -- 공정설비 (표 27)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    operation_id VARCHAR(50) NOT NULL, -- 공정식별자
-    operation_name VARCHAR(200), -- 공정명
-    equipment_id VARCHAR(50) NOT NULL, -- 설비식별자
-    equipment_name VARCHAR(200), -- 설비명
-    equipment_small_class VARCHAR(30), -- 설비소분류
-    equipment_quantity INTEGER, -- 기준사용대수
-    CONSTRAINT pk_operation_equipment PRIMARY KEY (enterprise_id, operation_id, equipment_id)
-);
-
-CREATE TABLE carrier ( -- 캐리어 (표 28)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    carrier_id VARCHAR(50) NOT NULL, -- 캐리어식별자
-    carrier_type VARCHAR(30), -- 캐리어유형
-    item_type VARCHAR(30), -- 품목유형
-    load_state VARCHAR(30), -- 적재상태
-    carrier_state VARCHAR(30), -- 캐리어상태
-    current_quantity NUMERIC(18,6), -- 적재수량
-    CONSTRAINT pk_carrier PRIMARY KEY (enterprise_id, carrier_id)
-);
-
-CREATE TABLE stocker_inventory ( -- 저장소재공정보 (표 29)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    stocker_id VARCHAR(50) NOT NULL, -- 저장소식별자
-    zone_id VARCHAR(50), -- 구역식별자
-    full_capacity INTEGER, -- 최대용량
-    current_capacity INTEGER, -- 현재용량
-    lot_id VARCHAR(50), -- 로트식별자
-    carrier_id VARCHAR(50), -- 캐리어식별자
-    alternate_stocker_id VARCHAR(50), -- 대체저장소식별자
-    CONSTRAINT pk_stocker_inventory PRIMARY KEY (enterprise_id, stocker_id)
-);
-
-CREATE TABLE warehouse_location ( -- 창고 (표 30)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    warehouse_id VARCHAR(50) NOT NULL, -- 창고식별자
-    warehouse_name VARCHAR(200), -- 창고명
-    warehouse_type VARCHAR(30), -- 창고유형
-    use_indicator BOOLEAN, -- 사용여부
-    negative_inventory_indicator BOOLEAN, -- 음수재고허용여부
-    warehouse_section_list VARCHAR(1000), -- 창고섹션목록
-    CONSTRAINT pk_warehouse_location PRIMARY KEY (enterprise_id, warehouse_id)
-);
-
-CREATE TABLE batch ( -- 배치 (표 31)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    batch_id VARCHAR(50) NOT NULL, -- 배치식별자
-    batch_name VARCHAR(200), -- 배치명
-    batch_description VARCHAR(1000), -- 배치설명
-    batch_type VARCHAR(30), -- 배치유형
-    parent_batch_id VARCHAR(50), -- 모배치식별자
-    item_id VARCHAR(50), -- 품목식별자
-    lot_id VARCHAR(50), -- 로트식별자
-    production_order_id VARCHAR(50), -- 생산지시식별자
-    production_order_sequence INTEGER, -- 생산지시순번
-    bom_id VARCHAR(50), -- 자재명세서식별자
-    bom_revision_number INTEGER, -- 자재명세서버전
-    recipe_id VARCHAR(50), -- 레시피식별자
-    recipe_version VARCHAR(255), -- 레시피버전
-    operation_id VARCHAR(50), -- 공정식별자
-    equipment_id VARCHAR(50), -- 설비식별자
-    batch_state VARCHAR(30), -- 배치상태
-    hold_indicator BOOLEAN, -- 보류여부
-    rework_indicator BOOLEAN, -- 재작업여부
-    quality_disposition_code VARCHAR(30), -- 품질판정코드
-    batch_planned_quantity NUMERIC(18,6), -- 배치계획수량
-    produced_quantity NUMERIC(18,6), -- 생산수량
-    defect_quantity NUMERIC(18,6), -- 불량수량
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    schedule_start_date_time TIMESTAMP, -- 계획시작일시
-    schedule_end_date_time TIMESTAMP, -- 계획종료일시
-    batch_start_date_time TIMESTAMP, -- 배치시작일시
-    batch_end_date_time TIMESTAMP, -- 배치종료일시
-    manufacture_date DATE, -- 제조일
-    valid_end_date DATE, -- 유효종료일
-    personnel_id VARCHAR(50), -- 사원식별자
-    CONSTRAINT pk_batch PRIMARY KEY (enterprise_id, batch_id)
-);
-
-CREATE TABLE line ( -- 라인 (표 32)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    line_id VARCHAR(50) NOT NULL, -- 라인식별자
-    line_name VARCHAR(200), -- 라인명
-    line_description VARCHAR(1000), -- 라인설명
-    line_type VARCHAR(30), -- 라인유형
-    production_method_type VARCHAR(30), -- 생산방식유형
-    parent_line_id VARCHAR(50), -- 상위라인식별자
-    department_in_charge_id VARCHAR(50), -- 관리부서식별자
-    person_in_charge_id VARCHAR(50), -- 관리자식별자
-    calendar_id VARCHAR(50), -- 달력식별자
-    issue_warehouse_id VARCHAR(50), -- 출고창고식별자
-    receipt_warehouse_id VARCHAR(50), -- 입고창고식별자
-    standard_capacity NUMERIC(18,6), -- 표준생산능력
-    capacity_uom_code VARCHAR(20), -- 생산능력단위코드
-    standard_cycle_time INTERVAL, -- 표준사이클타임
-    shift_count INTEGER, -- 작업조수
-    standard_headcount INTEGER, -- 표준작업인원
-    location VARCHAR(1000), -- 위치
-    use_indicator BOOLEAN, -- 사용여부
-    valid_start_date DATE, -- 유효시작일
-    valid_end_date DATE, -- 유효종료일
-    CONSTRAINT pk_line PRIMARY KEY (enterprise_id, line_id)
-);
-
-CREATE TABLE enterprise ( -- 회사 (표 33)
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    enterprise_name VARCHAR(200), -- 회사명
-    business_registration_number VARCHAR(50), -- 사업자등록번호
-    corporate_registration_number VARCHAR(50), -- 법인등록번호
-    representative_name VARCHAR(200), -- 대표자명
-    parent_enterprise_id VARCHAR(50), -- 상위회사식별자
-    country_id VARCHAR(30), -- 국가식별자
-    base_currency_code VARCHAR(30), -- 기준통화코드
-    dial_number VARCHAR(30), -- 전화번호
-    fax_number VARCHAR(30), -- 팩스번호
-    postal_code VARCHAR(10), -- 우편번호
-    base_address VARCHAR(1000), -- 기본주소
-    detail_address VARCHAR(1000), -- 상세주소
-    use_indicator BOOLEAN, -- 사용여부
-    CONSTRAINT pk_enterprise PRIMARY KEY (enterprise_id)
-);
-
-CREATE TABLE project_master ( -- 프로젝트마스터 (표 34)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    project_id VARCHAR(50) NOT NULL, -- 프로젝트식별자
-    project_name VARCHAR(200), -- 프로젝트명
-    project_status_code VARCHAR(30), -- 프로젝트상태코드
-    responsible_department_id VARCHAR(50), -- 프로젝트담당부서식별자
-    person_in_charge_id VARCHAR(50), -- 프로젝트담당자식별자
-    project_contract_date DATE, -- 프로젝트계약일
-    expected_start_date DATE, -- 시작예정일
-    expected_end_date DATE, -- 종료예정일
-    actual_start_date DATE, -- 실제시작일
-    actual_end_date DATE, -- 실제종료일
-    sales_document_number VARCHAR(50), -- 수주문서번호
-    sales_document_sequence INTEGER, -- 수주문서순번
-    item_id VARCHAR(50), -- 품목식별자
-    use_indicator BOOLEAN, -- 사용여부
-    division_id VARCHAR(50), -- 사업부식별자
-    CONSTRAINT pk_project_master PRIMARY KEY (enterprise_id, project_id)
-);
-
-CREATE TABLE engineering_change_order ( -- 설계변경지시 (표 35)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    engineering_change_order_id VARCHAR(50) NOT NULL, -- 설계변경지시식별자
-    item_id VARCHAR(50), -- 품목식별자
-    valid_start_date DATE, -- 유효시작일
-    valid_end_date DATE, -- 유효종료일
-    expected_execution_date DATE, -- 적용예정일
-    execution_date DATE, -- 적용이행일
-    bom_type VARCHAR(30), -- 자재명세서유형
-    bom_id VARCHAR(50), -- 자재명세서식별자
-    bom_revision_number INTEGER, -- 자재명세서버전
-    child_item_id VARCHAR(50), -- 자품목식별자
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    actual_requirement_quantity NUMERIC(18,6), -- 실소요수량
-    CONSTRAINT pk_engineering_change_order PRIMARY KEY (enterprise_id, engineering_change_order_id)
-);
-
-CREATE TABLE sales_order ( -- 수주오더 (표 36)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    sales_order_id VARCHAR(50) NOT NULL, -- 수주오더식별자
-    sales_document_number VARCHAR(50), -- 수주문서번호
-    sales_document_sequence INTEGER, -- 수주문서순번
-    sales_order_type VARCHAR(30), -- 수주유형
-    customer_id VARCHAR(50), -- 고객사식별자
-    sales_date DATE, -- 수주일
-    requested_delivery_date DATE, -- 요청납기일
-    sales_status VARCHAR(30), -- 수주상태
-    shipment_terms_code VARCHAR(30), -- 출하조건코드
-    sales_transaction_type VARCHAR(30), -- 거래유형
-    return_indicator BOOLEAN, -- 반품여부
-    export_indicator BOOLEAN, -- 수출여부
-    sales_automatic_approval_indicator BOOLEAN, -- 수주자동승인여부
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    item_quantity NUMERIC(18,6), -- 품목수량
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    selling_uom_code VARCHAR(20), -- 판매단위코드
-    conversion_unit_quantity NUMERIC(18,6), -- 단위환산수량
-    item_unit_quantity NUMERIC(18,6), -- 기준단위수량
-    CONSTRAINT uk_sales_order_doc UNIQUE (enterprise_id, sales_document_number, sales_document_sequence),
-    CONSTRAINT pk_sales_order PRIMARY KEY (enterprise_id, sales_order_id)
-);
-
-CREATE TABLE sales_plan ( -- 판매계획 (표 37)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    sales_plan_id VARCHAR(50) NOT NULL, -- 판매계획식별자
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    sales_projection NUMERIC(18,6), -- 판매추정치
-    projection_start_date DATE, -- 예측시작일
-    projection_end_date DATE, -- 예측종료일
-    CONSTRAINT pk_sales_plan PRIMARY KEY (enterprise_id, sales_plan_id)
-);
-
-CREATE TABLE base_price ( -- 기준가격 (표 38)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    item_id VARCHAR(50) NOT NULL, -- 품목식별자
-    currency_code VARCHAR(30) NOT NULL, -- 환종코드
-    unit_price NUMERIC(18,6), -- 단가
-    payment_terms_code VARCHAR(30), -- 결제조건코드
-    use_indicator BOOLEAN, -- 사용여부
-    CONSTRAINT pk_base_price PRIMARY KEY (enterprise_id, item_id, currency_code)
-);
-
-CREATE TABLE purchase_requisition ( -- 구매요청 (표 39)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    purchase_requisition_id VARCHAR(50) NOT NULL, -- 구매요청식별자
-    purchase_requisition_revision_number INTEGER, -- 구매요청버전
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    demand_quantity NUMERIC(18,6), -- 구매요청수량
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    purchase_requisition_unit_price NUMERIC(18,6), -- 구매요청단가
-    currency_code VARCHAR(30), -- 환종코드
-    vendor_id VARCHAR(50), -- 공급사식별자
-    vendor_name VARCHAR(200), -- 공급사명
-    requested_delivery_date DATE, -- 요청납기일
-    requester_department_id VARCHAR(50), -- 구매요청부서
-    requester_personnel_id VARCHAR(50), -- 구매요청자
-    CONSTRAINT pk_purchase_requisition PRIMARY KEY (enterprise_id, purchase_requisition_id)
-);
-
-CREATE TABLE purchase_order ( -- 구매발주 (표 40)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    purchase_order_id VARCHAR(50) NOT NULL, -- 구매발주식별자
-    purchase_document_number VARCHAR(50), -- 구매문서번호
-    vendor_id VARCHAR(50), -- 공급사식별자
-    payment_terms_code VARCHAR(30), -- 결제조건코드
-    purchase_group_code VARCHAR(30), -- 구매그룹코드
-    currency_code VARCHAR(30), -- 환종코드
-    exchange_rate NUMERIC(18,6), -- 환율
-    purchase_approval_date DATE, -- 승인일
-    purchase_order_date DATE, -- 구매발주일
-    purchase_order_type_code VARCHAR(30), -- 발주유형코드
-    purchase_transaction_type VARCHAR(30), -- 거래유형
-    purchase_order_start_date DATE, -- 시작일
-    purchase_order_valid_date DATE, -- 유효일
-    personnel_id VARCHAR(50), -- 사원식별자
-    purchase_order_closing_indicator BOOLEAN, -- 발주마감여부
-    purchase_order_closing_date DATE, -- 발주마감일
-    purchase_document_sequence INTEGER, -- 구매문서순번
-    item_purchase_type VARCHAR(30), -- 구매라인유형
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    purchase_order_line_status_code VARCHAR(30), -- 발주라인상태코드
-    tax_code VARCHAR(30), -- 세무코드
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    purchase_order_uom_code VARCHAR(20), -- 발주단위코드
-    conversion_unit_quantity NUMERIC(18,6), -- 단위환산수량
-    item_unit_quantity NUMERIC(18,6), -- 기준단위수량
-    purchase_order_quantity NUMERIC(18,6), -- 구매발주수량
-    purchase_goods_receipt_quantity NUMERIC(18,6), -- 구매입고수량
-    purchase_transaction_unit_price NUMERIC(18,6), -- 구매거래단가
-    purchase_transaction_price NUMERIC(18,6), -- 구매거래금액
-    purchase_order_unit_price NUMERIC(18,6), -- 발주단가
-    purchase_order_price NUMERIC(18,6), -- 발주금액
-    vat_price NUMERIC(18,6), -- 부가세금액
-    expected_delivery_date DATE, -- 납기예정일
-    incoming_inspection_indicator BOOLEAN, -- 수입검사여부
-    account_code VARCHAR(30), -- 계정코드
-    vat_transaction_unit_price NUMERIC(18,6), -- 부가세포함거래단가
-    vat_transaction_price NUMERIC(18,6), -- 부가세포함거래금액
-    vat_carrying_amount NUMERIC(18,6), -- 부가세포함장부금액
-    CONSTRAINT uk_purchase_order_doc UNIQUE (enterprise_id, purchase_document_number, purchase_document_sequence),
-    CONSTRAINT pk_purchase_order PRIMARY KEY (enterprise_id, purchase_order_id)
-);
-
-CREATE TABLE material_arrival ( -- 자재도착 (표 41)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    purchase_document_number VARCHAR(50) NOT NULL, -- 구매문서번호
-    purchase_document_sequence INTEGER NOT NULL, -- 구매문서순번
-    item_id VARCHAR(50), -- 품목식별자
-    purchase_goods_receipt_quantity NUMERIC(18,6), -- 구매입고수량
-    receipt_warehouse_id VARCHAR(50), -- 입고창고식별자
-    goods_receipt_date DATE, -- 입고처리일
-    lot_id VARCHAR(50) NOT NULL, -- 로트식별자
-    item_quantity NUMERIC(18,6), -- 품목수량
-    vendor_id VARCHAR(50), -- 공급사식별자
-    CONSTRAINT pk_material_arrival PRIMARY KEY (enterprise_id, purchase_document_number, purchase_document_sequence, lot_id)
-);
-
-CREATE TABLE goods_receipt ( -- 입고 (표 42)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    goods_receipt_id VARCHAR(50) NOT NULL, -- 입고식별자
-    warehouse_id VARCHAR(50), -- 창고식별자
-    personnel_id VARCHAR(50), -- 사원식별자
-    goods_receipt_sequence INTEGER NOT NULL, -- 입고순번
-    goods_receipt_type VARCHAR(30), -- 입고처리유형
-    goods_receipt_return_type VARCHAR(30), -- 입고반품유형
-    goods_receipt_date DATE, -- 입고처리일
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    inventory_transaction_document_number VARCHAR(50), -- 수불문서번호
-    inventory_transaction_document_sequence INTEGER, -- 수불문서순번
-    inventory_transaction_type_code VARCHAR(30), -- 수불유형코드
-    invoice_number VARCHAR(50), -- 송장번호
-    invoice_sequence INTEGER, -- 송장라인순번
-    invoice_processing_indicator BOOLEAN, -- 송장처리여부
-    incoming_inspection_indicator BOOLEAN, -- 수입검사여부
-    vendor_id VARCHAR(50), -- 공급사식별자
-    purchase_order_uom_code VARCHAR(20), -- 발주단위코드
-    item_unit_quantity NUMERIC(18,6), -- 기준단위수량
-    goods_receipt_quantity NUMERIC(18,6), -- 입고처리수량
-    incoming_inspection_accepted_quantity NUMERIC(18,6), -- 수입검사합격수량
-    incoming_inspection_rejected_quantity NUMERIC(18,6), -- 수입검사불합격수량
-    purchase_group_code VARCHAR(30), -- 구매그룹코드
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    CONSTRAINT pk_goods_receipt PRIMARY KEY (enterprise_id, goods_receipt_id, goods_receipt_sequence)
-);
-
-CREATE TABLE goods_issue ( -- 자재불출 (표 43)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    goods_issue_id VARCHAR(50) NOT NULL, -- 자재불출식별자
-    inventory_transaction_document_number VARCHAR(50), -- 수불문서번호
-    inventory_transaction_document_sequence INTEGER, -- 수불문서순번
-    item_id VARCHAR(50), -- 품목식별자
-    inventory_transaction_type_code VARCHAR(30), -- 수불유형코드
-    inventory_transfer_type VARCHAR(30), -- 입출고유형
-    inventory_variation_type VARCHAR(30), -- 재고증감유형
-    inventory_transaction_type VARCHAR(30), -- 수불유형
-    lot_id VARCHAR(50), -- 로트식별자
-    serial_use_indicator BOOLEAN, -- 시리얼사용여부
-    vendor_id VARCHAR(50), -- 공급사식별자
-    warehouse_id VARCHAR(50), -- 창고식별자
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    item_unit_quantity NUMERIC(18,6), -- 기준단위수량
-    order_uom_code VARCHAR(20), -- 오더단위코드
-    order_quantity NUMERIC(18,6), -- 오더수량
-    CONSTRAINT pk_goods_issue PRIMARY KEY (enterprise_id, goods_issue_id)
-);
-
-CREATE TABLE production_planning ( -- 생산계획 (표 44)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    production_plan_id VARCHAR(50) NOT NULL, -- 생산계획식별자
-    item_id VARCHAR(50), -- 품목식별자
-    production_plan_quantity INTEGER, -- 생산계획수량
-    schedule_start_date_time TIMESTAMP, -- 생산계획시작일시
-    schedule_end_date_time TIMESTAMP, -- 생산계획종료일시
-    CONSTRAINT pk_production_planning PRIMARY KEY (enterprise_id, production_plan_id)
-);
-
-CREATE TABLE production_order ( -- 생산지시 (표 45)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    production_order_id VARCHAR(50) NOT NULL, -- 생산지시식별자
-    production_order_sequence INTEGER NOT NULL, -- 생산지시순번
-    item_id VARCHAR(50), -- 품목식별자
-    line_id VARCHAR(50), -- 라인식별자
-    routing_id VARCHAR(50), -- 공정경로식별자
-    bom_id VARCHAR(50), -- 자재명세서식별자
-    bom_revision_number INTEGER, -- 자재명세서버전
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    production_order_quantity INTEGER, -- 생산지시수량
-    production_due_date_time TIMESTAMP, -- 생산완료기한일시
-    schedule_start_date_time TIMESTAMP, -- 생산계획시작일시
-    schedule_end_date_time TIMESTAMP, -- 생산계획종료일시
-    sales_document_number VARCHAR(50), -- 수주문서번호
-    sales_document_sequence INTEGER, -- 수주문서순번
-    CONSTRAINT pk_production_order PRIMARY KEY (enterprise_id, production_order_id, production_order_sequence)
-);
-
-CREATE TABLE operation_start ( -- 착공 (표 46)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    lot_id VARCHAR(50) NOT NULL, -- 로트식별자
-    lot_name VARCHAR(200), -- 로트명
-    lot_description VARCHAR(1000), -- 로트설명
-    lot_created_quantity NUMERIC(18,6), -- 로트수량
-    operation_id VARCHAR(50) NOT NULL, -- 공정식별자
-    equipment_id VARCHAR(50), -- 설비식별자
-    operation_start_time TIMESTAMP NOT NULL, -- 착공시간
-    personnel_id VARCHAR(50), -- 사원식별자
-    CONSTRAINT pk_operation_start PRIMARY KEY (enterprise_id, lot_id, operation_id, operation_start_time)
-);
-
-CREATE TABLE operation_end ( -- 완공 (표 47)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    lot_id VARCHAR(50) NOT NULL, -- 로트식별자
-    lot_name VARCHAR(200), -- 로트명
-    lot_description VARCHAR(1000), -- 로트설명
-    lot_created_quantity NUMERIC(18,6), -- 로트수량
-    operation_id VARCHAR(50) NOT NULL, -- 공정식별자
-    equipment_id VARCHAR(50), -- 설비식별자
-    operation_end_time TIMESTAMP NOT NULL, -- 완공시간
-    personnel_id VARCHAR(50), -- 사원식별자
-    produced_quantity NUMERIC(18,6), -- 생산수량
-    defect_quantity NUMERIC(18,6), -- 불량수량
-    rework_count INTEGER, -- 재작업횟수
-    CONSTRAINT pk_operation_end PRIMARY KEY (enterprise_id, lot_id, operation_id, operation_end_time)
-);
-
-CREATE TABLE transfer_command ( -- 이동지시 (표 48)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    transfer_command_id VARCHAR(50) NOT NULL, -- 이동지시식별자
-    lot_id VARCHAR(50), -- 로트식별자
-    lot_name VARCHAR(200), -- 로트명
-    lot_description VARCHAR(1000), -- 로트설명
-    carrier_id VARCHAR(50), -- 캐리어식별자
-    source_id VARCHAR(50), -- 출발지식별자
-    source_type VARCHAR(30), -- 출발지유형
-    source_name VARCHAR(200), -- 출발지명
-    destination_id VARCHAR(50), -- 목적지식별자
-    destination_type VARCHAR(30), -- 목적지유형
-    destination_name VARCHAR(200), -- 목적지명
-    CONSTRAINT pk_transfer_command PRIMARY KEY (enterprise_id, transfer_command_id)
-);
-
-CREATE TABLE transfer_start ( -- 운행시작 (표 49)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    transfer_command_id VARCHAR(50) NOT NULL, -- 이동지시식별자
-    lot_id VARCHAR(50), -- 로트식별자
-    lot_name VARCHAR(200), -- 로트명
-    lot_description VARCHAR(1000), -- 로트설명
-    carrier_id VARCHAR(50), -- 캐리어식별자
-    transfer_start_date_time TIMESTAMP, -- 운행시작일시
-    current_location VARCHAR(1000), -- 현재위치
-    destination_id VARCHAR(50), -- 목적지식별자
-    destination_type VARCHAR(30), -- 목적지유형
-    destination_name VARCHAR(200), -- 목적지명
-    error_code VARCHAR(30), -- 오류코드
-    error_message VARCHAR(1000), -- 오류메세지
-    CONSTRAINT pk_transfer_start PRIMARY KEY (enterprise_id, transfer_command_id)
-);
-
-CREATE TABLE transfer_end ( -- 운행완료 (표 50)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    transfer_command_id VARCHAR(50) NOT NULL, -- 이동지시식별자
-    lot_id VARCHAR(50), -- 로트식별자
-    lot_name VARCHAR(200), -- 로트명
-    lot_description VARCHAR(1000), -- 로트설명
-    carrier_id VARCHAR(50), -- 캐리어식별자
-    transfer_end_date_time TIMESTAMP, -- 운행완료일시
-    destination_id VARCHAR(50), -- 목적지식별자
-    destination_type VARCHAR(30), -- 목적지유형
-    destination_name VARCHAR(200), -- 목적지명
-    CONSTRAINT pk_transfer_end PRIMARY KEY (enterprise_id, transfer_command_id)
-);
-
-CREATE TABLE in_transit_location ( -- 운송위치 (표 51)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    transfer_command_id VARCHAR(50) NOT NULL, -- 이동지시식별자
-    lot_id VARCHAR(50), -- 로트식별자
-    lot_name VARCHAR(200), -- 로트명
-    lot_description VARCHAR(1000), -- 로트설명
-    carrier_id VARCHAR(50), -- 캐리어식별자
-    current_location VARCHAR(1000) NOT NULL, -- 현재위치
-    CONSTRAINT pk_in_transit_location PRIMARY KEY (enterprise_id, transfer_command_id, current_location)
-);
-
-CREATE TABLE equipment_state ( -- 설비상태 (표 52)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    equipment_id VARCHAR(50) NOT NULL, -- 설비식별자
-    equipment_state VARCHAR(30), -- 설비상태
-    equipment_control_mode VARCHAR(30), -- 설비제어모드
-    equipment_operation_mode VARCHAR(30), -- 설비운영모드
-    processed_lot_quantity NUMERIC(18,6), -- 진행로트수량
-    last_processed_lot_id VARCHAR(50), -- 최종진행로트식별자
-    last_processed_operation_id VARCHAR(50), -- 최종진행공정식별자
-    error_code VARCHAR(30), -- 오류코드
-    error_message VARCHAR(1000), -- 오류메세지
-    CONSTRAINT pk_equipment_state PRIMARY KEY (enterprise_id, equipment_id)
-);
-
-CREATE TABLE alarm ( -- 알람 (표 53)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    equipment_id VARCHAR(50) NOT NULL, -- 설비식별자
-    alarm_state VARCHAR(30), -- 알람상태
-    error_code VARCHAR(30) NOT NULL, -- 오류코드
-    error_message VARCHAR(1000), -- 오류메세지
-    event_date_time TIMESTAMP NOT NULL, -- 이벤트발생일시
-    current_location VARCHAR(1000), -- 현재위치
-    CONSTRAINT pk_alarm PRIMARY KEY (enterprise_id, equipment_id, event_date_time, error_code)
-);
-
-CREATE TABLE supplier_inspection_plan ( -- 협력업체품질검사계획 (표 54)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    vendor_id VARCHAR(50), -- 공급사식별자
-    project_id VARCHAR(50), -- 프로젝트식별자
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    purchase_order_id VARCHAR(50), -- 구매발주식별자
-    purchase_order_quantity NUMERIC(18,6), -- 구매발주수량
-    lot_id VARCHAR(50), -- 로트식별자
-    batch_id VARCHAR(50), -- 배치식별자
-    expected_delivery_date DATE, -- 납기예정일
-    inspection_plan_id VARCHAR(50) NOT NULL, -- 검사계획식별자
-    inspection_id VARCHAR(50) NOT NULL, -- 검사식별자
-    inspection_name VARCHAR(200), -- 검사명
-    inspector VARCHAR(255), -- 검사자
-    inspection_location VARCHAR(1000), -- 검사위치
-    expected_inspection_date DATE, -- 검사예정일
-    expected_inspection_time_period INTEGER, -- 검사예정기간
-    inspection_method VARCHAR(30), -- 검사방법
-    inspection_plan_quantity NUMERIC(18,6), -- 검사계획수량
-    inspection_check_sheet VARCHAR(1000), -- 검사체크시트
-    CONSTRAINT pk_supplier_inspection_plan PRIMARY KEY (enterprise_id, inspection_plan_id, inspection_id)
-);
-
-CREATE TABLE supplier_inspection_application ( -- 협력업체품질검사신청 (표 55)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    vendor_id VARCHAR(50), -- 공급사식별자
-    project_id VARCHAR(50), -- 프로젝트식별자
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    purchase_order_id VARCHAR(50), -- 구매발주식별자
-    lot_id VARCHAR(50), -- 로트식별자
-    batch_id VARCHAR(50), -- 배치식별자
-    inspection_plan_id VARCHAR(50), -- 검사계획식별자
-    inspection_id VARCHAR(50), -- 검사식별자
-    inspection_application_id VARCHAR(50) NOT NULL, -- 검사신청식별자
-    application_personnel_id VARCHAR(50), -- 검사신청자
-    inspection_name VARCHAR(200), -- 검사명
-    inspection_location VARCHAR(1000), -- 검사위치
-    inspection_method VARCHAR(30), -- 검사방법
-    expected_inspection_date DATE, -- 검사예정일
-    inspection_date DATE, -- 검사일
-    inspection_time_period INTEGER, -- 검사기간
-    inspection_quantity NUMERIC(18,6), -- 검사수량
-    self_check_inspection_result_sheet VARCHAR(1000), -- 자체점검결과시트
-    inspection_status_code VARCHAR(30), -- 검사상태코드
-    reason_for_application VARCHAR(255), -- 검사신청사유
-    inspection_cancel_reason VARCHAR(1000), -- 검사취소사유
-    CONSTRAINT pk_supplier_inspection_application PRIMARY KEY (enterprise_id, inspection_application_id)
-);
-
-CREATE TABLE supplier_inspection_result ( -- 협력업체품질검사결과 (표 56)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    vendor_id VARCHAR(50), -- 공급사식별자
-    project_id VARCHAR(50), -- 프로젝트식별자
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    lot_id VARCHAR(50), -- 로트식별자
-    batch_id VARCHAR(50), -- 배치식별자
-    inspection_plan_id VARCHAR(50), -- 검사계획식별자
-    inspection_id VARCHAR(50), -- 검사식별자
-    inspection_application_id VARCHAR(50), -- 검사신청식별자
-    inspection_result_id VARCHAR(50) NOT NULL, -- 검사결과식별자
-    inspector VARCHAR(255), -- 검사자
-    inspection_participant VARCHAR(1000), -- 검사입회자
-    inspection_location VARCHAR(1000), -- 검사위치
-    inspection_date DATE, -- 검사일
-    inspection_quantity NUMERIC(18,6), -- 검사수량
-    inspection_result VARCHAR(30), -- 검사결과
-    inspection_result_sheet VARCHAR(1000), -- 검사결과시트
-    inspection_status_code VARCHAR(30), -- 검사상태코드
-    CONSTRAINT pk_supplier_inspection_result PRIMARY KEY (enterprise_id, inspection_result_id)
-);
-
-CREATE TABLE corrective_action_request ( -- 시정조치요청 (표 57)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    vendor_id VARCHAR(50), -- 공급사식별자
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    lot_id VARCHAR(50), -- 로트식별자
-    batch_id VARCHAR(50), -- 배치식별자
-    inspection_application_id VARCHAR(50), -- 검사신청식별자
-    corrective_action_request_id VARCHAR(50) NOT NULL, -- 시정조치요청식별자
-    corrective_action_request_issuer_id VARCHAR(50), -- 시정조치요청발행자식별자
-    corrective_action_request_recipient_id VARCHAR(50), -- 시정조치요청접수자식별자
-    corrective_action_request_location VARCHAR(1000), -- 시정조치요청위치
-    corrective_action_request_document_reference VARCHAR(255), -- 시정조치요청첨부자료
-    CONSTRAINT pk_corrective_action_request PRIMARY KEY (enterprise_id, corrective_action_request_id)
-);
-
-CREATE TABLE corrective_action_plan ( -- 시정조치계획 (표 58)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    vendor_id VARCHAR(50), -- 공급사식별자
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    lot_id VARCHAR(50), -- 로트식별자
-    batch_id VARCHAR(50), -- 배치식별자
-    corrective_action_request_id VARCHAR(50), -- 시정조치요청식별자
-    corrective_action_plan_id VARCHAR(50) NOT NULL, -- 시정조치계획식별자
-    person_in_charge_id VARCHAR(50), -- 시정조치담당자식별자
-    person_in_charge_email VARCHAR(255), -- 시정조치담당자이메일명
-    person_in_charge_dial_number VARCHAR(30), -- 시정조치담당자전화번호
-    expected_corrective_action_date DATE, -- 시정조치예정일
-    corrective_action_request_document_reference VARCHAR(255), -- 시정조치요청첨부자료
-    corrective_action_approval_indicator BOOLEAN, -- 시정조치접수여부
-    corrective_action_status_code VARCHAR(30), -- 시정조치상태코드
-    reason_for_rejection VARCHAR(255), -- 반려사유
-    CONSTRAINT pk_corrective_action_plan PRIMARY KEY (enterprise_id, corrective_action_plan_id)
-);
-
-CREATE TABLE corrective_action_result ( -- 시정조치결과 (표 59)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    vendor_id VARCHAR(50), -- 공급사식별자
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    lot_id VARCHAR(50), -- 로트식별자
-    batch_id VARCHAR(50), -- 배치식별자
-    corrective_action_request_id VARCHAR(50), -- 시정조치요청식별자
-    corrective_action_plan_id VARCHAR(50), -- 시정조치계획식별자
-    corrective_action_result_id VARCHAR(50) NOT NULL, -- 시정조치결과식별자
-    person_in_charge_id VARCHAR(50), -- 시정조치담당자식별자
-    person_in_charge_email VARCHAR(255), -- 시정조치담당자이메일명
-    person_in_charge_dial_number VARCHAR(30), -- 시정조치담당자전화번호
-    corrective_action_confirmor_id VARCHAR(50), -- 시정조치확인자식별자
-    corrective_action_confirmor_email VARCHAR(255), -- 시정조치확인자이메일명
-    corrective_action_confirmor_dial_number VARCHAR(30), -- 시정조치확인자전화번호
-    corrective_action_date_time TIMESTAMP, -- 시정조치일시
-    corrective_action_result_description VARCHAR(1000), -- 시정조치결과내용
-    corrective_action_status_code VARCHAR(30), -- 시정조치상태코드
-    reason_for_rejection VARCHAR(255), -- 반려사유
-    CONSTRAINT pk_corrective_action_result PRIMARY KEY (enterprise_id, corrective_action_result_id)
-);
-
-CREATE TABLE product_packing ( -- 제품포장 (표 60)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    packing_type VARCHAR(30), -- 포장유형
-    warehouse_id VARCHAR(50), -- 창고식별자
-    serial_number VARCHAR(50), -- 일련번호
-    box_number VARCHAR(50) NOT NULL, -- 포장박스번호
-    pallet_number VARCHAR(50), -- 포장파렛트번호
-    item_id VARCHAR(50), -- 품목식별자
-    packing_sequence INTEGER NOT NULL, -- 포장순번
-    lot_id VARCHAR(50), -- 로트식별자
-    CONSTRAINT pk_product_packing PRIMARY KEY (enterprise_id, box_number, packing_sequence)
-);
-
-CREATE TABLE equipment_parameter ( -- 설비파라미터 (표 61)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    parameter_id VARCHAR(50) NOT NULL, -- 파라미터식별자
-    parameter_name VARCHAR(200), -- 파라미터명
-    parameter_type VARCHAR(30), -- 파라미터유형
-    parameter_grade VARCHAR(30), -- 파라미터등급
-    parameter_uom_code VARCHAR(20), -- 파라미터단위코드
-    equipment_id VARCHAR(50), -- 설비식별자
-    lsl NUMERIC(18,6), -- 규격하한
-    usl NUMERIC(18,6), -- 규격상한
-    periodic_data_collection_indicator BOOLEAN, -- 주기적수집여부
-    data_collection_period INTERVAL, -- 수집주기
-    CONSTRAINT pk_equipment_parameter PRIMARY KEY (enterprise_id, parameter_id)
-);
-
-CREATE TABLE trace_parameter ( -- 설비파라미터이력 (표 62)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    equipment_id VARCHAR(50) NOT NULL, -- 설비식별자
-    parameter_id VARCHAR(50) NOT NULL, -- 파라미터식별자
-    event_date_time TIMESTAMP NOT NULL, -- 이벤트발생일시
-    parameter_uom_code VARCHAR(20), -- 파라미터단위코드
-    parameter_value NUMERIC(18,6), -- 파라미터값
-    validation_result_code VARCHAR(30), -- 검증결과코드
-    CONSTRAINT pk_trace_parameter PRIMARY KEY (enterprise_id, equipment_id, parameter_id, event_date_time)
-);
-
-CREATE TABLE production_performance ( -- 생산실적 (표 63)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    production_performance_id VARCHAR(50) NOT NULL, -- 생산실적식별자
-    production_performance_sequence INTEGER NOT NULL, -- 생산실적순번
-    production_order_id VARCHAR(50), -- 생산지시식별자
-    production_order_sequence INTEGER, -- 생산지시순번
-    item_id VARCHAR(50), -- 품목식별자
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    produced_quantity NUMERIC(18,6), -- 생산수량
-    defect_quantity NUMERIC(18,6), -- 불량수량
-    rework_quantity INTEGER, -- 재작업수량
-    operation_id VARCHAR(50), -- 공정식별자
-    routing_id VARCHAR(50), -- 공정경로식별자
-    operation_sequence INTEGER, -- 공정순번
-    personnel_id VARCHAR(50), -- 사원식별자
-    production_performance_date DATE, -- 생산실적일자
-    execution_start_date_time TIMESTAMP, -- 생산시작일시
-    execution_end_date_time TIMESTAMP, -- 생산종료일시
-    cancel_indicator BOOLEAN, -- 취소여부
-    cancel_date_time TIMESTAMP, -- 취소일시
-    lot_id VARCHAR(50), -- 로트식별자
-    batch_id VARCHAR(50), -- 배치식별자
-    CONSTRAINT pk_production_performance PRIMARY KEY (enterprise_id, production_performance_id, production_performance_sequence)
-);
-
-CREATE TABLE production_performance_item ( -- 생산실적투입품목 (표 64)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    production_performance_id VARCHAR(50) NOT NULL, -- 생산실적식별자
-    production_performance_sequence INTEGER NOT NULL, -- 생산실적순번
-    production_order_id VARCHAR(50), -- 생산지시식별자
-    production_order_sequence INTEGER, -- 생산지시순번
-    item_id VARCHAR(50) NOT NULL, -- 품목식별자
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    line_id VARCHAR(50), -- 라인식별자
-    operation_id VARCHAR(50), -- 공정식별자
-    lot_id VARCHAR(50), -- 로트식별자
-    replacement_child_item_id VARCHAR(50), -- 대체자재식별자
-    warehouse_id VARCHAR(50), -- 창고식별자
-    warehouse_section VARCHAR(50), -- 창고섹션
-    required_quantity INTEGER, -- 소요수량
-    issued_quantity INTEGER, -- 출고수량
-    issued_indicator BOOLEAN, -- 출고완료여부
-    CONSTRAINT pk_production_performance_item PRIMARY KEY (enterprise_id, production_performance_id, production_performance_sequence, item_id)
-);
-
-CREATE TABLE production_performance_personnel ( -- 생산실적투입인력 (표 65)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    production_performance_id VARCHAR(50) NOT NULL, -- 생산실적식별자
-    production_performance_sequence INTEGER NOT NULL, -- 생산실적순번
-    production_order_id VARCHAR(50), -- 생산지시식별자
-    production_order_sequence INTEGER, -- 생산지시순번
-    operation_id VARCHAR(50), -- 공정식별자
-    personnel_id VARCHAR(50) NOT NULL, -- 사원식별자
-    execution_start_date_time TIMESTAMP, -- 생산시작일시
-    execution_end_date_time TIMESTAMP, -- 생산종료일시
-    task_group_code VARCHAR(30), -- 근무조코드
-    actual_labor_date_time TIMESTAMP, -- 투입일시
-    actual_labor_time INTERVAL, -- 투입시간
-    actual_labor_time_uom_code VARCHAR(20), -- 투입시간단위코드
-    CONSTRAINT pk_production_performance_personnel PRIMARY KEY (enterprise_id, production_performance_id, production_performance_sequence, personnel_id)
-);
-
-CREATE TABLE production_performance_equipment ( -- 설비활용실적 (표 66)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    production_performance_id VARCHAR(50) NOT NULL, -- 생산실적식별자
-    production_performance_sequence INTEGER NOT NULL, -- 생산실적순번
-    production_order_id VARCHAR(50), -- 생산지시식별자
-    production_order_sequence INTEGER, -- 생산지시순번
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    produced_quantity NUMERIC(18,6), -- 생산수량
-    defect_quantity NUMERIC(18,6), -- 불량수량
-    operation_id VARCHAR(50), -- 공정식별자
-    routing_id VARCHAR(50), -- 공정경로식별자
-    operation_sequence INTEGER, -- 공정순번
-    personnel_id VARCHAR(50), -- 사원식별자
-    execution_start_date_time TIMESTAMP, -- 생산시작일시
-    execution_end_date_time TIMESTAMP, -- 생산종료일시
-    cancel_indicator BOOLEAN, -- 취소여부
-    cancel_date_time TIMESTAMP, -- 취소일시
-    equipment_id VARCHAR(50) NOT NULL, -- 설비식별자
-    setup_time INTERVAL, -- 준비시간
-    run_time INTERVAL, -- 가동시간
-    inspection_finished_indicator BOOLEAN, -- 공정검사여부
-    CONSTRAINT pk_production_performance_equipment PRIMARY KEY (enterprise_id, production_performance_id, production_performance_sequence, equipment_id)
-);
-
-CREATE TABLE production_performance_quality ( -- 생산품질실적 (표 67)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    production_performance_id VARCHAR(50) NOT NULL, -- 생산실적식별자
-    production_performance_sequence INTEGER NOT NULL, -- 생산실적순번
-    production_order_id VARCHAR(50), -- 생산지시식별자
-    production_order_sequence INTEGER, -- 생산지시순번
-    item_id VARCHAR(50), -- 품목식별자
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    operation_id VARCHAR(50), -- 공정식별자
-    routing_id VARCHAR(50), -- 공정경로식별자
-    operation_sequence INTEGER, -- 공정순번
-    execution_start_date_time TIMESTAMP, -- 생산시작일시
-    execution_end_date_time TIMESTAMP, -- 생산종료일시
-    lot_id VARCHAR(50), -- 로트식별자
-    batch_id VARCHAR(50), -- 배치식별자
-    defect_type_quantity INTEGER, -- 불량유형별수량
-    defect_type_code VARCHAR(30) NOT NULL, -- 불량유형코드
-    defect_type_detail_code VARCHAR(30) NOT NULL, -- 불량유형상세코드
-    CONSTRAINT pk_production_performance_quality PRIMARY KEY (enterprise_id, production_performance_id, production_performance_sequence, defect_type_code, defect_type_detail_code)
-);
-
-CREATE TABLE inventory ( -- 재고 (표 68)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    warehouse_id VARCHAR(50) NOT NULL, -- 창고식별자
-    item_id VARCHAR(50) NOT NULL, -- 품목식별자
-    inventory_quantity NUMERIC(18,6), -- 현재고수량
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    CONSTRAINT pk_inventory PRIMARY KEY (enterprise_id, warehouse_id, item_id)
-);
-
-CREATE TABLE available_inventory ( -- 가용재고 (표 69)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    available_inventory_id VARCHAR(50) NOT NULL, -- 가용재고식별자
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    available_inventory_quantity NUMERIC(18,6), -- 가용재고량
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    demand_priority NUMERIC(18,6), -- 요청우선순위
-    prior_demand_quantity NUMERIC(18,6), -- 요청우선수량
-    expected_delivery_date DATE, -- 납기예정일
-    CONSTRAINT pk_available_inventory PRIMARY KEY (enterprise_id, available_inventory_id)
-);
-
-CREATE TABLE stock_transfer ( -- 재고이동 (표 70)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    stock_transfer_id VARCHAR(50) NOT NULL, -- 재고이동식별자
-    inventory_transaction_document_number VARCHAR(50), -- 수불문서번호
-    item_id VARCHAR(50), -- 품목식별자
-    warehouse_id VARCHAR(50), -- 창고식별자
-    receipt_warehouse_id VARCHAR(50), -- 입고창고식별자
-    stock_transfer_quantity NUMERIC(18,6), -- 재고이동수량
-    transfer_date_time TIMESTAMP, -- 이동일시
-    CONSTRAINT pk_stock_transfer PRIMARY KEY (enterprise_id, stock_transfer_id)
-);
-
-CREATE TABLE inventory_count ( -- 재고실사 (표 71)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    inventory_count_document_number VARCHAR(50) NOT NULL, -- 재고실사문서번호
-    inventory_count_date_time TIMESTAMP, -- 재고실사일시
-    warehouse_id VARCHAR(50) NOT NULL, -- 창고식별자
-    item_id VARCHAR(50) NOT NULL, -- 품목식별자
-    inventory_quantity NUMERIC(18,6), -- 현재고수량
-    inventory_count_quantity NUMERIC(18,6), -- 실사수량
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    CONSTRAINT pk_inventory_count PRIMARY KEY (enterprise_id, inventory_count_document_number, warehouse_id, item_id)
-);
-
-CREATE TABLE product_incoming ( -- 제품입고 (표 72)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    product_incoming_id VARCHAR(50) NOT NULL, -- 제품입고식별자
-    product_incoming_sequence INTEGER NOT NULL, -- 제품입고순번
-    inventory_transaction_document_number VARCHAR(50), -- 수불문서번호
-    inventory_transaction_document_sequence INTEGER, -- 수불문서순번
-    inventory_transaction_date DATE, -- 수불일
-    item_id VARCHAR(50), -- 품목식별자
-    customer_id VARCHAR(50), -- 고객사식별자
-    warehouse_id VARCHAR(50), -- 창고식별자
-    inventory_transaction_type_code VARCHAR(30), -- 수불유형코드
-    serial_use_indicator BOOLEAN, -- 시리얼사용여부
-    inventory_transfer_type VARCHAR(30), -- 입출고유형
-    inventory_variation_type VARCHAR(30), -- 재고증감유형
-    inventory_transaction_type VARCHAR(30), -- 수불유형
-    lot_control_indicator BOOLEAN, -- 로트사용여부
-    lot_id VARCHAR(50), -- 로트식별자
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    item_unit_quantity NUMERIC(18,6), -- 기준단위수량
-    order_uom_code VARCHAR(20), -- 오더단위코드
-    order_quantity NUMERIC(18,6), -- 오더수량
-    CONSTRAINT pk_product_incoming PRIMARY KEY (enterprise_id, product_incoming_id, product_incoming_sequence)
-);
-
-CREATE TABLE product_release_request ( -- 출하의뢰 (표 73)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    product_release_request_id VARCHAR(50) NOT NULL, -- 출하요청식별자
-    product_release_request_document_number VARCHAR(50), -- 납품문서번호
-    product_release_request_type VARCHAR(30), -- 납품구분유형
-    product_release_request_date DATE, -- 납품지시일
-    product_release_request_sequence INTEGER NOT NULL, -- 납품순번
-    line_id VARCHAR(50), -- 라인식별자
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    product_release_request_quantity NUMERIC(18,6), -- 납품수량
-    product_release_quantity NUMERIC(18,6), -- 출고수량
-    sales_quantity NUMERIC(18,6), -- 매출수량
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    selling_uom_code VARCHAR(20), -- 판매단위코드
-    item_unit_quantity NUMERIC(18,6), -- 기준단위수량
-    product_release_unit_quantity NUMERIC(18,6), -- 기준출고수량
-    sales_unit_quantity NUMERIC(18,6), -- 기준매출수량
-    warehouse_id VARCHAR(50), -- 창고식별자
-    requested_delivery_date DATE, -- 요청납기일
-    sales_document_number VARCHAR(50), -- 수주문서번호
-    sales_document_sequence INTEGER, -- 수주문서순번
-    customer_id VARCHAR(50), -- 고객사식별자
-    product_release_date DATE, -- 출고일
-    delivery_date DATE, -- 납품일
-    CONSTRAINT pk_product_release_request PRIMARY KEY (enterprise_id, product_release_request_id, product_release_request_sequence)
-);
-
-CREATE TABLE product_release_request_header ( -- 출하의뢰헤더 (표 —)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    product_release_request_id VARCHAR(50) NOT NULL, -- 출하요청식별자
-    CONSTRAINT pk_product_release_request_header PRIMARY KEY (enterprise_id, product_release_request_id)
-);
-
-CREATE TABLE product_release ( -- 제품출고 (표 74)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    product_release_id VARCHAR(50) NOT NULL, -- 출고식별자
-    product_release_sequence INTEGER NOT NULL, -- 출고순번
-    product_release_request_id VARCHAR(50), -- 출하요청식별자
-    sales_document_number VARCHAR(50), -- 수주문서번호
-    sales_document_sequence INTEGER, -- 수주문서순번
-    inventory_transaction_date DATE, -- 수불일
-    line_id VARCHAR(50), -- 라인식별자
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    order_uom_code VARCHAR(20), -- 오더단위코드
-    order_quantity NUMERIC(18,6), -- 오더수량
-    selling_uom_code VARCHAR(20), -- 판매단위코드
-    sales_quantity NUMERIC(18,6), -- 매출수량
-    return_indicator BOOLEAN, -- 반품여부
-    item_uom_code VARCHAR(20), -- 기준단위코드
-    item_unit_quantity NUMERIC(18,6), -- 기준단위수량
-    sales_unit_quantity NUMERIC(18,6), -- 기준매출수량
-    return_unit_quantity NUMERIC(18,6), -- 기준반품수량
-    customer_id VARCHAR(50), -- 고객사식별자
-    lot_id VARCHAR(50), -- 로트식별자
-    serial_use_indicator BOOLEAN, -- 시리얼사용여부
-    warehouse_id VARCHAR(50), -- 창고식별자
-    CONSTRAINT pk_product_release PRIMARY KEY (enterprise_id, product_release_id, product_release_sequence)
-);
-
-CREATE TABLE return ( -- 반품 (표 75)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    return_id VARCHAR(50) NOT NULL, -- 반품식별자
-    item_id VARCHAR(50), -- 품목식별자
-    lot_id VARCHAR(50), -- 로트식별자
-    batch_id VARCHAR(50), -- 배치식별자
-    warehouse_id VARCHAR(50), -- 창고식별자
-    return_sequence INTEGER NOT NULL, -- 반품순서
-    return_number VARCHAR(50), -- 반품번호
-    product_return_document_number VARCHAR(50), -- 반품문서번호
-    return_date_time TIMESTAMP, -- 반품일시
-    customer_id VARCHAR(50), -- 고객사식별자
-    vendor_id VARCHAR(50), -- 공급사식별자
-    return_quantity NUMERIC(18,6), -- 반품수량
-    return_type VARCHAR(30), -- 반품유형
-    CONSTRAINT pk_return PRIMARY KEY (enterprise_id, return_id, return_sequence)
-);
-
-CREATE TABLE product_trace_parameter_on_customer ( -- 고객제품데이터 (표 76)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    item_id VARCHAR(50) NOT NULL, -- 품목식별자
-    serial_number VARCHAR(50) NOT NULL, -- 제조번호
-    location VARCHAR(1000), -- 위치
-    item_type VARCHAR(30), -- 품목유형
-    parameter_name VARCHAR(200) NOT NULL, -- 파라미터명
-    parameter_value NUMERIC(18,6), -- 파라미터값
-    collection_date_time TIMESTAMP NOT NULL, -- 수집일시
-    CONSTRAINT pk_product_trace_parameter_on_customer PRIMARY KEY (enterprise_id, item_id, serial_number, parameter_name, collection_date_time)
-);
-
-CREATE TABLE after_sales_service_request ( -- 사후서비스신청 (표 77)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    request_number VARCHAR(50) NOT NULL, -- 신청번호
-    transfer_sequence INTEGER, -- 이관순번
-    basic_accept_process_code VARCHAR(30), -- 접수내용단순처리코드
-    promised_visit_date_time TIMESTAMP, -- 약속방문일시
-    transfer_registration_code VARCHAR(30), -- 이관등록코드
-    serial_number VARCHAR(50), -- 제조번호
-    CONSTRAINT pk_after_sales_service_request PRIMARY KEY (enterprise_id, request_number)
-);
-
-CREATE TABLE after_sales_service_request_result ( -- 사후서비스결과 (표 78)
-    enterprise_id VARCHAR(50) NOT NULL, -- 회사식별자
-    site_id VARCHAR(50) NOT NULL, -- 사업장식별자
-    plant_id VARCHAR(50) NOT NULL, -- 공장식별자
-    creator_id VARCHAR(50), -- 등록자식별자
-    creation_date_time TIMESTAMP, -- 등록일시
-    modifier_id VARCHAR(50), -- 수정자식별자
-    modification_date_time TIMESTAMP, -- 수정일시
-    note VARCHAR(1000), -- 비고
-    item_id VARCHAR(50), -- 품목식별자
-    item_name VARCHAR(200), -- 품목명
-    request_number VARCHAR(50) NOT NULL, -- 신청번호
-    transfer_sequence INTEGER NOT NULL, -- 이관순번
-    register_sequence INTEGER NOT NULL, -- 등록순번
-    repair_sequence INTEGER NOT NULL, -- 수리순번
-    serial_number VARCHAR(50), -- 제조번호
-    fault_large_class VARCHAR(30), -- 하자현상대분류
-    fault_small_class VARCHAR(30), -- 하자현상소분류
-    error_code VARCHAR(30), -- 오류코드
-    installation_date DATE, -- 설치일
-    processing_date DATE, -- 처리일
-    end_indicator BOOLEAN, -- 종료여부
-    work_type VARCHAR(30), -- 작업유형
-    child_item_id VARCHAR(50), -- 자품목식별자
-    child_item_name VARCHAR(200), -- 자품목명
-    item_specification VARCHAR(1000), -- 품목사양
-    repair_type VARCHAR(30), -- 수리유형
-    CONSTRAINT pk_after_sales_service_request_result PRIMARY KEY (enterprise_id, request_number, transfer_sequence, register_sequence, repair_sequence)
-);
-
+-- KS X 9101-1:2025 개정(안) v1.0 테이블정의서 'DDL' 시트 (참고용, 큰따옴표 PascalCase 원문 그대로)
+-- 레이크의 물리 스키마는 snake_case 로 옮겨 쓴다 (tools/gen_schema.py).
+CREATE TABLE "Site" ( -- 사업장 (표 12)
+    "SiteSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 사업장 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "SiteName" VARCHAR(200), -- 사업장명
+    "BusinessRegistrationNumber" VARCHAR(50), -- 사업자등록번호
+    "DialNumber" VARCHAR(30), -- 전화번호
+    "PostalCode" VARCHAR(10), -- 우편번호
+    "BaseAddress" VARCHAR(1000), -- 기본주소
+    "DetailAddress" VARCHAR(1000), -- 상세주소
+    "UseIndicator" BOOLEAN, -- 사용여부
+    CONSTRAINT "PK_Site" PRIMARY KEY ("SiteSequenceNo"),
+    CONSTRAINT "UK_Site" UNIQUE ("EnterpriseID", "SiteID")
+);
+CREATE TABLE "Plant" ( -- 공장 (표 13)
+    "PlantSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 공장 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "PlantName" VARCHAR(200), -- 공장명
+    "DialNumber" VARCHAR(30), -- 전화번호
+    "CountryID" VARCHAR(30), -- 국가식별자
+    "PostalCode" VARCHAR(10), -- 우편번호
+    "BaseAddress" VARCHAR(1000), -- 기본주소
+    "DetailAddress" VARCHAR(1000), -- 상세주소
+    CONSTRAINT "PK_Plant" PRIMARY KEY ("PlantSequenceNo"),
+    CONSTRAINT "UK_Plant" UNIQUE ("EnterpriseID", "PlantID")
+);
+CREATE TABLE "Department" ( -- 부서 (표 14)
+    "DepartmentSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 부서 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "DepartmentID" VARCHAR(50) NOT NULL, -- 부서식별자
+    "DepartmentName" VARCHAR(200), -- 부서명
+    "ParentDepartmentID" VARCHAR(50), -- 상위부서식별자
+    CONSTRAINT "PK_Department" PRIMARY KEY ("DepartmentSequenceNo"),
+    CONSTRAINT "UK_Department" UNIQUE ("EnterpriseID", "DepartmentID")
+);
+CREATE TABLE "Personnel" ( -- 사원 (표 15)
+    "PersonnelSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 사원 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "PersonnelID" VARCHAR(50) NOT NULL, -- 사원식별자
+    "PersonnelName" VARCHAR(200), -- 사원명
+    "DepartmentID" VARCHAR(50), -- 부서식별자
+    "EmploymentStatusType" VARCHAR(30), -- 재직유형
+    "PersonInChargeEmail" VARCHAR(255), -- 담당자이메일명
+    "PersonInChargeDialNumber" VARCHAR(30), -- 담당자전화번호
+    CONSTRAINT "PK_Personnel" PRIMARY KEY ("PersonnelSequenceNo"),
+    CONSTRAINT "UK_Personnel" UNIQUE ("EnterpriseID", "PersonnelID")
+);
+CREATE TABLE "CustomerPartyMaster" ( -- 고객사 (표 16)
+    "CustomerPartyMasterSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 고객사 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "CustomerID" VARCHAR(50) NOT NULL, -- 고객사식별자
+    "CustomerName" VARCHAR(200), -- 고객사명
+    "BusinessRegistrationNumber" VARCHAR(50), -- 사업자등록번호
+    "RepresentativeName" VARCHAR(200), -- 대표자명
+    "CountryID" VARCHAR(30), -- 국가식별자
+    "PostalCode" VARCHAR(10), -- 우편번호
+    "BaseAddress" VARCHAR(1000), -- 기본주소
+    "DetailAddress" VARCHAR(1000), -- 상세주소
+    "DialNumber" VARCHAR(30), -- 전화번호
+    "FaxNumber" VARCHAR(30), -- 팩스번호
+    "UseIndicator" BOOLEAN, -- 사용여부
+    "PersonInChargeName" VARCHAR(200), -- 담당자명
+    "PersonInChargeEmail" VARCHAR(255), -- 담당자이메일명
+    "PersonInChargeDialNumber" VARCHAR(30), -- 담당자전화번호
+    CONSTRAINT "PK_CustomerPartyMaster" PRIMARY KEY ("CustomerPartyMasterSequenceNo"),
+    CONSTRAINT "UK_CustomerPartyMaster" UNIQUE ("EnterpriseID", "CustomerID")
+);
+CREATE TABLE "VendorPartyMaster" ( -- 공급사 (표 17)
+    "VendorPartyMasterSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 공급사 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "VendorID" VARCHAR(50) NOT NULL, -- 공급사식별자
+    "VendorName" VARCHAR(200), -- 공급사명
+    "BusinessRegistrationNumber" VARCHAR(50), -- 사업자등록번호
+    "RepresentativeName" VARCHAR(200), -- 대표자명
+    "CountryID" VARCHAR(30), -- 국가식별자
+    "PostalCode" VARCHAR(10), -- 우편번호
+    "BaseAddress" VARCHAR(1000), -- 기본주소
+    "DetailAddress" VARCHAR(1000), -- 상세주소
+    "DialNumber" VARCHAR(30), -- 전화번호
+    "FaxNumber" VARCHAR(30), -- 팩스번호
+    "UseIndicator" BOOLEAN, -- 사용여부
+    "PersonInChargeName" VARCHAR(200), -- 담당자명
+    "PersonInChargeEmail" VARCHAR(255), -- 담당자이메일명
+    "PersonInChargeDialNumber" VARCHAR(30), -- 담당자전화번호
+    CONSTRAINT "PK_VendorPartyMaster" PRIMARY KEY ("VendorPartyMasterSequenceNo"),
+    CONSTRAINT "UK_VendorPartyMaster" UNIQUE ("EnterpriseID", "VendorID")
+);
+CREATE TABLE "CommonCodeMaster" ( -- 공통코드정보 (표 18)
+    "CommonCodeMasterSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 공통코드정보 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "CommonCodeID" VARCHAR(50) NOT NULL, -- 공통코드식별자
+    "CommonCodeName" VARCHAR(200), -- 공통코드명
+    "CommonCodeGroup" VARCHAR(30) NOT NULL, -- 공통코드그룹
+    "ParentCommonCodeGroup" VARCHAR(50), -- 상위공통코드그룹
+    "ParentCommonCodeID" VARCHAR(50), -- 상위공통코드식별자
+    "CommonCodeSequence" INTEGER, -- 표시순번
+    "UseIndicator" BOOLEAN, -- 사용여부
+    CONSTRAINT "PK_CommonCodeMaster" PRIMARY KEY ("CommonCodeMasterSequenceNo"),
+    CONSTRAINT "UK_CommonCodeMaster" UNIQUE ("EnterpriseID", "CommonCodeGroup", "CommonCodeID")
+);
+CREATE TABLE "WorkCalendar" ( -- 달력 (표 19)
+    "WorkCalendarSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 달력 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "CalendarID" VARCHAR(50) NOT NULL, -- 달력식별자
+    "CalendarType" VARCHAR(30), -- 달력유형
+    "CalendarDate" DATE, -- 달력일자
+    "DayOfWeek" VARCHAR(30), -- 요일
+    "WeekOfYear" INTEGER, -- 주수
+    "DayOfYear" INTEGER, -- 총누계일수
+    "ScheduleType" VARCHAR(30), -- 근무일유형
+    CONSTRAINT "PK_WorkCalendar" PRIMARY KEY ("WorkCalendarSequenceNo"),
+    CONSTRAINT "UK_WorkCalendar" UNIQUE ("EnterpriseID", "CalendarID")
+);
+CREATE TABLE "UOMGroupHeader" ( -- 단위그룹헤더 (표 20)
+    "UOMGroupHeaderSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 단위그룹헤더 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "UOMGroupID" VARCHAR(50) NOT NULL, -- 단위그룹식별자
+    "UOMGroupName" VARCHAR(200), -- 단위그룹명
+    CONSTRAINT "PK_UOMGroupHeader" PRIMARY KEY ("UOMGroupHeaderSequenceNo"),
+    CONSTRAINT "UK_UOMGroupHeader" UNIQUE ("EnterpriseID", "UOMGroupID")
+);
+CREATE TABLE "UOMGroupLine" ( -- 단위그룹라인 (표 20)
+    "UOMGroupLineSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 단위그룹라인 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "UOMGroupID" VARCHAR(50) NOT NULL, -- 단위그룹식별자
+    "UOMCode" VARCHAR(20) NOT NULL, -- 단위코드
+    "UOMCodeName" VARCHAR(200), -- 단위코드명
+    "UseIndicator" BOOLEAN, -- 사용여부
+    CONSTRAINT "PK_UOMGroupLine" PRIMARY KEY ("UOMGroupLineSequenceNo"),
+    CONSTRAINT "UK_UOMGroupLine" UNIQUE ("EnterpriseID", "UOMGroupID", "UOMCode")
+);
+CREATE TABLE "ItemMaster" ( -- 품목마스터 (표 21)
+    "ItemMasterSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 품목마스터 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ItemID" VARCHAR(50) NOT NULL, -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "ItemType" VARCHAR(30), -- 품목유형
+    "PhantomIndicator" BOOLEAN, -- 가상품목여부
+    "ItemLargeClass" VARCHAR(30), -- 품목대분류
+    "ItemMediumClass" VARCHAR(30), -- 품목중분류
+    "ItemSmallClass" VARCHAR(30), -- 품목소분류
+    "ModelName" VARCHAR(200), -- 모델명
+    "ItemSpecification" VARCHAR(1000), -- 품목사양
+    "ItemDetailSpecification" VARCHAR(1000), -- 품목상세사양
+    "UseIndicator" BOOLEAN, -- 사용여부
+    "CountryOfOrigin" VARCHAR(255), -- 원산국가
+    "PlaceOfOrigin" VARCHAR(255), -- 원산지역
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "Weight" NUMERIC(18,6), -- 중량
+    "NetWeight" NUMERIC(18,6), -- 순중량
+    "WeightUOMCode" VARCHAR(20), -- 중량단위코드
+    "Volume" NUMERIC(18,6), -- 부피
+    "VolumeUOMCode" VARCHAR(20), -- 부피단위코드
+    "Length" NUMERIC(18,6), -- 길이
+    "Width" NUMERIC(18,6), -- 너비
+    "Height" NUMERIC(18,6), -- 높이
+    "DimensionUOMCode" VARCHAR(20), -- 치수단위코드
+    "ValidEndDate" DATE, -- 유효종료일
+    "DrawingNumber" VARCHAR(50), -- 도면번호
+    "LotControlIndicator" BOOLEAN, -- 로트사용여부
+    "PurchaseLeadTime" INTERVAL, -- 구매리드타임
+    "ProductionLeadTime" INTERVAL, -- 생산리드타임
+    "LotSize" NUMERIC(18,6), -- 로트사이즈
+    "MainCustomerID" VARCHAR(50), -- 주요 고객사식별자
+    "MainVendorID" VARCHAR(50), -- 주요 공급사식별자
+    "SafetyStock" NUMERIC(18,6), -- 안전재고
+    "MaximumStockLevel" NUMERIC(18,6), -- 최대재고수준
+    "ReceiptWarehouseID" VARCHAR(50), -- 입고창고식별자
+    "IssueWarehouseID" VARCHAR(50), -- 출고창고식별자
+    "ABCClass" VARCHAR(30), -- 에이비씨분류
+    "ReplacementItemID" VARCHAR(50), -- 대체품목식별자
+    "IncomingInspectionIndicator" BOOLEAN, -- 수입검사여부
+    "FinalInspectionIndicator" BOOLEAN, -- 생산입고(최종)검사여부
+    "OutgoingInspectionIndicator" BOOLEAN, -- 출하검사여부
+    CONSTRAINT "PK_ItemMaster" PRIMARY KEY ("ItemMasterSequenceNo"),
+    CONSTRAINT "UK_ItemMaster" UNIQUE ("EnterpriseID", "ItemID")
+);
+CREATE TABLE "BOMHeader" ( -- 자재명세서헤더 (표 22)
+    "BOMHeaderSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 자재명세서헤더 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "BOMID" VARCHAR(50) NOT NULL, -- 자재명세서식별자
+    "BOMRevisionNumber" INTEGER NOT NULL, -- 자재명세서버전
+    "BOMType" VARCHAR(30), -- 자재명세서유형
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "BOMQuantity" NUMERIC(18,6), -- 품목기준수량
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "RoutingID" VARCHAR(50), -- 공정경로식별자
+    CONSTRAINT "PK_BOMHeader" PRIMARY KEY ("BOMHeaderSequenceNo"),
+    CONSTRAINT "UK_BOMHeader" UNIQUE ("EnterpriseID", "BOMID", "BOMRevisionNumber")
+);
+CREATE TABLE "BOMLine" ( -- 자재명세서라인 (표 22)
+    "BOMLineSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 자재명세서라인 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "BOMID" VARCHAR(50) NOT NULL, -- 자재명세서식별자
+    "BOMRevisionNumber" INTEGER NOT NULL, -- 자재명세서버전
+    "BOMLineSequence" INTEGER NOT NULL, -- 자재명세서라인순번
+    "ChildItemID" VARCHAR(50), -- 자품목식별자
+    "ChildItemUOMCode" VARCHAR(20), -- 자품목기준단위코드
+    "ActualRequirementQuantity" NUMERIC(18,6), -- 실소요수량
+    "OperationSequence" INTEGER, -- 공정순번
+    "BackFlushedIndicator" BOOLEAN, -- 백플러시여부
+    "ValidStartDateTime" TIMESTAMP, -- 유효시작일시
+    "ValidEndDateTime" TIMESTAMP, -- 유효종료일시
+    CONSTRAINT "PK_BOMLine" PRIMARY KEY ("BOMLineSequenceNo"),
+    CONSTRAINT "UK_BOMLine" UNIQUE ("EnterpriseID", "BOMID", "BOMRevisionNumber", "BOMLineSequence")
+);
+CREATE TABLE "Lot" ( -- 로트 (표 23)
+    "LotSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 로트 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "LotID" VARCHAR(50) NOT NULL, -- 로트식별자
+    "LotName" VARCHAR(200), -- 로트명
+    "LotDescription" VARCHAR(1000), -- 로트설명
+    "ParentLotID" VARCHAR(50), -- 모로트식별자
+    "ChildLotID" VARCHAR(50), -- 자로트식별자
+    "LotType" VARCHAR(30), -- 로트유형
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "CarrierID" VARCHAR(50), -- 캐리어식별자
+    "ProductionOrderID" VARCHAR(50), -- 생산지시식별자
+    "ProductionOrderSequence" INTEGER, -- 생산지시순번
+    "ScheduledDueDate" DATE, -- 생산마감기한
+    "LotPriority" INTEGER, -- 로트우선순위
+    "CurrentOperationID" VARCHAR(50), -- 현재공정식별자
+    "NextOperationID" VARCHAR(50), -- 다음공정식별자
+    "LotState" VARCHAR(30), -- 로트상태
+    "HoldIndicator" BOOLEAN, -- 보류여부
+    "HotIndicator" BOOLEAN, -- 긴급여부
+    "ReworkIndicator" BOOLEAN, -- 재작업여부
+    "LotCreatedQuantity" NUMERIC(18,6), -- 로트수량
+    "ProducedQuantity" NUMERIC(18,6), -- 생산수량
+    "DefectQuantity" NUMERIC(18,6), -- 불량수량
+    "ReworkQuantity" INTEGER, -- 재작업수량
+    "ReworkCount" INTEGER, -- 재작업횟수
+    "TotalReworkCount" INTEGER, -- 총재작업횟수
+    "LotStartedDateTime" TIMESTAMP, -- 공정투입일시
+    "PersonnelID" VARCHAR(50), -- 사원식별자
+    CONSTRAINT "PK_Lot" PRIMARY KEY ("LotSequenceNo"),
+    CONSTRAINT "UK_Lot" UNIQUE ("EnterpriseID", "LotID")
+);
+CREATE TABLE "RoutingHeader" ( -- 공정경로헤더 (표 24)
+    "RoutingHeaderSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 공정경로헤더 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "RoutingID" VARCHAR(50) NOT NULL, -- 공정경로식별자
+    "RoutingName" VARCHAR(200), -- 공정경로명
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "UseIndicator" BOOLEAN, -- 사용여부
+    CONSTRAINT "PK_RoutingHeader" PRIMARY KEY ("RoutingHeaderSequenceNo"),
+    CONSTRAINT "UK_RoutingHeader" UNIQUE ("EnterpriseID", "RoutingID")
+);
+CREATE TABLE "RoutingLine" ( -- 공정경로라인 (표 24)
+    "RoutingLineSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 공정경로라인 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "RoutingID" VARCHAR(50) NOT NULL, -- 공정경로식별자
+    "OperationSequence" INTEGER NOT NULL, -- 공정순번
+    "OperationID" VARCHAR(50), -- 공정식별자
+    "LastOperationIndicator" BOOLEAN, -- 최종공정여부
+    "SetupTime" INTERVAL, -- 준비시간
+    "RunTime" INTERVAL, -- 작업시간
+    "MoveTime" INTERVAL, -- 이동시간
+    CONSTRAINT "PK_RoutingLine" PRIMARY KEY ("RoutingLineSequenceNo"),
+    CONSTRAINT "UK_RoutingLine" UNIQUE ("EnterpriseID", "RoutingID", "OperationSequence")
+);
+CREATE TABLE "Operation" ( -- 공정 (표 25)
+    "OperationSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 공정 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "OperationID" VARCHAR(50) NOT NULL, -- 공정식별자
+    "OperationName" VARCHAR(200), -- 공정명
+    "OperationType" VARCHAR(30), -- 공정유형
+    "UseIndicator" BOOLEAN, -- 사용여부
+    "OperationLargeClass" VARCHAR(30), -- 공정대분류
+    "OperationMediumClass" VARCHAR(30), -- 공정중분류
+    "OperationSmallClass" VARCHAR(30), -- 공정소분류
+    "BackFlushedIndicator" BOOLEAN, -- 백플러시여부
+    CONSTRAINT "PK_Operation" PRIMARY KEY ("OperationSequenceNo"),
+    CONSTRAINT "UK_Operation" UNIQUE ("EnterpriseID", "OperationID")
+);
+CREATE TABLE "Equipment" ( -- 설비 (표 26)
+    "EquipmentSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 설비 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "EquipmentID" VARCHAR(50) NOT NULL, -- 설비식별자
+    "EquipmentName" VARCHAR(200), -- 설비명
+    "ParentEquipmentID" VARCHAR(50), -- 상위설비식별자
+    "EquipmentType" VARCHAR(30), -- 설비유형
+    "EquipmentLargeClass" VARCHAR(30), -- 설비대분류
+    "EquipmentMediumClass" VARCHAR(30), -- 설비중분류
+    "EquipmentSmallClass" VARCHAR(30), -- 설비소분류
+    "DepartmentInChargeID" VARCHAR(50), -- 관리부서식별자
+    "PersonInChargeID" VARCHAR(50), -- 관리자식별자
+    "OperationID" VARCHAR(50), -- 공정식별자
+    "UseIndicator" BOOLEAN, -- 사용여부
+    "DAQDevice" VARCHAR(255), -- 데이터수집장치
+    "FixedAssetID" VARCHAR(50), -- 고정자산식별자
+    "ModelNumber" VARCHAR(50), -- 모델번호
+    "SerialNumber" VARCHAR(50), -- 일련번호
+    "CountryOfOrigin" VARCHAR(255), -- 제조국가
+    "Manufacturer" VARCHAR(255), -- 제조업체
+    "AcquisitionDate" DATE, -- 취득일
+    "Location" VARCHAR(1000), -- 위치
+    CONSTRAINT "PK_Equipment" PRIMARY KEY ("EquipmentSequenceNo"),
+    CONSTRAINT "UK_Equipment" UNIQUE ("EnterpriseID", "EquipmentID")
+);
+CREATE TABLE "OperationEquipment" ( -- 공정설비 (표 27)
+    "OperationEquipmentSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 공정설비 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "OperationID" VARCHAR(50) NOT NULL, -- 공정식별자
+    "OperationName" VARCHAR(200), -- 공정명
+    "EquipmentID" VARCHAR(50) NOT NULL, -- 설비식별자
+    "EquipmentName" VARCHAR(200), -- 설비명
+    "EquipmentSmallClass" VARCHAR(30), -- 설비소분류
+    "EquipmentQuantity" INTEGER, -- 기준사용대수
+    CONSTRAINT "PK_OperationEquipment" PRIMARY KEY ("OperationEquipmentSequenceNo"),
+    CONSTRAINT "UK_OperationEquipment" UNIQUE ("EnterpriseID", "OperationID", "EquipmentID")
+);
+CREATE TABLE "Carrier" ( -- 캐리어 (표 28)
+    "CarrierSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 캐리어 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "CarrierID" VARCHAR(50) NOT NULL, -- 캐리어식별자
+    "CarrierType" VARCHAR(30), -- 캐리어유형
+    "ItemType" VARCHAR(30), -- 품목유형
+    "LoadState" VARCHAR(30), -- 적재상태
+    "CarrierState" VARCHAR(30), -- 캐리어상태
+    "CurrentQuantity" NUMERIC(18,6), -- 적재수량
+    CONSTRAINT "PK_Carrier" PRIMARY KEY ("CarrierSequenceNo"),
+    CONSTRAINT "UK_Carrier" UNIQUE ("EnterpriseID", "CarrierID")
+);
+CREATE TABLE "StockerInventory" ( -- 저장소재공정보 (표 29)
+    "StockerInventorySequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 저장소재공정보 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "StockerID" VARCHAR(50) NOT NULL, -- 저장소식별자
+    "ZoneID" VARCHAR(50), -- 구역식별자
+    "FullCapacity" INTEGER, -- 최대용량
+    "CurrentCapacity" INTEGER, -- 현재용량
+    "LotID" VARCHAR(50), -- 로트식별자
+    "CarrierID" VARCHAR(50), -- 캐리어식별자
+    "AlternateStockerID" VARCHAR(50), -- 대체저장소식별자
+    CONSTRAINT "PK_StockerInventory" PRIMARY KEY ("StockerInventorySequenceNo"),
+    CONSTRAINT "UK_StockerInventory" UNIQUE ("EnterpriseID", "StockerID")
+);
+CREATE TABLE "WarehouseLocationHeader" ( -- 창고헤더 (표 30)
+    "WarehouseLocationHeaderSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 창고헤더 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "WarehouseID" VARCHAR(50) NOT NULL, -- 창고식별자
+    "WarehouseName" VARCHAR(200), -- 창고명
+    "WarehouseType" VARCHAR(30), -- 창고유형
+    "UseIndicator" BOOLEAN, -- 사용여부
+    "NegativeInventoryIndicator" BOOLEAN, -- 음수재고허용여부
+    CONSTRAINT "PK_WarehouseLocationHeader" PRIMARY KEY ("WarehouseLocationHeaderSequenceNo"),
+    CONSTRAINT "UK_WarehouseLocationHeader" UNIQUE ("EnterpriseID", "WarehouseID")
+);
+CREATE TABLE "WarehouseLocationLine" ( -- 창고라인 (표 30)
+    "WarehouseLocationLineSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 창고라인 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "WarehouseID" VARCHAR(50) NOT NULL, -- 창고식별자
+    "WarehouseSection" VARCHAR(255) NOT NULL, -- 창고섹션
+    "WarehouseSectionName" VARCHAR(200), -- 창고섹션명
+    CONSTRAINT "PK_WarehouseLocationLine" PRIMARY KEY ("WarehouseLocationLineSequenceNo"),
+    CONSTRAINT "UK_WarehouseLocationLine" UNIQUE ("EnterpriseID", "WarehouseID", "WarehouseSection")
+);
+CREATE TABLE "Batch" ( -- 배치 (표 31)
+    "BatchSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 배치 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "BatchID" VARCHAR(50) NOT NULL, -- 배치식별자
+    "BatchName" VARCHAR(200), -- 배치명
+    "BatchDescription" VARCHAR(1000), -- 배치설명
+    "BatchType" VARCHAR(30), -- 배치유형
+    "ParentBatchID" VARCHAR(50), -- 모배치식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "LotID" VARCHAR(50), -- 로트식별자
+    "ProductionOrderID" VARCHAR(50), -- 생산지시식별자
+    "ProductionOrderSequence" INTEGER, -- 생산지시순번
+    "BOMID" VARCHAR(50), -- 자재명세서식별자
+    "BOMRevisionNumber" INTEGER, -- 자재명세서버전
+    "RecipeID" VARCHAR(50), -- 레시피식별자
+    "RecipeVersion" VARCHAR(255), -- 레시피버전
+    "OperationID" VARCHAR(50), -- 공정식별자
+    "EquipmentID" VARCHAR(50), -- 설비식별자
+    "BatchState" VARCHAR(30), -- 배치상태
+    "HoldIndicator" BOOLEAN, -- 보류여부
+    "ReworkIndicator" BOOLEAN, -- 재작업여부
+    "QualityDispositionCode" VARCHAR(30), -- 품질판정코드
+    "BatchPlannedQuantity" NUMERIC(18,6), -- 배치계획수량
+    "ProducedQuantity" NUMERIC(18,6), -- 생산수량
+    "DefectQuantity" NUMERIC(18,6), -- 불량수량
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "ScheduleStartDateTime" TIMESTAMP, -- 계획시작일시
+    "ScheduleEndDateTime" TIMESTAMP, -- 계획종료일시
+    "BatchStartDateTime" TIMESTAMP, -- 배치시작일시
+    "BatchEndDateTime" TIMESTAMP, -- 배치종료일시
+    "ManufactureDate" DATE, -- 제조일
+    "ValidEndDate" DATE, -- 유효종료일
+    "PersonnelID" VARCHAR(50), -- 사원식별자
+    CONSTRAINT "PK_Batch" PRIMARY KEY ("BatchSequenceNo"),
+    CONSTRAINT "UK_Batch" UNIQUE ("EnterpriseID", "BatchID")
+);
+CREATE TABLE "Line" ( -- 라인 (표 32)
+    "LineSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 라인 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "LineID" VARCHAR(50) NOT NULL, -- 라인식별자
+    "LineName" VARCHAR(200), -- 라인명
+    "LineDescription" VARCHAR(1000), -- 라인설명
+    "LineType" VARCHAR(30), -- 라인유형
+    "ProductionMethodType" VARCHAR(30), -- 생산방식유형
+    "ParentLineID" VARCHAR(50), -- 상위라인식별자
+    "DepartmentInChargeID" VARCHAR(50), -- 관리부서식별자
+    "PersonInChargeID" VARCHAR(50), -- 관리자식별자
+    "CalendarID" VARCHAR(50), -- 달력식별자
+    "IssueWarehouseID" VARCHAR(50), -- 출고창고식별자
+    "ReceiptWarehouseID" VARCHAR(50), -- 입고창고식별자
+    "StandardCapacity" NUMERIC(18,6), -- 표준생산능력
+    "CapacityUOMCode" VARCHAR(20), -- 생산능력단위코드
+    "StandardCycleTime" INTERVAL, -- 표준사이클타임
+    "ShiftCount" INTEGER, -- 작업조수
+    "StandardHeadcount" INTEGER, -- 표준작업인원
+    "Location" VARCHAR(1000), -- 위치
+    "UseIndicator" BOOLEAN, -- 사용여부
+    "ValidStartDate" DATE, -- 유효시작일
+    "ValidEndDate" DATE, -- 유효종료일
+    CONSTRAINT "PK_Line" PRIMARY KEY ("LineSequenceNo"),
+    CONSTRAINT "UK_Line" UNIQUE ("EnterpriseID", "LineID")
+);
+CREATE TABLE "Enterprise" ( -- 회사 (표 33)
+    "EnterpriseSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 회사 일련번호(PK)
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "EnterpriseName" VARCHAR(200), -- 회사명
+    "BusinessRegistrationNumber" VARCHAR(50), -- 사업자등록번호
+    "CorporateRegistrationNumber" VARCHAR(50), -- 법인등록번호
+    "RepresentativeName" VARCHAR(200), -- 대표자명
+    "ParentEnterpriseID" VARCHAR(50), -- 상위회사식별자
+    "CountryID" VARCHAR(30), -- 국가식별자
+    "BaseCurrencyCode" VARCHAR(30), -- 기준통화코드
+    "DialNumber" VARCHAR(30), -- 전화번호
+    "FaxNumber" VARCHAR(30), -- 팩스번호
+    "PostalCode" VARCHAR(10), -- 우편번호
+    "BaseAddress" VARCHAR(1000), -- 기본주소
+    "DetailAddress" VARCHAR(1000), -- 상세주소
+    "UseIndicator" BOOLEAN, -- 사용여부
+    CONSTRAINT "PK_Enterprise" PRIMARY KEY ("EnterpriseSequenceNo"),
+    CONSTRAINT "UK_Enterprise" UNIQUE ("EnterpriseID")
+);
+CREATE TABLE "ProjectMaster" ( -- 프로젝트마스터 (표 34)
+    "ProjectMasterSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 프로젝트마스터 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ProjectID" VARCHAR(50) NOT NULL, -- 프로젝트식별자
+    "ProjectName" VARCHAR(200), -- 프로젝트명
+    "ProjectStatusCode" VARCHAR(30), -- 프로젝트상태코드
+    "ResponsibleDepartmentID" VARCHAR(50), -- 프로젝트담당부서식별자
+    "PersonInChargeID" VARCHAR(50), -- 프로젝트담당자식별자
+    "ProjectContractDate" DATE, -- 프로젝트계약일
+    "ExpectedStartDate" DATE, -- 시작예정일
+    "ExpectedEndDate" DATE, -- 종료예정일
+    "ActualStartDate" DATE, -- 실제시작일
+    "ActualEndDate" DATE, -- 실제종료일
+    "SalesDocumentNumber" VARCHAR(50), -- 수주문서번호
+    "SalesDocumentSequence" INTEGER, -- 수주문서순번
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "UseIndicator" BOOLEAN, -- 사용여부
+    "DivisionID" VARCHAR(50), -- 사업부식별자
+    CONSTRAINT "PK_ProjectMaster" PRIMARY KEY ("ProjectMasterSequenceNo"),
+    CONSTRAINT "UK_ProjectMaster" UNIQUE ("EnterpriseID", "ProjectID")
+);
+CREATE TABLE "EngineeringChangeOrder" ( -- 설계변경지시 (표 35)
+    "EngineeringChangeOrderSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 설계변경지시 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "EngineeringChangeOrderID" VARCHAR(50) NOT NULL, -- 설계변경지시식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ValidStartDate" DATE, -- 유효시작일
+    "ValidEndDate" DATE, -- 유효종료일
+    "ExpectedExecutionDate" DATE, -- 적용예정일
+    "ExecutionDate" DATE, -- 적용이행일
+    "BOMType" VARCHAR(30), -- 자재명세서유형
+    "BOMID" VARCHAR(50), -- 자재명세서식별자
+    "BOMRevisionNumber" INTEGER, -- 자재명세서버전
+    "ChildItemID" VARCHAR(50), -- 자품목식별자
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "ActualRequirementQuantity" NUMERIC(18,6), -- 실소요수량
+    CONSTRAINT "PK_EngineeringChangeOrder" PRIMARY KEY ("EngineeringChangeOrderSequenceNo"),
+    CONSTRAINT "UK_EngineeringChangeOrder" UNIQUE ("EnterpriseID", "EngineeringChangeOrderID")
+);
+CREATE TABLE "SalesOrderHeader" ( -- 수주오더헤더 (표 36)
+    "SalesOrderHeaderSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 수주오더헤더 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "SalesDocumentNumber" VARCHAR(50) NOT NULL, -- 수주문서번호
+    "SalesOrderType" VARCHAR(30), -- 수주유형
+    "CustomerID" VARCHAR(50), -- 고객사식별자
+    "SalesDate" DATE, -- 수주일
+    "SalesStatus" VARCHAR(30), -- 수주상태
+    "ShipmentTermsCode" VARCHAR(30), -- 출하조건코드
+    "SalesTransactionType" VARCHAR(30), -- 거래유형
+    "ReturnIndicator" BOOLEAN, -- 반품여부
+    "ExportIndicator" BOOLEAN, -- 수출여부
+    "SalesAutomaticApprovalIndicator" BOOLEAN, -- 수주자동승인여부
+    CONSTRAINT "PK_SalesOrderHeader" PRIMARY KEY ("SalesOrderHeaderSequenceNo"),
+    CONSTRAINT "UK_SalesOrderHeader" UNIQUE ("EnterpriseID", "SalesDocumentNumber")
+);
+CREATE TABLE "SalesOrderLine" ( -- 수주오더라인 (표 36)
+    "SalesOrderLineSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 수주오더라인 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "SalesDocumentNumber" VARCHAR(50) NOT NULL, -- 수주문서번호
+    "SalesDocumentSequence" INTEGER NOT NULL, -- 수주문서순번
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "ItemQuantity" NUMERIC(18,6), -- 품목수량
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "SellingUOMCode" VARCHAR(20), -- 판매단위코드
+    "ConversionUnitQuantity" NUMERIC(18,6), -- 단위환산수량
+    "ItemUnitQuantity" NUMERIC(18,6), -- 기준단위수량
+    "RequestedDeliveryDate" DATE, -- 요청납기일
+    CONSTRAINT "PK_SalesOrderLine" PRIMARY KEY ("SalesOrderLineSequenceNo"),
+    CONSTRAINT "UK_SalesOrderLine" UNIQUE ("EnterpriseID", "SalesDocumentNumber", "SalesDocumentSequence")
+);
+CREATE TABLE "SalesPlan" ( -- 판매계획 (표 37)
+    "SalesPlanSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 판매계획 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "SalesPlanID" VARCHAR(50) NOT NULL, -- 판매계획식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "SalesProjection" NUMERIC(18,6), -- 판매추정치
+    "ProjectionStartDate" DATE, -- 예측시작일
+    "ProjectionEndDate" DATE, -- 예측종료일
+    CONSTRAINT "PK_SalesPlan" PRIMARY KEY ("SalesPlanSequenceNo"),
+    CONSTRAINT "UK_SalesPlan" UNIQUE ("EnterpriseID", "SalesPlanID")
+);
+CREATE TABLE "BasePrice" ( -- 기준가격 (표 38)
+    "BasePriceSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 기준가격 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ItemID" VARCHAR(50) NOT NULL, -- 품목식별자
+    "CurrencyCode" VARCHAR(30) NOT NULL, -- 환종코드
+    "UnitPrice" NUMERIC(18,6), -- 단가
+    "PaymentTermsCode" VARCHAR(30), -- 결제조건코드
+    "UseIndicator" BOOLEAN, -- 사용여부
+    CONSTRAINT "PK_BasePrice" PRIMARY KEY ("BasePriceSequenceNo"),
+    CONSTRAINT "UK_BasePrice" UNIQUE ("EnterpriseID", "ItemID", "CurrencyCode")
+);
+CREATE TABLE "PurchaseRequisition" ( -- 구매요청 (표 39)
+    "PurchaseRequisitionSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 구매요청 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "PurchaseRequisitionID" VARCHAR(50) NOT NULL, -- 구매요청식별자
+    "PurchaseRequisitionRevisionNumber" INTEGER, -- 구매요청버전
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "DemandQuantity" NUMERIC(18,6), -- 구매요청수량
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "PurchaseRequisitionUnitPrice" NUMERIC(18,6), -- 구매요청단가
+    "CurrencyCode" VARCHAR(30), -- 환종코드
+    "VendorID" VARCHAR(50), -- 공급사식별자
+    "VendorName" VARCHAR(200), -- 공급사명
+    "RequestedDeliveryDate" DATE, -- 요청납기일
+    "RequesterDepartmentID" VARCHAR(50), -- 구매요청부서
+    "RequesterPersonnelID" VARCHAR(50), -- 구매요청자
+    CONSTRAINT "PK_PurchaseRequisition" PRIMARY KEY ("PurchaseRequisitionSequenceNo"),
+    CONSTRAINT "UK_PurchaseRequisition" UNIQUE ("EnterpriseID", "PurchaseRequisitionID")
+);
+CREATE TABLE "PurchaseOrderHeader" ( -- 구매발주헤더 (표 40)
+    "PurchaseOrderHeaderSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 구매발주헤더 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "PurchaseDocumentNumber" VARCHAR(50) NOT NULL, -- 구매문서번호
+    "VendorID" VARCHAR(50), -- 공급사식별자
+    "PaymentTermsCode" VARCHAR(30), -- 결제조건코드
+    "PurchaseGroupCode" VARCHAR(30), -- 구매그룹코드
+    "CurrencyCode" VARCHAR(30), -- 환종코드
+    "ExchangeRate" NUMERIC(18,6), -- 환율
+    "PurchaseApprovalDate" DATE, -- 승인일
+    "PurchaseOrderDate" DATE, -- 구매발주일
+    "PurchaseOrderTypeCode" VARCHAR(30), -- 발주유형코드
+    "PurchaseTransactionType" VARCHAR(30), -- 거래유형
+    "PurchaseOrderStartDate" DATE, -- 시작일
+    "PurchaseOrderValidDate" DATE, -- 유효일
+    "PersonnelID" VARCHAR(50), -- 사원식별자
+    "PurchaseOrderClosingIndicator" BOOLEAN, -- 발주마감여부
+    "PurchaseOrderClosingDate" DATE, -- 발주마감일
+    CONSTRAINT "PK_PurchaseOrderHeader" PRIMARY KEY ("PurchaseOrderHeaderSequenceNo"),
+    CONSTRAINT "UK_PurchaseOrderHeader" UNIQUE ("EnterpriseID", "PurchaseDocumentNumber")
+);
+CREATE TABLE "PurchaseOrderLine" ( -- 구매발주라인 (표 40)
+    "PurchaseOrderLineSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 구매발주라인 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "PurchaseDocumentNumber" VARCHAR(50) NOT NULL, -- 구매문서번호
+    "PurchaseDocumentSequence" INTEGER NOT NULL, -- 구매문서순번
+    "ItemPurchaseType" VARCHAR(30), -- 구매라인유형
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "PurchaseOrderLineStatusCode" VARCHAR(30), -- 발주라인상태코드
+    "TaxCode" VARCHAR(30), -- 세무코드
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "PurchaseOrderUOMCode" VARCHAR(20), -- 발주단위코드
+    "ConversionUnitQuantity" NUMERIC(18,6), -- 단위환산수량
+    "ItemUnitQuantity" NUMERIC(18,6), -- 기준단위수량
+    "PurchaseOrderQuantity" NUMERIC(18,6), -- 구매발주수량
+    "PurchaseGoodsReceiptQuantity" NUMERIC(18,6), -- 구매입고수량
+    "PurchaseTransactionUnitPrice" NUMERIC(18,6), -- 구매거래단가
+    "PurchaseTransactionPrice" NUMERIC(18,6), -- 구매거래금액
+    "PurchaseOrderUnitPrice" NUMERIC(18,6), -- 발주단가
+    "PurchaseOrderPrice" NUMERIC(18,6), -- 발주금액
+    "VATPrice" NUMERIC(18,6), -- 부가세금액
+    "ExpectedDeliveryDate" DATE, -- 납기예정일
+    "IncomingInspectionIndicator" BOOLEAN, -- 수입검사여부
+    "AccountCode" VARCHAR(30), -- 계정코드
+    "VATTransactionUnitPrice" NUMERIC(18,6), -- 부가세포함거래단가
+    "VATTransactionPrice" NUMERIC(18,6), -- 부가세포함거래금액
+    "VATCarryingAmount" NUMERIC(18,6), -- 부가세포함장부금액
+    CONSTRAINT "PK_PurchaseOrderLine" PRIMARY KEY ("PurchaseOrderLineSequenceNo"),
+    CONSTRAINT "UK_PurchaseOrderLine" UNIQUE ("EnterpriseID", "PurchaseDocumentNumber", "PurchaseDocumentSequence")
+);
+CREATE TABLE "MaterialArrival" ( -- 자재도착 (표 41)
+    "MaterialArrivalSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 자재도착 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "PurchaseDocumentNumber" VARCHAR(50) NOT NULL, -- 구매문서번호
+    "PurchaseDocumentSequence" INTEGER NOT NULL, -- 구매문서순번
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "PurchaseGoodsReceiptQuantity" NUMERIC(18,6), -- 구매입고수량
+    "ReceiptWarehouseID" VARCHAR(50), -- 입고창고식별자
+    "GoodsReceiptDate" DATE, -- 입고처리일
+    "LotID" VARCHAR(50) NOT NULL, -- 로트식별자
+    "ItemQuantity" NUMERIC(18,6), -- 품목수량
+    "VendorID" VARCHAR(50), -- 공급사식별자
+    CONSTRAINT "PK_MaterialArrival" PRIMARY KEY ("MaterialArrivalSequenceNo"),
+    CONSTRAINT "UK_MaterialArrival" UNIQUE ("EnterpriseID", "PurchaseDocumentNumber", "PurchaseDocumentSequence", "LotID")
+);
+CREATE TABLE "GoodsReceipt" ( -- 입고 (표 42)
+    "GoodsReceiptSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 입고 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "GoodsReceiptID" VARCHAR(50) NOT NULL, -- 입고식별자
+    "WarehouseID" VARCHAR(50), -- 창고식별자
+    "PersonnelID" VARCHAR(50), -- 사원식별자
+    "GoodsReceiptSequence" INTEGER NOT NULL, -- 입고순번
+    "GoodsReceiptType" VARCHAR(30), -- 입고처리유형
+    "GoodsReceiptReturnType" VARCHAR(30), -- 입고반품유형
+    "GoodsReceiptDate" DATE, -- 입고처리일
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "InventoryTransactionDocumentNumber" VARCHAR(50), -- 수불문서번호
+    "InventoryTransactionDocumentSequence" INTEGER, -- 수불문서순번
+    "InventoryTransactionTypeCode" VARCHAR(30), -- 수불유형코드
+    "InvoiceNumber" VARCHAR(50), -- 송장번호
+    "InvoiceSequence" INTEGER, -- 송장라인순번
+    "InvoiceProcessingIndicator" BOOLEAN, -- 송장처리여부
+    "IncomingInspectionIndicator" BOOLEAN, -- 수입검사여부
+    "VendorID" VARCHAR(50), -- 공급사식별자
+    "PurchaseOrderUOMCode" VARCHAR(20), -- 발주단위코드
+    "ItemUnitQuantity" NUMERIC(18,6), -- 기준단위수량
+    "GoodsReceiptQuantity" NUMERIC(18,6), -- 입고처리수량
+    "IncomingInspectionAcceptedQuantity" NUMERIC(18,6), -- 수입검사합격수량
+    "IncomingInspectionRejectedQuantity" NUMERIC(18,6), -- 수입검사불합격수량
+    "PurchaseGroupCode" VARCHAR(30), -- 구매그룹코드
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    CONSTRAINT "PK_GoodsReceipt" PRIMARY KEY ("GoodsReceiptSequenceNo"),
+    CONSTRAINT "UK_GoodsReceipt" UNIQUE ("EnterpriseID", "GoodsReceiptID", "GoodsReceiptSequence")
+);
+CREATE TABLE "GoodsIssue" ( -- 자재불출 (표 43)
+    "GoodsIssueSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 자재불출 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "GoodsIssueID" VARCHAR(50) NOT NULL, -- 자재불출식별자
+    "InventoryTransactionDocumentNumber" VARCHAR(50), -- 수불문서번호
+    "InventoryTransactionDocumentSequence" INTEGER, -- 수불문서순번
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "InventoryTransactionTypeCode" VARCHAR(30), -- 수불유형코드
+    "InventoryTransferType" VARCHAR(30), -- 입출고유형
+    "InventoryVariationType" VARCHAR(30), -- 재고증감유형
+    "InventoryTransactionType" VARCHAR(30), -- 수불유형
+    "LotID" VARCHAR(50), -- 로트식별자
+    "SerialUseIndicator" BOOLEAN, -- 시리얼사용여부
+    "VendorID" VARCHAR(50), -- 공급사식별자
+    "WarehouseID" VARCHAR(50), -- 창고식별자
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "ItemUnitQuantity" NUMERIC(18,6), -- 기준단위수량
+    "OrderUOMCode" VARCHAR(20), -- 오더단위코드
+    "OrderQuantity" NUMERIC(18,6), -- 오더수량
+    CONSTRAINT "PK_GoodsIssue" PRIMARY KEY ("GoodsIssueSequenceNo"),
+    CONSTRAINT "UK_GoodsIssue" UNIQUE ("EnterpriseID", "GoodsIssueID")
+);
+CREATE TABLE "ProductionPlanning" ( -- 생산계획 (표 44)
+    "ProductionPlanningSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 생산계획 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ProductionPlanID" VARCHAR(50) NOT NULL, -- 생산계획식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ProductionPlanQuantity" INTEGER, -- 생산계획수량
+    "ScheduleStartDateTime" TIMESTAMP, -- 생산계획시작일시
+    "ScheduleEndDateTime" TIMESTAMP, -- 생산계획종료일시
+    CONSTRAINT "PK_ProductionPlanning" PRIMARY KEY ("ProductionPlanningSequenceNo"),
+    CONSTRAINT "UK_ProductionPlanning" UNIQUE ("EnterpriseID", "ProductionPlanID")
+);
+CREATE TABLE "ProductionOrder" ( -- 생산지시 (표 45)
+    "ProductionOrderSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 생산지시 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ProductionOrderID" VARCHAR(50) NOT NULL, -- 생산지시식별자
+    "ProductionOrderSequence" INTEGER NOT NULL, -- 생산지시순번
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "LineID" VARCHAR(50), -- 라인식별자
+    "RoutingID" VARCHAR(50), -- 공정경로식별자
+    "BOMID" VARCHAR(50), -- 자재명세서식별자
+    "BOMRevisionNumber" INTEGER, -- 자재명세서버전
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "ProductionOrderQuantity" INTEGER, -- 생산지시수량
+    "ProductionDueDateTime" TIMESTAMP, -- 생산완료기한일시
+    "ScheduleStartDateTime" TIMESTAMP, -- 생산계획시작일시
+    "ScheduleEndDateTime" TIMESTAMP, -- 생산계획종료일시
+    "SalesDocumentNumber" VARCHAR(50), -- 수주문서번호
+    "SalesDocumentSequence" INTEGER, -- 수주문서순번
+    CONSTRAINT "PK_ProductionOrder" PRIMARY KEY ("ProductionOrderSequenceNo"),
+    CONSTRAINT "UK_ProductionOrder" UNIQUE ("EnterpriseID", "ProductionOrderID", "ProductionOrderSequence")
+);
+CREATE TABLE "OperationStart" ( -- 착공 (표 46)
+    "OperationStartSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 착공 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "OperationStartID" VARCHAR(50) NOT NULL, -- 착공식별자
+    "LotID" VARCHAR(50), -- 로트식별자
+    "LotName" VARCHAR(200), -- 로트명
+    "LotDescription" VARCHAR(1000), -- 로트설명
+    "LotCreatedQuantity" NUMERIC(18,6), -- 로트수량
+    "OperationID" VARCHAR(50), -- 공정식별자
+    "EquipmentID" VARCHAR(50), -- 설비식별자
+    "OperationStartTime" TIMESTAMP, -- 착공시간
+    "PersonnelID" VARCHAR(50), -- 사원식별자
+    CONSTRAINT "PK_OperationStart" PRIMARY KEY ("OperationStartSequenceNo"),
+    CONSTRAINT "UK_OperationStart" UNIQUE ("EnterpriseID", "OperationStartID")
+);
+CREATE TABLE "OperationEnd" ( -- 완공 (표 47)
+    "OperationEndSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 완공 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "OperationEndID" VARCHAR(50) NOT NULL, -- 완공식별자
+    "LotID" VARCHAR(50), -- 로트식별자
+    "LotName" VARCHAR(200), -- 로트명
+    "LotDescription" VARCHAR(1000), -- 로트설명
+    "LotCreatedQuantity" NUMERIC(18,6), -- 로트수량
+    "OperationID" VARCHAR(50), -- 공정식별자
+    "EquipmentID" VARCHAR(50), -- 설비식별자
+    "OperationEndTime" TIMESTAMP, -- 완공시간
+    "PersonnelID" VARCHAR(50), -- 사원식별자
+    "ProducedQuantity" NUMERIC(18,6), -- 생산수량
+    "DefectQuantity" NUMERIC(18,6), -- 불량수량
+    "ReworkCount" INTEGER, -- 재작업횟수
+    CONSTRAINT "PK_OperationEnd" PRIMARY KEY ("OperationEndSequenceNo"),
+    CONSTRAINT "UK_OperationEnd" UNIQUE ("EnterpriseID", "OperationEndID")
+);
+CREATE TABLE "TransferCommand" ( -- 이동지시 (표 48)
+    "TransferCommandSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 이동지시 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "TransferCommandID" VARCHAR(50) NOT NULL, -- 이동지시식별자
+    "LotID" VARCHAR(50), -- 로트식별자
+    "LotName" VARCHAR(200), -- 로트명
+    "LotDescription" VARCHAR(1000), -- 로트설명
+    "CarrierID" VARCHAR(50), -- 캐리어식별자
+    "SourceID" VARCHAR(50), -- 출발지식별자
+    "SourceType" VARCHAR(30), -- 출발지유형
+    "SourceName" VARCHAR(200), -- 출발지명
+    "DestinationID" VARCHAR(50), -- 목적지식별자
+    "DestinationType" VARCHAR(30), -- 목적지유형
+    "DestinationName" VARCHAR(200), -- 목적지명
+    CONSTRAINT "PK_TransferCommand" PRIMARY KEY ("TransferCommandSequenceNo"),
+    CONSTRAINT "UK_TransferCommand" UNIQUE ("EnterpriseID", "TransferCommandID")
+);
+CREATE TABLE "TransferStart" ( -- 운행시작 (표 49)
+    "TransferStartSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 운행시작 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "TransferStartID" VARCHAR(50) NOT NULL, -- 운행시작식별자
+    "TransferCommandID" VARCHAR(50), -- 이동지시식별자
+    "LotID" VARCHAR(50), -- 로트식별자
+    "LotName" VARCHAR(200), -- 로트명
+    "LotDescription" VARCHAR(1000), -- 로트설명
+    "CarrierID" VARCHAR(50), -- 캐리어식별자
+    "TransferStartDateTime" TIMESTAMP, -- 운행시작일시
+    "CurrentLocation" VARCHAR(1000), -- 현재위치
+    "DestinationID" VARCHAR(50), -- 목적지식별자
+    "DestinationType" VARCHAR(30), -- 목적지유형
+    "DestinationName" VARCHAR(200), -- 목적지명
+    "ErrorCode" VARCHAR(30), -- 오류코드
+    "ErrorMessage" VARCHAR(1000), -- 오류메세지
+    CONSTRAINT "PK_TransferStart" PRIMARY KEY ("TransferStartSequenceNo"),
+    CONSTRAINT "UK_TransferStart" UNIQUE ("EnterpriseID", "TransferStartID")
+);
+CREATE TABLE "TransferEnd" ( -- 운행완료 (표 50)
+    "TransferEndSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 운행완료 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "TransferEndID" VARCHAR(50) NOT NULL, -- 운행완료식별자
+    "TransferCommandID" VARCHAR(50), -- 이동지시식별자
+    "LotID" VARCHAR(50), -- 로트식별자
+    "LotName" VARCHAR(200), -- 로트명
+    "LotDescription" VARCHAR(1000), -- 로트설명
+    "CarrierID" VARCHAR(50), -- 캐리어식별자
+    "TransferEndDateTime" TIMESTAMP, -- 운행완료일시
+    "DestinationID" VARCHAR(50), -- 목적지식별자
+    "DestinationType" VARCHAR(30), -- 목적지유형
+    "DestinationName" VARCHAR(200), -- 목적지명
+    CONSTRAINT "PK_TransferEnd" PRIMARY KEY ("TransferEndSequenceNo"),
+    CONSTRAINT "UK_TransferEnd" UNIQUE ("EnterpriseID", "TransferEndID")
+);
+CREATE TABLE "InTransitLocation" ( -- 운송위치 (표 51)
+    "InTransitLocationSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 운송위치 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "InTransitLocationID" VARCHAR(50) NOT NULL, -- 운송위치식별자
+    "TransferCommandID" VARCHAR(50), -- 이동지시식별자
+    "LotID" VARCHAR(50), -- 로트식별자
+    "LotName" VARCHAR(200), -- 로트명
+    "LotDescription" VARCHAR(1000), -- 로트설명
+    "CarrierID" VARCHAR(50), -- 캐리어식별자
+    "CurrentLocation" VARCHAR(1000), -- 현재위치
+    CONSTRAINT "PK_InTransitLocation" PRIMARY KEY ("InTransitLocationSequenceNo"),
+    CONSTRAINT "UK_InTransitLocation" UNIQUE ("EnterpriseID", "InTransitLocationID")
+);
+CREATE TABLE "EquipmentState" ( -- 설비상태 (표 52)
+    "EquipmentStateSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 설비상태 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "EquipmentStateID" VARCHAR(50) NOT NULL, -- 설비상태식별자
+    "EquipmentID" VARCHAR(50), -- 설비식별자
+    "EquipmentState" VARCHAR(30), -- 설비상태
+    "EquipmentControlMode" VARCHAR(30), -- 설비제어모드
+    "EquipmentOperationMode" VARCHAR(30), -- 설비운영모드
+    "ProcessedLotQuantity" NUMERIC(18,6), -- 진행로트수량
+    "LastProcessedLotID" VARCHAR(50), -- 최종진행로트식별자
+    "LastProcessedOperationID" VARCHAR(50), -- 최종진행공정식별자
+    "ErrorCode" VARCHAR(30), -- 오류코드
+    "ErrorMessage" VARCHAR(1000), -- 오류메세지
+    CONSTRAINT "PK_EquipmentState" PRIMARY KEY ("EquipmentStateSequenceNo"),
+    CONSTRAINT "UK_EquipmentState" UNIQUE ("EnterpriseID", "EquipmentStateID")
+);
+CREATE TABLE "Alarm" ( -- 알람 (표 53)
+    "AlarmSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 알람 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "AlarmID" VARCHAR(50) NOT NULL, -- 알람식별자
+    "EquipmentID" VARCHAR(50), -- 설비식별자
+    "AlarmState" VARCHAR(30), -- 알람상태
+    "ErrorCode" VARCHAR(30), -- 오류코드
+    "ErrorMessage" VARCHAR(1000), -- 오류메세지
+    "EventDateTime" TIMESTAMP, -- 이벤트발생일시
+    "CurrentLocation" VARCHAR(1000), -- 현재위치
+    CONSTRAINT "PK_Alarm" PRIMARY KEY ("AlarmSequenceNo"),
+    CONSTRAINT "UK_Alarm" UNIQUE ("EnterpriseID", "AlarmID")
+);
+CREATE TABLE "SupplierInspectionPlan" ( -- 협력업체품질검사계획 (표 54)
+    "SupplierInspectionPlanSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 협력업체품질검사계획 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "VendorID" VARCHAR(50), -- 공급사식별자
+    "ProjectID" VARCHAR(50), -- 프로젝트식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "PurchaseDocumentNumber" VARCHAR(50), -- 구매문서번호
+    "PurchaseDocumentSequence" INTEGER, -- 구매문서순번
+    "PurchaseOrderQuantity" NUMERIC(18,6), -- 구매발주수량
+    "LotID" VARCHAR(50), -- 로트식별자
+    "BatchID" VARCHAR(50), -- 배치식별자
+    "ExpectedDeliveryDate" DATE, -- 납기예정일
+    "InspectionPlanID" VARCHAR(50) NOT NULL, -- 검사계획식별자
+    "InspectionID" VARCHAR(50) NOT NULL, -- 검사식별자
+    "InspectionName" VARCHAR(200), -- 검사명
+    "Inspector" VARCHAR(255), -- 검사자
+    "InspectionLocation" VARCHAR(1000), -- 검사위치
+    "ExpectedInspectionDate" DATE, -- 검사예정일
+    "ExpectedInspectionTimePeriod" INTEGER, -- 검사예정기간
+    "InspectionMethod" VARCHAR(30), -- 검사방법
+    "InspectionPlanQuantity" NUMERIC(18,6), -- 검사계획수량
+    "InspectionCheckSheet" VARCHAR(1000), -- 검사체크시트
+    CONSTRAINT "PK_SupplierInspectionPlan" PRIMARY KEY ("SupplierInspectionPlanSequenceNo"),
+    CONSTRAINT "UK_SupplierInspectionPlan" UNIQUE ("EnterpriseID", "InspectionPlanID", "InspectionID")
+);
+CREATE TABLE "SupplierInspectionApplication" ( -- 협력업체품질검사신청 (표 55)
+    "SupplierInspectionApplicationSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 협력업체품질검사신청 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "VendorID" VARCHAR(50), -- 공급사식별자
+    "ProjectID" VARCHAR(50), -- 프로젝트식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "PurchaseDocumentNumber" VARCHAR(50), -- 구매문서번호
+    "PurchaseDocumentSequence" INTEGER, -- 구매문서순번
+    "LotID" VARCHAR(50), -- 로트식별자
+    "BatchID" VARCHAR(50), -- 배치식별자
+    "InspectionPlanID" VARCHAR(50), -- 검사계획식별자
+    "InspectionID" VARCHAR(50), -- 검사식별자
+    "InspectionApplicationID" VARCHAR(50) NOT NULL, -- 검사신청식별자
+    "ApplicationPersonnelID" VARCHAR(50), -- 검사신청자
+    "InspectionName" VARCHAR(200), -- 검사명
+    "InspectionLocation" VARCHAR(1000), -- 검사위치
+    "InspectionMethod" VARCHAR(30), -- 검사방법
+    "ExpectedInspectionDate" DATE, -- 검사예정일
+    "InspectionDate" DATE, -- 검사일
+    "InspectionTimePeriod" INTEGER, -- 검사기간
+    "InspectionQuantity" NUMERIC(18,6), -- 검사수량
+    "SelfCheckInspectionResultSheet" VARCHAR(1000), -- 자체점검결과시트
+    "InspectionStatusCode" VARCHAR(30), -- 검사상태코드
+    "ReasonForApplication" VARCHAR(255), -- 검사신청사유
+    "InspectionCancelReason" VARCHAR(1000), -- 검사취소사유
+    CONSTRAINT "PK_SupplierInspectionApplication" PRIMARY KEY ("SupplierInspectionApplicationSequenceNo"),
+    CONSTRAINT "UK_SupplierInspectionApplication" UNIQUE ("EnterpriseID", "InspectionApplicationID")
+);
+CREATE TABLE "SupplierInspectionResult" ( -- 협력업체품질검사결과 (표 56)
+    "SupplierInspectionResultSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 협력업체품질검사결과 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "VendorID" VARCHAR(50), -- 공급사식별자
+    "ProjectID" VARCHAR(50), -- 프로젝트식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "LotID" VARCHAR(50), -- 로트식별자
+    "BatchID" VARCHAR(50), -- 배치식별자
+    "InspectionPlanID" VARCHAR(50), -- 검사계획식별자
+    "InspectionID" VARCHAR(50), -- 검사식별자
+    "InspectionApplicationID" VARCHAR(50), -- 검사신청식별자
+    "InspectionResultID" VARCHAR(50) NOT NULL, -- 검사결과식별자
+    "Inspector" VARCHAR(255), -- 검사자
+    "InspectionParticipant" VARCHAR(1000), -- 검사입회자
+    "InspectionLocation" VARCHAR(1000), -- 검사위치
+    "InspectionDate" DATE, -- 검사일
+    "InspectionQuantity" NUMERIC(18,6), -- 검사수량
+    "InspectionResult" VARCHAR(30), -- 검사결과
+    "InspectionResultSheet" VARCHAR(1000), -- 검사결과시트
+    "InspectionStatusCode" VARCHAR(30), -- 검사상태코드
+    CONSTRAINT "PK_SupplierInspectionResult" PRIMARY KEY ("SupplierInspectionResultSequenceNo"),
+    CONSTRAINT "UK_SupplierInspectionResult" UNIQUE ("EnterpriseID", "InspectionResultID")
+);
+CREATE TABLE "CorrectiveActionRequest" ( -- 시정조치요청 (표 57)
+    "CorrectiveActionRequestSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 시정조치요청 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "VendorID" VARCHAR(50), -- 공급사식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "LotID" VARCHAR(50), -- 로트식별자
+    "BatchID" VARCHAR(50), -- 배치식별자
+    "InspectionApplicationID" VARCHAR(50), -- 검사신청식별자
+    "CorrectiveActionRequestID" VARCHAR(50) NOT NULL, -- 시정조치요청식별자
+    "CorrectiveActionRequestIssuerID" VARCHAR(50), -- 시정조치요청발행자식별자
+    "CorrectiveActionRequestRecipientID" VARCHAR(50), -- 시정조치요청접수자식별자
+    "CorrectiveActionRequestLocation" VARCHAR(1000), -- 시정조치요청위치
+    "CorrectiveActionRequestDocumentReference" VARCHAR(255), -- 시정조치요청첨부자료
+    CONSTRAINT "PK_CorrectiveActionRequest" PRIMARY KEY ("CorrectiveActionRequestSequenceNo"),
+    CONSTRAINT "UK_CorrectiveActionRequest" UNIQUE ("EnterpriseID", "CorrectiveActionRequestID")
+);
+CREATE TABLE "CorrectiveActionPlan" ( -- 시정조치계획 (표 58)
+    "CorrectiveActionPlanSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 시정조치계획 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "VendorID" VARCHAR(50), -- 공급사식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "LotID" VARCHAR(50), -- 로트식별자
+    "BatchID" VARCHAR(50), -- 배치식별자
+    "CorrectiveActionRequestID" VARCHAR(50), -- 시정조치요청식별자
+    "CorrectiveActionPlanID" VARCHAR(50) NOT NULL, -- 시정조치계획식별자
+    "PersonInChargeID" VARCHAR(50), -- 시정조치담당자식별자
+    "PersonInChargeEmail" VARCHAR(255), -- 시정조치담당자이메일명
+    "PersonInChargeDialNumber" VARCHAR(30), -- 시정조치담당자전화번호
+    "ExpectedCorrectiveActionDate" DATE, -- 시정조치예정일
+    "CorrectiveActionRequestDocumentReference" VARCHAR(255), -- 시정조치요청첨부자료
+    "CorrectiveActionApprovalIndicator" BOOLEAN, -- 시정조치접수여부
+    "CorrectiveActionStatusCode" VARCHAR(30), -- 시정조치상태코드
+    "ReasonForRejection" VARCHAR(255), -- 반려사유
+    CONSTRAINT "PK_CorrectiveActionPlan" PRIMARY KEY ("CorrectiveActionPlanSequenceNo"),
+    CONSTRAINT "UK_CorrectiveActionPlan" UNIQUE ("EnterpriseID", "CorrectiveActionPlanID")
+);
+CREATE TABLE "CorrectiveActionResult" ( -- 시정조치결과 (표 59)
+    "CorrectiveActionResultSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 시정조치결과 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "VendorID" VARCHAR(50), -- 공급사식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "LotID" VARCHAR(50), -- 로트식별자
+    "BatchID" VARCHAR(50), -- 배치식별자
+    "CorrectiveActionRequestID" VARCHAR(50), -- 시정조치요청식별자
+    "CorrectiveActionPlanID" VARCHAR(50), -- 시정조치계획식별자
+    "CorrectiveActionResultID" VARCHAR(50) NOT NULL, -- 시정조치결과식별자
+    "PersonInChargeID" VARCHAR(50), -- 시정조치담당자식별자
+    "PersonInChargeEmail" VARCHAR(255), -- 시정조치담당자이메일명
+    "PersonInChargeDialNumber" VARCHAR(30), -- 시정조치담당자전화번호
+    "CorrectiveActionConfirmorID" VARCHAR(50), -- 시정조치확인자식별자
+    "CorrectiveActionConfirmorEmail" VARCHAR(255), -- 시정조치확인자이메일명
+    "CorrectiveActionConfirmorDialNumber" VARCHAR(30), -- 시정조치확인자전화번호
+    "CorrectiveActionDateTime" TIMESTAMP, -- 시정조치일시
+    "CorrectiveActionResultDescription" VARCHAR(1000), -- 시정조치결과내용
+    "CorrectiveActionStatusCode" VARCHAR(30), -- 시정조치상태코드
+    "ReasonForRejection" VARCHAR(255), -- 반려사유
+    CONSTRAINT "PK_CorrectiveActionResult" PRIMARY KEY ("CorrectiveActionResultSequenceNo"),
+    CONSTRAINT "UK_CorrectiveActionResult" UNIQUE ("EnterpriseID", "CorrectiveActionResultID")
+);
+CREATE TABLE "ProductPacking" ( -- 제품포장 (표 60)
+    "ProductPackingSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 제품포장 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "PackingType" VARCHAR(30), -- 포장유형
+    "WarehouseID" VARCHAR(50), -- 창고식별자
+    "SerialNumber" VARCHAR(50), -- 일련번호
+    "BoxNumber" VARCHAR(50) NOT NULL, -- 포장박스번호
+    "PalletNumber" VARCHAR(50), -- 포장파렛트번호
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "PackingSequence" INTEGER NOT NULL, -- 포장순번
+    "LotID" VARCHAR(50), -- 로트식별자
+    CONSTRAINT "PK_ProductPacking" PRIMARY KEY ("ProductPackingSequenceNo"),
+    CONSTRAINT "UK_ProductPacking" UNIQUE ("EnterpriseID", "BoxNumber", "PackingSequence")
+);
+CREATE TABLE "EquipmentParameter" ( -- 설비파라미터 (표 61)
+    "EquipmentParameterSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 설비파라미터 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ParameterID" VARCHAR(50) NOT NULL, -- 파라미터식별자
+    "ParameterName" VARCHAR(200), -- 파라미터명
+    "ParameterType" VARCHAR(30), -- 파라미터유형
+    "ParameterGrade" VARCHAR(30), -- 파라미터등급
+    "ParameterUOMCode" VARCHAR(20), -- 파라미터단위코드
+    "EquipmentID" VARCHAR(50), -- 설비식별자
+    "LSL" NUMERIC(18,6), -- 규격하한
+    "USL" NUMERIC(18,6), -- 규격상한
+    "PeriodicDataCollectionIndicator" BOOLEAN, -- 주기적수집여부
+    "DataCollectionPeriod" INTERVAL, -- 수집주기
+    CONSTRAINT "PK_EquipmentParameter" PRIMARY KEY ("EquipmentParameterSequenceNo"),
+    CONSTRAINT "UK_EquipmentParameter" UNIQUE ("EnterpriseID", "ParameterID")
+);
+CREATE TABLE "TraceParameter" ( -- 설비파라미터이력 (표 62)
+    "TraceParameterSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 설비파라미터이력 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "TraceParameterID" VARCHAR(50) NOT NULL, -- 설비파라미터이력식별자
+    "EquipmentID" VARCHAR(50), -- 설비식별자
+    "ParameterID" VARCHAR(50), -- 파라미터식별자
+    "EventDateTime" TIMESTAMP, -- 이벤트발생일시
+    "ParameterUOMCode" VARCHAR(20), -- 파라미터단위코드
+    "ParameterValue" NUMERIC(18,6), -- 파라미터값
+    "ValidationResultCode" VARCHAR(30), -- 검증결과코드
+    CONSTRAINT "PK_TraceParameter" PRIMARY KEY ("TraceParameterSequenceNo"),
+    CONSTRAINT "UK_TraceParameter" UNIQUE ("EnterpriseID", "TraceParameterID")
+);
+CREATE TABLE "ProductionPerformance" ( -- 생산실적 (표 63)
+    "ProductionPerformanceSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 생산실적 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ProductionPerformanceID" VARCHAR(50) NOT NULL, -- 생산실적식별자
+    "ProductionPerformanceSequence" INTEGER NOT NULL, -- 생산실적순번
+    "ProductionOrderID" VARCHAR(50), -- 생산지시식별자
+    "ProductionOrderSequence" INTEGER, -- 생산지시순번
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "ProducedQuantity" NUMERIC(18,6), -- 생산수량
+    "DefectQuantity" NUMERIC(18,6), -- 불량수량
+    "ReworkQuantity" INTEGER, -- 재작업수량
+    "OperationID" VARCHAR(50), -- 공정식별자
+    "RoutingID" VARCHAR(50), -- 공정경로식별자
+    "OperationSequence" INTEGER, -- 공정순번
+    "PersonnelID" VARCHAR(50), -- 사원식별자
+    "ProductionPerformanceDate" DATE, -- 생산실적일자
+    "ExecutionStartDateTime" TIMESTAMP, -- 생산시작일시
+    "ExecutionEndDateTime" TIMESTAMP, -- 생산종료일시
+    "CancelIndicator" BOOLEAN, -- 취소여부
+    "CancelDateTime" TIMESTAMP, -- 취소일시
+    "LotID" VARCHAR(50), -- 로트식별자
+    "BatchID" VARCHAR(50), -- 배치식별자
+    CONSTRAINT "PK_ProductionPerformance" PRIMARY KEY ("ProductionPerformanceSequenceNo"),
+    CONSTRAINT "UK_ProductionPerformance" UNIQUE ("EnterpriseID", "ProductionPerformanceID", "ProductionPerformanceSequence")
+);
+CREATE TABLE "ProductionPerformanceItem" ( -- 생산실적투입품목 (표 64)
+    "ProductionPerformanceItemSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 생산실적투입품목 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ProductionPerformanceID" VARCHAR(50) NOT NULL, -- 생산실적식별자
+    "ProductionPerformanceSequence" INTEGER NOT NULL, -- 생산실적순번
+    "ProductionOrderID" VARCHAR(50), -- 생산지시식별자
+    "ProductionOrderSequence" INTEGER, -- 생산지시순번
+    "ItemID" VARCHAR(50) NOT NULL, -- 품목식별자
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "LineID" VARCHAR(50), -- 라인식별자
+    "OperationID" VARCHAR(50), -- 공정식별자
+    "LotID" VARCHAR(50), -- 로트식별자
+    "ReplacementChildItemID" VARCHAR(50), -- 대체자재식별자
+    "WarehouseID" VARCHAR(50), -- 창고식별자
+    "WarehouseSection" VARCHAR(255), -- 창고섹션
+    "RequiredQuantity" INTEGER, -- 소요수량
+    "IssuedQuantity" INTEGER, -- 출고수량
+    "IssuedIndicator" BOOLEAN, -- 출고완료여부
+    CONSTRAINT "PK_ProductionPerformanceItem" PRIMARY KEY ("ProductionPerformanceItemSequenceNo"),
+    CONSTRAINT "UK_ProductionPerformanceItem" UNIQUE ("EnterpriseID", "ProductionPerformanceID", "ProductionPerformanceSequence", "ItemID")
+);
+CREATE TABLE "ProductionPerformancePersonnel" ( -- 생산실적투입인력 (표 65)
+    "ProductionPerformancePersonnelSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 생산실적투입인력 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ProductionPerformanceID" VARCHAR(50) NOT NULL, -- 생산실적식별자
+    "ProductionPerformanceSequence" INTEGER NOT NULL, -- 생산실적순번
+    "ProductionOrderID" VARCHAR(50), -- 생산지시식별자
+    "ProductionOrderSequence" INTEGER, -- 생산지시순번
+    "OperationID" VARCHAR(50), -- 공정식별자
+    "PersonnelID" VARCHAR(50) NOT NULL, -- 사원식별자
+    "ExecutionStartDateTime" TIMESTAMP, -- 생산시작일시
+    "ExecutionEndDateTime" TIMESTAMP, -- 생산종료일시
+    "TaskGroupCode" VARCHAR(30), -- 근무조코드
+    "ActualLaborDateTime" TIMESTAMP, -- 투입일시
+    "ActualLaborTime" NUMERIC(18,6), -- 투입시간
+    "ActualLaborTimeUOMCode" VARCHAR(20), -- 투입시간단위코드
+    CONSTRAINT "PK_ProductionPerformancePersonnel" PRIMARY KEY ("ProductionPerformancePersonnelSequenceNo"),
+    CONSTRAINT "UK_ProductionPerformancePersonnel" UNIQUE ("EnterpriseID", "ProductionPerformanceID", "ProductionPerformanceSequence", "PersonnelID")
+);
+CREATE TABLE "ProductionPerformanceEquipment" ( -- 설비활용실적 (표 66)
+    "ProductionPerformanceEquipmentSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 설비활용실적 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ProductionPerformanceID" VARCHAR(50) NOT NULL, -- 생산실적식별자
+    "ProductionPerformanceSequence" INTEGER NOT NULL, -- 생산실적순번
+    "ProductionOrderID" VARCHAR(50), -- 생산지시식별자
+    "ProductionOrderSequence" INTEGER, -- 생산지시순번
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "ProducedQuantity" NUMERIC(18,6), -- 생산수량
+    "DefectQuantity" NUMERIC(18,6), -- 불량수량
+    "OperationID" VARCHAR(50), -- 공정식별자
+    "RoutingID" VARCHAR(50), -- 공정경로식별자
+    "OperationSequence" INTEGER, -- 공정순번
+    "PersonnelID" VARCHAR(50), -- 사원식별자
+    "ExecutionStartDateTime" TIMESTAMP, -- 생산시작일시
+    "ExecutionEndDateTime" TIMESTAMP, -- 생산종료일시
+    "CancelIndicator" BOOLEAN, -- 취소여부
+    "CancelDateTime" TIMESTAMP, -- 취소일시
+    "EquipmentID" VARCHAR(50) NOT NULL, -- 설비식별자
+    "SetupTime" INTERVAL, -- 준비시간
+    "RunTime" INTERVAL, -- 가동시간
+    "InspectionFinishedIndicator" BOOLEAN, -- 공정검사여부
+    CONSTRAINT "PK_ProductionPerformanceEquipment" PRIMARY KEY ("ProductionPerformanceEquipmentSequenceNo"),
+    CONSTRAINT "UK_ProductionPerformanceEquipment" UNIQUE ("EnterpriseID", "ProductionPerformanceID", "ProductionPerformanceSequence", "EquipmentID")
+);
+CREATE TABLE "ProductionPerformanceQuality" ( -- 생산품질실적 (표 67)
+    "ProductionPerformanceQualitySequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 생산품질실적 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ProductionPerformanceID" VARCHAR(50) NOT NULL, -- 생산실적식별자
+    "ProductionPerformanceSequence" INTEGER NOT NULL, -- 생산실적순번
+    "ProductionOrderID" VARCHAR(50), -- 생산지시식별자
+    "ProductionOrderSequence" INTEGER, -- 생산지시순번
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "OperationID" VARCHAR(50), -- 공정식별자
+    "RoutingID" VARCHAR(50), -- 공정경로식별자
+    "OperationSequence" INTEGER, -- 공정순번
+    "ExecutionStartDateTime" TIMESTAMP, -- 생산시작일시
+    "ExecutionEndDateTime" TIMESTAMP, -- 생산종료일시
+    "LotID" VARCHAR(50), -- 로트식별자
+    "BatchID" VARCHAR(50), -- 배치식별자
+    "DefectTypeQuantity" INTEGER, -- 불량유형별수량
+    "DefectTypeCode" VARCHAR(30) NOT NULL, -- 불량유형코드
+    "DefectTypeDetailCode" VARCHAR(30) NOT NULL, -- 불량유형상세코드
+    CONSTRAINT "PK_ProductionPerformanceQuality" PRIMARY KEY ("ProductionPerformanceQualitySequenceNo"),
+    CONSTRAINT "UK_ProductionPerformanceQuality" UNIQUE ("EnterpriseID", "ProductionPerformanceID", "ProductionPerformanceSequence", "DefectTypeCode", "DefectTypeDetailCode")
+);
+CREATE TABLE "Inventory" ( -- 재고 (표 68)
+    "InventorySequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 재고 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "WarehouseID" VARCHAR(50) NOT NULL, -- 창고식별자
+    "ItemID" VARCHAR(50) NOT NULL, -- 품목식별자
+    "InventoryQuantity" NUMERIC(18,6), -- 현재고수량
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    CONSTRAINT "PK_Inventory" PRIMARY KEY ("InventorySequenceNo"),
+    CONSTRAINT "UK_Inventory" UNIQUE ("EnterpriseID", "WarehouseID", "ItemID")
+);
+CREATE TABLE "AvailableInventory" ( -- 가용재고 (표 69)
+    "AvailableInventorySequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 가용재고 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "AvailableInventoryID" VARCHAR(50) NOT NULL, -- 가용재고식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "AvailableInventoryQuantity" NUMERIC(18,6), -- 가용재고량
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "DemandPriority" NUMERIC(18,6), -- 요청우선순위
+    "PriorDemandQuantity" NUMERIC(18,6), -- 요청우선수량
+    "ExpectedDeliveryDate" DATE, -- 납기예정일
+    CONSTRAINT "PK_AvailableInventory" PRIMARY KEY ("AvailableInventorySequenceNo"),
+    CONSTRAINT "UK_AvailableInventory" UNIQUE ("EnterpriseID", "AvailableInventoryID")
+);
+CREATE TABLE "StockTransfer" ( -- 재고이동 (표 70)
+    "StockTransferSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 재고이동 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "StockTransferID" VARCHAR(50) NOT NULL, -- 재고이동식별자
+    "InventoryTransactionDocumentNumber" VARCHAR(50), -- 수불문서번호
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "WarehouseID" VARCHAR(50), -- 창고식별자
+    "ReceiptWarehouseID" VARCHAR(50), -- 입고창고식별자
+    "StockTransferQuantity" NUMERIC(18,6), -- 재고이동수량
+    "TransferDateTime" TIMESTAMP, -- 이동일시
+    CONSTRAINT "PK_StockTransfer" PRIMARY KEY ("StockTransferSequenceNo"),
+    CONSTRAINT "UK_StockTransfer" UNIQUE ("EnterpriseID", "StockTransferID")
+);
+CREATE TABLE "InventoryCount" ( -- 재고실사 (표 71)
+    "InventoryCountSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 재고실사 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "InventoryCountDocumentNumber" VARCHAR(50) NOT NULL, -- 재고실사문서번호
+    "InventoryCountDateTime" TIMESTAMP, -- 재고실사일시
+    "WarehouseID" VARCHAR(50) NOT NULL, -- 창고식별자
+    "ItemID" VARCHAR(50) NOT NULL, -- 품목식별자
+    "InventoryQuantity" NUMERIC(18,6), -- 현재고수량
+    "InventoryCountQuantity" NUMERIC(18,6), -- 실사수량
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    CONSTRAINT "PK_InventoryCount" PRIMARY KEY ("InventoryCountSequenceNo"),
+    CONSTRAINT "UK_InventoryCount" UNIQUE ("EnterpriseID", "InventoryCountDocumentNumber", "WarehouseID", "ItemID")
+);
+CREATE TABLE "ProductIncoming" ( -- 제품입고 (표 72)
+    "ProductIncomingSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 제품입고 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ProductIncomingID" VARCHAR(50) NOT NULL, -- 제품입고식별자
+    "ProductIncomingSequence" INTEGER NOT NULL, -- 제품입고순번
+    "InventoryTransactionDocumentNumber" VARCHAR(50), -- 수불문서번호
+    "InventoryTransactionDocumentSequence" INTEGER, -- 수불문서순번
+    "InventoryTransactionDate" DATE, -- 수불일
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "CustomerID" VARCHAR(50), -- 고객사식별자
+    "WarehouseID" VARCHAR(50), -- 창고식별자
+    "InventoryTransactionTypeCode" VARCHAR(30), -- 수불유형코드
+    "SerialUseIndicator" BOOLEAN, -- 시리얼사용여부
+    "InventoryTransferType" VARCHAR(30), -- 입출고유형
+    "InventoryVariationType" VARCHAR(30), -- 재고증감유형
+    "InventoryTransactionType" VARCHAR(30), -- 수불유형
+    "LotControlIndicator" BOOLEAN, -- 로트사용여부
+    "LotID" VARCHAR(50), -- 로트식별자
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "ItemUnitQuantity" NUMERIC(18,6), -- 기준단위수량
+    "OrderUOMCode" VARCHAR(20), -- 오더단위코드
+    "OrderQuantity" NUMERIC(18,6), -- 오더수량
+    CONSTRAINT "PK_ProductIncoming" PRIMARY KEY ("ProductIncomingSequenceNo"),
+    CONSTRAINT "UK_ProductIncoming" UNIQUE ("EnterpriseID", "ProductIncomingID", "ProductIncomingSequence")
+);
+CREATE TABLE "ProductReleaseRequestHeader" ( -- 출하의뢰헤더 (표 73)
+    "ProductReleaseRequestHeaderSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 출하의뢰헤더 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ProductReleaseRequestID" VARCHAR(50) NOT NULL, -- 출하요청식별자
+    "ProductReleaseRequestDocumentNumber" VARCHAR(50), -- 납품문서번호
+    "ProductReleaseRequestType" VARCHAR(30), -- 납품구분유형
+    "ProductReleaseRequestDate" DATE, -- 납품지시일
+    "CustomerID" VARCHAR(50), -- 고객사식별자
+    CONSTRAINT "PK_ProductReleaseRequestHeader" PRIMARY KEY ("ProductReleaseRequestHeaderSequenceNo"),
+    CONSTRAINT "UK_ProductReleaseRequestHeader" UNIQUE ("EnterpriseID", "ProductReleaseRequestID")
+);
+CREATE TABLE "ProductReleaseRequestLine" ( -- 출하의뢰라인 (표 73)
+    "ProductReleaseRequestLineSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 출하의뢰라인 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ProductReleaseRequestID" VARCHAR(50) NOT NULL, -- 출하요청식별자
+    "ProductReleaseRequestSequence" INTEGER NOT NULL, -- 납품순번
+    "LineID" VARCHAR(50), -- 라인식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "ProductReleaseRequestQuantity" NUMERIC(18,6), -- 납품수량
+    "ProductReleaseQuantity" NUMERIC(18,6), -- 출고수량
+    "SalesQuantity" NUMERIC(18,6), -- 매출수량
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "SellingUOMCode" VARCHAR(20), -- 판매단위코드
+    "ItemUnitQuantity" NUMERIC(18,6), -- 기준단위수량
+    "ProductReleaseUnitQuantity" NUMERIC(18,6), -- 기준출고수량
+    "SalesUnitQuantity" NUMERIC(18,6), -- 기준매출수량
+    "WarehouseID" VARCHAR(50), -- 창고식별자
+    "RequestedDeliveryDate" DATE, -- 요청납기일
+    "SalesDocumentNumber" VARCHAR(50), -- 수주문서번호
+    "SalesDocumentSequence" INTEGER, -- 수주문서순번
+    "ProductReleaseDate" DATE, -- 출고일
+    "DeliveryDate" DATE, -- 납품일
+    CONSTRAINT "PK_ProductReleaseRequestLine" PRIMARY KEY ("ProductReleaseRequestLineSequenceNo"),
+    CONSTRAINT "UK_ProductReleaseRequestLine" UNIQUE ("EnterpriseID", "ProductReleaseRequestID", "ProductReleaseRequestSequence")
+);
+CREATE TABLE "ProductRelease" ( -- 제품출고 (표 74)
+    "ProductReleaseSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 제품출고 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ProductReleaseID" VARCHAR(50) NOT NULL, -- 출고식별자
+    "ProductReleaseSequence" INTEGER NOT NULL, -- 출고순번
+    "ProductReleaseRequestID" VARCHAR(50), -- 출하요청식별자
+    "SalesDocumentNumber" VARCHAR(50), -- 수주문서번호
+    "SalesDocumentSequence" INTEGER, -- 수주문서순번
+    "InventoryTransactionDate" DATE, -- 수불일
+    "LineID" VARCHAR(50), -- 라인식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "OrderUOMCode" VARCHAR(20), -- 오더단위코드
+    "OrderQuantity" NUMERIC(18,6), -- 오더수량
+    "SellingUOMCode" VARCHAR(20), -- 판매단위코드
+    "SalesQuantity" NUMERIC(18,6), -- 매출수량
+    "ReturnIndicator" BOOLEAN, -- 반품여부
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "ItemUnitQuantity" NUMERIC(18,6), -- 기준단위수량
+    "SalesUnitQuantity" NUMERIC(18,6), -- 기준매출수량
+    "ReturnUnitQuantity" NUMERIC(18,6), -- 기준반품수량
+    "CustomerID" VARCHAR(50), -- 고객사식별자
+    "LotID" VARCHAR(50), -- 로트식별자
+    "SerialUseIndicator" BOOLEAN, -- 시리얼사용여부
+    "WarehouseID" VARCHAR(50), -- 창고식별자
+    CONSTRAINT "PK_ProductRelease" PRIMARY KEY ("ProductReleaseSequenceNo"),
+    CONSTRAINT "UK_ProductRelease" UNIQUE ("EnterpriseID", "ProductReleaseID", "ProductReleaseSequence")
+);
+CREATE TABLE "DeliveryHeader" ( -- 배송헤더 (표 75)
+    "DeliveryHeaderSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 배송헤더 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "DeliveryID" VARCHAR(50) NOT NULL, -- 배송식별자
+    "DeliveryDateTime" TIMESTAMP, -- 배송일시
+    "CustomerID" VARCHAR(50), -- 고객사식별자
+    "PackingList" VARCHAR(1000), -- 포장내용
+    "PackingType" VARCHAR(30), -- 포장유형
+    "TransportationMethodCode" VARCHAR(30), -- 운송방법
+    "DepartmentInChargeID" VARCHAR(50), -- 배송처리담당부서식별자
+    "DepartmentInChargeName" VARCHAR(200), -- 배송처리담당부서명
+    "PersonInChargeID" VARCHAR(50), -- 배송처리담당자식별자
+    "PersonInChargeName" VARCHAR(200), -- 배송처리담당자명
+    "PersonInChargeDialNumber" VARCHAR(30), -- 배송처리담당자전화번호
+    "TransportationCompany" VARCHAR(255), -- 운송사
+    "PersonInChargeNameOfTransportation" VARCHAR(255), -- 운송담당자명
+    "PersonInChargeDialNumberOfTransportation" VARCHAR(255), -- 운송담당자전화번호
+    "Recipient" VARCHAR(255), -- 수취인
+    "RecipientDialNumber" VARCHAR(30), -- 수취인전화번호
+    "RecipientEmail" VARCHAR(255), -- 수취인이메일
+    "ShippingPoint" VARCHAR(255), -- 선적지
+    "ShipToAddress" VARCHAR(1000), -- 배송지
+    "PreferredReceiptDate" DATE, -- 인수희망일
+    "DeliveryNote" VARCHAR(1000), -- 배송메모
+    "DeliveryConfirmationDocument" VARCHAR(255), -- 납품확인서
+    CONSTRAINT "PK_DeliveryHeader" PRIMARY KEY ("DeliveryHeaderSequenceNo"),
+    CONSTRAINT "UK_DeliveryHeader" UNIQUE ("EnterpriseID", "DeliveryID")
+);
+CREATE TABLE "DeliveryLine" ( -- 배송라인 (표 75)
+    "DeliveryLineSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 배송라인 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "DeliveryID" VARCHAR(50) NOT NULL, -- 배송식별자
+    "DeliveryLineSequence" INTEGER NOT NULL, -- 배송라인순번
+    "ProductReleaseID" VARCHAR(50), -- 출고식별자
+    "ProductReleaseSequence" INTEGER, -- 출고순번
+    "SalesDocumentNumber" VARCHAR(50), -- 수주문서번호
+    "SalesDocumentSequence" INTEGER, -- 수주문서순번
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "InvoiceNumber" VARCHAR(50), -- 거래명세서번호
+    "LotID" VARCHAR(50), -- 로트식별자
+    "ItemUOMCode" VARCHAR(20), -- 기준단위코드
+    "ItemUnitQuantity" NUMERIC(18,6), -- 기준단위수량
+    "OrderUOMCode" VARCHAR(20), -- 오더단위코드
+    "OrderQuantity" NUMERIC(18,6), -- 오더수량
+    "ProductDeliveryUOMCode" VARCHAR(20), -- 납품단위코드
+    "ProductDeliveryQuantity" NUMERIC(18,6), -- 납품수량
+    "RequestedDeliveryDate" DATE, -- 요청납품일
+    CONSTRAINT "PK_DeliveryLine" PRIMARY KEY ("DeliveryLineSequenceNo"),
+    CONSTRAINT "UK_DeliveryLine" UNIQUE ("EnterpriseID", "DeliveryID", "DeliveryLineSequence")
+);
+CREATE TABLE "Return" ( -- 반품 (표 76)
+    "ReturnSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 반품 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ReturnID" VARCHAR(50) NOT NULL, -- 반품식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "LotID" VARCHAR(50), -- 로트식별자
+    "BatchID" VARCHAR(50), -- 배치식별자
+    "WarehouseID" VARCHAR(50), -- 창고식별자
+    "ReturnSequence" INTEGER NOT NULL, -- 반품순서
+    "ReturnNumber" VARCHAR(50), -- 반품번호
+    "ProductReturnDocumentNumber" VARCHAR(50), -- 반품문서번호
+    "ReturnDateTime" TIMESTAMP, -- 반품일시
+    "CustomerID" VARCHAR(50), -- 고객사식별자
+    "VendorID" VARCHAR(50), -- 공급사식별자
+    "ReturnQuantity" NUMERIC(18,6), -- 반품수량
+    "ReturnType" VARCHAR(30), -- 반품유형
+    CONSTRAINT "PK_Return" PRIMARY KEY ("ReturnSequenceNo"),
+    CONSTRAINT "UK_Return" UNIQUE ("EnterpriseID", "ReturnID", "ReturnSequence")
+);
+CREATE TABLE "ProductTraceParameterOnCustomer" ( -- 고객제품데이터 (표 77)
+    "ProductTraceParameterOnCustomerSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 고객제품데이터 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ProductTraceParameterOnCustomerID" VARCHAR(50) NOT NULL, -- 고객제품데이터식별자
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "SerialNumber" VARCHAR(50), -- 제조번호
+    "Location" VARCHAR(1000), -- 위치
+    "ItemType" VARCHAR(30), -- 품목유형
+    "ParameterName" VARCHAR(200), -- 파라미터명
+    "ParameterValue" NUMERIC(18,6), -- 파라미터값
+    "CollectionDateTime" TIMESTAMP, -- 수집일시
+    CONSTRAINT "PK_ProductTraceParameterOnCustomer" PRIMARY KEY ("ProductTraceParameterOnCustomerSequenceNo"),
+    CONSTRAINT "UK_ProductTraceParameterOnCustomer" UNIQUE ("EnterpriseID", "ProductTraceParameterOnCustomerID")
+);
+CREATE TABLE "AfterSalesServiceRequest" ( -- 사후서비스신청 (표 78)
+    "AfterSalesServiceRequestSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 사후서비스신청 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "RequestNumber" VARCHAR(50) NOT NULL, -- 신청번호
+    "TransferSequence" INTEGER, -- 이관순번
+    "BasicAcceptProcessCode" VARCHAR(30), -- 접수내용단순처리코드
+    "PromisedVisitDateTime" TIMESTAMP, -- 약속방문일시
+    "TransferRegistrationCode" VARCHAR(30), -- 이관등록코드
+    "SerialNumber" VARCHAR(50), -- 제조번호
+    CONSTRAINT "PK_AfterSalesServiceRequest" PRIMARY KEY ("AfterSalesServiceRequestSequenceNo"),
+    CONSTRAINT "UK_AfterSalesServiceRequest" UNIQUE ("EnterpriseID", "RequestNumber")
+);
+CREATE TABLE "AfterSalesServiceRequestResult" ( -- 사후서비스결과 (표 79)
+    "AfterSalesServiceRequestResultSequenceNo" BIGINT GENERATED BY DEFAULT AS IDENTITY, -- 사후서비스결과 일련번호(PK)
+    "EnterpriseID" VARCHAR(50) NOT NULL, -- 회사식별자
+    "SiteID" VARCHAR(50) NOT NULL, -- 사업장식별자
+    "PlantID" VARCHAR(50) NOT NULL, -- 공장식별자
+    "CreatorID" VARCHAR(50), -- 등록자식별자
+    "CreationDateTime" TIMESTAMP, -- 등록일시
+    "ModifierID" VARCHAR(50), -- 수정자식별자
+    "ModificationDateTime" TIMESTAMP, -- 수정일시
+    "Note" VARCHAR(1000), -- 비고
+    "ItemID" VARCHAR(50), -- 품목식별자
+    "ItemName" VARCHAR(200), -- 품목명
+    "RequestNumber" VARCHAR(50) NOT NULL, -- 신청번호
+    "TransferSequence" INTEGER NOT NULL, -- 이관순번
+    "RegisterSequence" INTEGER NOT NULL, -- 등록순번
+    "RepairSequence" INTEGER NOT NULL, -- 수리순번
+    "SerialNumber" VARCHAR(50), -- 제조번호
+    "FaultLargeClass" VARCHAR(30), -- 하자현상대분류
+    "FaultSmallClass" VARCHAR(30), -- 하자현상소분류
+    "ErrorCode" VARCHAR(30), -- 오류코드
+    "InstallationDate" DATE, -- 설치일
+    "ProcessingDate" DATE, -- 처리일
+    "EndIndicator" BOOLEAN, -- 종료여부
+    "WorkType" VARCHAR(30), -- 작업유형
+    "ChildItemID" VARCHAR(50), -- 자품목식별자
+    "ChildItemName" VARCHAR(200), -- 자품목명
+    "ItemSpecification" VARCHAR(1000), -- 품목사양
+    "RepairType" VARCHAR(30), -- 수리유형
+    CONSTRAINT "PK_AfterSalesServiceRequestResult" PRIMARY KEY ("AfterSalesServiceRequestResultSequenceNo"),
+    CONSTRAINT "UK_AfterSalesServiceRequestResult" UNIQUE ("EnterpriseID", "RequestNumber", "TransferSequence", "RegisterSequence", "RepairSequence")
+);

@@ -97,16 +97,28 @@
    "definition": "생산 현장의 달력을 의미한다. 단, 인사에서 사용하는 일반 달력과는 차이가 있다."
   },
   {
-   "name": "UOMGroup",
-   "iri": "ksx:UOMGroup",
-   "label": "단위그룹",
+   "name": "UOMGroupHeader",
+   "iri": "ksx:UOMGroupHeader",
+   "label": "단위그룹헤더",
    "group": "기준정보",
-   "table": "uom_group",
+   "table": "uom_group_header",
+   "clause": "7.4.1.9",
+   "pk": "EnterpriseID + UOMGroupID",
+   "columns": 10,
+   "event": false,
+   "definition": "단위그룹(UOMGroup) 명사의 헤더 구조체(struct) 단위그룹 1건의 공통 정보(중량, 부피, 길이 등 측정 단위의 그룹) 단위그룹마다 1회 나타남"
+  },
+  {
+   "name": "UOMGroupLine",
+   "iri": "ksx:UOMGroupLine",
+   "label": "단위그룹라인",
+   "group": "기준정보",
+   "table": "uom_group_line",
    "clause": "7.4.1.9",
    "pk": "EnterpriseID + UOMGroupID + UOMCode",
-   "columns": 13,
+   "columns": 12,
    "event": false,
-   "definition": "측정 단위의 집합을 의미한다. 일반적으로 재고관리 단위가 기본단위가 되며 특정 프로세스에서 변경될 수 있고, 재고에 반영될 때는 환산계수가 적용된다."
+   "definition": "단위그룹(UOMGroup) 명사의 라인 구조체(struct[1..N]) 단위그룹에 속하는 단위코드 행 정보 단위그룹헤더 아래에 1회 이상 반복하여 나타남(1..N)"
   },
   {
    "name": "ItemMaster",
@@ -121,28 +133,28 @@
    "definition": "품목코드, 품목명, 규격 등과 각종 속성값을 관리하는 품목마스터를 의미한다. 단, 수량정보는 포함하지 않는다."
   },
   {
-   "name": "BOM",
-   "iri": "ksx:BOM",
-   "label": "자재명세서",
-   "group": "기준정보",
-   "table": "bom",
-   "clause": "7.4.1.11",
-   "pk": "EnterpriseID + BOMID + BOMRevisionNumber + ChildItemID",
-   "columns": 22,
-   "event": false,
-   "definition": "품목을 구성하거나 품목을 생산하기 위해 투입되는 자재명세서를 의미한다."
-  },
-  {
    "name": "BOMHeader",
-   "iri": "arcon:BOMHeader",
+   "iri": "ksx:BOMHeader",
    "label": "자재명세서헤더",
    "group": "기준정보",
    "table": "bom_header",
-   "clause": "—",
+   "clause": "7.4.1.11",
    "pk": "EnterpriseID + BOMID + BOMRevisionNumber",
-   "columns": 10,
+   "columns": 15,
    "event": false,
-   "definition": "물리 보조 테이블(표준 외): 자재명세서의 자재명세서식별자+자재명세서버전 단위 헤더. 자재명세서 전체를 참조하는 FK를 위해 둠"
+   "definition": "자재명세서(BOM) 명사의 헤더 구조체(struct) 자재명세서 1건의 공통 정보(모품목, 버전, 유형, 공정경로) 자재명세서마다 1회 나타남"
+  },
+  {
+   "name": "BOMLine",
+   "iri": "ksx:BOMLine",
+   "label": "자재명세서라인",
+   "group": "기준정보",
+   "table": "bom_line",
+   "clause": "7.4.1.11",
+   "pk": "EnterpriseID + BOMID + BOMRevisionNumber + BOMLineSequence",
+   "columns": 18,
+   "event": false,
+   "definition": "자재명세서(BOM) 명사의 라인 구조체(struct[1..N]) 자재명세서를 구성하는 자품목 행 정보 자재명세서헤더 아래에 1회 이상 반복하여 나타남(1..N)"
   },
   {
    "name": "Lot",
@@ -157,28 +169,28 @@
    "definition": "묶음 생산 단위의 정보를 의미한다."
   },
   {
-   "name": "Routing",
-   "iri": "ksx:Routing",
-   "label": "공정경로",
-   "group": "기준정보",
-   "table": "routing",
-   "clause": "7.4.1.13",
-   "pk": "EnterpriseID + RoutingID + OperationSequence",
-   "columns": 18,
-   "event": false,
-   "definition": "생산 시 필요한 공정의 순서를 의미하며, 작업자, 기계를 포함한 경로와 관련된 모든 리소스, 활동에 대한 정보를 의미한다."
-  },
-  {
    "name": "RoutingHeader",
-   "iri": "arcon:RoutingHeader",
+   "iri": "ksx:RoutingHeader",
    "label": "공정경로헤더",
    "group": "기준정보",
    "table": "routing_header",
-   "clause": "—",
+   "clause": "7.4.1.13",
    "pk": "EnterpriseID + RoutingID",
-   "columns": 9,
+   "columns": 12,
    "event": false,
-   "definition": "물리 보조 테이블(표준 외): 공정경로의 공정경로식별자 단위 헤더. 공정경로 전체를 참조하는 FK를 위해 둠"
+   "definition": "공정경로(Routing) 명사의 헤더 구조체(struct) 공정경로 1건의 공통 정보(공정경로명, 대상 품목, 사용 여부) 공정경로마다 1회 나타남"
+  },
+  {
+   "name": "RoutingLine",
+   "iri": "ksx:RoutingLine",
+   "label": "공정경로라인",
+   "group": "기준정보",
+   "table": "routing_line",
+   "clause": "7.4.1.13",
+   "pk": "EnterpriseID + RoutingID + OperationSequence",
+   "columns": 15,
+   "event": false,
+   "definition": "공정경로(Routing) 명사의 라인 구조체(struct[1..N]) 공정경로를 구성하는 공정 행 정보 공정경로헤더 아래에 1회 이상 반복하여 나타남(1..N)"
   },
   {
    "name": "Operation",
@@ -241,16 +253,28 @@
    "definition": "공장 내 공정 물류 저장소 정보를 의미한다. 이는 공정 내 물류 최적화를 위해 Lot Dispatcher를 사용하는데 SCS(StockerControlSystem), Dispatcher, MES 상호연동을 위해 존재한다."
   },
   {
-   "name": "WarehouseLocation",
-   "iri": "ksx:WarehouseLocation",
-   "label": "창고",
+   "name": "WarehouseLocationHeader",
+   "iri": "ksx:WarehouseLocationHeader",
+   "label": "창고헤더",
    "group": "기준정보",
-   "table": "warehouse_location",
+   "table": "warehouse_location_header",
    "clause": "7.4.1.19",
    "pk": "EnterpriseID + WarehouseID",
-   "columns": 14,
+   "columns": 13,
    "event": false,
-   "definition": "재고를 모아 놓고 관리하는 위치를 의미한다."
+   "definition": "창고(WarehouseLocation) 명사의 헤더 구조체(struct) 창고 1건의 공통 정보(창고명, 창고유형, 재고 관리 기준) 창고마다 1회 나타남"
+  },
+  {
+   "name": "WarehouseLocationLine",
+   "iri": "ksx:WarehouseLocationLine",
+   "label": "창고라인",
+   "group": "기준정보",
+   "table": "warehouse_location_line",
+   "clause": "7.4.1.19",
+   "pk": "EnterpriseID + WarehouseID + WarehouseSection",
+   "columns": 11,
+   "event": false,
+   "definition": "창고(WarehouseLocation) 명사의 라인 구조체(struct[1..N]) 창고 내 저장 섹션 행 정보 창고헤더 아래에 1회 이상 반복하여 나타남(1..N)"
   },
   {
    "name": "Batch",
@@ -313,16 +337,28 @@
    "definition": "제품의 설계를 변경하는 지시를 의미한다. 설계변경지시 수행 결과는 BOM 및 공정경로BOM에 반영된다."
   },
   {
-   "name": "SalesOrder",
-   "iri": "ksx:SalesOrder",
-   "label": "수주오더",
+   "name": "SalesOrderHeader",
+   "iri": "ksx:SalesOrderHeader",
+   "label": "수주오더헤더",
    "group": "판매관리",
-   "table": "sales_order",
+   "table": "sales_order_header",
    "clause": "7.4.3.1",
-   "pk": "EnterpriseID + SalesOrderID",
-   "columns": 28,
+   "pk": "EnterpriseID + SalesDocumentNumber",
+   "columns": 18,
    "event": false,
-   "definition": "고객사 주문정보를 의미한다."
+   "definition": "수주오더(SalesOrder) 명사의 헤더 구조체(struct) 수주문서 1건의 공통 정보(고객사, 수주일, 수주유형, 거래 조건) 수주문서마다 1회 나타남"
+  },
+  {
+   "name": "SalesOrderLine",
+   "iri": "ksx:SalesOrderLine",
+   "label": "수주오더라인",
+   "group": "판매관리",
+   "table": "sales_order_line",
+   "clause": "7.4.3.1",
+   "pk": "EnterpriseID + SalesDocumentNumber + SalesDocumentSequence",
+   "columns": 18,
+   "event": false,
+   "definition": "수주오더(SalesOrder) 명사의 라인 구조체(struct[1..N]) 수주문서를 구성하는 품목 행 정보 수주오더헤더 아래에 1회 이상 반복하여 나타남(1..N)"
   },
   {
    "name": "SalesPlan",
@@ -361,16 +397,28 @@
    "definition": "생산 또는 판매를 위해 수급되어야 할 품목을 요청하는 것을 의미한다(원부자재, 소모품, 상품 등)."
   },
   {
-   "name": "PurchaseOrder",
-   "iri": "ksx:PurchaseOrder",
-   "label": "구매발주",
+   "name": "PurchaseOrderHeader",
+   "iri": "ksx:PurchaseOrderHeader",
+   "label": "구매발주헤더",
    "group": "구매관리",
-   "table": "purchase_order",
+   "table": "purchase_order_header",
    "clause": "7.4.4.3",
-   "pk": "EnterpriseID + PurchaseOrderID",
-   "columns": 47,
+   "pk": "EnterpriseID + PurchaseDocumentNumber",
+   "columns": 23,
    "event": false,
-   "definition": "구매자가 공급자의 품목을 구매하기 위한 주문을 의미한다."
+   "definition": "구매발주(PurchaseOrder) 명사의 헤더 구조체(struct) 구매문서 1건의 공통 정보(공급사, 발주일, 결제·거래 조건, 담당자) 구매문서마다 1회 나타남"
+  },
+  {
+   "name": "PurchaseOrderLine",
+   "iri": "ksx:PurchaseOrderLine",
+   "label": "구매발주라인",
+   "group": "구매관리",
+   "table": "purchase_order_line",
+   "clause": "7.4.4.3",
+   "pk": "EnterpriseID + PurchaseDocumentNumber + PurchaseDocumentSequence",
+   "columns": 32,
+   "event": false,
+   "definition": "구매발주(PurchaseOrder) 명사의 라인 구조체(struct[1..N]) 구매문서를 구성하는 품목 행 정보 구매발주헤더 아래에 1회 이상 반복하여 나타남(1..N)"
   },
   {
    "name": "MaterialArrival",
@@ -439,8 +487,8 @@
    "group": "생산관리",
    "table": "operation_start",
    "clause": "7.4.6.3",
-   "pk": "EnterpriseID + LotID + OperationID + OperationStartTime",
-   "columns": 16,
+   "pk": "EnterpriseID + OperationStartID",
+   "columns": 17,
    "event": true,
    "definition": "설비에 해당 공정의 생산을 지시한다."
   },
@@ -451,8 +499,8 @@
    "group": "생산관리",
    "table": "operation_end",
    "clause": "7.4.6.4",
-   "pk": "EnterpriseID + LotID + OperationID + OperationEndTime",
-   "columns": 19,
+   "pk": "EnterpriseID + OperationEndID",
+   "columns": 20,
    "event": true,
    "definition": "해당 공정의 생산 완료를 보고한다."
   },
@@ -475,8 +523,8 @@
    "group": "생산관리",
    "table": "transfer_start",
    "clause": "7.4.6.6",
-   "pk": "EnterpriseID + TransferCommandID",
-   "columns": 20,
+   "pk": "EnterpriseID + TransferStartID",
+   "columns": 21,
    "event": true,
    "definition": "이동지시 명령을 받아 운행 시작 시 시작 정보를 보고한다."
   },
@@ -487,8 +535,8 @@
    "group": "생산관리",
    "table": "transfer_end",
    "clause": "7.4.6.7",
-   "pk": "EnterpriseID + TransferCommandID",
-   "columns": 17,
+   "pk": "EnterpriseID + TransferEndID",
+   "columns": 18,
    "event": true,
    "definition": "이동지시 명령을 받아 운행 완료 시 완료 정보를 보고한다."
   },
@@ -499,8 +547,8 @@
    "group": "생산관리",
    "table": "in_transit_location",
    "clause": "7.4.6.8",
-   "pk": "EnterpriseID + TransferCommandID + CurrentLocation",
-   "columns": 14,
+   "pk": "EnterpriseID + InTransitLocationID",
+   "columns": 15,
    "event": true,
    "definition": "이동 중 현재 운송 위치 정보를 보고한다."
   },
@@ -511,9 +559,9 @@
    "group": "생산관리",
    "table": "equipment_state",
    "clause": "7.4.6.9",
-   "pk": "EnterpriseID + EquipmentID",
-   "columns": 17,
-   "event": false,
+   "pk": "EnterpriseID + EquipmentStateID",
+   "columns": 18,
+   "event": true,
    "definition": "설비의 상태가 변경될 시 상태 정보를 보고한다."
   },
   {
@@ -523,8 +571,8 @@
    "group": "생산관리",
    "table": "alarm",
    "clause": "7.4.6.10",
-   "pk": "EnterpriseID + EquipmentID + EventDateTime + ErrorCode",
-   "columns": 14,
+   "pk": "EnterpriseID + AlarmID",
+   "columns": 15,
    "event": true,
    "definition": "설비에서 발생하는 알람 정보를 의미한다."
   },
@@ -536,7 +584,7 @@
    "table": "supplier_inspection_plan",
    "clause": "7.4.6.11",
    "pk": "EnterpriseID + InspectionPlanID + InspectionID",
-   "columns": 28,
+   "columns": 29,
    "event": false,
    "definition": "수주산업에서 프로젝트성으로 추진하고 있는 협력업체 발주품에 대해 발주처 및 협력업체 품질부서에서 품질검사를 하기 위한 일정 계획을 의미한다."
   },
@@ -548,7 +596,7 @@
    "table": "supplier_inspection_application",
    "clause": "7.4.6.12",
    "pk": "EnterpriseID + InspectionApplicationID",
-   "columns": 31,
+   "columns": 32,
    "event": false,
    "definition": "품질검사계획에 따라 협력업체에 품질검사를 신청하는 것을 의미한다."
   },
@@ -631,8 +679,8 @@
    "group": "생산관리",
    "table": "trace_parameter",
    "clause": "7.4.6.19",
-   "pk": "EnterpriseID + EquipmentID + ParameterID + EventDateTime",
-   "columns": 14,
+   "pk": "EnterpriseID + TraceParameterID",
+   "columns": 15,
    "event": true,
    "definition": "설비에서 수집되는 Parameter 값의 적재 및 검증 이력을 의미한다."
   },
@@ -757,28 +805,28 @@
    "definition": "생산된 제품을 창고에 저장하는 것을 의미한다."
   },
   {
-   "name": "ProductReleaseRequest",
-   "iri": "ksx:ProductReleaseRequest",
-   "label": "출하의뢰",
-   "group": "창고관리",
-   "table": "product_release_request",
-   "clause": "7.4.8.2",
-   "pk": "EnterpriseID + ProductReleaseRequestID + ProductReleaseRequestSequence",
-   "columns": 31,
-   "event": false,
-   "definition": "수주된 품목에 대한 출하를 의뢰하는 것을 의미한다."
-  },
-  {
    "name": "ProductReleaseRequestHeader",
-   "iri": "arcon:ProductReleaseRequestHeader",
+   "iri": "ksx:ProductReleaseRequestHeader",
    "label": "출하의뢰헤더",
    "group": "창고관리",
    "table": "product_release_request_header",
-   "clause": "—",
+   "clause": "7.4.8.2",
    "pk": "EnterpriseID + ProductReleaseRequestID",
-   "columns": 9,
+   "columns": 13,
    "event": false,
-   "definition": "물리 보조 테이블(표준 외): 출하의뢰의 출하요청식별자 단위 헤더. 출하의뢰 전체를 참조하는 FK를 위해 둠"
+   "definition": "출하의뢰(ProductReleaseRequest) 명사의 헤더 구조체(struct) 출하의뢰 문서 1건의 공통 정보(납품문서번호, 납품구분유형, 납품지시일, 고객사) 출하의뢰마다 1회 나타남"
+  },
+  {
+   "name": "ProductReleaseRequestLine",
+   "iri": "ksx:ProductReleaseRequestLine",
+   "label": "출하의뢰라인",
+   "group": "창고관리",
+   "table": "product_release_request_line",
+   "clause": "7.4.8.2",
+   "pk": "EnterpriseID + ProductReleaseRequestID + ProductReleaseRequestSequence",
+   "columns": 27,
+   "event": false,
+   "definition": "출하의뢰(ProductReleaseRequest) 명사의 라인 구조체(struct[1..N]) 출하의뢰 문서를 구성하는 품목 행 정보 출하의뢰헤더 아래에 1회 이상 반복하여 나타남(1..N)"
   },
   {
    "name": "ProductRelease",
@@ -791,6 +839,30 @@
    "columns": 30,
    "event": false,
    "definition": "수주된 품목을 고객에게 보내는 것을 의미한다."
+  },
+  {
+   "name": "DeliveryHeader",
+   "iri": "ksx:DeliveryHeader",
+   "label": "배송헤더",
+   "group": "창고관리",
+   "table": "delivery_header",
+   "clause": "7.4.8.4",
+   "pk": "EnterpriseID + DeliveryID",
+   "columns": 30,
+   "event": false,
+   "definition": "배송(Delivery) 명사의 헤더 구조체(struct) 특정 수량의 물품을 공급업체에서 단일 고객 목적지로 운송하는 데 사용되는 배송 1건의 공통 정보 배송마다 1회 나타남"
+  },
+  {
+   "name": "DeliveryLine",
+   "iri": "ksx:DeliveryLine",
+   "label": "배송라인",
+   "group": "창고관리",
+   "table": "delivery_line",
+   "clause": "7.4.8.4",
+   "pk": "EnterpriseID + DeliveryID + DeliveryLineSequence",
+   "columns": 25,
+   "event": false,
+   "definition": "배송(Delivery) 명사의 라인 구조체(struct[1..N]) 납품되는 품목 행 정보 배송헤더 아래에 1회 이상 반복하여 나타남(1..N)"
   },
   {
    "name": "Return",
@@ -811,8 +883,8 @@
    "group": "서비스관리",
    "table": "product_trace_parameter_on_customer",
    "clause": "7.4.9.2",
-   "pk": "EnterpriseID + ItemID + SerialNumber + ParameterName + CollectionDateTime",
-   "columns": 15,
+   "pk": "EnterpriseID + ProductTraceParameterOnCustomerID",
+   "columns": 16,
    "event": true,
    "definition": "고객에게 판매 완료 후 부가적인 서비스 제공 및 가치창출을 위해 고객 제품에서 수집되는 데이터를 의미한다."
   },
@@ -874,6 +946,16 @@
    ]
   },
   {
+   "s": "UOMGroupLine",
+   "p": "refUOMGroup",
+   "o": "UOMGroupHeader",
+   "kind": "헤더-라인",
+   "fk": [
+    "EnterpriseID",
+    "UOMGroupID"
+   ]
+  },
+  {
    "s": "ItemMaster",
    "p": "refMainCustomer",
    "o": "CustomerPartyMaster",
@@ -895,8 +977,8 @@
   },
   {
    "s": "ItemMaster",
-   "p": "refReceiptWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -905,8 +987,8 @@
   },
   {
    "s": "ItemMaster",
-   "p": "refIssueWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -924,7 +1006,7 @@
    ]
   },
   {
-   "s": "BOM",
+   "s": "BOMHeader",
    "p": "refItem",
    "o": "ItemMaster",
    "kind": "명사 참조",
@@ -934,24 +1016,34 @@
    ]
   },
   {
-   "s": "BOM",
+   "s": "BOMHeader",
+   "p": "refRouting",
+   "o": "RoutingHeader",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "RoutingID"
+   ]
+  },
+  {
+   "s": "BOMLine",
+   "p": "refBOM",
+   "o": "BOMHeader",
+   "kind": "헤더-라인",
+   "fk": [
+    "EnterpriseID",
+    "BOMID",
+    "BOMRevisionNumber"
+   ]
+  },
+  {
+   "s": "BOMLine",
    "p": "refChildItem",
    "o": "ItemMaster",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
     "ChildItemID"
-   ]
-  },
-  {
-   "s": "BOM",
-   "p": "refRoutingLine",
-   "o": "Routing",
-   "kind": "명사 참조",
-   "fk": [
-    "EnterpriseID",
-    "RoutingID",
-    "OperationSequence"
    ]
   },
   {
@@ -1036,7 +1128,7 @@
    ]
   },
   {
-   "s": "Routing",
+   "s": "RoutingHeader",
    "p": "refItem",
    "o": "ItemMaster",
    "kind": "명사 참조",
@@ -1046,7 +1138,17 @@
    ]
   },
   {
-   "s": "Routing",
+   "s": "RoutingLine",
+   "p": "refRouting",
+   "o": "RoutingHeader",
+   "kind": "헤더-라인",
+   "fk": [
+    "EnterpriseID",
+    "RoutingID"
+   ]
+  },
+  {
+   "s": "RoutingLine",
    "p": "refOperation",
    "o": "Operation",
    "kind": "명사 참조",
@@ -1146,6 +1248,16 @@
    ]
   },
   {
+   "s": "WarehouseLocationLine",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
+   "kind": "헤더-라인",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID"
+   ]
+  },
+  {
    "s": "Batch",
    "p": "refParentBatch",
    "o": "Batch",
@@ -1190,7 +1302,7 @@
    "s": "Batch",
    "p": "refBOM",
    "o": "BOMHeader",
-   "kind": "헤더 참조",
+   "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
     "BOMID",
@@ -1269,8 +1381,8 @@
   },
   {
    "s": "Line",
-   "p": "refIssueWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -1279,8 +1391,8 @@
   },
   {
    "s": "Line",
-   "p": "refReceiptWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -1318,8 +1430,8 @@
   },
   {
    "s": "ProjectMaster",
-   "p": "refSalesOrder",
-   "o": "SalesOrder",
+   "p": "refSalesOrderLine",
+   "o": "SalesOrderLine",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -1359,14 +1471,13 @@
   },
   {
    "s": "EngineeringChangeOrder",
-   "p": "refBOMLine",
-   "o": "BOM",
+   "p": "refBOM",
+   "o": "BOMHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
     "BOMID",
-    "BOMRevisionNumber",
-    "ChildItemID"
+    "BOMRevisionNumber"
    ]
   },
   {
@@ -1380,7 +1491,7 @@
    ]
   },
   {
-   "s": "SalesOrder",
+   "s": "SalesOrderHeader",
    "p": "refCustomer",
    "o": "CustomerPartyMaster",
    "kind": "명사 참조",
@@ -1390,7 +1501,17 @@
    ]
   },
   {
-   "s": "SalesOrder",
+   "s": "SalesOrderLine",
+   "p": "refSalesOrder",
+   "o": "SalesOrderHeader",
+   "kind": "헤더-라인",
+   "fk": [
+    "EnterpriseID",
+    "SalesDocumentNumber"
+   ]
+  },
+  {
+   "s": "SalesOrderLine",
    "p": "refItem",
    "o": "ItemMaster",
    "kind": "명사 참조",
@@ -1460,7 +1581,7 @@
    ]
   },
   {
-   "s": "PurchaseOrder",
+   "s": "PurchaseOrderHeader",
    "p": "refVendor",
    "o": "VendorPartyMaster",
    "kind": "명사 참조",
@@ -1470,7 +1591,7 @@
    ]
   },
   {
-   "s": "PurchaseOrder",
+   "s": "PurchaseOrderHeader",
    "p": "refPersonnel",
    "o": "Personnel",
    "kind": "명사 참조",
@@ -1480,7 +1601,17 @@
    ]
   },
   {
-   "s": "PurchaseOrder",
+   "s": "PurchaseOrderLine",
+   "p": "refPurchaseOrder",
+   "o": "PurchaseOrderHeader",
+   "kind": "헤더-라인",
+   "fk": [
+    "EnterpriseID",
+    "PurchaseDocumentNumber"
+   ]
+  },
+  {
+   "s": "PurchaseOrderLine",
    "p": "refItem",
    "o": "ItemMaster",
    "kind": "명사 참조",
@@ -1491,8 +1622,8 @@
   },
   {
    "s": "MaterialArrival",
-   "p": "refPurchaseOrder",
-   "o": "PurchaseOrder",
+   "p": "refPurchaseOrderLine",
+   "o": "PurchaseOrderLine",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -1512,8 +1643,8 @@
   },
   {
    "s": "MaterialArrival",
-   "p": "refReceiptWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -1542,8 +1673,8 @@
   },
   {
    "s": "GoodsReceipt",
-   "p": "refWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -1612,8 +1743,8 @@
   },
   {
    "s": "GoodsIssue",
-   "p": "refWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -1654,7 +1785,7 @@
    "s": "ProductionOrder",
    "p": "refRouting",
    "o": "RoutingHeader",
-   "kind": "헤더 참조",
+   "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
     "RoutingID"
@@ -1664,7 +1795,7 @@
    "s": "ProductionOrder",
    "p": "refBOM",
    "o": "BOMHeader",
-   "kind": "헤더 참조",
+   "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
     "BOMID",
@@ -1673,8 +1804,8 @@
   },
   {
    "s": "ProductionOrder",
-   "p": "refSalesOrder",
-   "o": "SalesOrder",
+   "p": "refSalesOrderLine",
+   "o": "SalesOrderLine",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -1980,12 +2111,13 @@
   },
   {
    "s": "SupplierInspectionPlan",
-   "p": "refPurchaseOrder",
-   "o": "PurchaseOrder",
+   "p": "refPurchaseOrderLine",
+   "o": "PurchaseOrderLine",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
-    "PurchaseOrderID"
+    "PurchaseDocumentNumber",
+    "PurchaseDocumentSequence"
    ]
   },
   {
@@ -2040,12 +2172,13 @@
   },
   {
    "s": "SupplierInspectionApplication",
-   "p": "refPurchaseOrder",
-   "o": "PurchaseOrder",
+   "p": "refPurchaseOrderLine",
+   "o": "PurchaseOrderLine",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
-    "PurchaseOrderID"
+    "PurchaseDocumentNumber",
+    "PurchaseDocumentSequence"
    ]
   },
   {
@@ -2362,8 +2495,8 @@
   },
   {
    "s": "ProductPacking",
-   "p": "refWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -2454,7 +2587,7 @@
   {
    "s": "ProductionPerformance",
    "p": "refRoutingLine",
-   "o": "Routing",
+   "o": "RoutingLine",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -2566,19 +2699,9 @@
   },
   {
    "s": "ProductionPerformanceItem",
-   "p": "refWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocationLine",
+   "o": "WarehouseLocationLine",
    "kind": "명사 참조",
-   "fk": [
-    "EnterpriseID",
-    "WarehouseID"
-   ]
-  },
-  {
-   "s": "ProductionPerformanceItem",
-   "p": "refWarehouseSection",
-   "o": "WarehouseLocation",
-   "kind": "하위 목록 참조",
    "fk": [
     "EnterpriseID",
     "WarehouseID",
@@ -2662,7 +2785,7 @@
   {
    "s": "ProductionPerformanceEquipment",
    "p": "refRoutingLine",
-   "o": "Routing",
+   "o": "RoutingLine",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -2735,7 +2858,7 @@
   {
    "s": "ProductionPerformanceQuality",
    "p": "refRoutingLine",
-   "o": "Routing",
+   "o": "RoutingLine",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -2765,8 +2888,8 @@
   },
   {
    "s": "Inventory",
-   "p": "refWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -2805,8 +2928,8 @@
   },
   {
    "s": "StockTransfer",
-   "p": "refWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -2815,8 +2938,8 @@
   },
   {
    "s": "StockTransfer",
-   "p": "refReceiptWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -2825,8 +2948,8 @@
   },
   {
    "s": "InventoryCount",
-   "p": "refWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -2865,8 +2988,8 @@
   },
   {
    "s": "ProductIncoming",
-   "p": "refWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -2884,48 +3007,7 @@
    ]
   },
   {
-   "s": "ProductReleaseRequest",
-   "p": "refLine",
-   "o": "Line",
-   "kind": "명사 참조",
-   "fk": [
-    "EnterpriseID",
-    "LineID"
-   ]
-  },
-  {
-   "s": "ProductReleaseRequest",
-   "p": "refItem",
-   "o": "ItemMaster",
-   "kind": "명사 참조",
-   "fk": [
-    "EnterpriseID",
-    "ItemID"
-   ]
-  },
-  {
-   "s": "ProductReleaseRequest",
-   "p": "refWarehouse",
-   "o": "WarehouseLocation",
-   "kind": "명사 참조",
-   "fk": [
-    "EnterpriseID",
-    "WarehouseID"
-   ]
-  },
-  {
-   "s": "ProductReleaseRequest",
-   "p": "refSalesOrder",
-   "o": "SalesOrder",
-   "kind": "명사 참조",
-   "fk": [
-    "EnterpriseID",
-    "SalesDocumentNumber",
-    "SalesDocumentSequence"
-   ]
-  },
-  {
-   "s": "ProductReleaseRequest",
+   "s": "ProductReleaseRequestHeader",
    "p": "refCustomer",
    "o": "CustomerPartyMaster",
    "kind": "명사 참조",
@@ -2935,10 +3017,61 @@
    ]
   },
   {
+   "s": "ProductReleaseRequestLine",
+   "p": "refProductReleaseRequest",
+   "o": "ProductReleaseRequestHeader",
+   "kind": "헤더-라인",
+   "fk": [
+    "EnterpriseID",
+    "ProductReleaseRequestID"
+   ]
+  },
+  {
+   "s": "ProductReleaseRequestLine",
+   "p": "refLine",
+   "o": "Line",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LineID"
+   ]
+  },
+  {
+   "s": "ProductReleaseRequestLine",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "ProductReleaseRequestLine",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "WarehouseID"
+   ]
+  },
+  {
+   "s": "ProductReleaseRequestLine",
+   "p": "refSalesOrderLine",
+   "o": "SalesOrderLine",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "SalesDocumentNumber",
+    "SalesDocumentSequence"
+   ]
+  },
+  {
    "s": "ProductRelease",
    "p": "refProductReleaseRequest",
    "o": "ProductReleaseRequestHeader",
-   "kind": "헤더 참조",
+   "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
     "ProductReleaseRequestID"
@@ -2946,8 +3079,8 @@
   },
   {
    "s": "ProductRelease",
-   "p": "refSalesOrder",
-   "o": "SalesOrder",
+   "p": "refSalesOrderLine",
+   "o": "SalesOrderLine",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -2997,12 +3130,94 @@
   },
   {
    "s": "ProductRelease",
-   "p": "refWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
     "WarehouseID"
+   ]
+  },
+  {
+   "s": "DeliveryHeader",
+   "p": "refCustomer",
+   "o": "CustomerPartyMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "CustomerID"
+   ]
+  },
+  {
+   "s": "DeliveryHeader",
+   "p": "refDepartmentInCharge",
+   "o": "Department",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "DepartmentInChargeID"
+   ]
+  },
+  {
+   "s": "DeliveryHeader",
+   "p": "refPersonInCharge",
+   "o": "Personnel",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "PersonInChargeID"
+   ]
+  },
+  {
+   "s": "DeliveryLine",
+   "p": "refDelivery",
+   "o": "DeliveryHeader",
+   "kind": "헤더-라인",
+   "fk": [
+    "EnterpriseID",
+    "DeliveryID"
+   ]
+  },
+  {
+   "s": "DeliveryLine",
+   "p": "refProductRelease",
+   "o": "ProductRelease",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ProductReleaseID",
+    "ProductReleaseSequence"
+   ]
+  },
+  {
+   "s": "DeliveryLine",
+   "p": "refSalesOrderLine",
+   "o": "SalesOrderLine",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "SalesDocumentNumber",
+    "SalesDocumentSequence"
+   ]
+  },
+  {
+   "s": "DeliveryLine",
+   "p": "refItem",
+   "o": "ItemMaster",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "ItemID"
+   ]
+  },
+  {
+   "s": "DeliveryLine",
+   "p": "refLot",
+   "o": "Lot",
+   "kind": "명사 참조",
+   "fk": [
+    "EnterpriseID",
+    "LotID"
    ]
   },
   {
@@ -3037,8 +3252,8 @@
   },
   {
    "s": "Return",
-   "p": "refWarehouse",
-   "o": "WarehouseLocation",
+   "p": "refWarehouseLocation",
+   "o": "WarehouseLocationHeader",
    "kind": "명사 참조",
    "fk": [
     "EnterpriseID",
@@ -3143,44 +3358,22 @@
    ]
   },
   {
-   "s": "Routing",
-   "p": "arcon:hasHeader_RoutingHeader",
-   "o": "RoutingHeader",
-   "kind": "헤더-라인",
+   "s": "BOMLine",
+   "p": "refRoutingLine",
+   "o": "RoutingLine",
+   "kind": "헤더 경유 참조",
    "fk": [
-    "EnterpriseID",
-    "RoutingID"
-   ]
-  },
-  {
-   "s": "BOM",
-   "p": "arcon:hasHeader_BOMHeader",
-   "o": "BOMHeader",
-   "kind": "헤더-라인",
-   "fk": [
-    "EnterpriseID",
-    "BOMID",
-    "BOMRevisionNumber"
-   ]
-  },
-  {
-   "s": "ProductReleaseRequest",
-   "p": "arcon:hasHeader_ProductReleaseRequestHeader",
-   "o": "ProductReleaseRequestHeader",
-   "kind": "헤더-라인",
-   "fk": [
-    "EnterpriseID",
-    "ProductReleaseRequestID"
+    "OperationSequence"
    ]
   }
  ],
  "counts": {
-  "classes": 70,
-  "objectProperties": 68,
-  "codeProperties": 90,
-  "datatypeProperties": 321,
-  "links": 231,
-  "codeSchemes": 79,
-  "concepts": 608
+  "classes": 76,
+  "objectProperties": 70,
+  "codeProperties": 92,
+  "datatypeProperties": 346,
+  "links": 243,
+  "codeSchemes": 80,
+  "concepts": 615
  }
 }

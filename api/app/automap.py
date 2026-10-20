@@ -278,7 +278,8 @@ def pick(cols: list[str], profs: dict[str, dict], entity: str | None, targets: d
         missing = missing_keys(t, set(m.values()))
         pk_ok = not missing
         sc = sum(conf.values()) + (1.0 if pk_ok else -1.5 * len(missing))
-        if ent and (norm(name) in ent or (t["label_ko"] and norm(t["label_ko"]) in ent)):
+        base = re.sub(r"_(line|header)$", "", name)   # 헤더-라인 명사: 엔터티 이름은 보통 명사 이름(purchase_order)으로 온다
+        if ent and (norm(name) in ent or norm(base) == ent or (t["label_ko"] and norm(t["label_ko"]) in ent)):
             sc += 1.5
         out.append({"table": name, "label_ko": t["label_ko"], "score": round(sc, 2), "pk_ok": pk_ok,
                     "map": m, "confidence": conf})

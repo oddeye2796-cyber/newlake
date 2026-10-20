@@ -129,7 +129,7 @@
 <https://data.impix.co.kr/arcon/codelist/CorrectiveActionStatusCode> a skos:ConceptScheme ; skos:prefLabel "시정조치상태코드"@ko ;
     skos:definition "시정조치 진행 상태"@ko ; ksx:codeSystem "고정형" .
 <https://data.impix.co.kr/arcon/codelist/PackingType> a skos:ConceptScheme ; skos:prefLabel "포장유형"@ko ;
-    skos:definition "포장유형"@ko ; ksx:codeSystem "고정형" .
+    skos:definition "포장 형태. 제품포장(표 60)과 배송헤더(표 75)가 같은 그룹을 공유(7.1)"@ko ; ksx:codeSystem "고정형" .
 <https://data.impix.co.kr/arcon/codelist/ParameterType> a skos:ConceptScheme ; skos:prefLabel "파라미터유형"@ko ;
     skos:definition "설비에서 수집하는 파라미터의 유형"@ko ; ksx:codeSystem "고정형" .
 <https://data.impix.co.kr/arcon/codelist/ParameterGrade> a skos:ConceptScheme ; skos:prefLabel "파라미터등급"@ko ;
@@ -158,6 +158,8 @@
     skos:definition "사후서비스 처리 내용(교환, 수리, 점검 등)"@ko ; ksx:codeSystem "고정형" .
 <https://data.impix.co.kr/arcon/codelist/RepairType> a skos:ConceptScheme ; skos:prefLabel "수리유형"@ko ;
     skos:definition "부품 교체 사유가 된 현상 유형(회사 기준). 아래는 예시"@ko ; ksx:codeSystem "회사정의" .
+<https://data.impix.co.kr/arcon/codelist/TransportationMethodCode> a skos:ConceptScheme ; skos:prefLabel "운송방법"@ko ;
+    skos:definition "배송 운송 수단(배송헤더). 표준 예시: 항공, 해상, 도로, 철도. 국제 운송은 UN/CEFACT Rec 19 운송수단 코드(1 해상, 2 철도, 3 도로, 4 항공)와 대응"@ko ; ksx:codeSystem "고정형" .
 <https://data.impix.co.kr/arcon/codelist/합계> a skos:ConceptScheme ; skos:prefLabel ""@ko ;
     skos:definition ""@ko ; ksx:codeSystem "" .
 <https://data.impix.co.kr/arcon/codelist/CountryID/KR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/CountryID> ; skos:notation "KR" ;
@@ -1415,6 +1417,20 @@
     skos:prefLabel "기능 불량"@ko , "Malfunction"@en .
 <https://data.impix.co.kr/arcon/codelist/RepairType/PREVENT> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/RepairType> ; skos:notation "PREVENT" ;
     skos:prefLabel "예방 교체"@ko , "Preventive"@en .
+<https://data.impix.co.kr/arcon/codelist/TransportationMethodCode/ROAD> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransportationMethodCode> ; skos:notation "ROAD" ;
+    skos:prefLabel "도로"@ko , "Road transport"@en .
+<https://data.impix.co.kr/arcon/codelist/TransportationMethodCode/SEA> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransportationMethodCode> ; skos:notation "SEA" ;
+    skos:prefLabel "해상"@ko , "Maritime transport"@en .
+<https://data.impix.co.kr/arcon/codelist/TransportationMethodCode/AIR> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransportationMethodCode> ; skos:notation "AIR" ;
+    skos:prefLabel "항공"@ko , "Air transport"@en .
+<https://data.impix.co.kr/arcon/codelist/TransportationMethodCode/RAIL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransportationMethodCode> ; skos:notation "RAIL" ;
+    skos:prefLabel "철도"@ko , "Rail transport"@en .
+<https://data.impix.co.kr/arcon/codelist/TransportationMethodCode/PARCEL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransportationMethodCode> ; skos:notation "PARCEL" ;
+    skos:prefLabel "택배"@ko , "Parcel service"@en .
+<https://data.impix.co.kr/arcon/codelist/TransportationMethodCode/MULTI> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransportationMethodCode> ; skos:notation "MULTI" ;
+    skos:prefLabel "복합운송"@ko , "Multimodal transport"@en .
+<https://data.impix.co.kr/arcon/codelist/TransportationMethodCode/PICKUP> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/TransportationMethodCode> ; skos:notation "PICKUP" ;
+    skos:prefLabel "고객인수"@ko , "Customer pickup"@en .
 
 <https://data.impix.co.kr/arcon/codelist/UOM> a skos:ConceptScheme ; skos:prefLabel "단위코드"@ko .
 <https://data.impix.co.kr/arcon/codelist/UOM/EA> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "EA" ;
@@ -1443,10 +1459,10 @@
     rdfs:comment "그룹 QTY, 환산계수 " .
 <https://data.impix.co.kr/arcon/codelist/UOM/mg> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "mg" ;
     skos:prefLabel "밀리그램"@ko ; ksx:uneceRec20 "MGM" ;
-    rdfs:comment "그룹 WGT, 환산계수 9.9999999999999995E-7" .
+    rdfs:comment "그룹 WGT, 환산계수 1e-06" .
 <https://data.impix.co.kr/arcon/codelist/UOM/g> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "g" ;
     skos:prefLabel "그램"@ko ; ksx:uneceRec20 "GRM" ;
-    rdfs:comment "그룹 WGT, 환산계수 1E-3" .
+    rdfs:comment "그룹 WGT, 환산계수 0.001" .
 <https://data.impix.co.kr/arcon/codelist/UOM/kg> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "kg" ;
     skos:prefLabel "킬로그램"@ko ; ksx:uneceRec20 "KGM" ;
     rdfs:comment "그룹 WGT, 환산계수 1" .
@@ -1455,19 +1471,19 @@
     rdfs:comment "그룹 WGT, 환산계수 1000" .
 <https://data.impix.co.kr/arcon/codelist/UOM/mL> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "mL" ;
     skos:prefLabel "밀리리터"@ko ; ksx:uneceRec20 "MLT" ;
-    rdfs:comment "그룹 VOL, 환산계수 1E-3" .
+    rdfs:comment "그룹 VOL, 환산계수 0.001" .
 <https://data.impix.co.kr/arcon/codelist/UOM/L> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "L" ;
     skos:prefLabel "리터"@ko ; ksx:uneceRec20 "LTR" ;
     rdfs:comment "그룹 VOL, 환산계수 1" .
 <https://data.impix.co.kr/arcon/codelist/UOM/cm3> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "cm3" ;
     skos:prefLabel "세제곱센티미터"@ko ; ksx:uneceRec20 "CMQ" ;
-    rdfs:comment "그룹 VOL, 환산계수 1E-3" .
+    rdfs:comment "그룹 VOL, 환산계수 0.001" .
 <https://data.impix.co.kr/arcon/codelist/UOM/m3> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "m3" ;
     skos:prefLabel "세제곱미터"@ko ; ksx:uneceRec20 "MTQ" ;
     rdfs:comment "그룹 VOL, 환산계수 1000" .
 <https://data.impix.co.kr/arcon/codelist/UOM/mm> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "mm" ;
     skos:prefLabel "밀리미터"@ko ; ksx:uneceRec20 "MMT" ;
-    rdfs:comment "그룹 LEN, 환산계수 1E-3" .
+    rdfs:comment "그룹 LEN, 환산계수 0.001" .
 <https://data.impix.co.kr/arcon/codelist/UOM/cm> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "cm" ;
     skos:prefLabel "센티미터"@ko ; ksx:uneceRec20 "CMT" ;
     rdfs:comment "그룹 LEN, 환산계수 0.01" .
@@ -1479,19 +1495,19 @@
     rdfs:comment "그룹 LEN, 환산계수 1000" .
 <https://data.impix.co.kr/arcon/codelist/UOM/mm2> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "mm2" ;
     skos:prefLabel "제곱밀리미터"@ko ; ksx:uneceRec20 "MMK" ;
-    rdfs:comment "그룹 AREA, 환산계수 9.9999999999999995E-7" .
+    rdfs:comment "그룹 AREA, 환산계수 1e-06" .
 <https://data.impix.co.kr/arcon/codelist/UOM/cm2> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "cm2" ;
     skos:prefLabel "제곱센티미터"@ko ; ksx:uneceRec20 "CMK" ;
-    rdfs:comment "그룹 AREA, 환산계수 1E-4" .
+    rdfs:comment "그룹 AREA, 환산계수 0.0001" .
 <https://data.impix.co.kr/arcon/codelist/UOM/m2> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "m2" ;
     skos:prefLabel "제곱미터"@ko ; ksx:uneceRec20 "MTK" ;
     rdfs:comment "그룹 AREA, 환산계수 1" .
 <https://data.impix.co.kr/arcon/codelist/UOM/s> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "s" ;
     skos:prefLabel "초"@ko ; ksx:uneceRec20 "SEC" ;
-    rdfs:comment "그룹 TIME, 환산계수 2.7777777777777799E-4" .
+    rdfs:comment "그룹 TIME, 환산계수 0.000277777777777778" .
 <https://data.impix.co.kr/arcon/codelist/UOM/min> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "min" ;
     skos:prefLabel "분"@ko ; ksx:uneceRec20 "MIN" ;
-    rdfs:comment "그룹 TIME, 환산계수 1.6666666666666701E-2" .
+    rdfs:comment "그룹 TIME, 환산계수 0.0166666666666667" .
 <https://data.impix.co.kr/arcon/codelist/UOM/h> a skos:Concept ; skos:inScheme <https://data.impix.co.kr/arcon/codelist/UOM> ; skos:notation "h" ;
     skos:prefLabel "시간"@ko ; ksx:uneceRec20 "HUR" ;
     rdfs:comment "그룹 TIME, 환산계수 1" .

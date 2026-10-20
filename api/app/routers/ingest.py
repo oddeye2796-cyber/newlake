@@ -455,12 +455,24 @@ def _targets(s: Scoped) -> dict[str, dict]:
         "  FROM pg_constraint k JOIN pg_class c ON c.oid = k.conrelid JOIN pg_namespace n ON n.oid = c.relnamespace"
         " WHERE n.nspname = 'ksx' AND k.contype = 'u' ORDER BY c.relname, k.conname").fetchall():
         uniques.setdefault(r["tbl"], []).append(list(r["cols"]))
+    # 표준 v1.0 의 이벤트 식별자: 원천에 없으면 예전 자연 키 값을 이어 만든다 (gov.ksx_natural_key)
+    for r in s.conn.execute("SELECT table_name, parts FROM gov.ksx_natural_key ORDER BY table_name").fetchall():
+        uniques.setdefault(r["table_name"], []).append(list(r["parts"]))
+    # 헤더-라인 명사: 라인 표에 헤더 열도 대응할 수 있다 (변환이 헤더를 함께 채운다)
+    headers = {r["line"]: r for r in s.conn.execute(
+        "SELECT c.relname AS line, h.header::text AS header FROM pg_class c"
+        "  JOIN pg_namespace n ON n.oid = c.relnamespace AND n.nspname = 'ksx'"
+        "  CROSS JOIN LATERAL gov.header_of(c.relname::text) h"
+        " WHERE c.relkind IN ('r', 'p') AND NOT c.relispartition AND h.header IS NOT NULL").fetchall()}
     classes = {r["physical_table"]: r for r in s.conn.execute(
         "SELECT DISTINCT ON (physical_table) physical_table, label_ko, local_name, class_iri FROM onto.class"
         " WHERE physical_table IS NOT NULL ORDER BY physical_table, is_standard DESC").fetchall()}
     out: dict[str, dict] = {}
+    by_tbl: dict[str, list] = {}
     for r in rows:
-        if r["col"] in HIDDEN_TARGET_COLS or r["col"].startswith("lake_"):
+        by_tbl.setdefault(r["tbl"], []).append(r)
+    for r in rows:
+        if r["col"] in HIDDEN_TARGET_COLS or r["col"].startswith("lake_") or r["col"].endswith("_sequence_no"):
             continue
         cl = classes.get(r["tbl"])
         t = out.setdefault(r["tbl"], {"table": r["tbl"], "label_ko": cl["label_ko"] if cl else None,
@@ -469,6 +481,18 @@ def _targets(s: Scoped) -> dict[str, dict]:
                                       "columns": []})
         t["columns"].append({"name": r["col"], "label_ko": r["label"], "type": r["type"],
                              "required": r["required"] and not r["has_default"], "pk": r["pk"]})
+    for line, h in headers.items():
+        t = out.get(line)
+        if t is None:
+            continue
+        t["header"] = h["header"].removeprefix("ksx.")
+        own = {c["name"] for c in t["columns"]}
+        for r in by_tbl.get(t["header"], []):
+            if r["col"] in own or r["col"] in HIDDEN_TARGET_COLS or r["col"] in automap.SCOPE \
+                    or r["col"].startswith("lake_") or r["col"].endswith("_sequence_no"):
+                continue
+            t["columns"].append({"name": r["col"], "label_ko": r["label"], "type": r["type"],
+                                 "required": False, "pk": False, "header": True})
     return out
 
 

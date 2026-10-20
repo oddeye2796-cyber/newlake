@@ -104,13 +104,13 @@ def test_standardize_keeps_extras_proposes_and_checks_quality(client):
     m = d["suggested_map"]
     assert thick not in m and "폭" not in m and "업체명" not in m
     r = client.post(f"/api/admin/batches/{bid}/standardize", headers=ADMIN,
-                    json={"table": "purchase_order", "column_map": m, "site_id": "HQ", "plant_id": "P1", "create_refs": True})
+                    json={"table": "purchase_order_line", "column_map": m, "site_id": "HQ", "plant_id": "P1", "create_refs": True})
     assert r.status_code == 200, r.text
     res = r.json()
     assert res["rows_out"] == 2
     # 1) 자리 없는 열은 확장 속성으로 보관 (빈 열 '비고'는 제외)
     assert res["extensions"]["columns"] == 4 and res["extensions"]["rows"] == 8
-    ea = client.get("/api/admin/extension-attributes?table=purchase_order", headers=ADMIN).json()
+    ea = client.get("/api/admin/extension-attributes?table=purchase_order_line", headers=ADMIN).json()
     names = {x["attr_name"] for x in ea["summary"]}
     assert {thick, memo, "폭", "업체명"} <= names and any(x["attr_name"] == thick and x["attr_value"] == "0.4" for x in ea["rows"])
     # 2) 확장 제안이 쌓인다 (두께 → thickness decimal mm). 이미 승인된 열(이전 실행)은 다시 묻지 않으므로 꼬리표 열만 센다
@@ -118,7 +118,7 @@ def test_standardize_keeps_extras_proposes_and_checks_quality(client):
     props = {p["column_name"]: p for p in client.get("/api/admin/ontology/proposals", headers=ADMIN).json() if p["batch_id"] == bid}
     th = props[thick]
     assert th["suggested_local_name"] == "thickness" and th["suggested_range_iri"] == XSD + "decimal" and th["unit"] == "mm"
-    assert th["target_label"] == "구매발주" and th["status"] == "PROPOSED"
+    assert th["target_label"] == "구매발주라인" and th["status"] == "PROPOSED"
     # 3) 켜진 SQL 규칙이 자동으로 돌았다
     q = {x["rule_id"]: x for x in res["quality"]}
     assert q["po-quantity-positive"]["status"] == "OK" and q["po-item-known"]["status"] == "OK"
@@ -131,7 +131,7 @@ def test_standardize_keeps_extras_proposes_and_checks_quality(client):
     assert r.status_code == 200, r.text
     assert r.json() == {"status": "ACCEPTED", "result_iri": ARCON + local}
     assert client.post(f"/api/admin/ontology/proposals/{th['proposal_id']}/decide", headers=ADMIN, json={"accept": True}).status_code == 409
-    ea = client.get("/api/admin/extension-attributes?table=purchase_order", headers=ADMIN).json()
+    ea = client.get("/api/admin/extension-attributes?table=purchase_order_line", headers=ADMIN).json()
     assert next(x for x in ea["summary"] if x["attr_name"] == thick)["property_name"] == local
     # 반려 (분석가는 못 한다)
     assert client.post(f"/api/admin/ontology/proposals/{props[memo]['proposal_id']}/decide", headers=ANALYST, json={"accept": False}).status_code == 403
@@ -144,7 +144,7 @@ def test_standardize_keeps_extras_proposes_and_checks_quality(client):
     bid2 = _po_batch(client, tag + "B", qty2=0, thick=thick, memo=memo)
     m2 = client.get(f"/api/admin/batches/{bid2}", headers=ADMIN).json()["suggested_map"]
     res2 = client.post(f"/api/admin/batches/{bid2}/standardize", headers=ADMIN,
-                       json={"table": "purchase_order", "column_map": m2, "site_id": "HQ", "plant_id": "P1", "create_refs": True}).json()
+                       json={"table": "purchase_order_line", "column_map": m2, "site_id": "HQ", "plant_id": "P1", "create_refs": True}).json()
     assert res2["rows_out"] == 2 and res2["extensions"]["matched"] >= 1
     q2 = {x["rule_id"]: x for x in res2["quality"]}
     assert q2["po-quantity-positive"]["status"] == "VIOLATED" and q2["po-quantity-positive"]["violation_count"] == 1
@@ -155,16 +155,16 @@ def test_standardize_keeps_extras_proposes_and_checks_quality(client):
     r = client.post(f"/api/admin/batches/{bid2}/rollback", headers=ADMIN)
     assert r.status_code == 200, r.text
     rb = r.json()
-    assert rb["rows"] == 2 and rb["extension_rows"] >= 8 and rb["table"] == "ksx.purchase_order"
+    assert rb["rows"] == 2 and rb["extension_rows"] >= 8 and rb["table"] == "ksx.purchase_order_line"
     hist = {x["batch_id"]: x for x in client.get("/api/admin/batches", headers=ADMIN).json()}
     assert hist[bid2]["status"] == "LANDED"
     assert client.post(f"/api/admin/batches/{bid2}/rollback", headers=ADMIN).status_code == 409
     assert client.post(f"/api/admin/batches/{bid2}/rollback", headers=ANALYST).status_code == 403
     # 다른 배치 행은 남아 있다
-    assert client.get(f"/api/admin/extension-attributes?table=purchase_order", headers=ADMIN).json()["summary"]
+    assert client.get(f"/api/admin/extension-attributes?table=purchase_order_line", headers=ADMIN).json()["summary"]
     # 끄면 보관·제안·검증을 하지 않는다
     res3 = client.post(f"/api/admin/batches/{bid2}/standardize", headers=ADMIN,
-                       json={"table": "purchase_order", "column_map": m2, "site_id": "HQ", "plant_id": "P1", "keep_extras": False, "auto_quality": False}).json()
+                       json={"table": "purchase_order_line", "column_map": m2, "site_id": "HQ", "plant_id": "P1", "keep_extras": False, "auto_quality": False}).json()
     assert res3["rows_out"] == 2 and res3["extensions"] is None and res3["proposals"] == 0 and res3["quality"] == []
 
     # 정리: 두 배치를 되돌리면 보관 값이 없어져 확장 속성을 지울 수 있다

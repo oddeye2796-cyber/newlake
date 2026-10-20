@@ -32,7 +32,7 @@ def test_lot_page(client):
     assert d["lot"]["item_name"] == "BGA 패키지 A100"
     assert [a["lot_id"] for a in d["ancestors"]] == ["LOT-2026-0730"]
     assert len(d["spec_outs"]) == 2
-    assert d["orders"][0]["sales_order_id"] == "SO-5001"
+    assert d["orders"][0]["sales_order_id"] == "SD-5001"
     assert d["risks"] and d["actions"]
     assert sum(x["qty"] for x in d["defects"]) == 34
 

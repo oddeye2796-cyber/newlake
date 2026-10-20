@@ -18,6 +18,7 @@
 - 표준 외 요소(헤더 보조 테이블, 계보 전이 속성 등)는 arcon: 네임스페이스로 분리.
 """
 import csv, json, os, re
+from ksxnames import snake
 from collections import defaultdict, OrderedDict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,13 +40,16 @@ GROUPS = OrderedDict([
     ("창고관리", ("WarehouseObject", "Warehouse management")),
     ("서비스관리", ("ServiceObject", "Service management")),
 ])
-HEADER_TABLES = {"BOMHeader", "RoutingHeader", "ProductReleaseRequestHeader"}
+# 헤더·라인 구조 명사 (7.1, v1.0 최종본): 명사 1개 = 헤더 테이블 + 라인 테이블. 둘 다 표준(ksx:)이다.
+HL_NOUNS = ["UOMGroup", "BOM", "Routing", "WarehouseLocation", "SalesOrder", "PurchaseOrder",
+            "ProductReleaseRequest", "Delivery"]
+HEADER_TABLES = {n + "Header" for n in HL_NOUNS}
+LINE_TABLES = {n + "Line" for n in HL_NOUNS}
 # 사건(Event)형 명사 — 설계서 §3.3
-EVENT_NOUNS = {"OperationStart", "OperationEnd", "TransferStart", "TransferEnd",
-               "InTransitLocation", "Alarm", "TraceParameter", "ProductTraceParameterOnCustomer"}
-# 헤더·라인 구조 명사 (2025 개정 6.3)
-DOC_LINE_NOUNS = {"BOM", "Routing", "GoodsReceipt", "ProductIncoming", "ProductReleaseRequest",
-                  "ProductRelease", "Return", "ProductionPerformance"}
+EVENT_NOUNS = {"OperationStart", "OperationEnd", "TransferStart", "TransferEnd", "InTransitLocation",
+               "EquipmentState", "Alarm", "TraceParameter", "ProductTraceParameterOnCustomer"}
+# 문서 행: 헤더·라인의 라인 + 식별자(문서)+순번으로 행을 구분하는 명사 (해설 6.3)
+DOC_LINE_NOUNS = LINE_TABLES | {"GoodsReceipt", "ProductIncoming", "ProductRelease", "Return", "ProductionPerformance"}
 # 외부 표준 정렬 (부속서 B)
 ALIGN = {
     "Site": "IEC62264:Site", "WorkCalendar": "IEC62264:WorkCalendar", "Lot": "IEC62264:MaterialLot",
@@ -56,12 +60,13 @@ ALIGN = {
     "ProductionPerformancePersonnel": "IEC62264:PersonnelActual",
     "ProductionPerformanceEquipment": "IEC62264:EquipmentActual",
     "ProductionPerformanceQuality": "IEC62264:SegmentData", "Batch": "IEC61512-1:Batch",
-    "Personnel": "OAGIS:PersonLabor", "ItemMaster": "OAGIS:ItemMaster", "BOM": "OAGIS:BillOfMaterial",
-    "Routing": "OAGIS:Routing", "SalesOrder": "OAGIS:SalesOrder", "PurchaseOrder": "OAGIS:PurchaseOrder",
+    "Personnel": "OAGIS:PersonLabor", "ItemMaster": "OAGIS:ItemMaster", "BOMHeader": "OAGIS:BillOfMaterial",
+    "RoutingHeader": "OAGIS:Routing", "SalesOrderHeader": "OAGIS:SalesOrder", "PurchaseOrderHeader": "OAGIS:PurchaseOrder",
     "GoodsReceipt": "OAGIS:ReceiveDelivery", "GoodsIssue": "OAGIS:IssueInventory",
     "ProductionOrder": "OAGIS:ProductionOrder", "SupplierInspectionResult": "OAGIS:TestResult",
     "StockTransfer": "OAGIS:MoveInventory", "InventoryCount": "OAGIS:InventoryCount",
-    "ProductReleaseRequest": "OAGIS:ShipmentRequest", "ProductRelease": "OAGIS:Shipment",
+    "ProductReleaseRequestHeader": "OAGIS:ShipmentRequest", "ProductRelease": "OAGIS:Shipment",
+    "DeliveryHeader": "OAGIS:DeliveryReceipt",
     "Carrier": "SEMI:Carrier", "OperationStart": "SEMI:ProcessingStarted",
     "OperationEnd": "SEMI:ProcessingCompleted", "TransferCommand": "SEMI:TransferCommand",
     "TransferStart": "SEMI:TransferInitiated", "TransferEnd": "SEMI:TransferCompleted",
@@ -115,7 +120,17 @@ def esc(s):
 
 
 def cls_iri(name):
-    return ("arcon:" if name in HEADER_TABLES else "ksx:") + name
+    return "ksx:" + name
+
+
+def noun_ref(stem, parent):
+    """참조 속성 이름: 헤더를 가리키면 명사 이름(refPurchaseOrder), 라인을 가리키면 +Line(refPurchaseOrderLine)."""
+    for n in HL_NOUNS:
+        if parent == n + "Header":
+            return "ref" + n
+        if parent == n + "Line":
+            return "ref" + n + "Line"
+    return "ref" + RENAME.get(stem, stem)
 
 
 def main():
@@ -137,19 +152,27 @@ def main():
             tinfo[t["테이블명(영문)"]] = t
     tcols = defaultdict(list)
     for c in cols:
+        if c["구분"] == "PK":         # 행 일련번호(대리키, 표준 외 물리 컬럼) — 온톨로지에 올리지 않는다
+            continue
         tcols[c["테이블명(영문)"]].append(c)
 
     # ---- 관계(객체속성) 도출 -------------------------------------------------
     links = []          # (child, prop, parent, fk_cols, kind, note)
     ref_cols = defaultdict(set)   # child → 참조 대표 컬럼(객체속성으로 승격된 컬럼)
     prop_range = defaultdict(set)
+    header_props = set()          # 라인 → 자기 헤더 참조 (ksx:hasHeader 하위 속성)
+    copy_of = {}                  # (child, attr) → 원천 "명사.속성" (사본 속성, 7.1)
     for r in rels:
         kind = r["관계 구분"]
         child, parent = r["자식 테이블"], r["부모 테이블"]
         fk = [x.strip() for x in r["FK 컬럼"].split(",")]
-        if kind == "기본 속성":
+        if kind == "기본 속성" or not child:
             continue
         lead = next((x for x in fk if x != "EnterpriseID"), fk[0])
+        if kind == "사본 참조":
+            m = re.search(r"원천 속성 ([A-Za-z]+\.[A-Za-z]+)", r["비고"])
+            copy_of[(child, lead)] = m.group(1) if m else parent
+            continue
         if kind == "다형 참조":
             links.append(dict(child=child, prop="ref" + ref_stem(lead), parent="arcon:Location",
                               fk=fk, kind=kind, note=r["비고"]))
@@ -159,22 +182,12 @@ def main():
             links.append(dict(child=child, prop="refCustomerInstalledProduct",
                               parent="arcon:CustomerInstalledProduct", fk=fk, kind=kind, note=r["비고"]))
             continue
-        if kind == "하위 목록 참조":
-            links.append(dict(child=child, prop="refWarehouseSection", parent="ksx:WarehouseLocation",
-                              fk=fk, kind=kind, note=r["비고"]))
-            ref_cols[child].add(lead)
-            continue
-        if kind == "헤더-라인":
-            prop = "arcon:hasHeader"
-        else:
-            stem = ref_stem(lead)
-            prop = "ref" + RENAME.get(stem, stem)
-            if parent in ("Routing", "BOM"):        # 라인(행) 단위 참조 → 헤더 참조와 구분
-                prop += "Line"
+        prop = noun_ref(ref_stem(lead), parent)
         links.append(dict(child=child, prop=prop, parent=cls_iri(parent), fk=fk, kind=kind, note=r["비고"]))
-        if kind != "헤더-라인":
-            ref_cols[child].add(lead)
+        ref_cols[child].add(lead)
         prop_range[prop].add(cls_iri(parent))
+        if kind == "헤더-라인":
+            header_props.add(prop)
 
     # 같은 이름이 서로 다른 범위를 가리키면 부모명으로 구분
     clash = {p for p, rs in prop_range.items() if len(rs) > 1}
@@ -205,6 +218,8 @@ def main():
                 p = dprops.setdefault(name, dict(range=rng, label=c["속성명(국문)"], used=set(), attr=a,
                                                  ident=(typ == "ID")))
                 p["used"].add(t)
+                if (t, a) in copy_of:
+                    p.setdefault("copy", set()).add(copy_of[(t, a)])
 
     os.makedirs(OUT, exist_ok=True)
     W = []
@@ -220,7 +235,7 @@ def main():
 """ % (KSX, ARCON))
     w("""<https://ontology.impix.co.kr/ksx9101> a owl:Ontology ;
     rdfs:label "KS X 9101-1:2025 제조업무데이터 교환 코어 온톨로지"@ko ;
-    owl:versionInfo "9101-1:2025-v1.0/gen-0.1.0" ;
+    owl:versionInfo "9101-1:2025-v1.0-final/gen-0.3.0" ;
     dcterms:source "KSX9101-1_2025_온톨로지용v1.0_테이블정의서.xlsx" ;
     rdfs:comment "tools/gen_ontology.py 로 기계 생성. 수기 편집 금지. 표준 본문은 전재하지 않고 명칭·타입·절 번호만 기록."@ko .
 
@@ -228,7 +243,8 @@ def main():
 ksx:standardClause a owl:AnnotationProperty ; rdfs:label "표준 조항"@ko .
 ksx:standardTable  a owl:AnnotationProperty ; rdfs:label "표준 표 번호"@ko .
 ksx:physicalTable  a owl:AnnotationProperty ; rdfs:label "물리 테이블명"@ko .
-ksx:primaryKey     a owl:AnnotationProperty ; rdfs:label "식별 속성(PK)"@ko .
+ksx:primaryKey     a owl:AnnotationProperty ; rdfs:label "식별 키(UK, 회사+식별 속성)"@ko .
+ksx:copyOf         a owl:AnnotationProperty ; rdfs:label "사본 속성의 원천(명사.속성)"@ko .
 ksx:sourceAttribute a owl:AnnotationProperty ; rdfs:label "원천 속성명"@ko .
 ksx:usedIn         a owl:AnnotationProperty ; rdfs:label "사용 명사"@ko .
 ksx:codeScheme     a owl:AnnotationProperty ; rdfs:label "공통코드그룹"@ko .
@@ -249,12 +265,13 @@ arcon:Event a owl:Class ; rdfs:subClassOf ksx:ManufacturingBusinessObject ;
 arcon:eventTime a owl:DatatypeProperty ; rdfs:range xsd:dateTime ; rdfs:label "이벤트 시각"@ko .
 arcon:DocumentLine a owl:Class ; rdfs:label "문서 행(헤더·라인 구조)"@ko ;
     rdfs:comment "2025 개정 6.3: 문서 단위 식별자 + 행 순번으로 식별하는 명사"@ko .
-arcon:DocumentHeader a owl:Class ; rdfs:label "문서 헤더(표준 외 보조)"@ko .
+arcon:DocumentHeader a owl:Class ; rdfs:label "헤더 구조체"@ko ;
+    rdfs:comment "7.1 헤더(Header)·라인(Line) 구조: 명사 1건에 1회 나타나며 명사의 식별 속성을 가진다"@ko .
 arcon:Location a owl:Class ; rdfs:label "위치(다형)"@ko ;
     rdfs:comment "이동 출발지·목적지. 공정·설비·저장소·캐리어 중 하나 — 유형 코드로 구분"@ko .
 arcon:CustomerInstalledProduct a owl:Class ; rdfs:subClassOf ksx:ServiceObject ;
     rdfs:label "고객 설치 제품"@ko ; rdfs:comment "제조번호(SerialNumber) 단위. 표준 외 확장 명사(KS X 9101-2 절차로 등록 예정)"@ko .
-arcon:hasHeader a owl:ObjectProperty ; rdfs:range arcon:DocumentHeader ; rdfs:label "헤더 참조"@ko .
+ksx:hasHeader a owl:ObjectProperty ; rdfs:range arcon:DocumentHeader ; rdfs:label "소속 헤더(7.1 헤더·라인)"@ko .
 arcon:derivedFrom a owl:ObjectProperty , owl:TransitiveProperty ;
     rdfs:label "계보 파생"@ko ; rdfs:comment "로트 분할·병합 계보의 전이 폐포. 전수 역추적 근거."@ko .
 arcon:componentOf a owl:ObjectProperty , owl:TransitiveProperty ;
@@ -278,8 +295,8 @@ arcon:componentOf a owl:ObjectProperty , owl:TransitiveProperty ;
         lines = [f"{iri} a owl:Class ;", f"    rdfs:subClassOf {', '.join(sup)} ;",
                  f'    rdfs:label "{esc(ti["테이블명(국문)"])}"@ko , "{t}"@en ;',
                  f'    skos:definition "{esc(ti["테이블 설명(표준 정의)"])}"@ko ;',
-                 f'    ksx:physicalTable "{ti["물리 테이블명"]}" ;',
-                 f'    ksx:primaryKey "{esc(ti["PK"])}"']
+                 f'    ksx:physicalTable "{snake(t)}" ;',
+                 f'    ksx:primaryKey "{esc(ti["UK(식별 키)"])}"']
         if ti["조항"] and ti["조항"] != "—":
             lines[-1] += " ;"
             lines.append(f'    ksx:standardClause "{ti["조항"]}" ; ksx:standardTable "표 {ti["표"]}"')
@@ -288,8 +305,8 @@ arcon:componentOf a owl:ObjectProperty , owl:TransitiveProperty ;
             lines.append(f'    ksx:alignedTo "{ALIGN[t]}"')
         w("\n".join(lines) + " .\n")
         catalog.append(dict(name=t, iri=iri, label=ti["테이블명(국문)"], group=g,
-                            table=ti["물리 테이블명"], clause=ti["조항"], pk=ti["PK"],
-                            columns=int(ti["컬럼 수"] or 0), event=t in EVENT_NOUNS,
+                            table=snake(t), clause=ti["조항"], pk=ti["UK(식별 키)"],
+                            columns=int(ti["컬럼 수"] or 0) - 1, event=t in EVENT_NOUNS,
                             definition=ti["테이블 설명(표준 정의)"]))
     # 기본 참조 속성
     w("### 기본 속성(7.3) 참조 → 공용 객체속성")
@@ -316,6 +333,8 @@ arcon:componentOf a owl:ObjectProperty , owl:TransitiveProperty ;
             extra = " ;\n    rdfs:subPropertyOf arcon:derivedFrom"
         if p == "refChildItem":
             extra = " ;\n    rdfs:subPropertyOf arcon:componentOf"
+        if p in header_props:
+            extra += " ;\n    rdfs:subPropertyOf ksx:hasHeader"
         w(f'ksx:{p} a owl:ObjectProperty ;\n    rdfs:range {rng[0]} ;\n'
           f'    rdfs:label "{esc(next((c["속성명(국문)"] for c in tcols[ls[0]["child"]] if c["컬럼명(영문)"]==lead), lead))} 참조"@ko ;\n'
           f'    ksx:sourceAttribute "{lead}" ;\n    ksx:usedIn "{", ".join(used)}"{extra} .')
@@ -329,8 +348,9 @@ arcon:componentOf a owl:ObjectProperty , owl:TransitiveProperty ;
     w("")
     w("### 값 속성 → 데이터속성")
     for p, d in dprops.items():
+        cp = f' ;\n    ksx:copyOf "{", ".join(sorted(d["copy"]))}"' if d.get("copy") else ""
         w(f'ksx:{p} a owl:DatatypeProperty ; rdfs:range {d["range"]} ;\n'
-          f'    rdfs:label "{esc(d["label"])}"@ko ; ksx:sourceAttribute "{d["attr"]}" ; ksx:usedIn "{", ".join(sorted(d["used"]))}" .')
+          f'    rdfs:label "{esc(d["label"])}"@ko ; ksx:sourceAttribute "{d["attr"]}" ; ksx:usedIn "{", ".join(sorted(d["used"]))}"{cp} .')
     # 이벤트 시각 상위속성
     for p in ("operationStartTime", "operationEndTime", "eventDateTime", "collectionDateTime"):
         if p in dprops:
@@ -374,7 +394,7 @@ arcon:componentOf a owl:ObjectProperty , owl:TransitiveProperty ;
                 props.append(f'[ sh:path ksx:{name} ; sh:datatype {XSD.get(typ, "xsd:string")} ; sh:maxCount 1 ;{mc} ]')
         for l in linkmap[t]:
             p = l["prop"] if l["prop"].startswith("arcon:") else "ksx:" + l["prop"]
-            if l["kind"] in ("다형 참조", "표준 외 대상", "하위 목록 참조"):
+            if l["kind"] in ("다형 참조", "표준 외 대상", "헤더 경유 참조"):
                 continue
             props.append(f'[ sh:path {p} ; sh:class {l["parent"]} ; sh:message "[KSX9101/관계] {",".join(l["fk"])} → {l["parent"]}" ]')
         S.append(f"{iri}Shape a sh:NodeShape ;\n    sh:targetClass {iri} ;\n    sh:property\n        "

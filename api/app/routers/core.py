@@ -47,8 +47,8 @@ def search(q: str = Query(min_length=1, max_length=100), s: Scoped = Depends(sco
         SELECT 'equipment', equipment_id, equipment_name, operation_id FROM ksx.equipment
          WHERE equipment_id ILIKE %(p)s OR equipment_name ILIKE %(p)s
         UNION ALL
-        SELECT 'order', sales_order_id, sales_order_id || ' · ' || customer_id, requested_delivery_date::text FROM ksx.sales_order
-         WHERE sales_order_id ILIKE %(p)s OR customer_id ILIKE %(p)s
+        SELECT 'order', sales_document_number, sales_document_number || coalesce(' · ' || customer_id, ''), sales_date::text FROM ksx.sales_order_header
+         WHERE sales_document_number ILIKE %(p)s OR customer_id ILIKE %(p)s
         UNION ALL
         SELECT 'item', item_id, item_name, item_uom_code FROM ksx.item_master
          WHERE item_id ILIKE %(p)s OR item_name ILIKE %(p)s
