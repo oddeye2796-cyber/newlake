@@ -127,12 +127,22 @@ END $$;
 
 -- ── 5) 데이터 옮기기 ───────────────────────────────────────────────────────
 -- 5-1) 예전 수주·구매발주 행에 문서번호·순번이 비어 있으면 예전 식별자로 채운다 (새 식별 키)
-UPDATE ksx.sales_order_line SET sales_document_number = coalesce(sales_document_number, sales_order_id),
-       sales_document_sequence = coalesce(sales_document_sequence, 1)
- WHERE sales_document_number IS NULL OR sales_document_sequence IS NULL;
-UPDATE ksx.purchase_order_line SET purchase_document_number = coalesce(purchase_document_number, purchase_order_id),
-       purchase_document_sequence = coalesce(purchase_document_sequence, 1)
- WHERE purchase_document_number IS NULL OR purchase_document_sequence IS NULL;
+-- 문서번호·순번이 빈 예전 행(라인 키 도입 전 적재분): 문서번호 = 예전 식별자, 순번 = 그 문서의 다음 빈 번호
+-- (같은 문서를 나중에 다시 넣은 행과 겹쳐도 지우지 않고 다음 순번으로 남긴다)
+WITH f AS (
+  SELECT t.ctid AS rid, coalesce(t.sales_document_number, t.sales_order_id) AS d,
+         row_number() OVER (PARTITION BY t.enterprise_id, coalesce(t.sales_document_number, t.sales_order_id) ORDER BY t.sales_order_id) AS rn,
+         (SELECT coalesce(max(x.sales_document_sequence), 0) FROM ksx.sales_order_line x WHERE x.enterprise_id = t.enterprise_id
+             AND x.sales_document_number = coalesce(t.sales_document_number, t.sales_order_id) AND x.sales_document_sequence IS NOT NULL) AS base
+    FROM ksx.sales_order_line t WHERE t.sales_document_number IS NULL OR t.sales_document_sequence IS NULL)
+UPDATE ksx.sales_order_line t SET sales_document_number = f.d, sales_document_sequence = f.base + f.rn FROM f WHERE t.ctid = f.rid;
+WITH f AS (
+  SELECT t.ctid AS rid, coalesce(t.purchase_document_number, t.purchase_order_id) AS d,
+         row_number() OVER (PARTITION BY t.enterprise_id, coalesce(t.purchase_document_number, t.purchase_order_id) ORDER BY t.purchase_order_id) AS rn,
+         (SELECT coalesce(max(x.purchase_document_sequence), 0) FROM ksx.purchase_order_line x WHERE x.enterprise_id = t.enterprise_id
+             AND x.purchase_document_number = coalesce(t.purchase_document_number, t.purchase_order_id) AND x.purchase_document_sequence IS NOT NULL) AS base
+    FROM ksx.purchase_order_line t WHERE t.purchase_document_number IS NULL OR t.purchase_document_sequence IS NULL)
+UPDATE ksx.purchase_order_line t SET purchase_document_number = f.d, purchase_document_sequence = f.base + f.rn FROM f WHERE t.ctid = f.rid;
 -- 5-2) 자재명세서라인 순번: 같은 자재명세서(식별자+버전) 안에서 자품목 순으로 1,2,3…
 UPDATE ksx.bom_line b SET bom_line_sequence = x.rn
   FROM (SELECT ctid AS id, row_number() OVER (PARTITION BY enterprise_id, bom_id, bom_revision_number
