@@ -185,6 +185,11 @@ class Seeder:
                              for k in names))
         return names, out
 
+    def pick(self, table: str, row: dict) -> dict:
+        """헤더·라인처럼 한 행 사전을 두 표로 나눌 때: 그 표에 있는 열만."""
+        cols = self.cols(table)
+        return {k: v for k, v in row.items() if k in cols}
+
     def ksx(self, table: str, plant: str | None, row: dict, src: str, at: dt.datetime | None = None) -> dict:
         """ksx 행 공통 열: 회사·사업장·공장, 시드 표시(creator_id), 원천 시스템, 적재 시각."""
         at = at or self.now
@@ -250,7 +255,8 @@ class Seeder:
             " WHERE c.table_schema = 'ksx' AND c.column_name = 'creator_id' AND NOT k.relispartition"
             "   AND k.relkind IN ('r', 'p') ORDER BY 1").fetchall()]
         masters = {"enterprise", "site", "plant", "department", "personnel", "operation", "equipment", "equipment_parameter",
-                   "item_master", "bom_header", "bom", "warehouse_location", "vendor_party_master", "customer_party_master"}
+                   "item_master", "bom_header", "bom_line", "bom", "warehouse_location_header", "warehouse_location",
+                   "vendor_party_master", "customer_party_master"}
         n = 0
         for t in tables:
             if t in masters:    # 기준 정보는 지우지 않는다 (다른 적재가 참조할 수 있다). 다시 넣을 때 그대로 둔다.
@@ -301,7 +307,7 @@ class Seeder:
         self.insert("ksx.equipment_parameter", [k("ksx.equipment_parameter", p, {
             "parameter_id": pid, "parameter_name": nm, "parameter_uom_code": u, "equipment_id": e, "lsl": lsl, "usl": usl})
             for pid, nm, u, e, p, *_rest, lsl, usl in PARAMS if pid != "TEMP01"])
-        self.insert("ksx.warehouse_location", [k("ksx.warehouse_location", p, {
+        self.insert("ksx.warehouse_location_header", [k("ksx.warehouse_location_header", p, {
             "warehouse_id": w, "warehouse_name": nm, "warehouse_type": ty, "use_indicator": True}) for w, nm, ty, p in WAREHOUSES])
         self.insert("ksx.vendor_party_master", [k("ksx.vendor_party_master", "P1", {
             "vendor_id": v, "vendor_name": nm, "country_id": "KR", "use_indicator": True,
@@ -330,15 +336,16 @@ class Seeder:
         heads, lines = [], []
         for fg, (nm, p, *_r) in FG.items():
             bom_id = f"BOM-{fg}"
-            heads.append(k("ksx.bom_header", p, {"bom_id": bom_id, "bom_revision_number": 1}))
-            for rm, (rnm, rp, uom, *_x, use) in RM.items():
-                if fg in use:
-                    lines.append(k("ksx.bom", p, {
-                        "bom_id": bom_id, "bom_revision_number": 1, "bom_type": "PRODUCTION", "item_id": fg, "bom_quantity": 1,
-                        "item_uom_code": "EA", "child_item_id": rm, "child_item_uom_code": uom,
-                        "actual_requirement_quantity": use[fg], "valid_start_date_time": T0, "back_flushed_indicator": True}))
+            heads.append(k("ksx.bom_header", p, {"bom_id": bom_id, "bom_revision_number": 1, "bom_type": "PRODUCTION",
+                                                 "item_id": fg, "bom_quantity": 1, "item_uom_code": "EA"}))
+            for n, rm in enumerate([rm for rm, v in RM.items() if fg in v[6]], 1):
+                uom, use = RM[rm][2], RM[rm][6]
+                lines.append(k("ksx.bom_line", p, {
+                    "bom_id": bom_id, "bom_revision_number": 1, "bom_line_sequence": n, "child_item_id": rm,
+                    "child_item_uom_code": uom, "actual_requirement_quantity": use[fg], "valid_start_date_time": T0,
+                    "back_flushed_indicator": True}))
         self.insert("ksx.bom_header", heads)
-        self.insert("ksx.bom", lines)
+        self.insert("ksx.bom_line", lines)
 
     # ── 수주·생산 ────────────────────────────────────────────────────────────
     def production(self):
@@ -366,12 +373,12 @@ class Seeder:
                     n_order[sd] += 1
                     seq = n_order[sd]
                     tag = sd.strftime("%y%m%d")
-                    so_id, sd_no = f"SO-{tag}-{seq:02d}", f"SD-{tag}-{seq:02d}"
+                    sd_no = f"SD-{tag}-{seq:02d}"         # 수주문서번호 (화면에서 주문 번호)
                     qty = int(round(rnd.randint(qlo, qhi), -2))
                     tight = rnd.random() < 0.25
                     due = sd + dt.timedelta(days=rnd.randint(3, 5) if tight else rnd.randint(8, 16))
                     cust = rnd.choice(custs)
-                    so = {"sales_order_id": so_id, "sales_document_number": sd_no, "sales_document_sequence": 1,
+                    so = {"sales_document_number": sd_no, "sales_document_sequence": 1,
                           "sales_order_type": "NORMAL", "customer_id": cust, "sales_date": sd, "requested_delivery_date": due,
                           "sales_status": "CONFIRMED", "item_id": fg, "item_name": nm, "item_quantity": qty, "item_uom_code": "EA",
                           "export_indicator": False}
@@ -410,7 +417,7 @@ class Seeder:
                             setup = dt.timedelta(minutes=rnd.randint(10, 45))
                             who = rnd.choice([p for p in PEOPLE if p[3] == plant and p[2].startswith("D-PRD")])[0]
                             starts.append(self.ksx("ksx.operation_start", plant, {
-                                "lot_id": lot_id, "operation_id": op, "equipment_id": eq, "operation_start_time": st,
+                                "operation_start_id": f"OS-{lot_id}-{op[3:]}", "lot_id": lot_id, "operation_id": op, "equipment_id": eq, "operation_start_time": st,
                                 "personnel_id": who}, "MES-A" if plant == "P1" else "MES-B", st))
                             if en > self.now:          # 지금 진행 중
                                 cur_op, state = op, "START"
@@ -424,7 +431,7 @@ class Seeder:
                                     rate = wrate * rnd.uniform(0.9, 1.15)
                             dq = int(round(qty_now * rate))
                             ends.append(self.ksx("ksx.operation_end", plant, {
-                                "lot_id": lot_id, "operation_id": op, "equipment_id": eq, "operation_end_time": en,
+                                "operation_end_id": f"OE-{lot_id}-{op[3:]}", "lot_id": lot_id, "operation_id": op, "equipment_id": eq, "operation_end_time": en,
                                 "produced_quantity": qty_now, "defect_quantity": dq, "personnel_id": who},
                                 "MES-A" if plant == "P1" else "MES-B", en))
                             pp_id = f"PP-{lot_id}-{op.replace('OP-', '')}"
@@ -485,7 +492,7 @@ class Seeder:
                             "defect_quantity": lot_def or (0 if state == "CLOSING" else None),
                             "lot_started_date_time": started, "personnel_id": rnd.choice([p[0] for p in PEOPLE if p[3] == plant])},
                             "MES-A" if plant == "P1" else "MES-B", wo_start))
-                        self.lot_info[lot_id] = (plant, fg, wo, due, lq_in, lot_def, so_id, cust)
+                        self.lot_info[lot_id] = (plant, fg, wo, due, lq_in, lot_def, sd_no, cust)
                     # 출하: 로트가 끝난 다음 날(가끔 이틀 뒤) 출하. 수주 수량만큼만.
                     remain = qty
                     for i, (tdone, lot_id, good) in enumerate(sorted(done_times)):
@@ -503,7 +510,9 @@ class Seeder:
                         self.released_fg[(fg, ship_day)] += q
                     status = "SHIPPED" if remain <= 0 else ("PART_SHIPPED" if remain < qty else "CONFIRMED")
                     so["sales_status"] = status
-        self.copy("ksx.sales_order", [self.ksx("ksx.sales_order", p, so, "ERP-S", t) for p, so, t in orders])
+        # 수주 헤더(문서: 고객·수주일·상태) + 라인(품목·수량·납기). 같은 행 사전에서 각 표에 있는 열만 들어간다.
+        self.copy("ksx.sales_order_header", [self.ksx("ksx.sales_order_header", p, self.pick("ksx.sales_order_header", so), "ERP-S", t) for p, so, t in orders])
+        self.copy("ksx.sales_order_line", [self.ksx("ksx.sales_order_line", p, self.pick("ksx.sales_order_line", so), "ERP-S", t) for p, so, t in orders])
         self.copy("ksx.production_order", wos)
         self.copy("ksx.lot", lots)
         self.copy("ksx.operation_start", starts)
@@ -537,13 +546,13 @@ class Seeder:
                 v = round(v, 2 if abs(base) < 100 else 1)
                 code = "OVER_USL" if v > usl else ("UNDER_LSL" if v < lsl else "NORMAL")
                 rows.append({"enterprise_id": ENT, "site_id": SITE, "plant_id": plant, "creator_id": MARK,
-                             "equipment_id": eq, "parameter_id": pid, "event_date_time": t, "parameter_uom_code": uom,
+                             "trace_parameter_id": f"TP-{pid}-{t:%y%m%d%H%M}", "equipment_id": eq, "parameter_id": pid, "event_date_time": t, "parameter_uom_code": uom,
                              "parameter_value": v, "validation_result_code": code, "lake_source_system": f"EAP-{eq[-2:]}",
                              "lake_loaded_at": (t + dt.timedelta(seconds=40)).replace(tzinfo=KST)})
                 if code != "NORMAL" and (not alarms or alarms[-1]["equipment_id"] != eq
                                          or t - alarms[-1]["event_date_time"] > dt.timedelta(hours=1)):
                     alarms.append(self.ksx("ksx.alarm", plant, {
-                        "equipment_id": eq, "alarm_state": "ALARM", "error_code": f"{pid}-{code}",
+                        "alarm_id": f"AL-{eq[3:]}-{t:%y%m%d%H%M}-{pid}", "equipment_id": eq, "alarm_state": "ALARM", "error_code": f"{pid}-{code}",
                         "error_message": f"{nm} {v}{uom} — 규격({lsl}~{usl}) 이탈", "event_date_time": t,
                         "current_location": eq}, f"EAP-{eq[-2:]}", t))
         # 일상 알람(가벼운 경고·점검)
@@ -556,7 +565,7 @@ class Seeder:
                 kind = rnd.choice([("WARNING", "DOOR-OPEN", "도어 열림 감지"), ("WARNING", "VAC-LOW", "진공 압력 낮음"),
                                    ("MAINTENANCE", "PM-DUE", "예방보전 주기 도래"), ("WARNING", "TOOL-LIFE", "공구 수명 90% 도달")])
                 alarms.append(self.ksx("ksx.alarm", e[3], {
-                    "equipment_id": e[0], "alarm_state": kind[0], "error_code": kind[1], "error_message": kind[2],
+                    "alarm_id": f"AL-{e[0][3:]}-{t:%y%m%d%H%M}-{kind[1]}", "equipment_id": e[0], "alarm_state": kind[0], "error_code": kind[1], "error_message": kind[2],
                     "event_date_time": t, "current_location": e[0]}, "MES-A" if e[3] == "P1" else "MES-B", t))
         self.copy("ksx.trace_parameter", rows)
         seen = set()
@@ -573,12 +582,12 @@ class Seeder:
                 st = "ENG"
             ls = last.get(e)
             states.append(self.ksx("ksx.equipment_state", plant, {
-                "equipment_id": e, "equipment_state": st, "equipment_control_mode": "REMOTE", "equipment_operation_mode": "AUTO",
+                "equipment_state_id": e, "equipment_id": e, "equipment_state": st, "equipment_control_mode": "REMOTE", "equipment_operation_mode": "AUTO",
                 "processed_lot_quantity": rnd.randint(40, 200), "last_processed_lot_id": ls[1] if ls else None,
                 "last_processed_operation_id": ls[2] if ls else None,
                 "error_code": "EQ24-T3-OVER_USL" if e == "EQ-24" else None,
                 "error_message": "존3 온도 이탈 후 엔지니어 점검 중" if e == "EQ-24" else None}, "MES-A" if plant == "P1" else "MES-B"))
-        self.insert("ksx.equipment_state", states, "(enterprise_id, equipment_id) DO NOTHING")
+        self.insert("ksx.equipment_state", states, "(enterprise_id, equipment_state_id) DO NOTHING")
 
     # ── 구매·입고·재고 ──────────────────────────────────────────────────────
     def purchasing(self):
@@ -606,7 +615,7 @@ class Seeder:
                     qty = round(safety * rnd.uniform(0.5, 1.1), -1 if safety < 1000 else -2) or 10
                     exp = d + dt.timedelta(days=rnd.randint(3, 7))
                     who = "E3001" if plant == "P1" else "E3002"
-                    line = {"purchase_order_id": f"{doc}-{seq}", "purchase_document_number": doc, "purchase_document_sequence": seq,
+                    line = {"purchase_document_number": doc, "purchase_document_sequence": seq,
                             "vendor_id": ven, "currency_code": "KRW", "purchase_order_date": d, "purchase_approval_date": d,
                             "purchase_order_type_code": "NB", "personnel_id": who, "item_purchase_type": "RM", "item_id": rm,
                             "item_name": nm, "item_uom_code": uom, "purchase_order_uom_code": uom, "purchase_order_quantity": qty,
@@ -671,7 +680,7 @@ class Seeder:
              "last_error": "인증서 만료 (qms.acme.example)", "created_by": "u-han", "enterprise_id": ENT}],
             "(source_system_id) DO NOTHING")
         defs = [  # 데이터셋, 원천, 제목, 표준 표, 파일 이름 틀
-            ("raw.scm-p.purchase_order_export", "SCM-P", "SCM 발주 내보내기", "purchase_order", "SCM_발주_{d}.xlsx"),
+            ("raw.scm-p.purchase_order_export", "SCM-P", "SCM 발주 내보내기", "purchase_order_line", "SCM_발주_{d}.xlsx"),
             ("raw.mes-a.production_result", "MES-A", "1공장 MES 생산실적 일보", "production_performance", "MES1_생산실적_{d}.xlsx"),
             ("raw.mes-b.production_result", "MES-B", "2공장 MES 생산실적 일보", "production_performance", "MES2_생산실적_{d}.csv"),
         ]
@@ -687,7 +696,7 @@ class Seeder:
         for ds, src, title, std, _f in defs:
             cmap = scm_cols if src == "SCM-P" else mes_cols
             self.insert("catalog.dataset", [{
-                "dataset_id": ds, "title_ko": title, "zone_id": "RAW", "represents_class_iri": KSX + ("PurchaseOrder" if std == "purchase_order" else "ProductionPerformance"),
+                "dataset_id": ds, "title_ko": title, "zone_id": "RAW", "represents_class_iri": KSX + ("PurchaseOrderLine" if std == "purchase_order_line" else "ProductionPerformance"),
                 "source_system_id": src, "location_uri": f"upload://{src}/{ds.split('.')[-1]}/", "format": "xlsx" if "xlsx" in _f else "csv",
                 "ingest_mode": "file", "schedule_cron": "0 7 * * *", "owner_user_id": "u-han", "steward_user_id": "u-choi",
                 "tags": ["console", "daily"], "sensitivity": "INTERNAL", "enterprise_id": ENT,
@@ -704,11 +713,11 @@ class Seeder:
                 "from_dataset_id": ds, "to_dataset_id": f"std.{std}", "pipeline_id": "p-console-std",
                 "field_map": Jsonb({v: [k] for k, v in cmap.items()}), "enterprise_id": ENT}]
                 + ([{"from_dataset_id": ds, "to_dataset_id": "std.production_performance_quality", "pipeline_id": "p-console-std",
-                     "field_map": Jsonb({"defect_type_quantity": ["불량수량"]}), "enterprise_id": ENT}] if std != "purchase_order" else []),
+                     "field_map": Jsonb({"defect_type_quantity": ["불량수량"]}), "enterprise_id": ENT}] if std != "purchase_order_line" else []),
                 "(from_dataset_id, to_dataset_id, pipeline_id) DO NOTHING")
             self.insert("catalog.mapping", [{
                 "mapping_id": f"console/{ds}@v1", "source_dataset_id": ds, "target_class_iri": KSX + (
-                    "PurchaseOrder" if std == "purchase_order" else "ProductionPerformance"), "kind": "SQL", "version_no": 1,
+                    "PurchaseOrderLine" if std == "purchase_order_line" else "ProductionPerformance"), "kind": "SQL", "version_no": 1,
                 "artifact_uri": f"db://catalog.mapping/{ds}", "status": "APPROVED", "approved_by": "u-choi",
                 "approved_at": self.at(self.day(self.days + 2), 10).replace(tzinfo=KST), "f1_score": 0.97}], "(mapping_id) DO NOTHING")
 
@@ -727,7 +736,7 @@ class Seeder:
             jobs = []
             po = self.po_by_day.get((d, "P1"), []) + self.po_by_day.get((d, "P2"), [])
             if po:
-                jobs.append(("raw.scm-p.purchase_order_export", "SCM-P", "purchase_order", "SCM_발주_{d}.xlsx", [
+                jobs.append(("raw.scm-p.purchase_order_export", "SCM-P", "purchase_order_line", "SCM_발주_{d}.xlsx", [
                     {"발주번호": l["purchase_document_number"], "순번": l["purchase_document_sequence"],
                      "발주일자": l["purchase_order_date"].isoformat(), "공급사코드": l["vendor_id"], "품목코드": l["item_id"],
                      "품목명": l["item_name"], "단위": l["item_uom_code"], "발주수량": l["purchase_order_quantity"],
@@ -735,7 +744,7 @@ class Seeder:
                      "납기요청일": l["expected_delivery_date"].isoformat() if l["expected_delivery_date"] else "",
                      "통화": "KRW", "담당자": l["personnel_id"], "납품장소": "1공장 자재창고" if l["purchase_document_number"][8] == "1" else "2공장 자재창고",
                      "검수담당": rnd.choice(["송지아", "배준호", "문채원"])} for l in po],
-                    [("ksx.purchase_order", l["purchase_order_id"]) for l in po]))
+                    [("ksx.purchase_order_line", (l["purchase_document_number"], l["purchase_document_sequence"])) for l in po]))
             for plant, ds, src, fn in (("P1", "raw.mes-a.production_result", "MES-A", "MES1_생산실적_{d}.xlsx"),
                                        ("P2", "raw.mes-b.production_result", "MES-B", "MES2_생산실적_{d}.csv")):
                 rows = perf_by.get((d, plant), [])
@@ -759,7 +768,7 @@ class Seeder:
                 if src == "SCM-P" and rnd.random() < 0.12 and len(payload) > 1:
                     payload.append(dict(payload[0], **{"순번": len(payload) + 1, "품목코드": "", "발주수량": 0, "금액": 0}))
                     rej = 1
-                    err = f'{{"record_seq": {len(payload)}, "error": "품목코드가 비었습니다 (ksx.purchase_order.item_id 참조 무결성)"}}'
+                    err = f'{{"record_seq": {len(payload)}, "error": "품목코드가 비었습니다 (ksx.purchase_order_line.item_id 참조 무결성)"}}'
                 run_up, run_std = uid("run-up", b), uid("run-std", b)
                 data = json.dumps(payload, ensure_ascii=False).encode()
                 runs += [{"run_id": run_up, "pipeline_id": "p-console-upload", "started_at": t_in.replace(tzinfo=KST),
@@ -791,12 +800,20 @@ class Seeder:
         self.copy("raw.landing_file", files)
         self.copy("raw.landing_record", records)
         # 표준 행: 생산실적은 이미 들어가 있으니 배치만 잇고, 발주는 여기서 넣는다
+        # 발주 헤더(문서: 공급사·발주일·담당) + 라인(품목·수량·단가·납기). 같은 행 사전에서 각 표에 있는 열만 들어간다.
+        po_rows = []
         for plant, d, line in self.po_lines:
-            b = link.get(("ksx.purchase_order", line["purchase_order_id"]))
-            line["_b"] = b
-        self.copy("ksx.purchase_order", [self.ksx("ksx.purchase_order", plant, {k: v for k, v in line.items() if k != "_b"} | (
-            {"lake_batch_id": line["_b"][0], "lake_loaded_at": line["_b"][1].replace(tzinfo=KST)} if line["_b"] else {}),
-            "SCM-P", self.at(d, 16)) for plant, d, line in self.po_lines])
+            b = link.get(("ksx.purchase_order_line", (line["purchase_document_number"], line["purchase_document_sequence"])))
+            po_rows.append((plant, d, line | ({"lake_batch_id": b[0], "lake_loaded_at": b[1].replace(tzinfo=KST)} if b else {})))
+        heads = {}
+        for plant, d, row in po_rows:
+            heads.setdefault(row["purchase_document_number"], (plant, d, row))
+        self.copy("ksx.purchase_order_header", [self.ksx("ksx.purchase_order_header", plant, self.pick("ksx.purchase_order_header", row),
+                                                         "SCM-P", self.at(d, 16))
+                                                for plant, d, row in heads.values()])
+        self.copy("ksx.purchase_order_line", [self.ksx("ksx.purchase_order_line", plant, self.pick("ksx.purchase_order_line", row),
+                                                       "SCM-P", self.at(d, 16))
+                                              for plant, d, row in po_rows])
         pp = [(b, t.replace(tzinfo=KST), key[1]) for key, (b, t) in link.items() if key[0] == "ksx.production_performance"]
         if pp and "lake_batch_id" in self.cols("ksx.production_performance"):
             with c.cursor() as cur:
@@ -820,7 +837,7 @@ class Seeder:
             "라인속도": ("lineSpeedRatio", "라인 속도 비율", "xsd:decimal", 0.58, "REJECTED", "설비 파라미터(trace_parameter)로 받는 게 맞음"),
             "외관검사자": ("visualInspectorName", "외관 검사자", "xsd:string", 0.61, "PROPOSED", "사람 이름 — 개인정보 표시 필요"),
         }
-        target = {"SCM-P": KSX + "PurchaseOrder", "MES-A": KSX + "ProductionPerformance", "MES-B": KSX + "ProductionPerformance"}
+        target = {"SCM-P": KSX + "PurchaseOrderLine", "MES-A": KSX + "ProductionPerformance", "MES-B": KSX + "ProductionPerformance"}
         rows = []
         for (ds, col), b in first.items():
             name, label, rng, conf, status, why = plan[col]
@@ -882,9 +899,10 @@ class Seeder:
     def quality(self):
         rnd = self.rnd
         rules = [
-            ("q-po-due-date", "발주 납기요청일 누락", "완전성", KSX + "PurchaseOrder", "std.purchase_order", "Warning", 99.0,
-             "SELECT purchase_order_id AS focus_node, 'expected_delivery_date' AS result_path, '납기요청일이 비었습니다' AS message"
-             " FROM ksx.purchase_order WHERE expected_delivery_date IS NULL"),
+            ("q-po-due-date", "발주 납기요청일 누락", "완전성", KSX + "PurchaseOrderLine", "std.purchase_order_line", "Warning", 99.0,
+             "SELECT purchase_document_number || '-' || purchase_document_sequence AS focus_node,"
+             " 'expected_delivery_date' AS result_path, '납기요청일이 비었습니다' AS message"
+             " FROM ksx.purchase_order_line WHERE expected_delivery_date IS NULL"),
             ("q-perf-defect-le-produced", "생산실적 불량수량 ≤ 생산수량", "일관성", KSX + "ProductionPerformance", "std.production_performance",
              "Violation", 100.0,
              "SELECT production_performance_id AS focus_node, 'defect_quantity' AS result_path,"
@@ -906,12 +924,14 @@ class Seeder:
         ]
         self.insert("catalog.quality_rule", [dict(zip(["rule_id", "label_ko", "dimension", "target_class_iri", "target_dataset_id",
                                                        "severity", "threshold", "sql_check"], r)) | {"enabled": True} for r in rules],
-                    "(rule_id) DO NOTHING")
+                    "(rule_id) DO UPDATE SET target_class_iri = EXCLUDED.target_class_iri,"
+                    " target_dataset_id = EXCLUDED.target_dataset_id, sql_check = EXCLUDED.sql_check")
         # 몇 군데 일부러 흠: 납기 비운 발주 3건, 불량>생산 1건, 보류 로트 하나엔 사유
         c = self.c
-        c.execute("UPDATE ksx.purchase_order SET expected_delivery_date = NULL WHERE purchase_order_id IN"
-                  " (SELECT purchase_order_id FROM ksx.purchase_order WHERE creator_id = %s ORDER BY purchase_order_date DESC"
-                  "  OFFSET 4 LIMIT 3)", (MARK,))
+        c.execute("UPDATE ksx.purchase_order_line SET expected_delivery_date = NULL"
+                  " WHERE (purchase_document_number, purchase_document_sequence) IN"
+                  " (SELECT purchase_document_number, purchase_document_sequence FROM ksx.purchase_order_line WHERE creator_id = %s"
+                  "  ORDER BY purchase_document_number DESC, purchase_document_sequence OFFSET 4 LIMIT 3)", (MARK,))
         c.execute("UPDATE ksx.production_performance SET defect_quantity = produced_quantity + 12 WHERE production_performance_id ="
                   " (SELECT production_performance_id FROM ksx.production_performance WHERE creator_id = %s AND plant_id = 'P2'"
                   "  ORDER BY production_performance_date DESC OFFSET 7 LIMIT 1)", (MARK,))
