@@ -46,6 +46,16 @@ jobs:
           LAKE_DATABASE_URL: postgresql://svc_app:svc_app_dev@localhost:5432/lake
           LAKE_AGENT_DATABASE_URL: postgresql://svc_agent:svc_agent_dev@localhost:5432/lake
         run: pytest -q
+      - name: 한 달치 시연 데이터 (두 번 돌려 다시 만들어지는지)
+        env:
+          PGDATABASE: lake
+        run: |
+          python3 tools/seed_demo_month.py
+          python3 tools/seed_demo_month.py
+          psql -d lake -v ON_ERROR_STOP=1 -tAc "select count(*) from ksx.lot where creator_id = 'demo-seed'" | grep -qv '^0$'
+          psql -d lake -v ON_ERROR_STOP=1 -c "select count(*) as risks from mart.v_otd_risk_candidate" \
+            -c "select round(100.0 * count(*) filter (where on_time) / nullif(count(on_time), 0), 1) as otd_pct from mart.v_kpi_otd" \
+            -c "select count(*) as batches from raw.ingest_batch where scenario_id = 'demo-seed'"
 
   web:
     runs-on: ubuntu-24.04

@@ -40,6 +40,15 @@ ADMIN_GETS = ["/api/admin/overview", "/api/admin/datasets", "/api/admin/ontology
               "/api/admin/ontology/extensions", "/api/admin/ontology/proposals?status=PROPOSED", "/api/admin/ontology/proposals?status=ALL",
               "/api/admin/extension-attributes?table=purchase_order&limit=20"]
 
+def thin(path, res):
+    """설비 측정값은 7일치 2점에 1점, 30일치 8점에 1점만 남긴다 (규격 이탈 점은 모두). 시연 시드의 15분 간격 측정값이 파일을 키우지 않게."""
+    step = {"days=7": 2, "days=30": 8}.get(path.rsplit("?", 1)[-1])
+    if path.startswith("/api/equipment/") and step and res[0] == 200:
+        tr = res[1]["trace"]
+        res[1]["trace"] = [r for i, r in enumerate(tr) if i % step == 0 or r.get("validation_result_code") not in (None, "NORMAL")]
+    return res
+
+
 out = {"get": {}, "query": {}}
 for u in USERS:
     paths = list(GETS) + ADMIN_GETS
@@ -47,6 +56,14 @@ for u in USERS:
     for q in ["LOT-", "EQ-", "SO-", "ITM-", "C-"]:
         paths.append("/api/search?q=" + Q(q))
         hits += req(u, "/api/search?q=" + Q(q))[1]["results"]
+    # 첫 화면·KPI 에서 눌러 들어가는 로트·설비 (시연 시드의 로트는 LT… 라 위 검색에 안 잡힌다)
+    home = req(u, "/api/home")[1]
+    for r in home.get("spec_outs", []):
+        hits.append({"kind": "equipment", "id": r["equipment_id"]})
+        if r.get("lot_id"):
+            hits.append({"kind": "lot", "id": r["lot_id"]})
+    for r in req(u, "/api/kpi/risks")[1]:
+        hits.append({"kind": "lot", "id": r["lot_id"]})
     for h in hits:
         paths.append("/api/search?q=" + Q(h["id"]))
         if h["kind"] == "lot":
@@ -59,7 +76,7 @@ for u in USERS:
         paths += ["/api/admin/datasets/" + Q(d["dataset_id"]) for d in req(u, "/api/admin/datasets")[1]]
         paths += ["/api/admin/ontology/classes/" + Q(c["local_name"]) for c in req(u, "/api/admin/ontology/classes")[1]]
     for p in dict.fromkeys(paths):
-        out["get"][f"{u}|{p}"] = req(u, p)
+        out["get"][f"{u}|{p}"] = thin(p, req(u, p))
     for sql in presets:
         out["query"][f"{u}|{sql}"] = req(u, "/api/agent/query", {"sql": sql})
 

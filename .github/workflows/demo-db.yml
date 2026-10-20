@@ -42,6 +42,13 @@ jobs:
         run: psql -d "$DEMO_DB" -v ON_ERROR_STOP=1 -q -v app_pw="$SVC_PW" -v agent_pw="$SVC_PW" -f db/seed/demo_roles.sql
       - name: 시연 시드
         run: psql -d "$DEMO_DB" -v ON_ERROR_STOP=1 -q -1 -f db/seed/dev_seed.sql
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 한 달치 시연 데이터 (오늘 기준으로 다시 만든다)
+        run: |
+          pip install -q "psycopg[binary]==3.2.13"
+          PGDATABASE="$DEMO_DB" python3 tools/seed_demo_month.py
       - name: 확인
         run: |
           psql -d "$DEMO_DB" -v ON_ERROR_STOP=1 -c "select count(*) as rls_gaps from gov.rls_gaps()" \
