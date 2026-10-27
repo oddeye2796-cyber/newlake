@@ -95,7 +95,7 @@ export function LotPage({ id }: { id: string }) {
       <h3 className="sub">{t('조치 이력')}</h3>
       {data.actions.length === 0 ? <p className="muted small">{t('이 로트에 대한 조치 요청이 없어요.')}</p> :
         <div className="tlist">{data.actions.map((a) => { const [et, c] = execPill(a.status); return (
-          <div className="row" key={a.execution_id}><span><b>{t(a.action_label)}</b> <span className="small muted">{t('요청 {who}', { who: a.requested_by ?? '—' })}{a.approved_by ? ` · ${t('결정 {who}', { who: a.approved_by })}` : ''} · {fmtTs(a.created_at)}</span></span><Pill cls={c}>{et}</Pill></div>); })}
+          <div className="row" key={a.execution_id}><span><b>{tl(a.action_label)}</b> <span className="small muted">{t('요청 {who}', { who: a.requested_by ?? '—' })}{a.approved_by ? ` · ${t('결정 {who}', { who: a.approved_by })}` : ''} · {fmtTs(a.created_at)}</span></span><Pill cls={c}>{et}</Pill></div>); })}
           {pending && <p className="small muted">{rich(t('승인 대기 중인 요청은 {link}에서 처리해요.'), { link: <Link to="/inbox">{t('요청함')}</Link> })}</p>}</div>}
       <div className="acts" style={{ marginTop: 16 }}>
         {sql && <Link className="btn" to={`/ask?q=${encodeURIComponent(sql)}`}>{t('계보를 질의로 보기')}</Link>}

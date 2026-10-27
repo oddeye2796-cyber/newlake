@@ -47,7 +47,7 @@ function Card({ r, onDone }: { r: InboxRow; onDone: (msg: string) => void }) {
     <div className="alert" style={{ ['--sc' as string]: r.status === 'PROPOSED' ? 'var(--warn)' : r.status === 'REJECTED' ? 'var(--line)' : 'var(--ok)' }}>
       <span className="sev" />
       <div>
-        <b>{t(r.action_label)} · {kind ? <Link to={`/find/${kind}/${target}`}>{target}</Link> : target}</b>
+        <b>{tl(r.action_label)} · {kind ? <Link to={`/find/${kind}/${target}`}>{target}</Link> : target}</b>
         <p>{t('요청 {who}', { who: r.requested_by ?? '—' })} · {fmtTs(r.created_at)}{d?.cause ? ` · ${t('이유: {cause}', { cause: tl(d.cause) })}` : ''}{d?.sales_order_id ? ` · ${t('주문 {id}', { id: d.sales_order_id })}` : ''}</p>
         <Stepper status={r.status} />
         {r.status === 'PROPOSED' && r.can_decide && <div className="yourtask"><TriangleAlert aria-hidden="true" />{t('내 할 일: 근거를 확인하고 승인하거나 반려해 주세요')}</div>}
