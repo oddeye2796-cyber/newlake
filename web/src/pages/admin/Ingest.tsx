@@ -5,6 +5,7 @@ import { del, get, post, postForm, put, type BatchDetail, type BatchRow, type Lo
 import { useAuth } from '../../auth';
 import { hasRole } from './Steward';
 import { Pill, State } from '../../components/ui';
+import { confirmDialog } from '../../components/Confirm';
 import { fmtTs, n0 } from '../../format';
 import { useApi } from '../../useApi';
 import { t, tk, tl } from '../../i18n';
@@ -275,12 +276,12 @@ function SourcesTab({ sources, reload, canWrite }: { sources: SourceRow[]; reloa
       host: s.host ?? '', port: s.port ? String(s.port) : '5432', database: s.database_name ?? '', username: s.username ?? '', owner_dept: s.owner_dept ?? '' });
   };
   const cancel = () => { setEditing(null); setF(blank); setErr(null); };
-  const remove = (s: SourceRow) => {
+  const remove = async (s: SourceRow) => {
     const purge = s.datasets > 0;
     const msg = purge
       ? t('원천 {id} 를 지울까요? 데이터셋 {n}개와 원천 존에 올린 데이터도 함께 지워져요. 표준 존에 이미 넣은 행은 남아요.', { id: s.source_system_id, n: s.datasets })
       : t('원천 {id} 를 지울까요?', { id: s.source_system_id });
-    if (!window.confirm(msg)) return;
+    if (!(await confirmDialog(msg))) return;
     setErr(null);
     del(`/api/admin/sources/${encodeURIComponent(s.source_system_id)}${purge ? '?purge=true' : ''}`)
       .then(() => { toast(t('원천 {id} 를 지웠어요.', { id: s.source_system_id })); if (editing === s.source_system_id) cancel(); reload(); })
@@ -342,16 +343,16 @@ function SourcesTab({ sources, reload, canWrite }: { sources: SourceRow[]; reloa
 function HistoryTab({ rows, open, reload }: { rows: BatchRow[]; open: (id: string) => void; reload: () => void }) {
   const { toast } = useAuth();
   const [err, setErr] = useState<string | null>(null);
-  const remove = (b: BatchRow) => {
+  const remove = async (b: BatchRow) => {
     const msg = b.std_table
       ? t('{name} 배치를 원천 존에서 지울까요? 표준 존({tbl})에 이미 넣은 행은 남아요.', { name: b.file_name ?? b.source_entity ?? b.batch_id, tbl: b.std_table })
       : t('{name} 배치({n}행)를 원천 존에서 지울까요?', { name: b.file_name ?? b.source_entity ?? b.batch_id, n: n0(b.record_count) });
-    if (!window.confirm(msg)) return;
+    if (!(await confirmDialog(msg))) return;
     setErr(null);
     del<{ records: number }>(`/api/admin/batches/${b.batch_id}`).then((r) => { toast(t('{n}행을 지웠어요.', { n: n0(r.records) })); reload(); }).catch((x: Error) => setErr(x.message));
   };
-  const rollback = (b: BatchRow) => {
-    if (!window.confirm(t('{name} 배치가 표준 존({tbl})에 넣은 행과 확장 값을 빼고 원천 존 상태로 되돌릴까요? 이 배치가 덮어쓴 행은 이전 값으로 돌아가고, 뒤 배치가 덮어쓴 행은 남아요.', { name: b.file_name ?? b.source_entity ?? b.batch_id, tbl: b.std_table ?? '' }))) return;
+  const rollback = async (b: BatchRow) => {
+    if (!(await confirmDialog(t('{name} 배치가 표준 존({tbl})에 넣은 행과 확장 값을 빼고 원천 존 상태로 되돌릴까요? 이 배치가 덮어쓴 행은 이전 값으로 돌아가고, 뒤 배치가 덮어쓴 행은 남아요.', { name: b.file_name ?? b.source_entity ?? b.batch_id, tbl: b.std_table ?? '' })))) return;
     setErr(null);
     post<RollbackResult>(`/api/admin/batches/${b.batch_id}/rollback`, {}).then((r) => { toast(r.restored_rows ? t('표준 존에서 {n}행을 빼고 {m}행을 이전 값으로 되돌렸어요.', { n: n0(r.rows), m: n0(r.restored_rows) }) : t('표준 존에서 {n}행을 뺐어요.', { n: n0(r.rows) })); reload(); }).catch((x: Error) => setErr(x.message));
   };

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { del, post, put, type AdminClassRow, type ExtClass, type ExtLink, type ExtProperty, type ExtProposal, type Extensions } from '../../api';
 import { useAuth } from '../../auth';
 import { Pill, State } from '../../components/ui';
+import { confirmDialog } from '../../components/Confirm';
 import { useApi } from '../../useApi';
 import { t, tl, tle } from '../../i18n';
 import { fmtTs } from '../../format';
@@ -150,7 +151,7 @@ export function ExtensionsTab({ classes }: { classes: AdminClassRow[] }) {
   const [mode, setMode] = useState<null | { kind: 'class'; c: ExtClass | null } | { kind: 'prop'; p: ExtProperty | null; domain?: string } | { kind: 'link' }>(null);
   const [err, setErr] = useState<string | null>(null);
   const reload = () => { setMode(null); ext.reload(); };
-  const remove = (what: string, url: string, label: string) => { if (!window.confirm(t('{what} {label} 을(를) 지울까요?', { what, label }))) return; setErr(null); del(url).then(() => { toast(t('지웠어요.')); ext.reload(); }).catch((x: Error) => setErr(x.message)); };
+  const remove = async (what: string, url: string, label: string) => { if (!(await confirmDialog(t('{what} {label} 을(를) 지울까요?', { what, label })))) return; setErr(null); del(url).then(() => { toast(t('지웠어요.')); ext.reload(); }).catch((x: Error) => setErr(x.message)); };
   if (!ext.data) return <State loading={ext.loading} error={ext.error} />;
   const d = ext.data;
   // 방금 만든 확장 클래스도 고를 수 있게 표준 목록에 합친다

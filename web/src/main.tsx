@@ -6,6 +6,9 @@ import { AuthProvider } from './auth';
 import { LangProvider } from './i18n/react';
 import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
 import './styles.css';
+import { installValidityMessages } from './validity';
+
+installValidityMessages();
 
 // 미리보기(GitHub Pages)는 정적 호스팅이라 새로고침해도 경로가 살도록 해시 라우팅을 쓴다
 const Router = import.meta.env.VITE_DEMO === '1' ? HashRouter : BrowserRouter;

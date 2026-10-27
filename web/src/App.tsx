@@ -8,6 +8,7 @@ import { USERS, useAuth } from './auth';
 import { lsGet, lsSet } from './storage';
 import { LANGS, t, tk, tl } from './i18n';
 import { useLang } from './i18n/react';
+import { ConfirmHost } from './components/Confirm';
 import Home from './pages/Home';
 import Ask from './pages/Ask';
 import Find from './pages/Find';
@@ -152,6 +153,7 @@ export default function App() {
       </main>
       </div>
       {toastMsg && <div className="toast" role="status">{toastMsg}</div>}
+      <ConfirmHost />
     </div>
   );
 }

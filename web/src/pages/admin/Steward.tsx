@@ -5,6 +5,7 @@ import { useState, type FormEvent } from 'react';
 import { del, post, put, type AdminDatasetDetail, type AdminField, type AdminMapping, type AdminPipeline, type AdminRisk, type Me, type OntoProperty, type Person, type QualityRule, type QualityRunResult, type QualityViolation } from '../../api';
 import { useAuth } from '../../auth';
 import { Pill } from '../../components/ui';
+import { confirmDialog } from '../../components/Confirm';
 import { useApi } from '../../useApi';
 import { t, tl } from '../../i18n';
 import { lastName, sensName, violStatus } from './common';
@@ -66,7 +67,7 @@ export function DatasetDeleteButton({ id, zone, onDone }: { id: string; zone: st
   const { toast } = useAuth();
   const { busy, err, run } = useBusy();
   if (zone !== 'RAW') return null;
-  const go = () => { if (!window.confirm(t('데이터셋 {id} 를 카탈로그에서 지울까요? 이 데이터셋의 계보·매핑 기록도 함께 지워져요. 적재 배치가 남아 있으면 거절돼요.', { id }))) return; run(del(`/api/admin/datasets/${encodeURIComponent(id)}`), () => { toast(t('데이터셋 {id} 를 지웠어요.', { id })); onDone(); }); };
+  const go = async () => { if (!(await confirmDialog(t('데이터셋 {id} 를 카탈로그에서 지울까요? 이 데이터셋의 계보·매핑 기록도 함께 지워져요. 적재 배치가 남아 있으면 거절돼요.', { id })))) return; run(del(`/api/admin/datasets/${encodeURIComponent(id)}`), () => { toast(t('데이터셋 {id} 를 지웠어요.', { id })); onDone(); }); };
   return <><button className="btn danger" type="button" disabled={busy || DEMO} onClick={go}><Trash2 aria-hidden="true" /> {t('삭제')}</button>{err && <div className="banner" role="alert">{err}</div>}</>;
 }
 
@@ -165,7 +166,7 @@ export function RuleRowButtons({ r, onEdit, onDone }: { r: QualityRule; onEdit: 
   const runNow = () => run(post<QualityRunResult>(`/api/admin/quality/rules/${encodeURIComponent(r.rule_id)}/run`, {}), (x) =>
     onDone(t('{id} 실행: 대상 {f}건, 위반 {v}건, 적합률 {rate}%', { id: r.rule_id, f: x.focus_count, v: x.violation_count, rate: x.conformance_rate == null ? '—' : Math.round(x.conformance_rate * 10) / 10 })
       + (x.new_violations == null ? '' : ` · ${t('새 위반 {n} · 이어짐 {k} · 자동 해결 {a}', { n: x.new_violations, k: x.carried_violations ?? 0, a: x.auto_resolved ?? 0 })}`)));
-  const remove = () => { if (!window.confirm(t('규칙 {id} 를 지울까요? 위반 기록이 있으면 거절돼요.', { id: r.rule_id }))) return; run(del(`/api/admin/quality/rules/${encodeURIComponent(r.rule_id)}`), () => onDone(t('규칙 {id} 를 지웠어요.', { id: r.rule_id }))); };
+  const remove = async () => { if (!(await confirmDialog(t('규칙 {id} 를 지울까요? 위반 기록이 있으면 거절돼요.', { id: r.rule_id })))) return; run(del(`/api/admin/quality/rules/${encodeURIComponent(r.rule_id)}`), () => onDone(t('규칙 {id} 를 지웠어요.', { id: r.rule_id }))); };
   return <td className="r" style={{ whiteSpace: 'nowrap' }} onClick={(e) => e.stopPropagation()}>
     {r.sql_check && <button className="btn icon" type="button" title={t('바로 실행')} aria-label={t('{id} 바로 실행', { id: r.rule_id })} disabled={busy || DEMO} onClick={runNow}><Play aria-hidden="true" /></button>}
     <button className="btn icon" type="button" title={t('수정')} aria-label={t('{id} 수정', { id: r.rule_id })} disabled={DEMO} onClick={onEdit}><Pencil aria-hidden="true" /></button>

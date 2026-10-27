@@ -5,6 +5,8 @@ import { useMemo, useState, type FormEvent } from 'react';
 import { del, post, put, type AccessPolicy, type ActionPolicy, type AdminClassRow, type AdminRole, type AdminUser, type CatalogDataset, type OntoAction, type RoleAssignment, type Scopes } from '../../api';
 import { useAuth } from '../../auth';
 import { Pill } from '../../components/ui';
+import { confirmDialog } from '../../components/Confirm';
+import { DateInput } from '../../components/DateInput';
 import { fmtTs } from '../../format';
 import { useApi } from '../../useApi';
 import { t, tl } from '../../i18n';
@@ -42,8 +44,8 @@ export function UsersTab({ canWrite }: { canWrite: boolean }) {
       .then(() => { toast(editing ? t('사용자 {id} 를 고쳤어요.', { id }) : t('사용자 {id} 를 등록했어요.', { id })); cancel(); users.reload(); })
       .catch((x: Error) => setErr(x.message)).finally(() => setBusy(false));
   };
-  const lock = (u: AdminUser, status: string) => {
-    if (!window.confirm(status === 'RETIRED' ? t('{id} 를 퇴직 처리할까요? 더는 들어올 수 없어요.', { id: u.user_id }) : t('{id} 를 잠글까요? 풀 때까지 들어올 수 없어요.', { id: u.user_id }))) return;
+  const lock = async (u: AdminUser, status: string) => {
+    if (!(await confirmDialog(status === 'RETIRED' ? t('{id} 를 퇴직 처리할까요? 더는 들어올 수 없어요.', { id: u.user_id }) : t('{id} 를 잠글까요? 풀 때까지 들어올 수 없어요.', { id: u.user_id })))) return;
     put(`/api/admin/users/${encodeURIComponent(u.user_id)}`, { display_name: u.display_name, email: u.email, personnel_id: u.personnel_id, status })
       .then(() => { toast(t('{id} 상태를 바꿨어요.', { id: u.user_id })); users.reload(); }).catch((x: Error) => setErr(x.message));
   };
@@ -100,8 +102,8 @@ export function RolesTab({ roles, assignments, reload }: { roles: AdminRole[]; a
       .catch((x: Error) => setErr(x.message)).finally(() => setBusy(false));
   };
   const edit = (a: RoleAssignment) => { setErr(null); setF({ user_id: a.user_id, role_id: a.role_id, site_id: a.site_id ?? '', plant_id: a.plant_id ?? '', valid_until: a.valid_until ?? '' }); };
-  const revoke = (a: RoleAssignment) => {
-    if (!window.confirm(t('{user} 의 {role} 역할({scope})을 뺄까요?', { user: a.user_id, role: tl(a.role_label), scope: a.site_id ? `${a.site_id}${a.plant_id ? '/' + a.plant_id : ''}` : t('전사') }))) return;
+  const revoke = async (a: RoleAssignment) => {
+    if (!(await confirmDialog(t('{user} 의 {role} 역할({scope})을 뺄까요?', { user: a.user_id, role: tl(a.role_label), scope: a.site_id ? `${a.site_id}${a.plant_id ? '/' + a.plant_id : ''}` : t('전사') })))) return;
     setErr(null);
     post('/api/admin/roles/revoke', { user_id: a.user_id, role_id: a.role_id, site_id: a.site_id, plant_id: a.plant_id })
       .then(() => { toast(t('역할을 뺐어요.')); reload(); }).catch((x: Error) => setErr(x.message));
@@ -127,7 +129,7 @@ export function RolesTab({ roles, assignments, reload }: { roles: AdminRole[]; a
             <datalist id="grant-sites">{(scopes.data?.sites ?? []).map((s) => <option key={s.site_id} value={s.site_id}>{tl(s.site_name) ?? ''}</option>)}</datalist></label>
           <label className="fld"><span>{t('공장 (비우면 사업장 전체)')}</span><input className="input mono" list="grant-plants" maxLength={50} disabled={!f.site_id.trim()} placeholder={t('사업장 전체')} value={f.plant_id} onChange={set('plant_id')} />
             <datalist id="grant-plants">{plants.map((p) => <option key={p.plant_id} value={p.plant_id}>{tl(p.plant_name) ?? ''}</option>)}</datalist></label>
-          <label className="fld"><span>{t('만료일 (선택)')}</span><input className="input" type="date" value={f.valid_until} onChange={set('valid_until')} /></label>
+          <label className="fld"><span>{t('만료일 (선택)')}</span><DateInput value={f.valid_until} onChange={set('valid_until')} /></label>
         </div>
         <label className="small" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 8 }}>
           <input type="checkbox" checked={createScope} onChange={(e) => setCreateScope(e.target.checked)} />
@@ -161,8 +163,8 @@ export function AccessPoliciesTab({ roles, canWrite }: { roles: AdminRole[]; can
     put(`/api/admin/access-policies/${encodeURIComponent(id)}`, { role_id: f.role_id, target_class_iri: f.target === 'class' ? f.target_class_iri || null : null, target_dataset_id: f.target === 'dataset' ? f.target_dataset_id || null : null, max_sensitivity: f.max_sensitivity, actions: f.actions, requires_approval: f.requires_approval })
       .then(() => { toast(t('정책 {id} 를 저장했어요.', { id })); cancel(); list.reload(); }).catch((x: Error) => setErr(x.message)).finally(() => setBusy(false));
   };
-  const remove = (p: AccessPolicy) => {
-    if (!window.confirm(t('정책 {id} 를 지울까요?', { id: p.policy_id }))) return;
+  const remove = async (p: AccessPolicy) => {
+    if (!(await confirmDialog(t('정책 {id} 를 지울까요?', { id: p.policy_id })))) return;
     del(`/api/admin/access-policies/${encodeURIComponent(p.policy_id)}`).then(() => { toast(t('정책 {id} 를 지웠어요.', { id: p.policy_id })); if (editing === p.policy_id) cancel(); list.reload(); }).catch((x: Error) => setErr(x.message));
   };
   return (
@@ -228,8 +230,8 @@ export function ActionPoliciesTab({ roles, canWrite }: { roles: AdminRole[]; can
     void save(id, { trigger_class_iri: f.trigger_class_iri, condition: cond, action_iri: f.action_iri, mode: f.mode, approver_role_id: f.mode === 'approval' ? f.approver_role_id || null : null, notify_role_ids: f.notify_role_ids, suppress_minutes: Number(f.suppress_minutes) || 0, enabled: f.enabled }, t('정책 {id} 를 저장했어요.', { id })).then(() => cancel());
   };
   const toggle = (p: ActionPolicy) => save(p.policy_id, { trigger_class_iri: p.trigger_class_iri, condition: p.condition, action_iri: p.action_iri, mode: p.mode, approver_role_id: p.approver_role_id, notify_role_ids: p.notify_role_ids, suppress_minutes: p.suppress_minutes, enabled: !p.enabled }, p.enabled ? t('정책 {id} 를 껐어요.', { id: p.policy_id }) : t('정책 {id} 를 켰어요.', { id: p.policy_id }));
-  const remove = (p: ActionPolicy) => {
-    if (!window.confirm(t('정책 {id} 를 지울까요?', { id: p.policy_id }))) return;
+  const remove = async (p: ActionPolicy) => {
+    if (!(await confirmDialog(t('정책 {id} 를 지울까요?', { id: p.policy_id })))) return;
     del(`/api/admin/action-policies/${encodeURIComponent(p.policy_id)}`).then(() => { toast(t('정책 {id} 를 지웠어요.', { id: p.policy_id })); if (editing === p.policy_id) cancel(); list.reload(); }).catch((x: Error) => setErr(x.message));
   };
   return (
@@ -289,8 +291,8 @@ export function MyAccessRequests({ requests, reload }: { requests: import('../..
       .then(() => { toast(t('접근 요청을 보냈어요. 데이터셋 담당자가 승인하면 알려 드려요.')); setF((x) => ({ ...x, dataset_id: '', purpose: '' })); reload(); })
       .catch((x: Error) => setErr(x.message)).finally(() => setBusy(false));
   };
-  const cancel = (r: { request_id: string; dataset_id: string }) => {
-    if (!window.confirm(t('{ds} 접근 요청을 취소할까요?', { ds: r.dataset_id }))) return;
+  const cancel = async (r: { request_id: string; dataset_id: string }) => {
+    if (!(await confirmDialog(t('{ds} 접근 요청을 취소할까요?', { ds: r.dataset_id })))) return;
     del(`/api/access-requests/${r.request_id}`).then(() => { toast(t('요청을 취소했어요.')); reload(); }).catch((x: Error) => setErr(x.message));
   };
   return (
@@ -310,8 +312,8 @@ export function MyAccessRequests({ requests, reload }: { requests: import('../..
           <label className="fld" style={{ gridColumn: '1 / -1' }}><span>{t('데이터셋')}</span><select className="input" required value={f.dataset_id} onChange={set('dataset_id')}>
             <option value="">{t('데이터셋을 고르세요')}</option>{(datasets.data ?? []).map((d) => <option key={d.dataset_id} value={d.dataset_id}>{tl(d.title_ko)} · {d.dataset_id} ({sensName(d.sensitivity) ?? d.sensitivity})</option>)}</select></label>
           <label className="fld" style={{ gridColumn: '1 / -1' }}><span>{t('목적')}</span><input className="input" required minLength={5} placeholder={t('예: 10월 수율 분석 보고서 작성')} value={f.purpose} onChange={set('purpose')} /></label>
-          <label className="fld"><span>{t('시작일')}</span><input className="input" type="date" required value={f.period_from} onChange={set('period_from')} /></label>
-          <label className="fld"><span>{t('종료일')}</span><input className="input" type="date" required value={f.period_to} onChange={set('period_to')} /></label>
+          <label className="fld"><span>{t('시작일')}</span><DateInput required value={f.period_from} onChange={set('period_from')} /></label>
+          <label className="fld"><span>{t('종료일')}</span><DateInput required value={f.period_to} onChange={set('period_to')} /></label>
           <div className="fld" style={{ gridColumn: '1 / -1' }}><span>{t('요청 행위')}</span><div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', paddingTop: 6 }}>
             {ACTIONS.map((a) => <label key={a} className="small" style={{ display: 'flex', gap: 4, alignItems: 'center', color: 'var(--ink)', fontWeight: 400 }}><input type="checkbox" checked={f.actions.includes(a)} onChange={() => toggleAct(a)} />{actLabel(a)}</label>)}</div></div>
         </div>
