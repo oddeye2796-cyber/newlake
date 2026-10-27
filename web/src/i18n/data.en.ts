@@ -998,5 +998,6 @@ const data: Record<string, string> = {
   "원본 대신 표준 존 trace_parameter 를 쓰세요": "Use the standard-zone trace_parameter instead of the raw data",
   "KSX9101-1_2025_온톨로지용v1.0 (최종본) 테이블정의서·공통코드 워크시트 + arcon_ext.ttl + lake_meta.ttl": "KSX9101-1_2025 ontology edition v1.0 (final): table definition and common-code worksheets + arcon_ext.ttl + lake_meta.ttl",
   "KSX9101-1_2025_온톨로지용v1.0_테이블정의서.xlsx + arcon_ext.ttl + lake_meta.ttl": "KSX9101-1_2025 ontology edition v1.0 table definition .xlsx + arcon_ext.ttl + lake_meta.ttl",
+  "문채원": "Mun Chaewon",
 };
 export default data;

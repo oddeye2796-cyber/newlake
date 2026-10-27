@@ -34,6 +34,12 @@ const G: [string, string, string][] = [
   ['내용', 'details', '内容'], ['설명', 'description', '説明'], ['종류', 'type', '種類'], ['유형', 'type', 'タイプ'], ['등급', 'grade', '等級'], ['레벨', 'level', 'レベル'],
   ['그룹', 'group', 'グループ'], ['조', 'shift', '班'], ['기', 'unit', '機'], ['호기', 'unit no.', '号機'], ['차', 'th', '回目'], ['회', 'times', '回'],
   ['원', 'KRW', 'ウォン'], ['개', 'pcs', '個'], ['대', 'units', '台'], ['장', 'sheets', '枚'], ['매', 'sheets', '枚'],
+  ['비가동', 'downtime', '非稼働'], ['가동시간', 'run time', '稼働時間'], ['유무', 'presence', '有無'], ['여부', 'flag', '要否'], ['설정', 'setting', '設定'],
+  ['교대조', 'shift', '交代班'], ['교대', 'shift', '交代'], ['파트', 'part', 'パート'], ['샘플', 'sample', 'サンプル'], ['사이클타임', 'cycle time', 'サイクルタイム'],
+  ['종합효율', 'overall efficiency', '総合効率'], ['효율', 'efficiency', '効率'], ['분당', 'per minute', '毎分'], ['분', 'min', '分'], ['생산량', 'output', '生産量'],
+  ['편차', 'deviation', '偏差'], ['순번', 'sequence no.', '順番'], ['순', 'net', '純'], ['수출', 'export', '輸出'], ['배정', 'assignment', '割当'], ['메모', 'memo', 'メモ'],
+  ['솔더볼', 'solder ball', 'ソルダーボール'], ['트레이', 'tray', 'トレー'], ['종료시간', 'end time', '終了時間'], ['시작시간', 'start time', '開始時間'],
+  ['투입유무', 'input presence', '投入有無'], ['비가동시간', 'downtime', '非稼働時間'],
 ];
 
 const BY_KO = new Map(G.map((g) => [g[0], g] as const));

@@ -998,5 +998,6 @@ const data: Record<string, string> = {
   "원본 대신 표준 존 trace_parameter 를 쓰세요": "原本ではなく標準ゾーンの trace_parameter を使ってください",
   "KSX9101-1_2025_온톨로지용v1.0 (최종본) 테이블정의서·공통코드 워크시트 + arcon_ext.ttl + lake_meta.ttl": "KSX9101-1_2025 オントロジー用 v1.0（最終版）テーブル定義書・共通コードワークシート + arcon_ext.ttl + lake_meta.ttl",
   "KSX9101-1_2025_온톨로지용v1.0_테이블정의서.xlsx + arcon_ext.ttl + lake_meta.ttl": "KSX9101-1_2025 オントロジー用 v1.0 テーブル定義書.xlsx + arcon_ext.ttl + lake_meta.ttl",
+  "문채원": "ムン・チェウォン",
 };
 export default data;
