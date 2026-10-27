@@ -7,7 +7,7 @@ import { LOT_STATE, KIND_KO, daysLeft, dLabel, defectLabel, execPill, fmtDate, f
 import { pushRecent } from '../recent';
 import { equipmentSpecOutSql, lotGenealogySql } from '../askPresets';
 import { useApi } from '../useApi';
-import { t } from '../i18n';
+import { t, tl } from '../i18n';
 
 /** '{이름}' 자리표시자를 노드로 바꿔 끼운다 (문장 안에 JSX 가 들어갈 때) */
 const rich = (s: string, m: Record<string, ReactNode>): ReactNode[] => s.split(/(\{\w+\})/).map((p, i) => (/^\{\w+\}$/.test(p) && p.slice(1, -1) in m ? <Fragment key={i}>{m[p.slice(1, -1)]}</Fragment> : p));
@@ -51,24 +51,24 @@ export function LotPage({ id }: { id: string }) {
   const sql = lotGenealogySql(id);
   const topRisk = data.risks[0];
   return (
-    <Shell kindLabel={t('로트')} id={id} name={str(l.lot_name)}
+    <Shell kindLabel={t('로트')} id={id} name={tl(str(l.lot_name))}
       pills={<>
         <Pill cls={held ? 'p-warn' : 'p-line'}>{held ? t('보류') : stateKo}</Pill>
         {topRisk && <Pill cls={riskPill(topRisk.risk_level)[1]}>{t('납기 위험 {lv}', { lv: riskPill(topRisk.risk_level)[0] })}</Pill>}
         {pending && <Pill cls="p-warn">{t('승인 대기')}</Pill>}
       </>}>
       <Facts rows={[
-        [t('품목'), l.item_id ? `${l.item_name ?? ''} (${l.item_id})` : null],
+        [t('품목'), l.item_id ? `${tl(String(l.item_name ?? ''))} (${l.item_id})` : null],
         [t('투입 수량'), created != null ? `${n0(created)} EA` : null],
         [t('생산 / 불량'), made != null || defect != null ? `${n0(made)} / ${n0(defect)}${rate != null ? ` (${t('불량률 {rate}%', { rate: rate.toFixed(2) })})` : ''}` : null],
-        [t('현재 공정'), l.current_operation_id ? `${l.current_operation_name ?? ''} (${l.current_operation_id})` : null],
+        [t('현재 공정'), l.current_operation_id ? `${tl(String(l.current_operation_name ?? ''))} (${l.current_operation_id})` : null],
         [t('상태'), stateKo],
         [t('시작'), l.lot_started_date_time ? fmtTs(String(l.lot_started_date_time)) : null],
       ]} />
       {data.spec_outs.length > 0 && <>
         <h3 className="sub">{t('기준을 벗어난 설비 측정값')}</h3>
         <div className="tablewrap"><table><thead><tr><th>{t('설비')}</th><th>{t('항목')}</th><th>{t('시각')}</th><th className="r">{t('측정값')}</th><th className="r">{t('기준')}</th></tr></thead>
-          <tbody>{data.spec_outs.map((s, i) => <tr key={i}><td className="mono">{s.equipment_id}</td><td>{s.parameter_name}</td><td className="num">{fmtTs(s.event_date_time)}</td><td className="r num down">{s.parameter_value}</td><td className="r num">{s.lsl}~{s.usl}</td></tr>)}</tbody></table></div>
+          <tbody>{data.spec_outs.map((s, i) => <tr key={i}><td className="mono">{s.equipment_id}</td><td>{tl(s.parameter_name)}</td><td className="num">{fmtTs(s.event_date_time)}</td><td className="r num down">{s.parameter_value}</td><td className="r num">{s.lsl}~{s.usl}</td></tr>)}</tbody></table></div>
       </>}
       {data.defects.length > 0 && <>
         <h3 className="sub">{t('불량 유형')}</h3>
@@ -76,7 +76,7 @@ export function LotPage({ id }: { id: string }) {
       </>}
       {data.risks.length > 0 && <>
         <h3 className="sub">{t('납기 위험')}</h3>
-        {data.risks.map((r) => <div key={r.event_id} style={{ marginBottom: 6 }}><Pill cls={riskPill(r.risk_level)[1]}>{riskPill(r.risk_level)[0]}</Pill> <span className="small">{r.detail.cause} · {t('{ts} 감지', { ts: fmtTs(r.detected_at) })}</span></div>)}
+        {data.risks.map((r) => <div key={r.event_id} style={{ marginBottom: 6 }}><Pill cls={riskPill(r.risk_level)[1]}>{riskPill(r.risk_level)[0]}</Pill> <span className="small">{tl(r.detail.cause)} · {t('{ts} 감지', { ts: fmtTs(r.detected_at) })}</span></div>)}
       </>}
       <Links groups={[
         [t('모로트'), data.ancestors.map((a) => <Chip key={a.lot_id} kind="lot" id={a.lot_id} />)],
@@ -90,7 +90,7 @@ export function LotPage({ id }: { id: string }) {
       {data.orders.length > 0 && <>
         <h3 className="sub">{t('연결된 주문')}</h3>
         <div className="tablewrap"><table><thead><tr><th>{t('주문')}</th><th>{t('고객')}</th><th className="r">{t('수량')}</th><th>{t('납기')}</th></tr></thead>
-          <tbody>{data.orders.map((o) => { const d = daysLeft(o.requested_delivery_date); return <tr key={o.sales_order_id}><td className="mono"><Link to={`/find/order/${o.sales_order_id}`}>{o.sales_order_id}</Link></td><td>{o.customer_name ?? o.customer_id}</td><td className="r num">{n0(o.item_quantity)}</td><td className="num">{fmtDate(o.requested_delivery_date)} <span className="muted">{dLabel(d)}</span></td></tr>; })}</tbody></table></div>
+          <tbody>{data.orders.map((o) => { const d = daysLeft(o.requested_delivery_date); return <tr key={o.sales_order_id}><td className="mono"><Link to={`/find/order/${o.sales_order_id}`}>{o.sales_order_id}</Link></td><td>{tl(o.customer_name) ?? o.customer_id}</td><td className="r num">{n0(o.item_quantity)}</td><td className="num">{fmtDate(o.requested_delivery_date)} <span className="muted">{dLabel(d)}</span></td></tr>; })}</tbody></table></div>
       </>}
       <h3 className="sub">{t('조치 이력')}</h3>
       {data.actions.length === 0 ? <p className="muted small">{t('이 로트에 대한 조치 요청이 없어요.')}</p> :
@@ -122,11 +122,11 @@ export function EquipmentPage({ id }: { id: string }) {
   const outs = data.trace.filter((t) => t.validation_result_code !== 'NORMAL');
   const sql = equipmentSpecOutSql(id);
   return (
-    <Shell kindLabel={t('설비')} id={id} name={str(e.equipment_name)}
+    <Shell kindLabel={t('설비')} id={id} name={tl(str(e.equipment_name))}
       pills={<Pill cls={outs.length ? 'p-crit' : 'p-ok'}>{outs.length ? t('기준 초과 이력') : t('정상')}</Pill>}>
       <Facts rows={[
-        [t('공정'), e.operation_id ? `${e.operation_name ?? ''} (${e.operation_id})` : null],
-        [t('감시 항목'), data.parameters.length ? data.parameters.map((p) => t('{name} (기준 {lsl}~{usl}{uom})', { name: p.parameter_name, lsl: p.lsl ?? '—', usl: p.usl ?? '—', uom: p.parameter_uom_code ?? '' })).join(', ') : null],
+        [t('공정'), e.operation_id ? `${tl(String(e.operation_name ?? ''))} (${e.operation_id})` : null],
+        [t('감시 항목'), data.parameters.length ? data.parameters.map((p) => t('{name} (기준 {lsl}~{usl}{uom})', { name: tl(p.parameter_name), lsl: p.lsl ?? '—', usl: p.usl ?? '—', uom: p.parameter_uom_code ?? '' })).join(', ') : null],
         [t('최근 초과'), outs.length ? outs.map((o) => `${fmtTs(o.event_date_time).slice(5)} ${o.parameter_value}`).join(', ') : t('최근 {days}일 없음', { days })],
         [t('가동률'), myUtil[0] ? `${pct(myUtil[0].time_util_pct)} (${fmtDate(myUtil[0].perf_date)})` : null],
       ]} />
@@ -137,7 +137,7 @@ export function EquipmentPage({ id }: { id: string }) {
       {data.parameters.length === 0 && <p className="muted small">{t('등록된 감시 항목이 없어요.')}</p>}
       {data.parameters.map((p) => (
         <div key={p.parameter_id}>
-          <h3 className="sub">{t('{name} 추이 · 최근 {days}일', { name: p.parameter_name, days })}</h3>
+          <h3 className="sub">{t('{name} 추이 · 최근 {days}일', { name: tl(p.parameter_name), days })}</h3>
           <TraceChart pts={data.trace.filter((t) => t.parameter_id === p.parameter_id).map((t) => ({ t: t.event_date_time, v: t.parameter_value }))} lsl={p.lsl} usl={p.usl} unit={p.parameter_uom_code ?? ''} name={p.parameter_name} />
         </div>
       ))}
@@ -198,8 +198,8 @@ export function SimplePage({ kind, id }: { kind: Kind; id: string }) {
   if (!hit) return <div className="panel state err">{t('{kind} {id}을(를) 찾을 수 없거나 볼 수 있는 범위 밖이에요.', { kind: KIND_KO[kind] ?? kind, id })}</div>;
   const orders = (otd.data?.orders || []).filter((x) => (kind === 'customer' ? x.customer_id === id : kind === 'item' ? x.item_id === id : false));
   return (
-    <Shell kindLabel={KIND_KO[kind] ?? kind} id={id} name={hit.label}>
-      <Facts rows={[[t('이름'), hit.label], [kind === 'item' ? t('단위') : t('비고'), hit.sub]]} />
+    <Shell kindLabel={KIND_KO[kind] ?? kind} id={id} name={tl(hit.label)}>
+      <Facts rows={[[t('이름'), tl(hit.label)], [kind === 'item' ? t('단위') : t('비고'), tl(hit.sub)]]} />
       <Links groups={[[t('주문'), orders.map((x) => <Chip key={x.sales_order_id} kind="order" id={x.sales_order_id} />)]]} />
       <Source>{rich(t('MES·ERP 기준 정보 · 표준 분류 {cls}'), { cls: <span className="mono">{kind === 'item' ? 'ksx:ItemMaster' : 'ksx:CustomerPartyMaster'}</span> })}</Source>
     </Shell>

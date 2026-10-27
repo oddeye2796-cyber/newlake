@@ -7,7 +7,7 @@ import { useAuth } from '../../auth';
 import { Pill } from '../../components/ui';
 import { fmtTs } from '../../format';
 import { useApi } from '../../useApi';
-import { t } from '../../i18n';
+import { t, tl } from '../../i18n';
 import { lastName, sensName } from './common';
 
 const DEMO = import.meta.env.VITE_DEMO === '1';
@@ -53,7 +53,7 @@ export function UsersTab({ canWrite }: { canWrite: boolean }) {
         {users.error && <div className="banner" role="alert">{users.error}</div>}
         <div className="tablewrap"><table><thead><tr><th>{t('사용자')}</th><th>{t('역할')}</th><th>{t('상태')}</th>{canWrite && <th />}</tr></thead><tbody>
           {(users.data ?? []).map((u) => { const [st, stc] = userSt(u.status); return <tr key={u.user_id}>
-            <td>{u.display_name}<div className="mono muted small">{u.user_id}{u.email ? ` · ${u.email}` : ''}{u.personnel_id ? ` · ${u.personnel_id}` : ''}</div></td>
+            <td>{tl(u.display_name)}<div className="mono muted small">{u.user_id}{u.email ? ` · ${u.email}` : ''}{u.personnel_id ? ` · ${u.personnel_id}` : ''}</div></td>
             <td className="small">{u.roles.length ? u.roles.join(', ') : <span className="muted">{t('역할 없음')}</span>}</td>
             <td><Pill cls={stc}>{st}</Pill></td>
             {canWrite && <td className="r" style={{ whiteSpace: 'nowrap' }}>
@@ -101,7 +101,7 @@ export function RolesTab({ roles, assignments, reload }: { roles: AdminRole[]; a
   };
   const edit = (a: RoleAssignment) => { setErr(null); setF({ user_id: a.user_id, role_id: a.role_id, site_id: a.site_id ?? '', plant_id: a.plant_id ?? '', valid_until: a.valid_until ?? '' }); };
   const revoke = (a: RoleAssignment) => {
-    if (!window.confirm(t('{user} 의 {role} 역할({scope})을 뺄까요?', { user: a.user_id, role: a.role_label, scope: a.site_id ? `${a.site_id}${a.plant_id ? '/' + a.plant_id : ''}` : t('전사') }))) return;
+    if (!window.confirm(t('{user} 의 {role} 역할({scope})을 뺄까요?', { user: a.user_id, role: tl(a.role_label), scope: a.site_id ? `${a.site_id}${a.plant_id ? '/' + a.plant_id : ''}` : t('전사') }))) return;
     setErr(null);
     post('/api/admin/roles/revoke', { user_id: a.user_id, role_id: a.role_id, site_id: a.site_id, plant_id: a.plant_id })
       .then(() => { toast(t('역할을 뺐어요.')); reload(); }).catch((x: Error) => setErr(x.message));
@@ -111,7 +111,7 @@ export function RolesTab({ roles, assignments, reload }: { roles: AdminRole[]; a
       <section className="panel"><header><h2>{t('역할 배정')}</h2><span className="small muted">gov.role_assignment · {t('{n}건', { n: rows.length })}</span></header>
         <div className="tablewrap"><table><thead><tr><th>{t('사용자')}</th><th>{t('역할')}</th><th>{t('범위')}</th><th>{t('상태')}</th><th /></tr></thead><tbody>
           {rows.map((a, i) => (
-            <tr key={i}><td>{a.display_name}<div className="mono muted small">{a.user_id}</div></td><td>{a.role_label}<div className="mono muted small">{a.role_id}</div></td>
+            <tr key={i}><td>{tl(a.display_name)}<div className="mono muted small">{a.user_id}</div></td><td>{tl(a.role_label)}<div className="mono muted small">{a.role_id}</div></td>
               <td className="mono small">{a.site_id ?? t('전사')}{a.plant_id ? ` / ${a.plant_id}` : ''}</td>
               <td><Pill cls={a.status === 'ACTIVE' ? 'p-ok' : 'p-line'}>{a.status === 'ACTIVE' ? t('유효') : a.status}</Pill>{a.valid_until && <div className="small muted">~ {a.valid_until}</div>}</td>
               <RowBtns id={`${a.user_id} ${a.role_id}`} onEdit={() => edit(a)} onDel={() => revoke(a)} /></tr>))}
@@ -121,12 +121,12 @@ export function RolesTab({ roles, assignments, reload }: { roles: AdminRole[]; a
       <form className="panel" onSubmit={submit}><header><h2>{t('역할 주기')}</h2></header>
         <div className="formgrid">
           <label className="fld"><span>{t('사용자')}</span><input className="input mono" required list="grant-users" placeholder={t('사용자 ID 입력 (목록에서 골라도 돼요)')} value={f.user_id} onChange={set('user_id')} />
-            <datalist id="grant-users">{(users.data ?? []).map((u) => <option key={u.user_id} value={u.user_id}>{u.display_name}</option>)}</datalist></label>
-          <label className="fld"><span>{t('역할')}</span><select className="input" value={f.role_id} onChange={set('role_id')}>{roles.map((r) => <option key={r.role_id} value={r.role_id}>{r.label_ko} · {r.role_id}</option>)}</select></label>
+            <datalist id="grant-users">{(users.data ?? []).map((u) => <option key={u.user_id} value={u.user_id}>{tl(u.display_name)}</option>)}</datalist></label>
+          <label className="fld"><span>{t('역할')}</span><select className="input" value={f.role_id} onChange={set('role_id')}>{roles.map((r) => <option key={r.role_id} value={r.role_id}>{tl(r.label_ko)} · {r.role_id}</option>)}</select></label>
           <label className="fld"><span>{t('사업장 (비우면 전사)')}</span><input className="input mono" list="grant-sites" maxLength={50} placeholder={t('전사')} value={f.site_id} onChange={set('site_id')} />
-            <datalist id="grant-sites">{(scopes.data?.sites ?? []).map((s) => <option key={s.site_id} value={s.site_id}>{s.site_name ?? ''}</option>)}</datalist></label>
+            <datalist id="grant-sites">{(scopes.data?.sites ?? []).map((s) => <option key={s.site_id} value={s.site_id}>{tl(s.site_name) ?? ''}</option>)}</datalist></label>
           <label className="fld"><span>{t('공장 (비우면 사업장 전체)')}</span><input className="input mono" list="grant-plants" maxLength={50} disabled={!f.site_id.trim()} placeholder={t('사업장 전체')} value={f.plant_id} onChange={set('plant_id')} />
-            <datalist id="grant-plants">{plants.map((p) => <option key={p.plant_id} value={p.plant_id}>{p.plant_name ?? ''}</option>)}</datalist></label>
+            <datalist id="grant-plants">{plants.map((p) => <option key={p.plant_id} value={p.plant_id}>{tl(p.plant_name) ?? ''}</option>)}</datalist></label>
           <label className="fld"><span>{t('만료일 (선택)')}</span><input className="input" type="date" value={f.valid_until} onChange={set('valid_until')} /></label>
         </div>
         <label className="small" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 8 }}>
@@ -172,8 +172,8 @@ export function AccessPoliciesTab({ roles, canWrite }: { roles: AdminRole[]; can
         {list.error && <div className="banner" role="alert">{list.error}</div>}
         <div className="tablewrap"><table><thead><tr><th>{t('정책')}</th><th>{t('역할')}</th><th>{t('대상')}</th><th>{t('허용')}</th>{canWrite && <th />}</tr></thead><tbody>
           {(list.data ?? []).map((p) => <tr key={p.policy_id}>
-            <td className="mono small">{p.policy_id}</td><td>{p.role_label}</td>
-            <td className="small">{p.target_class_iri ? <>{p.class_label ?? lastName(p.target_class_iri)} <span className="mono muted">ksx:{lastName(p.target_class_iri)}</span></> : <>{p.dataset_title ?? p.target_dataset_id} <span className="mono muted">{p.target_dataset_id}</span></>}</td>
+            <td className="mono small">{p.policy_id}</td><td>{tl(p.role_label)}</td>
+            <td className="small">{p.target_class_iri ? <>{tl(p.class_label) ?? lastName(p.target_class_iri)} <span className="mono muted">ksx:{lastName(p.target_class_iri)}</span></> : <>{tl(p.dataset_title) ?? p.target_dataset_id} <span className="mono muted">{p.target_dataset_id}</span></>}</td>
             <td className="small">{p.actions.map(actLabel).join(', ')} · {t('{s}까지', { s: sensName(p.max_sensitivity) ?? p.max_sensitivity })}{p.requires_approval && <> <Pill cls="p-warn">{t('승인 필요')}</Pill></>}</td>
             {canWrite && <RowBtns id={p.policy_id} onEdit={() => edit(p)} onDel={() => remove(p)} />}
           </tr>)}
@@ -183,11 +183,11 @@ export function AccessPoliciesTab({ roles, canWrite }: { roles: AdminRole[]; can
       {canWrite && <form className="panel" onSubmit={submit}><header><h2>{editing ? t('정책 수정') : t('새 접근 정책')}</h2>{editing && <span className="small muted mono">{editing}</span>}</header>
         <div className="formgrid">
           <label className="fld"><span>{t('정책 ID')}</span><input className="input mono" required readOnly={!!editing} pattern="[A-Za-z0-9][A-Za-z0-9._\-]{1,99}" placeholder="analyst-lot-read" value={f.policy_id} onChange={set('policy_id')} /></label>
-          <label className="fld"><span>{t('역할')}</span><select className="input" value={f.role_id} onChange={set('role_id')}>{roles.map((r) => <option key={r.role_id} value={r.role_id}>{r.label_ko} · {r.role_id}</option>)}</select></label>
+          <label className="fld"><span>{t('역할')}</span><select className="input" value={f.role_id} onChange={set('role_id')}>{roles.map((r) => <option key={r.role_id} value={r.role_id}>{tl(r.label_ko)} · {r.role_id}</option>)}</select></label>
           <label className="fld"><span>{t('대상 종류')}</span><select className="input" value={f.target} onChange={set('target')}><option value="class">{t('온톨로지 클래스')}</option><option value="dataset">{t('데이터셋')}</option></select></label>
           {f.target === 'class'
-            ? <label className="fld"><span>{t('클래스')}</span><select className="input" required value={f.target_class_iri} onChange={set('target_class_iri')}><option value="">{t('클래스를 고르세요')}</option>{(classes.data ?? []).map((c) => <option key={c.class_iri} value={c.class_iri}>{c.label_ko} · {c.local_name}</option>)}</select></label>
-            : <label className="fld"><span>{t('데이터셋')}</span><select className="input" required value={f.target_dataset_id} onChange={set('target_dataset_id')}><option value="">{t('데이터셋을 고르세요')}</option>{(datasets.data ?? []).map((d) => <option key={d.dataset_id} value={d.dataset_id}>{d.title_ko} · {d.dataset_id}</option>)}</select></label>}
+            ? <label className="fld"><span>{t('클래스')}</span><select className="input" required value={f.target_class_iri} onChange={set('target_class_iri')}><option value="">{t('클래스를 고르세요')}</option>{(classes.data ?? []).map((c) => <option key={c.class_iri} value={c.class_iri}>{tl(c.label_ko)} · {c.local_name}</option>)}</select></label>
+            : <label className="fld"><span>{t('데이터셋')}</span><select className="input" required value={f.target_dataset_id} onChange={set('target_dataset_id')}><option value="">{t('데이터셋을 고르세요')}</option>{(datasets.data ?? []).map((d) => <option key={d.dataset_id} value={d.dataset_id}>{tl(d.title_ko)} · {d.dataset_id}</option>)}</select></label>}
           <label className="fld"><span>{t('민감도 상한')}</span><select className="input" value={f.max_sensitivity} onChange={set('max_sensitivity')}>{['PUBLIC', 'INTERNAL', 'CONFIDENTIAL', 'PERSONAL'].map((s) => <option key={s} value={s}>{sensName(s) ?? s}</option>)}</select></label>
           <div className="fld"><span>{t('허용 행위')}</span><div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', paddingTop: 6 }}>
             {ACTIONS.map((a) => <label key={a} className="small" style={{ display: 'flex', gap: 4, alignItems: 'center', color: 'var(--ink)', fontWeight: 400 }}><input type="checkbox" checked={f.actions.includes(a)} onChange={() => toggleAct(a)} />{actLabel(a)}</label>)}</div></div>
@@ -240,7 +240,7 @@ export function ActionPoliciesTab({ roles, canWrite }: { roles: AdminRole[]; can
         <div className="tablewrap"><table><thead><tr><th>{t('정책')}</th><th>{t('계기 → 조치')}</th><th>{t('방식')}</th><th>{t('상태')}</th>{canWrite && <th />}</tr></thead><tbody>
           {(list.data ?? []).map((p) => <tr key={p.policy_id}>
             <td className="mono small" style={{ whiteSpace: 'nowrap' }}>{p.policy_id}<div className="muted">{t('실행 {n}건', { n: p.executions })}</div></td>
-            <td className="small">{p.trigger_label ?? lastName(p.trigger_class_iri)} → <b>{p.action_label ?? lastName(p.action_iri)}</b>{Object.keys(p.condition).length > 0 && <div className="mono muted">{JSON.stringify(p.condition)}</div>}</td>
+            <td className="small">{tl(p.trigger_label) ?? lastName(p.trigger_class_iri)} → <b>{tl(p.action_label) ?? lastName(p.action_iri)}</b>{Object.keys(p.condition).length > 0 && <div className="mono muted">{JSON.stringify(p.condition)}</div>}</td>
             <td className="small">{modeName(p.mode)}{p.approver_role_id && <div className="muted">{t('승인자 {r}', { r: p.approver_role_id })}</div>}{p.notify_role_ids.length > 0 && <div className="muted">{t('알림 {r}', { r: p.notify_role_ids.join(', ') })}</div>}</td>
             <td style={{ whiteSpace: 'nowrap' }}><Pill cls={p.enabled ? 'p-ok' : 'p-line'}>{p.enabled ? t('켜짐') : t('꺼짐')}</Pill>{canWrite && <> <button className="btn" type="button" disabled={DEMO || busy} onClick={() => void toggle(p)}>{p.enabled ? t('끄기') : t('켜기')}</button></>}<div className="small muted">{t('{m}분 억제', { m: p.suppress_minutes })}</div></td>
             {canWrite && <td className="r" style={{ whiteSpace: 'nowrap' }}>
@@ -254,14 +254,14 @@ export function ActionPoliciesTab({ roles, canWrite }: { roles: AdminRole[]; can
       {canWrite && <form className="panel" onSubmit={submit}><header><h2>{editing ? t('정책 수정') : t('새 조치 정책')}</h2>{editing && <span className="small muted mono">{editing}</span>}</header>
         <div className="formgrid">
           <label className="fld"><span>{t('정책 ID')}</span><input className="input mono" required readOnly={!!editing} pattern="[A-Za-z0-9][A-Za-z0-9._\-]{1,99}" placeholder="spec-out-hold" value={f.policy_id} onChange={set('policy_id')} /></label>
-          <label className="fld"><span>{t('계기 클래스 (이벤트)')}</span><select className="input" required value={f.trigger_class_iri} onChange={set('trigger_class_iri')}><option value="">{t('클래스를 고르세요')}</option>{(classes.data ?? []).filter((c) => c.is_event || !c.is_standard).map((c) => <option key={c.class_iri} value={c.class_iri}>{c.label_ko} · {c.local_name}</option>)}</select></label>
-          <label className="fld"><span>{t('조치')}</span><select className="input" required value={f.action_iri} onChange={set('action_iri')}><option value="">{t('조치를 고르세요')}</option>{(actions.data ?? []).map((a) => <option key={a.action_iri} value={a.action_iri}>{a.label_ko}</option>)}</select></label>
+          <label className="fld"><span>{t('계기 클래스 (이벤트)')}</span><select className="input" required value={f.trigger_class_iri} onChange={set('trigger_class_iri')}><option value="">{t('클래스를 고르세요')}</option>{(classes.data ?? []).filter((c) => c.is_event || !c.is_standard).map((c) => <option key={c.class_iri} value={c.class_iri}>{tl(c.label_ko)} · {c.local_name}</option>)}</select></label>
+          <label className="fld"><span>{t('조치')}</span><select className="input" required value={f.action_iri} onChange={set('action_iri')}><option value="">{t('조치를 고르세요')}</option>{(actions.data ?? []).map((a) => <option key={a.action_iri} value={a.action_iri}>{tl(a.label_ko)}</option>)}</select></label>
           <label className="fld"><span>{t('방식')}</span><select className="input" value={f.mode} onChange={set('mode')}>{['approval', 'auto', 'notify'].map((m) => <option key={m} value={m}>{modeName(m)}</option>)}</select></label>
-          {f.mode === 'approval' && <label className="fld"><span>{t('승인자 역할')}</span><select className="input" value={f.approver_role_id} onChange={set('approver_role_id')}>{roles.map((r) => <option key={r.role_id} value={r.role_id}>{r.label_ko}</option>)}</select></label>}
+          {f.mode === 'approval' && <label className="fld"><span>{t('승인자 역할')}</span><select className="input" value={f.approver_role_id} onChange={set('approver_role_id')}>{roles.map((r) => <option key={r.role_id} value={r.role_id}>{tl(r.label_ko)}</option>)}</select></label>}
           <label className="fld"><span>{t('같은 대상 억제 시간 (분)')}</span><input className="input num" type="number" min={0} value={f.suppress_minutes} onChange={set('suppress_minutes')} /></label>
           <label className="fld" style={{ gridColumn: '1 / -1' }}><span>{t('조건 (JSON)')}</span><input className="input mono" value={f.condition} onChange={set('condition')} placeholder='{"risk_level": "HIGH"}' /></label>
           <div className="fld" style={{ gridColumn: '1 / -1' }}><span>{t('알림 역할')}</span><div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', paddingTop: 6 }}>
-            {roles.map((r) => <label key={r.role_id} className="small" style={{ display: 'flex', gap: 4, alignItems: 'center', color: 'var(--ink)', fontWeight: 400 }}><input type="checkbox" checked={f.notify_role_ids.includes(r.role_id)} onChange={() => toggleRole(r.role_id)} />{r.label_ko}</label>)}</div></div>
+            {roles.map((r) => <label key={r.role_id} className="small" style={{ display: 'flex', gap: 4, alignItems: 'center', color: 'var(--ink)', fontWeight: 400 }}><input type="checkbox" checked={f.notify_role_ids.includes(r.role_id)} onChange={() => toggleRole(r.role_id)} />{tl(r.label_ko)}</label>)}</div></div>
         </div>
         <label className="small" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 10 }}><input type="checkbox" checked={f.enabled} onChange={(e) => setF((x) => ({ ...x, enabled: e.target.checked }))} />{t('켜 두기')}</label>
         {err && <div className="banner" role="alert">{err}</div>}
@@ -298,8 +298,8 @@ export function MyAccessRequests({ requests, reload }: { requests: import('../..
       <section className="panel"><header><h2>{t('내 접근 요청')}</h2><span className="small muted">gov.access_request</span></header>
         <div className="tablewrap"><table><thead><tr><th>{t('데이터셋')}</th><th>{t('목적')}</th><th>{t('상태')}</th><th /></tr></thead><tbody>
           {requests.map((r) => { const [s, sc] = st(r.status); return <tr key={r.request_id}>
-            <td>{r.dataset_title ?? r.dataset_id}<div className="mono muted small">{r.dataset_id} · {r.requested_actions.map(actLabel).join(', ')} · {r.period_from} ~ {r.period_to}</div></td>
-            <td className="small">{r.purpose}{r.decision_note && <div className="muted">{t('결정 메모: {note}', { note: r.decision_note })}</div>}</td>
+            <td>{tl(r.dataset_title) ?? r.dataset_id}<div className="mono muted small">{r.dataset_id} · {r.requested_actions.map(actLabel).join(', ')} · {r.period_from} ~ {r.period_to}</div></td>
+            <td className="small">{tl(r.purpose)}{r.decision_note && <div className="muted">{t('결정 메모: {note}', { note: tl(r.decision_note) })}</div>}</td>
             <td><Pill cls={sc}>{s}</Pill><div className="small muted">{fmtTs(r.decided_at ?? r.created_at)}</div></td>
             <td className="r">{(r.status === 'REQUESTED' || r.status === 'APPROVED') && <button className="btn" type="button" disabled={DEMO} onClick={() => cancel(r)}>{t('취소')}</button>}</td></tr>; })}
           {requests.length === 0 && <tr><td colSpan={4} className="muted">{t('보낸 접근 요청이 없어요.')}</td></tr>}
@@ -308,7 +308,7 @@ export function MyAccessRequests({ requests, reload }: { requests: import('../..
       <form className="panel" onSubmit={submit}><header><h2>{t('접근 요청하기')}</h2></header>
         <div className="formgrid">
           <label className="fld" style={{ gridColumn: '1 / -1' }}><span>{t('데이터셋')}</span><select className="input" required value={f.dataset_id} onChange={set('dataset_id')}>
-            <option value="">{t('데이터셋을 고르세요')}</option>{(datasets.data ?? []).map((d) => <option key={d.dataset_id} value={d.dataset_id}>{d.title_ko} · {d.dataset_id} ({sensName(d.sensitivity) ?? d.sensitivity})</option>)}</select></label>
+            <option value="">{t('데이터셋을 고르세요')}</option>{(datasets.data ?? []).map((d) => <option key={d.dataset_id} value={d.dataset_id}>{tl(d.title_ko)} · {d.dataset_id} ({sensName(d.sensitivity) ?? d.sensitivity})</option>)}</select></label>
           <label className="fld" style={{ gridColumn: '1 / -1' }}><span>{t('목적')}</span><input className="input" required minLength={5} placeholder={t('예: 10월 수율 분석 보고서 작성')} value={f.purpose} onChange={set('purpose')} /></label>
           <label className="fld"><span>{t('시작일')}</span><input className="input" type="date" required value={f.period_from} onChange={set('period_from')} /></label>
           <label className="fld"><span>{t('종료일')}</span><input className="input" type="date" required value={f.period_to} onChange={set('period_to')} /></label>

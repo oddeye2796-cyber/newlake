@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { get, type Kind, type SearchHit } from '../api';
 import { KIND_KO, LOT_STATE } from '../format';
-import { t } from '../i18n';
+import { t, tl } from '../i18n';
 import { getRecent } from '../recent';
 import { EquipmentPage, LotPage, OrderPage, SimplePage } from './entities';
 
@@ -58,8 +58,8 @@ export default function Find() {
           {hits && shown.length === 0 && <p className="muted small">{t('찾는 항목이 없어요. 번호 일부만 넣어 보세요.')}</p>}
           {shown.map((x) => (
             <button key={x.kind + x.id} type="button" className="ritem" aria-current={x.kind === kind && x.id === id} onClick={() => nav(`/find/${x.kind}/${encodeURIComponent(x.id)}`)}>
-              <span><b>{x.id}</b><span className="small muted"> {KIND_KO[x.kind]}</span><br /><span className="small">{x.label}</span></span>
-              {x.sub && <span className="small muted">{(x.kind === 'lot' && LOT_STATE[x.sub]) || x.sub}</span>}
+              <span><b>{x.id}</b><span className="small muted"> {KIND_KO[x.kind]}</span><br /><span className="small">{tl(x.label)}</span></span>
+              {x.sub && <span className="small muted">{(x.kind === 'lot' && LOT_STATE[x.sub]) || tl(x.sub)}</span>}
             </button>
           ))}
         </section>

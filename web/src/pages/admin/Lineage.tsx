@@ -4,7 +4,7 @@ import type { AdminDatasetDetail, AdminOverview, LineageEdge } from '../../api';
 import { Pill, State, Tier } from '../../components/ui';
 import { fmtTs, n0 } from '../../format';
 import { useApi } from '../../useApi';
-import { t } from '../../i18n';
+import { t, tl } from '../../i18n';
 import { Head, ZONES, ZoneChip, lastName, runStatus, zoneColor, zoneName } from './common';
 
 interface Node { id: string; title: string; zone: string }
@@ -37,7 +37,7 @@ export default function Lineage() {
   const edges = useMemo(() => data?.edges ?? [], [data]);
   const nodes = useMemo(() => {
     const m = new Map<string, Node>();
-    edges.forEach((e) => { m.set(e.from_dataset_id, { id: e.from_dataset_id, title: e.from_title, zone: e.from_zone }); m.set(e.to_dataset_id, { id: e.to_dataset_id, title: e.to_title, zone: e.to_zone }); });
+    edges.forEach((e) => { m.set(e.from_dataset_id, { id: e.from_dataset_id, title: tl(e.from_title), zone: e.from_zone }); m.set(e.to_dataset_id, { id: e.to_dataset_id, title: tl(e.to_title), zone: e.to_zone }); });
     return m;
   }, [edges]);
   const want = sp.get('ds');
@@ -68,7 +68,7 @@ export default function Lineage() {
             {edges.map((e) => {
               const A = P.get(e.from_dataset_id)!, B = P.get(e.to_dataset_id)!, x1 = A.x + bw / 2, x2 = B.x - bw / 2, mx = (x1 + x2) / 2;
               const on = hi.has(e.from_dataset_id) && hi.has(e.to_dataset_id);
-              return <path key={e.edge_id} className={`ledge ${on ? 'hi' : ''}`} d={`M${x1} ${A.y} C${mx} ${A.y} ${mx} ${B.y} ${x2} ${B.y}`}><title>{e.pipeline_label ?? e.pipeline_id}</title></path>;
+              return <path key={e.edge_id} className={`ledge ${on ? 'hi' : ''}`} d={`M${x1} ${A.y} C${mx} ${A.y} ${mx} ${B.y} ${x2} ${B.y}`}><title>{tl(e.pipeline_label) ?? e.pipeline_id}</title></path>;
             })}
             {[...nodes.values()].map((n) => {
               const p = P.get(n.id)!;
@@ -88,11 +88,11 @@ export default function Lineage() {
                 const [st, stc] = runStatus(p?.last_status ?? '') || [p?.last_status ?? '—', 'p-line'];
                 return (
                   <dl key={e.pipeline_id} className="kv" style={{ marginBottom: 10 }}>
-                    <dt>{t('생성 작업')}</dt><dd>{e.pipeline_label ?? e.pipeline_id}</dd>
-                    <dt>{t('입력')}</dt><dd>{producing.filter((x) => x.pipeline_id === e.pipeline_id).map((x) => x.from_title).join(', ')}</dd>
+                    <dt>{t('생성 작업')}</dt><dd>{tl(e.pipeline_label) ?? e.pipeline_id}</dd>
+                    <dt>{t('입력')}</dt><dd>{producing.filter((x) => x.pipeline_id === e.pipeline_id).map((x) => tl(x.from_title)).join(', ')}</dd>
                     {p && <><dt>{t('엔진')}</dt><dd>{p.engine} · {p.schedule_cron ?? t('수동')}</dd><dt>{t('최근 실행')}</dt><dd><Pill cls={stc}>{st}</Pill> {fmtTs(p.last_ended_at ?? p.last_started_at)}</dd>
                       <dt>{t('처리량')}</dt><dd className="num">{t('입력 {a} · 출력 {b} · 거부 {c}', { a: n0(p.rows_in), b: n0(p.rows_out), c: n0(p.rows_rejected) })}</dd>
-                      {p.error_message && <><dt>{t('오류')}</dt><dd style={{ color: 'var(--crit)' }}>{p.error_message}</dd></>}</>}
+                      {p.error_message && <><dt>{t('오류')}</dt><dd style={{ color: 'var(--crit)' }}>{tl(p.error_message)}</dd></>}</>}
                   </dl>);
               })}
               <Link className="btn" to={`/admin/catalog/${encodeURIComponent(selNode.id)}`}>{t('카탈로그에서 열기')}</Link>

@@ -8,7 +8,7 @@ import { daysLeft, fmtTs, n0, pct, riskPill, KIND_KO } from '../format';
 import { getRecent } from '../recent';
 import { useApi } from '../useApi';
 import { SUGGESTED } from '../askPresets';
-import { t } from '../i18n';
+import { t, tl } from '../i18n';
 
 interface Task { key: string; sev: 'crit' | 'warn'; title: string; body: string; btns: ReactNode }
 
@@ -35,7 +35,7 @@ export default function Home() {
       out.push({
         key: r.event_id, sev: 'crit',
         title: t('주문 {id} 납기가 위험해요 (위험도 {lv})', { id: x.sales_order_id ?? '', lv }),
-        body: `${t('납기 {date}{left}인 주문에 들어갈 로트 {lot}에서 불량률 {rate}%가 나왔어요.', { date: x.requested_delivery_date ?? '—', left: left != null ? `(${left >= 0 ? t('{n}일 남음', { n: left }) : t('{n}일 지남', { n: -left })})` : '', lot: x.lot_id ?? '', rate: x.defect_rate_pct ?? '—' })} ${x.cause ?? ''}`,
+        body: `${t('납기 {date}{left}인 주문에 들어갈 로트 {lot}에서 불량률 {rate}%가 나왔어요.', { date: x.requested_delivery_date ?? '—', left: left != null ? `(${left >= 0 ? t('{n}일 남음', { n: left }) : t('{n}일 지남', { n: -left })})` : '', lot: x.lot_id ?? '', rate: x.defect_rate_pct ?? '—' })} ${tl(x.cause) ?? ''}`,
         btns: <>
           {x.lot_id && <Link className="btn primary" to={`/find/lot/${x.lot_id}`}>{t('로트 보기')}</Link>}
           {x.sales_order_id && <Link className="btn" to={`/find/order/${x.sales_order_id}`}>{t('주문 보기')}</Link>}
@@ -52,7 +52,7 @@ export default function Home() {
       const lots = [...new Set(g.map((s) => s.lot_id).filter(Boolean))].join(', ');
       out.push({
         key: `so-${top.equipment_id}-${top.parameter_id}`, sev: 'crit',
-        title: t('설비 {id}에서 기준 이탈이 있었어요 ({param})', { id: top.equipment_id ?? '', param: top.parameter_name }),
+        title: t('설비 {id}에서 기준 이탈이 있었어요 ({param})', { id: top.equipment_id ?? '', param: tl(top.parameter_name) }),
         body: `${t('{ts}부터 {n}회 기준({lsl}~{usl})을 벗어났고, 최대 {max}였어요.', { ts: fmtTs(first.event_date_time), n: g.length, lsl: top.lsl ?? '—', usl: top.usl ?? '—', max: top.parameter_value })}${lots ? ` ${t('그때 진행한 로트: {lots}', { lots })}` : ''}`,
         btns: <>{top.equipment_id && <Link className="btn" to={`/find/equipment/${top.equipment_id}`}>{t('설비 보기')}</Link>}</>,
       });
@@ -81,7 +81,7 @@ export default function Home() {
     <>
       <section className="hero" aria-label={t('오늘 요약')}>
         <span className="eyebrow"><Sparkles aria-hidden="true" />{me ? `${me.enterprise_id} · ${me.site_ids === '*' ? t('전사') : [me.site_ids, me.plant_ids].flat().join(' / ')}` : t('오늘의 공장')}</span>
-        <h1>{me ? t('{name} 님, 오늘 확인할 일이 {n}건 있어요', { name: me.display_name, n: tasks.length }) : t('오늘 확인할 일이 {n}건 있어요', { n: tasks.length })}</h1>
+        <h1>{me ? t('{name} 님, 오늘 확인할 일이 {n}건 있어요', { name: tl(me.display_name), n: tasks.length }) : t('오늘 확인할 일이 {n}건 있어요', { n: tasks.length })}</h1>
         <p>{t('규칙이 잡아낸 위험, 승인을 기다리는 요청, 기준을 벗어난 설비 값을 한곳에 모았어요. 항목을 열면 근거가 된 기록까지 따라가 볼 수 있어요.')}</p>
         <div className="hstats">
           <span className="hstat" style={{ ['--c' as string]: '#FB7185' }}><i />{t('위험')} <b>{nCrit}</b></span>
@@ -118,7 +118,7 @@ export default function Home() {
           {recent.length === 0 ? <p className="muted small">{t('아직 본 항목이 없어요. 찾아보기에서 로트나 설비를 열어 보세요.')}</p> :
             <div className="recent">{recent.map((r) => (
               <Link key={r.kind + r.id} className="rcard" to={`/find/${r.kind}/${r.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <span className="small muted">{KIND_KO[r.kind]}</span><b>{r.id}</b><span className="small">{r.label}</span>
+                <span className="small muted">{KIND_KO[r.kind]}</span><b>{r.id}</b><span className="small">{tl(r.label)}</span>
               </Link>))}</div>}
         </section>
       </div>

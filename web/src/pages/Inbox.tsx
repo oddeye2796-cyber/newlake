@@ -6,7 +6,7 @@ import { MyAccessRequests } from './admin/AccessManage';
 import { useAuth } from '../auth';
 import { Pill, State, Tier, TierLegend } from '../components/ui';
 import { execPill, fmtTs, iriId, iriKind, riskPill } from '../format';
-import { t } from '../i18n';
+import { t, tl } from '../i18n';
 import { useApi } from '../useApi';
 
 type Tab = 'approve' | 'mine' | 'all' | 'access';
@@ -48,7 +48,7 @@ function Card({ r, onDone }: { r: InboxRow; onDone: (msg: string) => void }) {
       <span className="sev" />
       <div>
         <b>{t(r.action_label)} · {kind ? <Link to={`/find/${kind}/${target}`}>{target}</Link> : target}</b>
-        <p>{t('요청 {who}', { who: r.requested_by ?? '—' })} · {fmtTs(r.created_at)}{d?.cause ? ` · ${t('이유: {cause}', { cause: d.cause })}` : ''}{d?.sales_order_id ? ` · ${t('주문 {id}', { id: d.sales_order_id })}` : ''}</p>
+        <p>{t('요청 {who}', { who: r.requested_by ?? '—' })} · {fmtTs(r.created_at)}{d?.cause ? ` · ${t('이유: {cause}', { cause: tl(d.cause) })}` : ''}{d?.sales_order_id ? ` · ${t('주문 {id}', { id: d.sales_order_id })}` : ''}</p>
         <Stepper status={r.status} />
         {r.status === 'PROPOSED' && r.can_decide && <div className="yourtask"><TriangleAlert aria-hidden="true" />{t('내 할 일: 근거를 확인하고 승인하거나 반려해 주세요')}</div>}
         <div className="meta"><Pill cls={stc}>{st}</Pill>{r.risk_level && <Pill cls={rlc}>{t('위험도 {lv}', { lv: rl })}</Pill>}
@@ -56,9 +56,9 @@ function Card({ r, onDone }: { r: InboxRow; onDone: (msg: string) => void }) {
           {r.approver_role_id && r.status === 'PROPOSED' && <Pill>{t('승인 권한: {role}', { role: r.approver_role_id })}</Pill>}</div>
         {facts.length === 0 && <p className="small muted">{t('기록된 근거 사실이 없어요.')}</p>}
         {facts.length > 0 && <details className="evd" open={r.status === 'PROPOSED'} style={{ marginTop: 8 }}><summary>{t('근거 {n}건 보기', { n: facts.length })}</summary>
-          <ul className="evlist">{facts.map((f, i) => <li key={i}><Tier t={f.tier} /> {f.text}</li>)}</ul>
+          <ul className="evlist">{facts.map((f, i) => <li key={i}><Tier t={f.tier} /> {tl(f.text)}</li>)}</ul>
         </details>}
-        {r.rationale?.decision_note && <p className="small">{t('결정 메모: {note}', { note: r.rationale.decision_note })}{r.rationale.decided_at ? ` (${fmtTs(r.rationale.decided_at)})` : ''}</p>}
+        {r.rationale?.decision_note && <p className="small">{t('결정 메모: {note}', { note: tl(r.rationale.decision_note) })}{r.rationale.decided_at ? ` (${fmtTs(r.rationale.decided_at)})` : ''}</p>}
         <details className="tech"><summary>{t('기술 정보')}</summary><p className="small mono">{t('{act} · 정책 {policy} · 실행 {id}', { act: r.action_iri.replace('https://ontology.impix.co.kr/', ''), policy: r.policy_id ?? '—', id: r.execution_id })}</p></details>
         {err && <div className="banner" role="alert">{err}</div>}
       </div>

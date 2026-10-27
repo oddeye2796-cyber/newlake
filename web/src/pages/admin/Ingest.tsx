@@ -7,7 +7,7 @@ import { hasRole } from './Steward';
 import { Pill, State } from '../../components/ui';
 import { fmtTs, n0 } from '../../format';
 import { useApi } from '../../useApi';
-import { t, tk } from '../../i18n';
+import { t, tk, tl } from '../../i18n';
 import { Head } from './common';
 
 const DEMO = import.meta.env.VITE_DEMO === '1';
@@ -56,7 +56,7 @@ function SourcePick({ sources, value, onChange, filter }: { sources: SourceRow[]
     <label className="fld"><span>{t('원천 시스템')}</span>
       <select className="input" value={value} onChange={(e) => onChange(e.target.value)}>
         <option value="">{t('원천을 고르세요')}</option>
-        {list.map((s) => <option key={s.source_system_id} value={s.source_system_id}>{s.source_system_id} · {s.label_ko}</option>)}
+        {list.map((s) => <option key={s.source_system_id} value={s.source_system_id}>{s.source_system_id} · {tl(s.label_ko)}</option>)}
       </select>
     </label>
   );
@@ -115,7 +115,7 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
         <label className="fld grow"><span>{t('넣을 표준 표')}</span>
           <select className="input" value={table} onChange={(e) => setTable(e.target.value)}>
             <option value="">{t('표를 고르세요')}</option>
-            {(targets.data ?? []).map((x) => <option key={x.table} value={x.table}>{x.label_ko ? `${x.label_ko} · ksx.${x.table}` : `ksx.${x.table}`}</option>)}
+            {(targets.data ?? []).map((x) => <option key={x.table} value={x.table}>{x.label_ko ? `${tl(x.label_ko)} · ksx.${x.table}` : `ksx.${x.table}`}</option>)}
           </select>
         </label>
         {hasScope && <>
@@ -124,7 +124,7 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
         </>}
       </div>
       {detail.suggested_table && <p className="note">{t('열 이름·한글 설명·값 모양을 보고 {table} 표에 {n}개 열을 자동으로 맞춰 두었어요. 신뢰도가 낮은 열만 확인하고 넣으면 돼요.', { table: `ksx.${detail.suggested_table}`, n: Object.keys(detail.suggested_map).length })}</p>}
-      {detail.candidates.length > 1 && <p className="small muted">{t('다른 후보')}: {detail.candidates.filter((x) => x.table !== table).map((x, i) => <span key={x.table}>{i > 0 && ', '}<button type="button" className="linkbtn" onClick={() => setTable(x.table)}>{x.label_ko ?? x.table}</button> <span className="muted">({t('{n}개 열', { n: x.mapped })})</span></span>)}</p>}
+      {detail.candidates.length > 1 && <p className="small muted">{t('다른 후보')}: {detail.candidates.filter((x) => x.table !== table).map((x, i) => <span key={x.table}>{i > 0 && ', '}<button type="button" className="linkbtn" onClick={() => setTable(x.table)}>{tl(x.label_ko) ?? x.table}</button> <span className="muted">({t('{n}개 열', { n: x.mapped })})</span></span>)}</p>}
       {auto.size > 0 && <p className="small muted">{t('자동으로 채우는 키: {cols} — 순번은 같은 문서 안에서 1, 2, 3… 으로 매기고, 식별자는 "문서번호-순번" 으로 만들어요.', { cols: [...auto].join(', ') })}</p>}
       {(detail.blank_keys?.rows ?? 0) > 0 && <p className="note">{t('키 열({cols}) 값이 비어 있는 행이 {d}행 있어요 (예: #{s}). 합계·소계 줄처럼 키가 없는 행은 넣을 때 거부돼요.', { cols: detail.blank_keys!.columns.join(', '), d: n0(detail.blank_keys!.rows), s: String(detail.blank_keys!.last ?? detail.blank_keys!.first ?? '') })}</p>}
       {detail.dup_keys > 0 && <p className="note">{t('앞 {n}행 가운데 {d}행이 같은 키를 가져서, 넣으면 뒤 행이 앞 행을 덮어써요. 키 열이 맞는지 확인해 주세요.', { n: n0(detail.sample_rows), d: n0(detail.dup_keys) })}</p>}
@@ -134,7 +134,7 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
           <tr key={c}><td className="mono">{c}</td><td className="small muted">{cell(detail.rows[0]?.[c])}</td>
             <td><select className="input" value={map[c] ?? ''} aria-label={t('{col} 의 표준 열', { col: c })} onChange={(e) => { const v = e.target.value; setMap((m) => ({ ...m, [c]: v })); setTouched((x) => new Set(x).add(c)); }}>
               <option value="">{extras ? t('— 확장 속성으로 보관 —') : t('— 넣지 않음 —')}</option>
-              {tgt.columns.map((tc) => <option key={tc.name} value={tc.name} disabled={used.has(tc.name) && map[c] !== tc.name}>{tc.name}{tc.label_ko ? ` · ${tc.label_ko}` : ''}{tc.pk ? (auto.has(tc.name) ? ` (${t('키·자동')})` : ` (${t('키')})`) : tc.required ? ' *' : ''}</option>)}
+              {tgt.columns.map((tc) => <option key={tc.name} value={tc.name} disabled={used.has(tc.name) && map[c] !== tc.name}>{tc.name}{tc.label_ko ? ` · ${tl(tc.label_ko)}` : ''}{tc.pk ? (auto.has(tc.name) ? ` (${t('키·자동')})` : ` (${t('키')})`) : tc.required ? ' *' : ''}</option>)}
             </select></td>
             <td className="r">{map[c] ? confPill(detail.confidence[c], touched.has(c) || detail.suggested_map[c] !== map[c]) : null}</td></tr>))}
       </tbody></table></div>}
@@ -164,7 +164,7 @@ function MapPanel({ batchId, rev, onDone }: { batchId: string; rev: number; onDo
         {res.extensions && res.extensions.rows > 0 && <p className="small">{t('확장 속성으로 보관: {cols}개 열 · {rows}개 값', { cols: n0(res.extensions.columns), rows: n0(res.extensions.rows) })}{res.extensions.matched ? ` · ${t('기존 확장 속성에 이음 {n}', { n: n0(res.extensions.matched) })}` : ''}
           {(res.proposals ?? 0) > 0 && <> · <Link to="/admin/ontology/_proposals">{t('온톨로지 확장 제안 {n}건 보기', { n: n0(res.proposals ?? 0) })}</Link></>}</p>}
         {res.quality && res.quality.length > 0 && <div className="small" style={{ marginTop: 6 }}><b>{t('자동 품질 검증')}</b><ul className="evlist" style={{ marginTop: 4 }}>{res.quality.map((q) => (
-          <li key={q.rule_id}><Pill cls={q.status === 'OK' ? 'p-ok' : q.status === 'VIOLATED' ? 'p-crit' : 'p-warn'}>{q.status === 'OK' ? t('적합') : q.status === 'VIOLATED' ? t('위반 {n}', { n: n0(q.violation_count ?? 0) }) : t('실패')}</Pill> {q.label_ko}
+          <li key={q.rule_id}><Pill cls={q.status === 'OK' ? 'p-ok' : q.status === 'VIOLATED' ? 'p-crit' : 'p-warn'}>{q.status === 'OK' ? t('적합') : q.status === 'VIOLATED' ? t('위반 {n}', { n: n0(q.violation_count ?? 0) }) : t('실패')}</Pill> {tl(q.label_ko)}
             {q.conformance_rate != null && <span className="muted num"> · {Math.round(Number(q.conformance_rate) * 10) / 10}%</span>}{q.error && <span className="muted"> · {q.error}</span>}</li>))}</ul>
           <Link to="/admin/quality">{t('품질 화면에서 위반 처리')}</Link></div>}
         {res.quality && res.quality.length === 0 && autoQ && <p className="small muted">{t('이 표에 걸린 검사식(SQL) 규칙이 없어 자동 검증은 건너뛰었어요. 품질 화면에서 규칙을 만들면 다음 적재부터 돌아요.')}</p>}
@@ -304,9 +304,9 @@ function SourcesTab({ sources, reload, canWrite }: { sources: SourceRow[]; reloa
           {sources.map((s) => {
             const [st, stc] = connSt(s.db_kind && s.db_kind !== 'FILE' ? s.status : null);
             return <tr key={s.source_system_id}>
-              <td>{s.label_ko}<div className="mono muted small">{s.source_system_id} · {s.system_type}</div></td>
+              <td>{tl(s.label_ko)}<div className="mono muted small">{s.source_system_id} · {s.system_type}</div></td>
               <td><Pill cls={stc}>{st}</Pill>{s.host && <div className="mono small muted" style={{ overflowWrap: 'anywhere' }}>{s.db_kind?.toLowerCase()}://{s.host}{s.port ? `:${s.port}` : ''}/{s.database_name}</div>}
-                {s.last_error && <div className="small" style={{ color: 'var(--crit)' }}>{s.last_error}</div>}</td>
+                {s.last_error && <div className="small" style={{ color: 'var(--crit)' }}>{tl(s.last_error)}</div>}</td>
               <td className="r num">{s.datasets}{s.last_ingested_at && <div className="small muted">{fmtTs(s.last_ingested_at)}</div>}</td>
               <td className="r" style={{ whiteSpace: 'nowrap' }}>{canWrite && <>
                 <button className="btn icon" type="button" title={t('수정')} aria-label={t('{id} 수정', { id: s.source_system_id })} disabled={DEMO} onClick={() => edit(s)}><Pencil aria-hidden="true" /></button>

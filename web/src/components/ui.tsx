@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { TIER, tierClass } from '../format';
-import { t } from '../i18n';
+import { t, tl } from '../i18n';
 
 export const Tier = ({ t }: { t: string }) => <span className={`tier t-${tierClass(t)}`} title={t}>{TIER[t] || t}</span>;
 export const Pill = ({ children, cls = 'p-line' }: { children: ReactNode; cls?: string }) => <span className={`pill ${cls}`}>{children}</span>;
@@ -38,4 +38,4 @@ export function DataTable({ cols, rows }: { cols: string[]; rows: Record<string,
       <tbody>{rows.map((r, i) => <tr key={i}>{cols.map((c) => <td key={c} className={typeof r[c] === 'number' ? 'num r' : ''}>{cell(r[c])}</td>)}</tr>)}</tbody></table></div>
   );
 }
-const cell = (v: unknown) => (v == null ? '—' : typeof v === 'object' ? JSON.stringify(v) : String(v));
+const cell = (v: unknown) => (v == null ? '—' : typeof v === 'object' ? JSON.stringify(v) : tl(String(v)));

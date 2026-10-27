@@ -4,7 +4,7 @@ import { useAuth } from '../../auth';
 import { Pill, State } from '../../components/ui';
 import { fmtTs } from '../../format';
 import { useApi } from '../../useApi';
-import { t } from '../../i18n';
+import { t, tl } from '../../i18n';
 import { Head, sensName } from './common';
 import { AccessPoliciesTab, ActionPoliciesTab, RolesTab, UsersTab } from './AccessManage';
 
@@ -29,11 +29,11 @@ function Req({ r, onDone }: { r: AccessRequest; onDone: (m: string) => void }) {
     <article className="alert task" style={{ ['--sc' as string]: sc }}>
       <span className="sev" />
       <div>
-        <b>{r.requester_id} · {r.dataset_title ?? r.dataset_id}</b>
-        <p>{r.purpose}</p>
+        <b>{r.requester_id} · {tl(r.dataset_title) ?? r.dataset_id}</b>
+        <p>{tl(r.purpose)}</p>
         <div className="meta"><Pill cls={stc}>{st}</Pill><Pill>{r.dataset_id}</Pill><Pill>{sensName(r.sensitivity) ?? r.sensitivity}</Pill>
           {r.requested_actions.map((a) => <Pill key={a}>{a}</Pill>)}<Pill>{t('기간 {from} ~ {to}', { from: r.period_from ?? '—', to: r.period_to ?? '—' })}</Pill><Pill>{t('요청 {ts}', { ts: fmtTs(r.created_at) })}</Pill></div>
-        {r.approver_id && <p className="small">{t('결정 {id}', { id: r.approver_id })} · {fmtTs(r.decided_at)}{r.decision_note ? ` · ${r.decision_note}` : ''}</p>}
+        {r.approver_id && <p className="small">{t('결정 {id}', { id: r.approver_id })} · {fmtTs(r.decided_at)}{r.decision_note ? ` · ${tl(r.decision_note)}` : ''}</p>}
         {err && <div className="banner" role="alert">{err}</div>}
       </div>
       <div className="acts">{r.status === 'REQUESTED' && (
@@ -76,7 +76,7 @@ export default function Access() {
       {d && tab === 'roles' && <>
         <section className="panel"><header><h2>{t('역할')}</h2><span className="small muted">gov.role · {t('역할 종류는 고정이에요')}</span></header>
           <div className="tablewrap"><table><thead><tr><th>{t('역할')}</th><th>{t('할 수 있는 일')}</th>{d.assignments && <th className="r">{t('배정')}</th>}</tr></thead><tbody>
-            {d.roles.map((r) => <tr key={r.role_id}><td>{r.label_ko}<div className="mono muted small">{r.role_id}</div></td><td className="small">{r.description ?? '—'}</td>{d.assignments && <td className="r num">{counts.get(r.role_id) ?? 0}</td>}</tr>)}
+            {d.roles.map((r) => <tr key={r.role_id}><td>{tl(r.label_ko)}<div className="mono muted small">{r.role_id}</div></td><td className="small">{tl(r.description) ?? '—'}</td>{d.assignments && <td className="r num">{counts.get(r.role_id) ?? 0}</td>}</tr>)}
           </tbody></table></div>
         </section>
         <div style={{ marginTop: 14 }}>

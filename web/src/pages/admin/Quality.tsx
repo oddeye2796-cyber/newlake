@@ -6,7 +6,7 @@ import { useAuth } from '../../auth';
 import { Pill, State } from '../../components/ui';
 import { fmtTs } from '../../format';
 import { useApi } from '../../useApi';
-import { t } from '../../i18n';
+import { t, tl } from '../../i18n';
 import { Head, lastName, num, violStatus } from './common';
 import { DEMO, RuleForm, RuleRowButtons, ViolationActions, dimName, hasRole } from './Steward';
 
@@ -28,7 +28,7 @@ export default function Quality() {
     rules.forEach((r) => { if (r.focus_count == null) return; const k = r.dimension ?? t('기타'), x = m.get(k) ?? { f: 0, v: 0 }; m.set(k, { f: x.f + r.focus_count, v: x.v + (r.violation_count ?? 0) }); });
     return [...m.entries()].map(([k, x]) => [k, x.f ? Math.round((1000 * (x.f - x.v)) / x.f) / 10 : null] as [string, number | null]);
   }, [rules]);
-  const ruleName = (id: string) => rules.find((r) => r.rule_id === id)?.label_ko ?? id;
+  const ruleName = (id: string) => tl(rules.find((r) => r.rule_id === id)?.label_ko) ?? id;
   const viol = (data?.violations ?? []).filter((v) => (rule === 'ALL' || v.rule_id === rule) && (st === 'ALL' || v.status === st));
   const open = (data?.violations ?? []).filter((v) => v.status === 'OPEN').length;
   return (
@@ -41,12 +41,12 @@ export default function Quality() {
         {(data.semantic_blocked ?? []).length > 0 && <div className="banner" role="status" style={{ marginBottom: 14 }}>
           <b>{t('시맨틱 존 반영 보류')}</b> · {t('아래 데이터셋이 품질 부적합이라 시맨틱 존 파이프라인이 시작되지 않아요. 원천 데이터를 고쳐 다시 넣고 규칙을 다시 돌리면 풀려요.')}
           <ul className="evlist" style={{ marginTop: 6 }}>{(data.semantic_blocked ?? []).map((b) => (
-            <li key={`${b.pipeline_id}/${b.dataset_id}`}><Link to={`/admin/catalog/${encodeURIComponent(b.dataset_id)}`}>{b.dataset_title}</Link> <span className="mono small muted">{b.dataset_id}</span>
-              {b.quality_score != null && <> · {Math.round(b.quality_score * 10) / 10}%</>} → {b.pipeline_label}</li>))}</ul>
+            <li key={`${b.pipeline_id}/${b.dataset_id}`}><Link to={`/admin/catalog/${encodeURIComponent(b.dataset_id)}`}>{tl(b.dataset_title)}</Link> <span className="mono small muted">{b.dataset_id}</span>
+              {b.quality_score != null && <> · {Math.round(b.quality_score * 10) / 10}%</>} → {tl(b.pipeline_label)}</li>))}</ul>
         </div>}
         <div className="grid g4">
           {dims.map(([n, v]) => (
-            <div key={n} className="panel kpi"><span className="kl">{t('KS X 9101 {name} 차원', { name: n })}</span><span className="kv num">{v == null ? '—' : `${v}%`}</span>
+            <div key={n} className="panel kpi"><span className="kl">{t('KS X 9101 {name} 차원', { name: dimName(n) })}</span><span className="kv num">{v == null ? '—' : `${v}%`}</span>
               {v != null && <div className="bar" style={{ ['--bc' as string]: v < 99 ? 'var(--warn)' : 'var(--ok)' }}><i style={{ width: `${v}%` }} /></div>}</div>))}
           {dims.length === 0 && <div className="panel muted small">{t('실행된 규칙이 없어요.')}</div>}
         </div>
@@ -55,8 +55,8 @@ export default function Quality() {
             <div className="tablewrap"><table><thead><tr><th>{t('규칙')}</th><th>{t('대상')}</th><th className="r">{t('적합률')}</th><th className="r">{t('위반')}</th>{canWrite && <th />}</tr></thead><tbody>
               {rules.map((r) => (
                 <tr key={r.rule_id} className={`click ${rule === r.rule_id ? 'sel' : ''}`} tabIndex={0} onClick={() => setRule(rule === r.rule_id ? 'ALL' : r.rule_id)} onKeyDown={(e) => { if (e.key === 'Enter') setRule(rule === r.rule_id ? 'ALL' : r.rule_id); }}>
-                  <td style={{ minWidth: 170 }}>{r.label_ko}<div className="mono muted small">{r.shape_iri ? `ksx:${lastName(r.shape_iri)}` : r.rule_id} · {dimName(r.dimension)} · {r.severity}{r.sql_check ? ' · SQL' : ''}{r.enabled ? '' : ` · ${t('꺼짐')}`}</div></td>
-                  <td className="small">{r.class_label ?? r.target_dataset_id ?? '—'}{r.last_dataset_id && <div className="mono muted">{r.last_dataset_id}</div>}</td>
+                  <td style={{ minWidth: 170 }}>{tl(r.label_ko)}<div className="mono muted small">{r.shape_iri ? `ksx:${lastName(r.shape_iri)}` : r.rule_id} · {dimName(r.dimension)} · {r.severity}{r.sql_check ? ' · SQL' : ''}{r.enabled ? '' : ` · ${t('꺼짐')}`}</div></td>
+                  <td className="small">{tl(r.class_label) ?? r.target_dataset_id ?? '—'}{r.last_dataset_id && <div className="mono muted">{r.last_dataset_id}</div>}</td>
                   <td className="r num">{r.conformance_rate == null ? '—' : `${Math.round(r.conformance_rate * 10) / 10}%`}<div className="small muted">{t('기준 {v}%', { v: r.threshold ?? '—' })}</div></td>
                   <td className="r">{r.violation_count == null ? '—' : <Pill cls={r.violation_count === 0 ? 'p-ok' : (r.conformance_rate ?? 100) < (r.threshold ?? 0) ? 'p-crit' : 'p-warn'}>{num(r.violation_count)}</Pill>}
                     <div className="small muted">{fmtTs(r.last_run_at)}</div></td>
@@ -78,7 +78,7 @@ export default function Quality() {
                 return (
                   <article key={v.violation_id} className="alert task" style={{ ['--sc' as string]: v.status === 'OPEN' ? 'var(--crit)' : v.status === 'ACK' ? 'var(--warn)' : v.status === 'WAIVED' ? 'var(--muted)' : 'var(--ok)' }}>
                     <span className="sev" />
-                    <div><b>{lastName(v.focus_node)}{v.result_path ? ` · ${v.result_path}` : ''}</b><p>{v.message}</p>
+                    <div><b>{lastName(v.focus_node)}{v.result_path ? ` · ${v.result_path}` : ''}</b><p>{tl(v.message)}</p>
                       <div className="meta"><Pill cls={vsc}>{vs}</Pill><Pill>{v.severity}</Pill><Pill>{ruleName(v.rule_id)}</Pill><Pill>{fmtTs(v.executed_at)}</Pill>{v.assignee_user_id && <Pill>{t('담당 {id}', { id: v.assignee_user_id })}</Pill>}</div>
                       {canWrite && <div className="acts" style={{ justifyContent: 'flex-start', marginTop: 8 }}><ViolationActions v={v} people={people.data ?? []} onDone={reload} /></div>}</div>
                     <div className="acts">{v.dataset_id && <Link className="btn" to={`/admin/catalog/${encodeURIComponent(v.dataset_id)}`}>{t('데이터셋')}</Link>}</div>
