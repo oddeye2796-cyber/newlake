@@ -5,7 +5,7 @@ import { Pill, State } from '../../components/ui';
 import { useApi } from '../../useApi';
 import { t, tl } from '../../i18n';
 import { Head, ZoneChip, lastName, num } from './common';
-import { dimName } from './Steward';
+import { dimName, sevName } from './Steward';
 import { ExtensionsTab, ProposalsTab } from './OntoExt';
 
 const TABS = (): [string, string][] => [['_std', t('표준 코어')], ['_ext', t('회사 확장')], ['_proposals', t('확장 제안')]];
@@ -72,7 +72,7 @@ function Detail({ d, labels, onPick }: { d: AdminClassDetail; labels: Map<string
         <Link key={x.dataset_id} to={`/admin/catalog/${encodeURIComponent(x.dataset_id)}`} style={{ textDecoration: 'none', color: 'inherit', display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: 8, padding: '4px 6px' }}>
           <span>{tl(x.title_ko)} <code className="mono muted">{x.dataset_id}</code></span><ZoneChip z={x.zone_id} /></Link>))}</div>}
       {d.actions.length > 0 && <><h3 style={{ marginTop: 14 }}>{t('이 클래스에 거는 조치')}</h3><ul className="evlist">{d.actions.map((a) => <li key={a.action_iri}><b>{tl(a.label_ko)}</b> <span className="mono muted">{lastName(a.action_iri)} · {a.verb}</span></li>)}</ul></>}
-      {d.quality_rules.length > 0 && <><h3 style={{ marginTop: 14 }}>{t('품질 규칙')}</h3><ul className="evlist">{d.quality_rules.map((r) => <li key={r.rule_id}><Link to="/admin/quality">{tl(r.label_ko)}</Link> <Pill>{dimName(r.dimension)}</Pill> <span className="small muted">{r.severity}</span></li>)}</ul></>}
+      {d.quality_rules.length > 0 && <><h3 style={{ marginTop: 14 }}>{t('품질 규칙')}</h3><ul className="evlist">{d.quality_rules.map((r) => <li key={r.rule_id}><Link to="/admin/quality">{tl(r.label_ko)}</Link> <Pill>{dimName(r.dimension)}</Pill> <span className="small muted">{sevName(r.severity)}</span></li>)}</ul></>}
       <h3 style={{ marginTop: 14 }}>{t('관계 ({out} 나감 · {inc} 들어옴)', { out: out.length, inc: inc.length })}</h3>
       <div className="rel">{out.map((l, i) => rel(l, l.object_class_iri, tl(l.object_label), '→', i))}{inc.map((l, i) => rel(l, l.subject_class_iri, tl(l.subject_label), '←', i))}</div>
     </section>

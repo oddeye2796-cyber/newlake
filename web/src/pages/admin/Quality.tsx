@@ -6,9 +6,9 @@ import { useAuth } from '../../auth';
 import { Pill, State } from '../../components/ui';
 import { fmtTs } from '../../format';
 import { useApi } from '../../useApi';
-import { t, tl } from '../../i18n';
+import { pn, t, tl } from '../../i18n';
 import { Head, lastName, num, violStatus } from './common';
-import { DEMO, RuleForm, RuleRowButtons, ViolationActions, dimName, hasRole } from './Steward';
+import { DEMO, RuleForm, RuleRowButtons, ViolationActions, dimName, hasRole, sevName } from './Steward';
 
 export default function Quality() {
   const { me, toast } = useAuth();
@@ -55,8 +55,8 @@ export default function Quality() {
             <div className="tablewrap"><table><thead><tr><th>{t('규칙')}</th><th>{t('대상')}</th><th className="r">{t('적합률')}</th><th className="r">{t('위반')}</th>{canWrite && <th />}</tr></thead><tbody>
               {rules.map((r) => (
                 <tr key={r.rule_id} className={`click ${rule === r.rule_id ? 'sel' : ''}`} tabIndex={0} onClick={() => setRule(rule === r.rule_id ? 'ALL' : r.rule_id)} onKeyDown={(e) => { if (e.key === 'Enter') setRule(rule === r.rule_id ? 'ALL' : r.rule_id); }}>
-                  <td style={{ minWidth: 170 }}>{tl(r.label_ko)}<div className="mono muted small">{r.shape_iri ? `ksx:${lastName(r.shape_iri)}` : r.rule_id} · {dimName(r.dimension)} · {r.severity}{r.sql_check ? ' · SQL' : ''}{r.enabled ? '' : ` · ${t('꺼짐')}`}</div></td>
-                  <td className="small">{tl(r.class_label) ?? r.target_dataset_id ?? '—'}{r.last_dataset_id && <div className="mono muted">{r.last_dataset_id}</div>}</td>
+                  <td style={{ minWidth: 170 }}>{tl(r.label_ko)}<div className="mono muted small">{r.shape_iri ? `ksx:${lastName(r.shape_iri)}` : r.rule_id} · {dimName(r.dimension)} · {sevName(r.severity)}{r.sql_check ? ' · SQL' : ''}{r.enabled ? '' : ` · ${t('꺼짐')}`}</div></td>
+                  <td className="small">{tl(r.class_label) ?? pn(r.target_dataset_id) ?? r.target_dataset_id ?? '—'}{r.last_dataset_id && <div className="muted">{pn(r.last_dataset_id) && <div>{pn(r.last_dataset_id)}</div>}<span className="mono">{r.last_dataset_id}</span></div>}</td>
                   <td className="r num">{r.conformance_rate == null ? '—' : `${Math.round(r.conformance_rate * 10) / 10}%`}<div className="small muted">{t('기준 {v}%', { v: r.threshold ?? '—' })}</div></td>
                   <td className="r">{r.violation_count == null ? '—' : <Pill cls={r.violation_count === 0 ? 'p-ok' : (r.conformance_rate ?? 100) < (r.threshold ?? 0) ? 'p-crit' : 'p-warn'}>{num(r.violation_count)}</Pill>}
                     <div className="small muted">{fmtTs(r.last_run_at)}</div></td>
@@ -78,8 +78,8 @@ export default function Quality() {
                 return (
                   <article key={v.violation_id} className="alert task" style={{ ['--sc' as string]: v.status === 'OPEN' ? 'var(--crit)' : v.status === 'ACK' ? 'var(--warn)' : v.status === 'WAIVED' ? 'var(--muted)' : 'var(--ok)' }}>
                     <span className="sev" />
-                    <div><b>{lastName(v.focus_node)}{v.result_path ? ` · ${v.result_path}` : ''}</b><p>{tl(v.message)}</p>
-                      <div className="meta"><Pill cls={vsc}>{vs}</Pill><Pill>{v.severity}</Pill><Pill>{ruleName(v.rule_id)}</Pill><Pill>{fmtTs(v.executed_at)}</Pill>{v.assignee_user_id && <Pill>{t('담당 {id}', { id: v.assignee_user_id })}</Pill>}</div>
+                    <div><b title={v.result_path ?? undefined}>{lastName(v.focus_node)}{v.result_path ? ` · ${pn(v.result_path) ?? v.result_path}` : ''}</b><p>{tl(v.message)}</p>
+                      <div className="meta"><Pill cls={vsc}>{vs}</Pill><Pill>{sevName(v.severity)}</Pill><Pill>{ruleName(v.rule_id)}</Pill><Pill>{fmtTs(v.executed_at)}</Pill>{v.assignee_user_id && <Pill>{t('담당 {id}', { id: v.assignee_user_id })}</Pill>}</div>
                       {canWrite && <div className="acts" style={{ justifyContent: 'flex-start', marginTop: 8 }}><ViolationActions v={v} people={people.data ?? []} onDone={reload} /></div>}</div>
                     <div className="acts">{v.dataset_id && <Link className="btn" to={`/admin/catalog/${encodeURIComponent(v.dataset_id)}`}>{t('데이터셋')}</Link>}</div>
                   </article>);

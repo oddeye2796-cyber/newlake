@@ -138,7 +138,7 @@ export function EquipmentPage({ id }: { id: string }) {
       {data.parameters.map((p) => (
         <div key={p.parameter_id}>
           <h3 className="sub">{t('{name} 추이 · 최근 {days}일', { name: tl(p.parameter_name), days })}</h3>
-          <TraceChart pts={data.trace.filter((t) => t.parameter_id === p.parameter_id).map((t) => ({ t: t.event_date_time, v: t.parameter_value }))} lsl={p.lsl} usl={p.usl} unit={p.parameter_uom_code ?? ''} name={p.parameter_name} />
+          <TraceChart pts={data.trace.filter((t) => t.parameter_id === p.parameter_id).map((t) => ({ t: t.event_date_time, v: t.parameter_value }))} lsl={p.lsl} usl={p.usl} unit={p.parameter_uom_code ?? ''} name={tl(p.parameter_name)} />
         </div>
       ))}
       {lots.length > 0 && <p className="small muted">{t('기준을 벗어난 시각에 진행 중이던 로트:')} {lots.map((l) => <Chip key={l} kind="lot" id={l} />)}</p>}

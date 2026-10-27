@@ -12,6 +12,8 @@ import enAdmin from './en.admin';
 import jaAdmin from './ja.admin';
 import dataEn from './data.en';
 import dataJa from './data.ja';
+import phys from './physical';
+import { glossTranslate } from './glossary';
 
 export type Lang = 'ko' | 'en' | 'ja';
 export const LANGS: { id: Lang; label: string; short: string }[] = [
@@ -80,9 +82,29 @@ export function tl(ko: string | null | undefined): string | undefined {
   if (ko.endsWith(` ${SEQ_FULL}`)) return `${tl(ko.slice(0, -SEQ_FULL.length - 1))} ${a.seqFull}`;
   if (ko.endsWith(' 일련번호')) return `${tl(ko.slice(0, -5))} ${a.seq}`;
   if (ko.endsWith(' 참조')) return `${tl(ko.slice(0, -3))} ${current === 'en' ? `(${a.ref})` : a.ref}`;
+  const msg = tlMessage(ko);
+  if (msg !== undefined) return msg;
   if ((m = ko.match(/^(.+?) — (.+)$/))) return `${tl(m[1])} — ${tl(m[2])}`;
-  return ko;
+  return glossTranslate(ko, current);
 }
+
+/** 품질 검사식이 값을 이어 붙여 만드는 위반 메시지(숫자·이름이 섞여 사전에 통째로 못 넣는 문장) */
+const num = (v: string) => (/^-?\d+\.\d+$/.test(v) ? String(Number(v)) : v);
+const none = () => (current === 'en' ? 'none' : 'なし');
+function tlMessage(ko: string): string | undefined {
+  const en = current === 'en';
+  let m: RegExpMatchArray | null;
+  if ((m = ko.match(/^발주 수량이 0 이하: (.+)$/))) { const v = m[1] === '없음' ? none() : num(m[1]); return en ? `PO quantity is 0 or less: ${v}` : `発注数量が 0 以下: ${v}`; }
+  if ((m = ko.match(/^품목 (.+) 이 품목 마스터에 없음$/))) return en ? `Item ${m[1]} is not in the item master` : `品目 ${m[1]} が品目マスタにありません`;
+  if ((m = ko.match(/^(.+) 재고 (-?[\d.]+) < 안전재고 (-?[\d.]+)$/))) return en ? `${tl(m[1])} stock ${num(m[2])} < safety stock ${num(m[3])}` : `${tl(m[1])} 在庫 ${num(m[2])} < 安全在庫 ${num(m[3])}`;
+  if ((m = ko.match(/^불량 (-?[\d.]+) > 생산 (-?[\d.]+)$/))) return en ? `Defects ${num(m[1])} > produced ${num(m[2])}` : `不良 ${num(m[1])} > 生産 ${num(m[2])}`;
+  if ((m = ko.match(/^lotState "(.+)" 가 공통코드 LotState 에 없음$/))) return en ? `lotState "${m[1]}" is not in the LotState common code` : `lotState "${m[1]}" が共通コード LotState にありません`;
+  if ((m = ko.match(/^(.+) — (\d{4}-\d\d-\d\d) 검사에서 발견, 원천 수정 후 해소$/))) return en ? `${tl(m[1])} — found in the ${m[2]} check, resolved after fixing the source` : `${tl(m[1])} — ${m[2]} の検査で検出、ソース修正後に解消`;
+  return undefined;
+}
+
+/** 물리 이름(테이블·데이터셋 ID·컬럼명)을 표준 라벨로 번역한다. 사전에 없는 이름은 undefined. */
+export const pn = (name: string | null | undefined): string | undefined => (name && phys[name] ? tl(phys[name]) : undefined);
 
 /** 검사용: 데이터 라벨 사전에 있는 모든 키 */
 export const dataKeys = (l: Exclude<Lang, 'ko'>) => Object.keys(DATA[l]);

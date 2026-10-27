@@ -14,7 +14,7 @@ export const hasRole = (me: Me | null, ...roles: string[]) => !!me && (me.roles.
 export const SENSITIVITIES = ['PUBLIC', 'INTERNAL', 'CONFIDENTIAL', 'PERSONAL'];
 const DIMENSIONS = ['완전성', '유일성', '유효성', '일관성', '정확성', '구조', '값', '관계', '의미']; // i18n-ignore: DB 값(catalog.quality_rule.dimension)
 const SEVERITIES = ['Info', 'Warning', 'Violation'];
-const sevName = (s: string): string => ({ Info: t('정보'), Warning: t('주의'), Violation: t('위반') } as Record<string, string>)[s] ?? s;
+export const sevName = (s: string): string => ({ Info: t('정보'), Warning: t('주의'), Violation: t('위반') } as Record<string, string>)[s] ?? s;
 export const dimName = (d: string | null): string => (d ? ({ 완전성: t('완전성'), 유일성: t('유일성'), 유효성: t('유효성'), 일관성: t('일관성'), 정확성: t('정확성'), 구조: t('구조'), 값: t('값'), 관계: t('관계'), 의미: t('의미') } as Record<string, string>)[d] ?? d : '—'); // i18n-ignore: DB 값이 키
 
 function useBusy() {
