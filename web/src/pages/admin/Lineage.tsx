@@ -4,7 +4,7 @@ import type { AdminDatasetDetail, AdminOverview, LineageEdge } from '../../api';
 import { Pill, State, Tier } from '../../components/ui';
 import { fmtTs, n0 } from '../../format';
 import { useApi } from '../../useApi';
-import { t, tl } from '../../i18n';
+import { pn, t, tl } from '../../i18n';
 import { Head, ZONES, ZoneChip, lastName, runStatus, zoneColor, zoneName } from './common';
 
 interface Node { id: string; title: string; zone: string }
@@ -23,7 +23,7 @@ function FieldRows({ e }: { e: LineageEdge }) {
     const prop = data?.fields.find((f) => f.field_name === col)?.maps_to_property_iri;
     return (
       <tr key={`${e.edge_id}-${col}-${s}`}>
-        <td className="mono">{lastName(e.from_dataset_id)}.{s}</td><td className="mono">{lastName(e.to_dataset_id)}.{col}</td>
+        <td>{tl(s) !== s && <div>{tl(s)}</div>}<span className="mono small muted">{lastName(e.from_dataset_id)}.{s}</span></td><td>{pn(col) && <div>{pn(col)}</div>}<span className="mono small muted">{lastName(e.to_dataset_id)}.{col}</span></td>
         <td className="mono">{prop ? `ksx:${lastName(prop)}` : '—'}</td><td><Tier t="ASSERTED" /></td>
       </tr>);
   }))}</>;

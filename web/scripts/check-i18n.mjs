@@ -72,6 +72,8 @@ try {
     else if (typeof o === 'string' && hangul.test(o) && LABEL_KEYS.has(key) && !o.includes('\n') && !resolvable(o)) dataMissing.add(`${key}: ${o}`);
   })(fx, '');
 } catch { /* fixtures 없으면 건너뜀 */ }
+// 물리 이름 → 한국어 라벨(physical.ts): 라벨이 사전에서 풀려야 pn() 이 번역해 준다.
+for (const m of readFileSync(join(root, 'i18n', 'physical.ts'), 'utf8').matchAll(/^\s*"(?:\\.|[^"\\])*":\s*("(?:\\.|[^"\\])*"),/gm)) { const v = JSON.parse(m[1]); if (hangul.test(v) && !resolvable(v)) dataMissing.add(`physical: ${v}`); }
 let bad = false;
 if (dataMissing.size) { bad = true; console.log(`\n데이터 라벨 번역 없음 (${dataMissing.size}) — src/i18n/data.en.ts · data.ja.ts 에 추가:`); for (const k of dataMissing) console.log('  ' + k); }
 for (const l of ['en', 'ja']) if (missing[l].size) { bad = true; console.log(`\n${l} 번역 없음 (${missing[l].size}):`); for (const k of missing[l]) console.log('  ' + JSON.stringify(k)); }

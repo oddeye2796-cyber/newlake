@@ -232,7 +232,7 @@ function ProposalRow({ p, classes, canWrite, onDone }: { p: ExtProposal; classes
   return (
     <>
       <tr>
-        <td><b>{p.column_name}</b><div className="small muted">{tl(p.dataset_title) ?? p.dataset_id} → <span className="mono">{p.std_table ? `ksx.${p.std_table}` : '—'}</span></div>
+        <td><b title={p.column_name}>{tl(p.column_name)}</b>{tl(p.column_name) !== p.column_name && <span className="small muted"> ({p.column_name})</span>}<div className="small muted">{tl(p.dataset_title) ?? p.dataset_id} → <span className="mono">{p.std_table ? `ksx.${p.std_table}` : '—'}</span></div>
           {p.sample_values?.length > 0 && <div className="small mono muted">{p.sample_values.slice(0, 3).map((v) => tl(String(v))).join(' · ')}</div>}</td>
         <td className="small">{p.matched_name ? <>{t('기존 속성에 잇기')}<div className="mono">arcon:{p.matched_name}</div></> : <>{p.kind === 'REF' ? t('참조 속성') : p.kind === 'CLASS' ? t('새 클래스') : t('새 속성')}<div className="mono">arcon:{p.suggested_local_name}</div></>}
           <div className="muted">{tl(p.target_label) ?? lastName(p.target_class_iri)}{p.kind !== 'CLASS' && p.suggested_range_iri ? ` · xsd:${xsdName(p.suggested_range_iri)}` : ''}{p.unit ? ` · ${p.unit}` : ''}</div></td>
