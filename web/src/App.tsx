@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { USERS, useAuth } from './auth';
 import { lsGet, lsSet } from './storage';
-import { LANGS, t, tk } from './i18n';
+import { LANGS, t, tk, tl } from './i18n';
 import { useLang } from './i18n/react';
 import Home from './pages/Home';
 import Ask from './pages/Ask';
@@ -100,13 +100,13 @@ export default function App() {
         {isAdminUser(me) && <NavGroup title={t('데이터 관리')} items={ADMIN} />}
         <div className="scope">
           <div className="who">
-            <span className="avatar" aria-hidden="true">{user?.name.slice(0, 1) ?? '?'}</span>
-            <span className="wn"><b>{me?.display_name ?? user?.name ?? ''}</b><small>{me ? me.roles.map((r) => (ROLE_KO[r] ? t(ROLE_KO[r]) : r)).join(', ') : ''}</small></span>
+            <span className="avatar" aria-hidden="true">{tl(user?.name)?.slice(0, 1) ?? '?'}</span>
+            <span className="wn"><b>{tl(me?.display_name) ?? tl(user?.name) ?? ''}</b><small>{me ? me.roles.map((r) => (ROLE_KO[r] ? t(ROLE_KO[r]) : r)).join(', ') : ''}</small></span>
           </div>
           {meError && <span className="err">{meError}</span>}
           <label htmlFor="roleSel">{t('보는 사람 바꾸기')}</label>
           <select className="input" id="roleSel" value={userId} onChange={(e) => setUserId(e.target.value)}>
-            {USERS.map((u) => <option key={u.id} value={u.id}>{u.name} · {t(u.desc)}</option>)}
+            {USERS.map((u) => <option key={u.id} value={u.id}>{tl(u.name)} · {t(u.desc)}</option>)}
           </select>
         </div>
       </aside>

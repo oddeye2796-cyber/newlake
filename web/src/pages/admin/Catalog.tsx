@@ -6,7 +6,7 @@ import { useAuth } from '../../auth';
 import { Pill, State, Tier } from '../../components/ui';
 import { fmtTs } from '../../format';
 import { useApi } from '../../useApi';
-import { t } from '../../i18n';
+import { t, tl } from '../../i18n';
 import { Head, ZONES, ZoneChip, lastName, num, qstatus, sensName, zoneName } from './common';
 import { DEMO, DatasetDeleteButton, DatasetForm, FieldRow, MappingButtons, hasRole } from './Steward';
 
@@ -28,7 +28,7 @@ function Detail({ id, index, onDeleted }: { id: string; index: Map<string, Admin
   if (!data || !d) return <section className="panel"><State loading={loading} error={error} /></section>;
   const [qs, qsc] = qstatus(d.quality_status) || [d.quality_status, 'p-line'];
   const run = data.quality_runs[0];
-  const refTitle = (x: string) => index.get(x)?.title_ko ?? x;
+  const refTitle = (x: string) => tl(index.get(x)?.title_ko) ?? x;
   const refList = (rows: AdminDatasetDetail['upstream']) => rows.length === 0 ? <p className="small muted">{t('기록 없음')}</p> : (
     <div className="rel">{rows.map((r) => (
       <Link key={r.dataset_id + (r.pipeline_id ?? '')} to={`/admin/catalog/${encodeURIComponent(r.dataset_id)}`} style={{ textDecoration: 'none', color: 'inherit', display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: 8, padding: '4px 6px' }}>
@@ -38,19 +38,19 @@ function Detail({ id, index, onDeleted }: { id: string; index: Map<string, Admin
   if (editing) return <DatasetForm d={d} onDone={() => { setEditing(false); reload(); onDeleted(); }} onCancel={() => setEditing(false)} />;
   return (
     <section className="panel">
-      <header><div><h2>{d.title_ko}</h2><div className="mono muted">{d.dataset_id}</div></div>
+      <header><div><h2>{tl(d.title_ko)}</h2><div className="mono muted">{d.dataset_id}</div></div>
         <div className="acts">{canMeta && <button className="btn" type="button" disabled={DEMO} onClick={() => setEditing(true)}><Pencil aria-hidden="true" /> {t('정보 수정')}</button>}
           {canMeta && <DatasetDeleteButton id={d.dataset_id} zone={d.zone_id} onDone={onDeleted} />}<ZoneChip z={d.zone_id} /></div></header>
       <dl className="kv" style={{ marginBottom: 12 }}>
-        <dt>{t('표현 클래스')}</dt><dd>{cls ? <><Link to={`/admin/ontology/${cls}`}>ksx:{cls}</Link> · {d.class_label}</> : '—'}</dd>
-        <dt>{t('원천 시스템')}</dt><dd>{d.source_label ?? d.source_system_id ?? '—'}{d.ingest_mode ? ` · ${d.ingest_mode}` : ''}{d.schedule_cron ? ` · ${d.schedule_cron}` : ''}</dd>
+        <dt>{t('표현 클래스')}</dt><dd>{cls ? <><Link to={`/admin/ontology/${cls}`}>ksx:{cls}</Link> · {tl(d.class_label)}</> : '—'}</dd>
+        <dt>{t('원천 시스템')}</dt><dd>{tl(d.source_label) ?? d.source_system_id ?? '—'}{d.ingest_mode ? ` · ${d.ingest_mode}` : ''}{d.schedule_cron ? ` · ${d.schedule_cron}` : ''}</dd>
         <dt>{t('형식')}</dt><dd>{d.format ?? '—'} · {t('레코드')} <span className="num">{num(d.record_count)}</span></dd>
         <dt>{t('위치')}</dt><dd className="mono small">{d.location_uri ?? '—'}</dd>
         <dt>{t('최근 적재')}</dt><dd>{fmtTs(d.last_ingested_at)}</dd>
         <dt>{t('품질')}</dt><dd><Pill cls={qsc}>{qs}</Pill>{d.quality_score != null && <span className="num"> {Math.round(d.quality_score * 10) / 10}%</span>}</dd>
         <dt>{t('민감도')}</dt><dd>{sensName(d.sensitivity) ?? d.sensitivity}{d.pseudonymized ? ` · ${t('가명처리')}` : ''}{d.retention ? ` · ${t('보존 {v}', { v: d.retention })}` : ''}</dd>
         <dt>{t('담당')}</dt><dd>{t('소유 {owner} · 스튜어드 {steward}', { owner: d.owner_user_id ?? '—', steward: d.steward_user_id ?? '—' })}</dd>
-        {d.description && <><dt>{t('설명')}</dt><dd>{d.description}</dd></>}
+        {d.description && <><dt>{t('설명')}</dt><dd>{tl(d.description)}</dd></>}
       </dl>
       <div className="tabs" role="tablist">{tabs().map(([k, n]) => <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => setTab(k)}>{n}</button>)}</div>
       {tab === 'schema' && <>
@@ -63,7 +63,7 @@ function Detail({ id, index, onDeleted }: { id: string; index: Map<string, Admin
         {ext.data && ext.data.summary.length > 0 && <>
           <h3 className="sub">{t('확장 속성 (표준 표에 자리가 없어 따로 보관한 열)')}</h3>
           <div className="tablewrap"><table><thead><tr><th>{t('원천 열')}</th><th>{t('온톨로지 속성')}</th><th className="r">{t('값')}</th><th>{t('최근 적재')}</th></tr></thead><tbody>
-            {ext.data.summary.map((x) => <tr key={x.attr_name}><td className="mono">{x.attr_name}</td><td>{x.property_name ? <>{x.property_label ?? x.property_name} <code className="mono muted">arcon:{x.property_name}</code></> : <Link to="/admin/ontology/_proposals">{t('아직 안 정함 → 확장 제안')}</Link>}</td><td className="r num">{num(x.rows)}</td><td className="num small">{fmtTs(x.last_loaded_at)}</td></tr>)}
+            {ext.data.summary.map((x) => <tr key={x.attr_name}><td className="mono">{x.attr_name}</td><td>{x.property_name ? <>{tl(x.property_label) ?? x.property_name} <code className="mono muted">arcon:{x.property_name}</code></> : <Link to="/admin/ontology/_proposals">{t('아직 안 정함 → 확장 제안')}</Link>}</td><td className="r num">{num(x.rows)}</td><td className="num small">{fmtTs(x.last_loaded_at)}</td></tr>)}
           </tbody></table></div>
           <p className="hint">{t('값은 ksx.extension_attribute 에 (표, 행 키, 열 이름) 으로 보관돼요. 승인한 확장 속성은 온톨로지 화면의 회사 확장 탭에서 관리해요.')}</p>
         </>}
@@ -82,9 +82,9 @@ function Detail({ id, index, onDeleted }: { id: string; index: Map<string, Admin
           const out = rel.data.links.filter((l) => l.subject_class_iri === rel.data!.class.class_iri), inc = rel.data.links.filter((l) => l.object_class_iri === rel.data!.class.class_iri && l.subject_class_iri !== l.object_class_iri);
           const row = (l: typeof out[number], other: string, label: string, arrow: string, i: number) => (
             <Link key={`${arrow}${i}${l.property_iri}`} to={`/admin/ontology/${lastName(other)}`} style={{ textDecoration: 'none', color: 'inherit', display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: 8, padding: '4px 6px' }}>
-              <span>{arrow} {label} <code className="mono muted">ksx:{l.property_name}</code></span><span className="small muted">{l.relation_kind}</span></Link>);
-          return <><h3>{t('나가는 관계 {n}', { n: out.length })}</h3><div className="rel">{out.map((l, i) => row(l, l.object_class_iri, l.object_label, '→', i))}</div>
-            <h3 style={{ marginTop: 12 }}>{t('들어오는 관계 {n}', { n: inc.length })}</h3><div className="rel">{inc.map((l, i) => row(l, l.subject_class_iri, l.subject_label, '←', i))}</div></>;
+              <span>{arrow} {label} <code className="mono muted">ksx:{l.property_name}</code></span><span className="small muted">{tl(l.relation_kind)}</span></Link>);
+          return <><h3>{t('나가는 관계 {n}', { n: out.length })}</h3><div className="rel">{out.map((l, i) => row(l, l.object_class_iri, tl(l.object_label), '→', i))}</div>
+            <h3 style={{ marginTop: 12 }}>{t('들어오는 관계 {n}', { n: inc.length })}</h3><div className="rel">{inc.map((l, i) => row(l, l.subject_class_iri, tl(l.subject_label), '←', i))}</div></>;
         })()}
       </>)}
       {tab === 'quality' && (!run && d.quality_status === 'UNKNOWN' ? <p className="muted">{t('이 데이터셋에서 아직 품질 검증을 실행하지 않았어요.')}</p> : <>
@@ -93,7 +93,7 @@ function Detail({ id, index, onDeleted }: { id: string; index: Map<string, Admin
           <div className="tablewrap"><table><thead><tr><th>{t('규칙')}</th><th className="r">{t('적합률')}</th><th className="r">{t('위반')}</th><th>{t('최근 실행')}</th></tr></thead><tbody>
             {(data.quality_rules ?? []).map((q) => {
               const below = q.threshold != null && q.conformance_rate != null && q.conformance_rate < q.threshold;
-              return <tr key={q.rule_id} style={q.enabled ? undefined : { opacity: 0.55 }}><td>{q.label_ko}<div className="mono muted small">{q.rule_id}{q.enabled ? '' : ` · ${t('꺼짐')}`}</div></td>
+              return <tr key={q.rule_id} style={q.enabled ? undefined : { opacity: 0.55 }}><td>{tl(q.label_ko)}<div className="mono muted small">{q.rule_id}{q.enabled ? '' : ` · ${t('꺼짐')}`}</div></td>
                 <td className="r num">{q.conformance_rate == null ? '—' : `${Math.round(q.conformance_rate * 10) / 10}%`}<div className="small muted">{t('기준 {v}%', { v: q.threshold ?? '—' })}</div></td>
                 <td className="r"><Pill cls={q.violation_count === 0 ? 'p-ok' : below ? 'p-crit' : 'p-warn'}>{num(q.violation_count)}</Pill></td>
                 <td className="small">{fmtTs(q.executed_at)}</td></tr>;
@@ -144,7 +144,7 @@ export default function Catalog() {
           {['ALL', ...ZONES].map((z) => <button key={z} className="chip" type="button" aria-pressed={zone === z} onClick={() => setZone(z)}>{z === 'ALL' ? t('전체') : zoneName(z)}</button>)}
         </div>
         <select className="input" aria-label={t('업무영역')} value={grp} onChange={(e) => setGrp(e.target.value)}>
-          <option value="ALL">{t('업무영역 전체')}</option>{groups.map((g) => <option key={g}>{g}</option>)}
+          <option value="ALL">{t('업무영역 전체')}</option>{groups.map((g) => <option key={g} value={g}>{tl(g)}</option>)}
         </select>
       </div>
       <State loading={list.loading} error={list.error} />
@@ -156,7 +156,7 @@ export default function Catalog() {
               const go = () => nav(`/admin/catalog/${encodeURIComponent(d.dataset_id)}`);
               return (
                 <tr key={d.dataset_id} className={`click ${d.dataset_id === sel ? 'sel' : ''}`} tabIndex={0} onClick={go} onKeyDown={(e) => { if (e.key === 'Enter') go(); }} aria-current={d.dataset_id === sel}>
-                  <td><b>{d.title_ko}</b><div className="mono muted">{d.dataset_id}</div></td><td><ZoneChip z={d.zone_id} /></td>
+                  <td><b>{tl(d.title_ko)}</b><div className="mono muted">{d.dataset_id}</div></td><td><ZoneChip z={d.zone_id} /></td>
                   <td className="mono">{d.represents_class_iri ? `ksx:${lastName(d.represents_class_iri)}` : '—'}</td><td className="r num">{num(d.record_count)}</td>
                   <td><Pill cls={qsc}>{qs}{d.quality_score != null ? ` ${d.quality_score}%` : ''}</Pill></td>
                 </tr>);

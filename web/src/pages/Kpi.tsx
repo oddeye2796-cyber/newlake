@@ -4,7 +4,7 @@ import { runQuery, type Otd, type PpmRow, type RiskRow, type UtilRow, type WipRo
 import { Spark } from '../components/charts';
 import { Pill, State } from '../components/ui';
 import { LOT_STATE, daysLeft, dLabel, fmtDate, n0, pct, riskPill } from '../format';
-import { t } from '../i18n';
+import { t, tl } from '../i18n';
 import { useApi } from '../useApi';
 
 const byDate = <T extends { perf_date: string }>(rows: T[]) => {
@@ -22,7 +22,7 @@ export default function Kpi() {
   const wip = useApi<WipRow[]>('/api/kpi/wip');
   const risks = useApi<RiskRow[]>('/api/kpi/risks');
   const [opName, setOpName] = useState<Record<string, string>>({});
-  useEffect(() => { runQuery('SELECT operation_id, operation_name FROM ksx.operation').then((r) => setOpName(Object.fromEntries(r.rows.map((x) => [String(x.operation_id), String(x.operation_name)])))).catch(() => undefined); }, []);
+  useEffect(() => { runQuery('SELECT operation_id, operation_name FROM ksx.operation').then((r) => setOpName(Object.fromEntries(r.rows.map((x) => [String(x.operation_id), tl(String(x.operation_name))])))).catch(() => undefined); }, []);
 
   const yieldSeries = useMemo(() => byDate(yld.data || []).map(([d, rs]) => ({ d, v: (1 - sum(rs.map((r) => r.defect_qty)) / (sum(rs.map((r) => r.produced_qty)) || 1)) * 100 })), [yld.data]);
   const ppmSeries = useMemo(() => byDate(ppm.data || []).map(([d, rs]) => ({ d, v: (sum(rs.map((r) => r.defect_qty)) / (sum(rs.map((r) => r.produced_qty)) || 1)) * 1e6 })), [ppm.data]);

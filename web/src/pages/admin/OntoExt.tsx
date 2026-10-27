@@ -7,7 +7,7 @@ import { del, post, put, type AdminClassRow, type ExtClass, type ExtLink, type E
 import { useAuth } from '../../auth';
 import { Pill, State } from '../../components/ui';
 import { useApi } from '../../useApi';
-import { t } from '../../i18n';
+import { t, tl, tle } from '../../i18n';
 import { fmtTs } from '../../format';
 import { lastName, num } from './common';
 import { DEMO, hasRole } from './Steward';
@@ -29,7 +29,7 @@ function ClassSelect({ value, onChange, classes, blank, required }: { value: str
   const groups = useMemo(() => { const m = new Map<string, AdminClassRow[]>(); classes.forEach((c) => { const g = c.business_group ?? t('기타'); m.set(g, [...(m.get(g) ?? []), c]); }); return [...m.entries()]; }, [classes]);
   return <select className="input" value={value} required={required} onChange={(e) => onChange(e.target.value)}>
     <option value="">{blank}</option>
-    {groups.map(([g, cs]) => <optgroup key={g} label={g}>{cs.map((c) => <option key={c.class_iri} value={c.class_iri}>{c.label_ko} · {c.is_standard ? 'ksx' : 'arcon'}:{c.local_name}</option>)}</optgroup>)}
+    {groups.map(([g, cs]) => <optgroup key={g} label={tl(g)}>{cs.map((c) => <option key={c.class_iri} value={c.class_iri}>{tle(c.label_ko, c.label_en)} · {c.is_standard ? 'ksx' : 'arcon'}:{c.local_name}</option>)}</optgroup>)}
   </select>;
 }
 
@@ -110,7 +110,7 @@ function LinkForm({ classes, props, onDone, onCancel }: { classes: AdminClassRow
       <header><h2>{t('확장 관계 등록')}</h2></header>
       <div className="formgrid">
         <label className="fld"><span>{t('주어 클래스')}</span><ClassSelect value={f.subject_class_iri} onChange={(v) => setF((x) => ({ ...x, subject_class_iri: v }))} classes={classes} blank={t('클래스를 고르세요')} required /></label>
-        <label className="fld"><span>{t('참조 속성')}</span><select className="input" required value={f.property_iri} onChange={(e) => setF((x) => ({ ...x, property_iri: e.target.value }))}><option value="">{t('속성을 고르세요')}</option>{objs.map((p) => <option key={p.property_iri} value={p.property_iri}>{p.label_ko} · arcon:{p.local_name}</option>)}</select></label>
+        <label className="fld"><span>{t('참조 속성')}</span><select className="input" required value={f.property_iri} onChange={(e) => setF((x) => ({ ...x, property_iri: e.target.value }))}><option value="">{t('속성을 고르세요')}</option>{objs.map((p) => <option key={p.property_iri} value={p.property_iri}>{tl(p.label_ko)} · arcon:{p.local_name}</option>)}</select></label>
         <label className="fld"><span>{t('목적어 클래스')}</span><ClassSelect value={f.object_class_iri} onChange={(v) => setF((x) => ({ ...x, object_class_iri: v }))} classes={classes} blank={t('클래스를 고르세요')} required /></label>
         <label className="fld"><span>{t('관계 종류')}</span><input className="input" maxLength={30} value={f.relation_kind} onChange={(e) => setF((x) => ({ ...x, relation_kind: e.target.value }))} /></label>
       </div>
@@ -168,12 +168,12 @@ export function ExtensionsTab({ classes }: { classes: AdminClassRow[] }) {
         <header><h2>{t('확장 클래스 {n}', { n: d.classes.length })}</h2><div className="acts">{canClass && <button className="btn" type="button" disabled={DEMO} onClick={() => setMode({ kind: 'class', c: null })}><Plus aria-hidden="true" /> {t('새 클래스')}</button>}</div></header>
         <div className="tablewrap"><table><thead><tr><th>{t('클래스')}</th><th>{t('상위')}</th><th>{t('업무영역')}</th><th className="r">{t('속성')}</th><th className="r">{t('데이터셋')}</th><th>{t('버전')}</th>{canClass && <th />}</tr></thead><tbody>
           {d.classes.map((c) => <tr key={c.class_iri}>
-            <td><Link to={`/admin/ontology/${encodeURIComponent(c.local_name)}`}>{c.label_ko}</Link><div className="mono small muted">arcon:{c.local_name}{c.is_event ? ` · ${t('이벤트형')}` : ''}</div></td>
-            <td className="small">{c.parent_label ?? '—'}</td><td className="small">{c.business_group ?? '—'}</td><td className="r num">{c.properties}</td><td className="r num">{c.datasets}</td><td>{vpill(c.version_id)}</td>
+            <td><Link to={`/admin/ontology/${encodeURIComponent(c.local_name)}`}>{tle(c.label_ko, c.label_en)}</Link><div className="mono small muted">arcon:{c.local_name}{c.is_event ? ` · ${t('이벤트형')}` : ''}</div></td>
+            <td className="small">{tl(c.parent_label) ?? '—'}</td><td className="small">{tl(c.business_group) ?? '—'}</td><td className="r num">{c.properties}</td><td className="r num">{c.datasets}</td><td>{vpill(c.version_id)}</td>
             {canClass && <td className="r" style={{ whiteSpace: 'nowrap' }}>
-              <button className="btn icon" type="button" title={t('속성 추가')} aria-label={t('{name} 에 속성 추가', { name: c.label_ko })} disabled={DEMO} onClick={() => setMode({ kind: 'prop', p: null, domain: c.class_iri })}><Plus aria-hidden="true" /></button>{' '}
-              <button className="btn icon" type="button" title={t('수정')} aria-label={t('{name} 수정', { name: c.label_ko })} disabled={DEMO} onClick={() => setMode({ kind: 'class', c })}><Pencil aria-hidden="true" /></button>{' '}
-              <button className="btn icon" type="button" title={t('삭제')} aria-label={t('{name} 삭제', { name: c.label_ko })} disabled={DEMO} onClick={() => remove(t('확장 클래스'), `/api/admin/ontology/ext/classes/${encodeURIComponent(c.local_name)}`, c.label_ko)}><Trash2 aria-hidden="true" /></button></td>}
+              <button className="btn icon" type="button" title={t('속성 추가')} aria-label={t('{name} 에 속성 추가', { name: tle(c.label_ko, c.label_en) })} disabled={DEMO} onClick={() => setMode({ kind: 'prop', p: null, domain: c.class_iri })}><Plus aria-hidden="true" /></button>{' '}
+              <button className="btn icon" type="button" title={t('수정')} aria-label={t('{name} 수정', { name: tle(c.label_ko, c.label_en) })} disabled={DEMO} onClick={() => setMode({ kind: 'class', c })}><Pencil aria-hidden="true" /></button>{' '}
+              <button className="btn icon" type="button" title={t('삭제')} aria-label={t('{name} 삭제', { name: tle(c.label_ko, c.label_en) })} disabled={DEMO} onClick={() => remove(t('확장 클래스'), `/api/admin/ontology/ext/classes/${encodeURIComponent(c.local_name)}`, c.label_ko)}><Trash2 aria-hidden="true" /></button></td>}
           </tr>)}
           {d.classes.length === 0 && <tr><td colSpan={7} className="muted">{t('아직 회사 확장 클래스가 없어요. 표준에 없는 개념이 생기면 여기서 등록해요.')}</td></tr>}
         </tbody></table></div>
@@ -183,9 +183,9 @@ export function ExtensionsTab({ classes }: { classes: AdminClassRow[] }) {
         <header><h2>{t('확장 속성 {n}', { n: d.properties.length })}</h2><div className="acts">{canProp && <button className="btn" type="button" disabled={DEMO} onClick={() => setMode({ kind: 'prop', p: null })}><Plus aria-hidden="true" /> {t('새 속성')}</button>}</div></header>
         <div className="tablewrap"><table><thead><tr><th>{t('속성')}</th><th>{t('붙는 클래스')}</th><th>{t('종류 · 형')}</th><th className="r">{t('보관 값')}</th><th>{t('버전')}</th>{canProp && <th />}</tr></thead><tbody>
           {d.properties.map((p) => <tr key={p.property_iri}>
-            <td>{p.label_ko ?? p.local_name}<div className="mono small muted">arcon:{p.local_name}</div></td>
-            <td className="small">{p.domain_label ?? <span className="muted">{t('(표준 arcon 속성)')}</span>}</td>
-            <td className="small">{kindName(p.kind)} · <span className="mono">{p.kind === 'OBJECT' ? (p.range_label ?? lastName(p.range_iri)) : `xsd:${xsdName(p.range_iri)}`}</span>{p.unit ? ` · ${p.unit}` : ''}</td>
+            <td>{tl(p.label_ko) ?? p.local_name}<div className="mono small muted">arcon:{p.local_name}</div></td>
+            <td className="small">{tl(p.domain_label) ?? <span className="muted">{t('(표준 arcon 속성)')}</span>}</td>
+            <td className="small">{kindName(p.kind)} · <span className="mono">{p.kind === 'OBJECT' ? (tl(p.range_label) ?? lastName(p.range_iri)) : `xsd:${xsdName(p.range_iri)}`}</span>{p.unit ? ` · ${p.unit}` : ''}</td>
             <td className="r num">{num(p.values_stored)}</td><td>{vpill(p.version_id)}</td>
             {canProp && <td className="r" style={{ whiteSpace: 'nowrap' }}>{p.domain_class_iri && <>
               <button className="btn icon" type="button" title={t('수정')} aria-label={t('{name} 수정', { name: p.local_name })} disabled={DEMO} onClick={() => setMode({ kind: 'prop', p })}><Pencil aria-hidden="true" /></button>{' '}
@@ -199,7 +199,7 @@ export function ExtensionsTab({ classes }: { classes: AdminClassRow[] }) {
       <section className="panel">
         <header><h2>{t('확장 관계 {n}', { n: d.links.length })}</h2><div className="acts">{canClass && <button className="btn" type="button" disabled={DEMO} onClick={() => setMode({ kind: 'link' })}><Plus aria-hidden="true" /> {t('새 관계')}</button>}</div></header>
         <div className="tablewrap"><table><thead><tr><th>{t('주어')}</th><th>{t('속성')}</th><th>{t('목적어')}</th><th>{t('종류')}</th>{canClass && <th />}</tr></thead><tbody>
-          {d.links.map((l: ExtLink) => <tr key={l.link_id}><td>{l.subject_label}</td><td className="mono small">arcon:{l.property_name}</td><td>{l.object_label}</td><td className="small">{l.relation_kind ?? '—'}</td>
+          {d.links.map((l: ExtLink) => <tr key={l.link_id}><td>{tl(l.subject_label)}</td><td className="mono small">arcon:{l.property_name}</td><td>{tl(l.object_label)}</td><td className="small">{tl(l.relation_kind) ?? '—'}</td>
             {canClass && <td className="r"><button className="btn icon" type="button" title={t('삭제')} aria-label={t('관계 {id} 삭제', { id: l.link_id })} disabled={DEMO} onClick={() => remove(t('확장 관계'), `/api/admin/ontology/ext/links/${l.link_id}`, `${l.subject_label} → ${l.object_label}`)}><Trash2 aria-hidden="true" /></button></td>}</tr>)}
           {d.links.length === 0 && <tr><td colSpan={5} className="muted">{t('확장 관계가 없어요. 참조 속성을 만들면 자동으로 생겨요.')}</td></tr>}
         </tbody></table></div>
@@ -209,7 +209,7 @@ export function ExtensionsTab({ classes }: { classes: AdminClassRow[] }) {
       <section className="panel">
         <header><h2>{t('온톨로지 버전')}</h2><span className="small muted">onto.ontology_version</span></header>
         <div className="tablewrap"><table><thead><tr><th>{t('버전')}</th><th>{t('온톨로지')}</th><th>{t('상태')}</th><th className="r">{t('클래스 · 속성')}</th><th>{t('발행 시각')}</th>{canClass && <th />}</tr></thead><tbody>
-          {d.versions.map((v) => { const [s, sc] = vstatus(v.status); const empty = v.classes + v.properties === 0 && v.ontology_iri.includes('/arcon'); return <tr key={v.version_id}><td className="mono small">{v.version_id}</td><td className="small">{v.ontology_iri.includes('/arcon') ? t('회사 확장 (arcon)') : t('표준 코어 (ksx9101)')}{v.source ? <div className="muted">{v.source}</div> : null}</td><td><Pill cls={sc}>{s}</Pill></td><td className="r num small">{v.classes} · {v.properties}</td><td className="num small">{fmtTs(v.released_at)}</td>
+          {d.versions.map((v) => { const [s, sc] = vstatus(v.status); const empty = v.classes + v.properties === 0 && v.ontology_iri.includes('/arcon'); return <tr key={v.version_id}><td className="mono small">{v.version_id}</td><td className="small">{v.ontology_iri.includes('/arcon') ? t('회사 확장 (arcon)') : t('표준 코어 (ksx9101)')}{v.source ? <div className="muted">{tl(v.source)}</div> : null}</td><td><Pill cls={sc}>{s}</Pill></td><td className="r num small">{v.classes} · {v.properties}</td><td className="num small">{fmtTs(v.released_at)}</td>
             {canClass && <td className="r">{empty && <button className="btn icon" type="button" title={t('빈 버전 삭제')} aria-label={t('{id} 삭제', { id: v.version_id })} disabled={DEMO} onClick={() => remove(t('빈 버전'), `/api/admin/ontology/versions/${encodeURIComponent(v.version_id)}`, v.version_id)}><Trash2 aria-hidden="true" /></button>}</td>}</tr>; })}
         </tbody></table></div>
         <p className="hint">{t('클래스·속성이 하나도 안 담긴 버전만 지울 수 있어요. 현재 발행본을 지우면 직전 발행본이 다시 현재 버전이 돼요.')}</p>
@@ -232,11 +232,11 @@ function ProposalRow({ p, classes, canWrite, onDone }: { p: ExtProposal; classes
   return (
     <>
       <tr>
-        <td><b>{p.column_name}</b><div className="small muted">{p.dataset_title ?? p.dataset_id} → <span className="mono">{p.std_table ? `ksx.${p.std_table}` : '—'}</span></div>
-          {p.sample_values?.length > 0 && <div className="small mono muted">{p.sample_values.slice(0, 3).map(String).join(' · ')}</div>}</td>
+        <td><b>{p.column_name}</b><div className="small muted">{tl(p.dataset_title) ?? p.dataset_id} → <span className="mono">{p.std_table ? `ksx.${p.std_table}` : '—'}</span></div>
+          {p.sample_values?.length > 0 && <div className="small mono muted">{p.sample_values.slice(0, 3).map((v) => tl(String(v))).join(' · ')}</div>}</td>
         <td className="small">{p.matched_name ? <>{t('기존 속성에 잇기')}<div className="mono">arcon:{p.matched_name}</div></> : <>{p.kind === 'REF' ? t('참조 속성') : p.kind === 'CLASS' ? t('새 클래스') : t('새 속성')}<div className="mono">arcon:{p.suggested_local_name}</div></>}
-          <div className="muted">{p.target_label ?? lastName(p.target_class_iri)}{p.kind !== 'CLASS' && p.suggested_range_iri ? ` · xsd:${xsdName(p.suggested_range_iri)}` : ''}{p.unit ? ` · ${p.unit}` : ''}</div></td>
-        <td className="small">{p.rationale}{conf != null && <div className="muted">{t('신뢰도 {n}%', { n: conf })} · {t('{n}행 봄', { n: num(p.rows_seen) })}</div>}</td>
+          <div className="muted">{tl(p.target_label) ?? lastName(p.target_class_iri)}{p.kind !== 'CLASS' && p.suggested_range_iri ? ` · xsd:${xsdName(p.suggested_range_iri)}` : ''}{p.unit ? ` · ${p.unit}` : ''}</div></td>
+        <td className="small">{tl(p.rationale)}{conf != null && <div className="muted">{t('신뢰도 {n}%', { n: conf })} · {t('{n}행 봄', { n: num(p.rows_seen) })}</div>}</td>
         <td>{decided ? <><Pill cls={p.status === 'ACCEPTED' ? 'p-ok' : 'p-line'}>{p.status === 'ACCEPTED' ? t('승인') : t('반려')}</Pill><div className="small muted">{p.decided_by} · {fmtTs(p.decided_at)}</div>{p.result_iri && <div className="small mono">arcon:{lastName(p.result_iri)}</div>}</>
           : canWrite ? <div className="acts" style={{ justifyContent: 'flex-start' }}>
             <button className="btn primary" type="button" disabled={busy || DEMO} onClick={() => decide(true)}><Check aria-hidden="true" /> {t('승인')}</button>

@@ -6,7 +6,7 @@ import { useAuth } from '../../auth';
 import { Pill, State, Tier } from '../../components/ui';
 import { daysLeft, fmtTs, n0, riskPill } from '../../format';
 import { useApi } from '../../useApi';
-import { t, getLang } from '../../i18n';
+import { t, getLang, tl } from '../../i18n';
 import { Head, lastName, num, runStatus, zoneColor, zoneName } from './common';
 import { PipelineEditor, RiskActions, hasRole } from './Steward';
 
@@ -32,7 +32,7 @@ export default function Overview() {
         <div className="zones">
           {data.zones.map((z) => (
             <div key={z.zone_id} className="zone" style={{ ['--zc' as string]: zoneColor(z.zone_id) }}>
-              <div className="zn">{getLang() === 'ko' ? z.label_ko : zoneName(z.zone_id) ?? z.label_ko}</div><div className="zv num">{t('데이터셋 {n}', { n: num(z.datasets) })}</div>
+              <div className="zn">{getLang() === 'ko' ? z.label_ko : zoneName(z.zone_id) ?? tl(z.label_ko)}</div><div className="zv num">{t('데이터셋 {n}', { n: num(z.datasets) })}</div>
               <div className="zs">{t('레코드 {n}', { n: z.records == null ? t('집계 없음') : n0(z.records) })}</div><span className="arrow" aria-hidden="true">›</span>
             </div>))}
         </div>
@@ -55,7 +55,7 @@ export default function Overview() {
                     <span className="sev" />
                     <div>
                       <b>{t('납기 위험 · 주문 {order} ({customer}{left})', { order: x.sales_order_id ?? '—', customer: x.customer_id ?? '—', left: left != null ? `, ${left >= 0 ? t('{n}일 남음', { n: left }) : t('{n}일 지남', { n: -left })}` : '' })}</b>
-                      <p>{t('로트 {lot} 불량률 {rate}%.', { lot: x.lot_id ?? '—', rate: x.defect_rate_pct ?? '—' })} {x.cause ?? ''}</p>
+                      <p>{t('로트 {lot} 불량률 {rate}%.', { lot: x.lot_id ?? '—', rate: x.defect_rate_pct ?? '—' })} {tl(x.cause) ?? ''}</p>
                       <div className="meta"><Pill cls={lvc}>{t('위험도 {level}', { level: lv })}</Pill><Tier t="INFERRED" />{r.derived_by && <Pill>{t('규칙 {name}', { name: lastName(r.derived_by) })}</Pill>}<Pill>{fmtTs(r.detected_at)}</Pill></div>
                     </div>
                     <div className="acts">{x.lot_id && <Link className="btn" to={`/find/lot/${x.lot_id}`}>{t('로트 보기')}</Link>}<Link className="btn" to="/admin/lineage">{t('계보')}</Link>{canRisk && <RiskActions r={r} onDone={reload} />}</div>
@@ -70,12 +70,12 @@ export default function Overview() {
                 const [st, stc] = runStatus(p.last_status ?? '') || [p.last_status ?? t('실행 기록 없음'), 'p-line'];
                 return (
                   <tr key={p.pipeline_id}>
-                    <td>{p.label_ko}<div className="small muted">{zoneName(p.from_zone) ?? p.from_zone} → {zoneName(p.to_zone) ?? p.to_zone} · {p.engine} · {p.schedule_cron ?? t('수동')}{p.owner_user_id ? ` · ${p.owner_user_id}` : ''}{p.enabled ? '' : ` · ${t('꺼짐')}`}</div>
+                    <td>{tl(p.label_ko)}<div className="small muted">{zoneName(p.from_zone) ?? p.from_zone} → {zoneName(p.to_zone) ?? p.to_zone} · {p.engine} · {p.schedule_cron ?? t('수동')}{p.owner_user_id ? ` · ${p.owner_user_id}` : ''}{p.enabled ? '' : ` · ${t('꺼짐')}`}</div>
                       {canPipe && <PipelineEditor key={`${p.enabled}${p.schedule_cron}${p.owner_user_id}`} p={p} people={people.data ?? []} onDone={reload} />}</td>
                     <td><Pill cls={stc}>{st}</Pill>
                       <div className="small muted">{fmtTs(p.last_ended_at ?? p.last_started_at)}</div>
                       {p.rows_in != null && <div className="small muted num">{t('입력 {a} · 출력 {b}', { a: n0(p.rows_in), b: n0(p.rows_out) })}{p.rows_rejected ? ` · ${t('거부 {n}', { n: n0(p.rows_rejected) })}` : ''}</div>}
-                      {p.error_message && <div className="small" style={{ color: 'var(--crit)' }}>{p.error_message}</div>}</td>
+                      {p.error_message && <div className="small" style={{ color: 'var(--crit)' }}>{tl(p.error_message)}</div>}</td>
                   </tr>);
               })}
             </tbody></table></div>

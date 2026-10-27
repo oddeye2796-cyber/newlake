@@ -6,7 +6,7 @@ import { del, post, put, type AdminDatasetDetail, type AdminField, type AdminMap
 import { useAuth } from '../../auth';
 import { Pill } from '../../components/ui';
 import { useApi } from '../../useApi';
-import { t } from '../../i18n';
+import { t, tl } from '../../i18n';
 import { lastName, sensName, violStatus } from './common';
 
 export const DEMO = import.meta.env.VITE_DEMO === '1';
@@ -26,7 +26,7 @@ function useBusy() {
 
 export function PeopleSelect({ value, onChange, blank, people }: { value: string; onChange: (v: string) => void; blank: string; people: Person[] }) {
   return <select className="input" value={value} onChange={(e) => onChange(e.target.value)}>
-    <option value="">{blank}</option>{people.map((p) => <option key={p.user_id} value={p.user_id}>{p.display_name} · {p.user_id}</option>)}
+    <option value="">{blank}</option>{people.map((p) => <option key={p.user_id} value={p.user_id}>{tl(p.display_name)} · {p.user_id}</option>)}
   </select>;
 }
 
@@ -82,7 +82,7 @@ export function FieldRow({ f, canWrite, props, onSaved }: { f: AdminField; canWr
   const pending = f.maps_to_property_iri && f.mapping_status !== 'APPROVED';
   if (!edit) return (
     <tr>
-      <td><span className="mono">{f.field_name}</span>{f.is_pk && <> <Pill>PK</Pill></>}{f.is_pii && <> <Pill cls="p-warn">{t('개인정보')}</Pill></>}<div className="small muted">{f.label_ko ?? ''}{f.is_required ? ` · ${t('필수')}` : ''}{f.description ? ` · ${f.description}` : ''}</div></td>
+      <td><span className="mono">{f.field_name}</span>{f.is_pk && <> <Pill>PK</Pill></>}{f.is_pii && <> <Pill cls="p-warn">{t('개인정보')}</Pill></>}<div className="small muted">{tl(f.label_ko) ?? ''}{f.is_required ? ` · ${t('필수')}` : ''}{f.description ? ` · ${tl(f.description)}` : ''}</div></td>
       <td className="mono small">{f.data_type ?? '—'}</td>
       <td className="mono small">{f.maps_to_property_iri ? `ksx:${lastName(f.maps_to_property_iri)}` : <span className="muted">{t('레이크 메타')}</span>}</td>
       <td className="small">{f.mapping_method ?? '—'}{f.mapping_confidence != null ? ` · ${f.mapping_confidence}` : ''}{f.mapping_status ? ` · ${f.mapping_status}` : ''}</td>
@@ -99,7 +99,7 @@ export function FieldRow({ f, canWrite, props, onSaved }: { f: AdminField; canWr
         <div className="formgrid" style={{ padding: '4px 0' }}>
           <label className="fld"><span>{t('컬럼')} <code className="mono">{f.field_name}</code> · {t('한글 이름')}</span><input className="input" value={x.label_ko} onChange={(e) => setX({ ...x, label_ko: e.target.value })} /></label>
           <label className="fld"><span>{t('온톨로지 속성')}</span><select className="input mono" value={x.maps_to_property_iri} onChange={(e) => setX({ ...x, maps_to_property_iri: e.target.value })}>
-            <option value="">{t('(없음 · 레이크 메타)')}</option>{props.map((p) => <option key={p.property_iri} value={p.property_iri}>ksx:{p.local_name}{p.label_ko ? ` · ${p.label_ko}` : ''}</option>)}</select></label>
+            <option value="">{t('(없음 · 레이크 메타)')}</option>{props.map((p) => <option key={p.property_iri} value={p.property_iri}>ksx:{p.local_name}{p.label_ko ? ` · ${tl(p.label_ko)}` : ''}</option>)}</select></label>
           <label className="fld"><span>{t('설명')}</span><input className="input" value={x.description} onChange={(e) => setX({ ...x, description: e.target.value })} /></label>
           <label className="fld" style={{ flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'end' }}><input type="checkbox" checked={x.is_pii} onChange={(e) => setX({ ...x, is_pii: e.target.checked })} /><span>{t('개인정보 항목')}</span></label>
         </div>
@@ -146,8 +146,8 @@ export function RuleForm({ rule, datasets, classes, onDone, onCancel }: { rule: 
         <label className="fld"><span>{t('심각도')}</span><select className="input" value={f.severity} onChange={set('severity')}>{SEVERITIES.map((s) => <option key={s} value={s}>{sevName(s)}</option>)}</select></label>
         <label className="fld"><span>{t('대상 종류')}</span><select className="input" value={f.target_kind} onChange={set('target_kind')}><option value="dataset">{t('데이터셋')}</option><option value="class">{t('클래스')}</option></select></label>
         {f.target_kind === 'dataset'
-          ? <label className="fld"><span>{t('대상 데이터셋')}</span><select className="input" required value={f.target_dataset_id} onChange={set('target_dataset_id')}><option value="">{t('데이터셋을 고르세요')}</option>{datasets.map((d) => <option key={d.dataset_id} value={d.dataset_id}>{d.title_ko} · {d.dataset_id}</option>)}</select></label>
-          : <label className="fld"><span>{t('대상 클래스')}</span><select className="input" required value={f.target_class_iri} onChange={set('target_class_iri')}><option value="">{t('클래스를 고르세요')}</option>{classes.map((c) => <option key={c.class_iri} value={c.class_iri}>{c.label_ko} · ksx:{lastName(c.class_iri)}</option>)}</select></label>}
+          ? <label className="fld"><span>{t('대상 데이터셋')}</span><select className="input" required value={f.target_dataset_id} onChange={set('target_dataset_id')}><option value="">{t('데이터셋을 고르세요')}</option>{datasets.map((d) => <option key={d.dataset_id} value={d.dataset_id}>{tl(d.title_ko)} · {d.dataset_id}</option>)}</select></label>
+          : <label className="fld"><span>{t('대상 클래스')}</span><select className="input" required value={f.target_class_iri} onChange={set('target_class_iri')}><option value="">{t('클래스를 고르세요')}</option>{classes.map((c) => <option key={c.class_iri} value={c.class_iri}>{tl(c.label_ko)} · ksx:{lastName(c.class_iri)}</option>)}</select></label>}
         <label className="fld"><span>{t('기준 적합률 % (비우면 없음)')}</span><input className="input num" type="number" min={0} max={100} step="0.1" value={f.threshold} onChange={set('threshold')} /></label>
         <label className="fld"><span>{t('SHACL 셰이프 IRI (선택)')}</span><input className="input mono" value={f.shape_iri} onChange={set('shape_iri')} /></label>
         <label className="fld" style={{ gridColumn: '1 / -1' }}><span>{t('검사식 (SELECT · 위반 행을 돌려줘요. 열: focus_node, result_path, message)')}</span>
@@ -181,7 +181,7 @@ export function ViolationActions({ v, people, onDone }: { v: QualityViolation; p
   const set = (status: string, assignee: string | null = v.assignee_user_id) => run(put(`/api/admin/quality/violations/${v.violation_id}`, { status, assignee_user_id: assignee }), () => { toast(t('위반 #{id} 를 {s} 로 바꿨어요.', { id: v.violation_id, s: violStatus(status)?.[0] ?? status })); onDone(); });
   return <>
     <select className="input" aria-label={t('담당자')} value={v.assignee_user_id ?? ''} disabled={busy || DEMO} onChange={(e) => set(v.status, e.target.value || null)}>
-      <option value="">{t('담당자 없음')}</option>{people.map((p) => <option key={p.user_id} value={p.user_id}>{p.display_name}</option>)}</select>
+      <option value="">{t('담당자 없음')}</option>{people.map((p) => <option key={p.user_id} value={p.user_id}>{tl(p.display_name)}</option>)}</select>
     {v.status === 'OPEN' && <button className="btn" type="button" disabled={busy || DEMO} onClick={() => set('ACK')}>{t('확인함')}</button>}
     {v.status !== 'FIXED' && <button className="btn primary" type="button" disabled={busy || DEMO} onClick={() => set('FIXED')}>{t('해결')}</button>}
     {v.status === 'OPEN' && <button className="btn" type="button" disabled={busy || DEMO} onClick={() => set('WAIVED')}>{t('예외 처리')}</button>}
