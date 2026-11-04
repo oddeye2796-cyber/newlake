@@ -8,7 +8,7 @@ import { Pill, State } from '../../components/ui';
 import { confirmDialog } from '../../components/Confirm';
 import { fmtTs, n0 } from '../../format';
 import { useApi } from '../../useApi';
-import { t, tk, tl } from '../../i18n';
+import { t, tk, tl, tlName } from '../../i18n';
 import { Head } from './common';
 
 const DEMO = import.meta.env.VITE_DEMO === '1';
@@ -345,14 +345,14 @@ function HistoryTab({ rows, open, reload }: { rows: BatchRow[]; open: (id: strin
   const [err, setErr] = useState<string | null>(null);
   const remove = async (b: BatchRow) => {
     const msg = b.std_table
-      ? t('{name} 배치를 원천 존에서 지울까요? 표준 존({tbl})에 이미 넣은 행은 남아요.', { name: b.file_name ?? b.source_entity ?? b.batch_id, tbl: b.std_table })
-      : t('{name} 배치({n}행)를 원천 존에서 지울까요?', { name: b.file_name ?? b.source_entity ?? b.batch_id, n: n0(b.record_count) });
+      ? t('{name} 배치를 원천 존에서 지울까요? 표준 존({tbl})에 이미 넣은 행은 남아요.', { name: tlName(b.file_name ?? b.source_entity) ?? b.batch_id, tbl: b.std_table })
+      : t('{name} 배치({n}행)를 원천 존에서 지울까요?', { name: tlName(b.file_name ?? b.source_entity) ?? b.batch_id, n: n0(b.record_count) });
     if (!(await confirmDialog(msg))) return;
     setErr(null);
     del<{ records: number }>(`/api/admin/batches/${b.batch_id}`).then((r) => { toast(t('{n}행을 지웠어요.', { n: n0(r.records) })); reload(); }).catch((x: Error) => setErr(x.message));
   };
   const rollback = async (b: BatchRow) => {
-    if (!(await confirmDialog(t('{name} 배치가 표준 존({tbl})에 넣은 행과 확장 값을 빼고 원천 존 상태로 되돌릴까요? 이 배치가 덮어쓴 행은 이전 값으로 돌아가고, 뒤 배치가 덮어쓴 행은 남아요.', { name: b.file_name ?? b.source_entity ?? b.batch_id, tbl: b.std_table ?? '' })))) return;
+    if (!(await confirmDialog(t('{name} 배치가 표준 존({tbl})에 넣은 행과 확장 값을 빼고 원천 존 상태로 되돌릴까요? 이 배치가 덮어쓴 행은 이전 값으로 돌아가고, 뒤 배치가 덮어쓴 행은 남아요.', { name: tlName(b.file_name ?? b.source_entity) ?? b.batch_id, tbl: b.std_table ?? '' })))) return;
     setErr(null);
     post<RollbackResult>(`/api/admin/batches/${b.batch_id}/rollback`, {}).then((r) => { toast(r.restored_rows ? t('표준 존에서 {n}행을 빼고 {m}행을 이전 값으로 되돌렸어요.', { n: n0(r.rows), m: n0(r.restored_rows) }) : t('표준 존에서 {n}행을 뺐어요.', { n: n0(r.rows) })); reload(); }).catch((x: Error) => setErr(x.message));
   };
@@ -363,13 +363,13 @@ function HistoryTab({ rows, open, reload }: { rows: BatchRow[]; open: (id: strin
           const [st, stc] = batchSt(b.status);
           return <tr key={b.batch_id}>
             <td className="num small">{fmtTs(b.received_at)}</td>
-            <td>{b.file_name ?? b.source_entity}<div className="mono muted small">{b.source_system_id} · {b.dataset_id}</div></td>
+            <td><span title={b.file_name ?? b.source_entity ?? undefined}>{tlName(b.file_name ?? b.source_entity)}</span><div className="mono muted small">{b.source_system_id} · {b.dataset_id}</div></td>
             <td className="r num">{n0(b.record_count)}</td>
             <td><Pill cls={stc}>{st}</Pill></td>
             <td className="small">{b.std_table ? <><span className="mono">{b.std_table}</span><div className="muted">{t('넣음 {a} · 거부 {b}', { a: n0(b.std_rows_out), b: n0(b.std_rows_rejected) })}</div></> : '—'}</td>
             <td className="r" style={{ whiteSpace: 'nowrap' }}><button className="btn" type="button" onClick={() => open(b.batch_id)}>{b.status === 'LANDED' ? t('표준 존에 넣기') : t('다시 넣기')}</button>{' '}
-              {b.std_table && <><button className="btn icon" type="button" title={t('표준 존에서 되돌리기')} aria-label={t('{id} 표준 존에서 되돌리기', { id: b.file_name ?? b.batch_id })} disabled={DEMO} onClick={() => rollback(b)}><Undo2 aria-hidden="true" /></button>{' '}</>}
-              <button className="btn icon" type="button" title={t('삭제')} aria-label={t('{id} 삭제', { id: b.file_name ?? b.batch_id })} disabled={DEMO} onClick={() => remove(b)}><Trash2 aria-hidden="true" /></button></td></tr>;
+              {b.std_table && <><button className="btn icon" type="button" title={t('표준 존에서 되돌리기')} aria-label={t('{id} 표준 존에서 되돌리기', { id: tlName(b.file_name) ?? b.batch_id })} disabled={DEMO} onClick={() => rollback(b)}><Undo2 aria-hidden="true" /></button>{' '}</>}
+              <button className="btn icon" type="button" title={t('삭제')} aria-label={t('{id} 삭제', { id: tlName(b.file_name) ?? b.batch_id })} disabled={DEMO} onClick={() => remove(b)}><Trash2 aria-hidden="true" /></button></td></tr>;
         })}
         {rows.length === 0 && <tr><td colSpan={6} className="muted">{t('아직 올린 데이터가 없어요.')}</td></tr>}
       </tbody></table></div>

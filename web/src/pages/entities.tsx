@@ -170,10 +170,10 @@ export function OrderPage({ id }: { id: string }) {
   const status: [string, string] = o.on_time === true ? [t('납기 내 출고'), 'p-ok'] : o.on_time === false ? [t('납기 초과'), 'p-crit']
     : myRisks.length ? [t('납기 위험'), 'p-crit'] : [t('진행 중'), 'p-line'];
   return (
-    <Shell kindLabel={t('주문')} id={id} name={`${cust?.label ?? o.customer_id} · ${item?.label ?? o.item_id}`} pills={<Pill cls={status[1]}>{status[0]}</Pill>}>
+    <Shell kindLabel={t('주문')} id={id} name={`${tl(cust?.label) ?? o.customer_id} · ${tl(item?.label) ?? o.item_id}`} pills={<Pill cls={status[1]}>{status[0]}</Pill>}>
       <Facts rows={[
-        [t('고객'), `${cust?.label ?? ''} (${o.customer_id})`],
-        [t('품목'), `${item?.label ?? ''} (${o.item_id})`],
+        [t('고객'), `${tl(cust?.label) ?? ''} (${o.customer_id})`],
+        [t('품목'), `${tl(item?.label) ?? ''} (${o.item_id})`],
         [t('주문 수량'), `${n0(o.ordered_qty)} EA`],
         [t('납기'), `${fmtDate(o.requested_delivery_date)}${o.on_time == null && left != null ? ` (${left >= 0 ? t('{n}일 남음', { n: left }) : t('{n}일 지남', { n: -left })})` : ''}`],
         [t('출고'), o.fulfilled_date ? `${fmtDate(o.fulfilled_date)} (${n0(o.released_qty)} EA)` : t('아직 출고 전 (출고 {n} EA)', { n: n0(o.released_qty) })],

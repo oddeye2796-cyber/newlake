@@ -70,6 +70,12 @@ const AFFIX: Record<Exclude<Lang, 'ko'>, { seqFull: string; seq: string; ref: st
   ja: { seqFull: '通し番号（行の代理キー、標準外の物理カラム）', seq: '通し番号', ref: '参照' },
 };
 
+/** 원천 파일·엔터티 이름(예: SCM_발주_20260901.xlsx)의 한국어 토막만 tl() 로 옮긴다. 번호·확장자는 그대로 둔다. 원문은 title 등으로 함께 보여 줄 것. */
+export function tlName(ko: string | null | undefined): string | undefined {
+  if (!ko || current === 'ko') return ko ?? undefined;
+  return ko.replace(/[가-힣](?:[가-힣0-9 ]*[가-힣])?/g, (m) => tl(m).replace(/\s+/g, '_'));
+}
+
 /** DB 에서 온 한국어 라벨(클래스·속성·컬럼·데이터셋·파이프라인 이름 등)을 현재 언어로. 사전에 없으면 원문 그대로. */
 export function tl(ko: string): string;
 export function tl(ko: string | null | undefined): string | undefined;
